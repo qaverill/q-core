@@ -1,0 +1,19 @@
+{
+  "name": "q-core",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "aws-sdk": "^2.314.0",
+    "concurrently": "^4.0.1",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "nodemon": "^1.18.4",
+    "request": "^2.88.0"
+  },
+  "scripts": {
+    "q-react-app": "cd ../q-react-app && yarn start",
+    "q-node-server": "nodemon server.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn q-node-server\" \"yarn q-react-app\""
+  }
+}

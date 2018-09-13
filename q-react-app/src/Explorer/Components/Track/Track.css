@@ -1,0 +1,19 @@
+div.track-info{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  width: 300px;
+}
+div.track-artists{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+p.artist-link{
+  color: gray;
+  cursor: pointer;
+}
+p.artist-link:hover{
+  color: white;
+}

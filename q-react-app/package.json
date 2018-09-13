@@ -1,0 +1,19 @@
+{
+  "name": "q-react-app",
+  "version": "1.0.0",
+  "private": true,
+  "proxy": "http://localhost:8888/",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "react": "^16.5.0",
+    "react-dom": "^16.5.0",
+    "react-notifications": "^1.4.3",
+    "react-scripts": "^1.1.5"
+  },
+  "scripts": {
+    "start": "setx PORT 3000 && react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
