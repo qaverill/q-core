@@ -2,4 +2,4 @@
 The core of Q
 
 ## how?
-'yarn dev'
+`yarn dev`
