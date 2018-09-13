@@ -1,0 +1,10 @@
+{
+  "name": "q-node-server",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+  },
+  "scripts": {
+    "dev": "cd q-node-server && yarn dev"
+  }
+}

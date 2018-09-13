@@ -1,5 +1,5 @@
 {
-  "name": "q-core",
+  "name": "q-node-server",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
@@ -12,8 +12,8 @@
     "request": "^2.88.0"
   },
   "scripts": {
-    "q-react-app": "cd ../q-react-app && yarn start",
     "q-node-server": "nodemon server.js",
+    "q-react-app": "cd ../q-react-app && yarn start",
     "dev": "concurrently --kill-others-on-fail \"yarn q-node-server\" \"yarn q-react-app\""
   }
 }
