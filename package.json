@@ -1,10 +1,11 @@
 {
-  "name": "q-node-server",
+  "name": "q-core",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
   },
   "scripts": {
-    "dev": "cd q-node-server && yarn dev"
+    "dev": "cd q-node-server && yarn dev",
+    "install": "cd q-node-server && npm install && cd ../q-react-app && npm install"
   }
 }
