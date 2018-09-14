@@ -1,46 +1,50 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import registerServiceWorker from './registerServiceWorker';
-import SpotifyLogin from './login/SpotifyLogin';
-import SpotifyQ from './SpotifyQ';
-import './App.css';
-import './Elements.css';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Sidebar from 'react-sidebar'
+import Test from './components/Test/Test'
 
-function checkForAuthToken(){
-  let hashParams = {};
-    let changed = 0;
-    let e, r = /([^&;=]+)=?([^&;]*)/g,
-      q = window.location.hash.substring(1);
-    e = r.exec(q)
-    while (e) {
-      hashParams[e[1]] = decodeURIComponent(e[2]);
-      e = r.exec(q);
-      changed++;
-    }
+import { NotificationContainer } from 'react-notifications';
 
-    let auth_token, refresh_token;
-    if (changed === 0){
-      auth_token = null;
-    } else {
-      auth_token = hashParams.access_token;
-      refresh_token = hashParams.refresh_token;
-    }
+import './App.css'
+import './Elements.css'
+import './Colors.css'
 
-    if (auth_token != null){
-      sessionStorage.setItem("auth_token", auth_token);
-      sessionStorage.setItem("refresh_token", refresh_token);
-    }
+class App extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      sidebarOpen: true,
+      currentPage: <Test title="Test"/>
+    };
+    this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
+  }
+
+  onSetSidebarOpen(open) {
+    this.setState({ sidebarOpen: open });
+  }
+
+  render() {
+    console.log(this.state.currentPage);
+    return (
+      <Sidebar
+        sidebar={<b>Sidebar content</b>}
+        open={this.state.sidebarOpen}
+        onSetOpen={this.onSetSidebarOpen}
+        styles={{ sidebar: { background: "white" } }}
+      >
+        <div id="app">
+          <NotificationContainer/>
+          <img id="menu-icon" src={require('./menu-icon.png')} onClick={() => this.onSetSidebarOpen(true)} />
+          <div id="app-header" >
+            <h3 id="current-page">{this.state.currentPage.props.title}</h3>
+          </div>
+          <div id="app-body">
+            {this.state.currentPage}
+          </div>
+        </div>
+      </Sidebar>
+    );
+  }
 }
 
-checkForAuthToken();
-
-if (sessionStorage.getItem("auth_token") == null){
-  ReactDOM.render(
-    <SpotifyLogin />,
-    document.getElementById('root')
-  );
-} else {
-  ReactDOM.render(<SpotifyQ />, document.getElementById('root'));
-}
-
-registerServiceWorker();
+ReactDOM.render(<App />, document.getElementById('root'));

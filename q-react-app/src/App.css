@@ -1,63 +1,46 @@
-div.App {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
+#root {
   height: 100%;
-  overflow: hidden;
 }
 
-div.App-header {
+#app {
+  height: 100%;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#app-header {
   padding: 10px 0;
   font-size: 20px;
   font-weight: bold;
+  background-color: black;
+  color: white;
+  height: 30px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
+#menu-icon {
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  margin: 10px;
+}
+
+#current-page {
+  margin: 0;
+  float: left;
+}
+
+#app-body {
+  height: calc(100% - 50px);
+  background-color: #222222;
+
   display: flex;
   justify-content: center;
 }
-
-.blue {
-  background-color: #016FB9;
-  color: white;
-}
-
-.purple {
-  background-color: #541388;
-  color: white;
-}
-
-.red {
-  background-color: #A71D31;
-  color: white;
-}
-
-.dark {
-  background-color: #222222;
-  color: white;
-}
-
-.light {
-  background-color: #4A483F;
-  color: white;
-}
-
-.black {
-  background-color: black;
-  color: white;
-}
-
-.white {
-  background-color: white;
-  color: black;
-}
-
-input.search {
-  background-image: url('./Explorer/Images/search-icon.png');
-  background-position: 6px 5px; 
-  background-repeat: no-repeat;
-  width: 400px;
-}
-
-
-
-
-

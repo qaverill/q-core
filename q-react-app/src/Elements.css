@@ -7,9 +7,6 @@ html, body {
   -moz-font-smoothing: antialiased;
   -o-font-smoothing: antialiased;
 }
-#root {
-  height: 100%;
-}
 button, a {
   border: none;
   border-radius: 50px;
