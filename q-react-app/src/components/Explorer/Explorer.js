@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Artist from './Components/Artist/Artist';
 import Album from './Components/Album/Album';
 import Track from './Components/Track/Track';
-import { getArtist, getAlbum, getTrack, searchSpotify } from '../SpotifyAPI/Getters'
+import { getArtist, getAlbum, getTrack, searchSpotify } from '../../utilities/SpotifyAPI/Getters'
 import { getRandomColor } from '../functions';
 import './Explorer.css';
 

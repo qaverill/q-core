@@ -1,10 +1,9 @@
-import React, {Component} from "react";
-import 'react-notifications/lib/notifications.css';
-import { NotificationManager } from 'react-notifications';
-import { getHistory } from '../Getters';
-import { writeQListens } from '../../DynamoDB/Writers';
-import { readQListen } from '../../DynamoDB/Readers';
-import './Collector.css';
+import React, {Component} from 'react'
+import 'react-notifications/lib/notifications.css'
+import { NotificationManager } from 'react-notifications'
+import { getHistory } from '../../../../utilities/SpotifyAPI/Getters'
+import { writeQListens } from '../../../../utilities/DynamoDB/Writers'
+import { readQListen } from '../../../../utilities/DynamoDB/Readers'
 
 class HistoryCollector extends Component {
   constructor(props){
@@ -12,11 +11,11 @@ class HistoryCollector extends Component {
     this.state = {
       unsavedListens: [],
       listensChecked: 0,
-    }
+    };
     this.writeListensToDB = this.writeListensToDB.bind(this);
   }
   render() {
-    (this.state.listensChecked == 50 ? console.log("Checked all listens") : null)
+    (this.state.listensChecked === 50 ? console.log("Checked all listens") : null);
     if (this.state.unsavedListens.length !== 0){
       return (
         <div className="collector dark">

@@ -2,8 +2,7 @@ let express = require('express')
 let router = express.Router()
 
 let AWS = require("aws-sdk");
-AWS.config.loadFromPath('../q-config/aws-config.json');
-AWS.config.update({endpoint: "https://dynamodb.us-east-2.amazonaws.com"});
+AWS.config.update(require('../q-config/config').aws);
 
 let docClient = new AWS.DynamoDB.DocumentClient();
 

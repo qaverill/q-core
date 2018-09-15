@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import HistoryCollector from './SpotifyAPI/Collectors/History';
-import LibraryCollector from './SpotifyAPI/Collectors/Library';
 import Explorer from './Explorer/Explorer';
 import { NotificationContainer } from 'react-notifications';
 
@@ -24,8 +22,6 @@ class SpotifyQ extends Component {
       <div className="App">
         <NotificationContainer/>
         <div className="App-header black" onClick={this.copyAuthTokenToClipboard}>Spotify Q</div>
-        <HistoryCollector />
-        <LibraryCollector />
         <Explorer />
       </div>
     );

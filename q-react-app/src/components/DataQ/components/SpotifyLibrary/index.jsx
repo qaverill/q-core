@@ -1,11 +1,10 @@
 import React, {Component} from "react";
 import 'react-notifications/lib/notifications.css';
 import { NotificationManager } from 'react-notifications';
-import { readQSave } from '../../DynamoDB/Readers';
-import { writeQSaves } from '../../DynamoDB/Writers';
-import { getLibrary } from '../Getters';
-import { addToLibraryArchives } from '../Setters';
-import './Collector.css';
+import { readQSave } from '../../../../utilities/DynamoDB/Readers';
+import { writeQSaves } from '../../../../utilities/DynamoDB/Writers';
+import { getLibrary } from '../../../../utilities/SpotifyAPI/Getters';
+import { addToLibraryArchives } from '../../../../utilities/SpotifyAPI/Setters';
 
 class LibraryCollector extends Component {
   constructor(props){

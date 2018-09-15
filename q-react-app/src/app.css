@@ -11,30 +11,32 @@
 }
 
 #app-header {
-  padding: 10px 0;
   font-size: 20px;
   font-weight: bold;
   background-color: black;
   color: white;
-  height: 30px;
+  height: 50px;
 
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
   flex-wrap: nowrap;
 }
 
 #menu-icon {
+  float: left;
   height: 30px;
   width: 30px;
-  position: absolute;
-  margin: 10px;
+  cursor: pointer;
+  margin-right: auto;
+  margin-left: 10px;
 }
 
-#current-page {
-  margin: 0;
-  float: left;
+#api-status {
+  cursor: pointer;
+  float: right;
+  margin-left: auto;
+  margin-right: 10px;
 }
 
 #app-body {
@@ -43,4 +45,20 @@
 
   display: flex;
   justify-content: center;
+}
+
+.page-border {
+  margin: 10px;
+  height: calc(100% - 20px);
+  width: 100%;
+  background-position: center;
+  border-radius: 15px;
+}
+
+.page {
+  height: calc(100% - 10px);
+  width: calc(100% - 10px);
+  margin: 5px;
+  background-color: #222222;
+  border-radius: 15px;
 }

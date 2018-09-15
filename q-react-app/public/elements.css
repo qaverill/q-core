@@ -7,7 +7,7 @@ html, body {
   -moz-font-smoothing: antialiased;
   -o-font-smoothing: antialiased;
 }
-button, a {
+button {
   border: none;
   border-radius: 50px;
   color: white;

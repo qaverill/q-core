@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getTrack } from '../../../SpotifyAPI/Getters'
+import { getTrack } from '../../../../utilities/SpotifyAPI/Getters'
 import Artist from '../Artist/Artist';
 import './Track.css';
 
