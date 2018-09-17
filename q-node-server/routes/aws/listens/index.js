@@ -1,11 +1,6 @@
-let express = require('express');
-let router = express.Router();
+let listens = require('express').Router();
 
-router.use(function timeLog (req, res, next) {
-  next();
-});
-
-router.post('/listens', function(req, res) {
+listens.post('/listens', function(req, res) {
   console.log('POST\t/aws/listens');
 
   const listens = req.body.listens;
@@ -26,7 +21,7 @@ router.post('/listens', function(req, res) {
 
   res.end()
 });
-router.get('/listens/:timestamp', function(req, res){
+listens.get('/listens/:timestamp', function(req, res){
   console.log(`GET\t/dynamo/listens/${parseInt(req.params.timestamp)}`);
 
   const params = {
@@ -51,6 +46,6 @@ router.get('/listens/:timestamp', function(req, res){
 });
 
 console.log('POST\t/aws/listens');
-console.log('GET\t/aws/listens/:timestamp');
+console.log('GET \t/aws/listens/:timestamp');
 
 module.exports = router;

@@ -1,18 +1,12 @@
-let express = require('express');
 let request = require('request');
 let querystring = require('querystring');
 let cookieParser = require('cookie-parser');
 
-let stateKey = 'spotify_auth_state';
-let spotifyConfig = require('../../config/spotify');
+console.log('GET\t/spotify/login');
+console.log('GET\t/spotify/callback');
+console.log('GET\t/spotify/refresh_token');
+console.log('GET\t/spotify/tokens');
 
-let router = express.Router();
-
-/**
- * Generates a random string containing numbers and letters
- * @param  {number} length The length of the string
- * @return {string} The generated string
- */
 let generateRandomString = function(length) {
   let text = '';
   let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -24,13 +18,8 @@ let generateRandomString = function(length) {
 };
 
 router.use(express.static(__dirname + '/public')).use(cookieParser());
-router.use(function timeLog (req, res, next) {
-  next();
-});
 
 router.get('/login', function(req, res) {
-  console.log('GET\t/spotify/login');
-
   let state = generateRandomString(16);
   res.cookie(stateKey, state);
 
@@ -44,8 +33,6 @@ router.get('/login', function(req, res) {
     }));
 });
 router.get('/callback', function(req, res) {
-  console.log('GET\t/spotify/callback');
-
   let code = req.query.code || null;
   let state = req.query.state || null;
   let storedState = req.cookies ? req.cookies[stateKey] : null;
@@ -93,8 +80,6 @@ router.get('/callback', function(req, res) {
   }
 });
 router.get('/refresh_token', function(req, res) {
-  console.log('GET\t/spotify/refresh_token');
-
   // requesting access token from refresh token
   let refresh_token = req.query.refresh_token;
   let authOptions = {
@@ -117,13 +102,7 @@ router.get('/refresh_token', function(req, res) {
   });
 });
 router.get('/tokens', function(req, res) {
-  console.log('GET\t/spotify/tokens');
   res.send(global.spotifyAuth);
 });
-
-console.log('GET\t/spotify/login');
-console.log('GET\t/spotify/callback');
-console.log('GET\t/spotify/refresh_token');
-console.log('GET\t/spotify/tokens');
 
 module.exports = router;

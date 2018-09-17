@@ -1,21 +1,27 @@
-let express = require('express');
-let cors = require('cors');
-let bodyParser = require('body-parser');
+const server = require('express')();
+const routes = require('./routes');
+const PORT = 8888;
 
+server.use(require('cors')());
+
+// body-parser
+const bodyParser = require('body-parser');
+server.use(bodyParser.json());
+server.use(bodyParser.urlencoded({ extended: true }));
+
+// AWS
 let AWS = require('aws-sdk');
 AWS.config.loadFromPath('./config/aws.json');
 AWS.config.update({endpoint: "https://dynamodb.us-east-2.amazonaws.com"});
 global.docClient = new AWS.DynamoDB.DocumentClient();
 
-let app = express();
+// Spotify
+global.stateKey = 'spotify_auth_state';
+global.spotifyConfig = require('./config/spotify');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+// Roots
+server.use('/', routes);
 
-app.use('/spotify', require('./paths/spotify/auth'));
-app.use('/aws', require('./paths/aws/saves'));
-app.use('/aws', require('./paths/aws/listens'));
-
-console.log('\nListening on port 8888');
-app.listen(8888);
+app.listen(PORT, () => {
+  console.log(`App listening on port ${PORT}`)
+});

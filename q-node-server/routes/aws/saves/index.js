@@ -1,11 +1,6 @@
-let express = require('express');
-let router = express.Router();
+let saves = require('express').Router();
 
-router.use(function timeLog (req, res, next) {
-  next();
-});
-
-router.post('/saves', function(req, res) {
+saves.post('/saves', function(req, res) {
   console.log("POST\t/aws/saves");
 
   const saves = req.body.saves;
@@ -32,7 +27,7 @@ router.post('/saves', function(req, res) {
   }
   res.send ("Successfully added " + totalAdded + " out of " + QSaves.length + " QSaves");
 });
-router.get('/saves/:trackID', function(req, res){
+saves.get('/saves/:trackID', function(req, res){
   console.log(`GET\t/dynamo/saves/${req.params.trackID}`);
 
   const params = {
@@ -57,6 +52,6 @@ router.get('/saves/:trackID', function(req, res){
 });
 
 console.log('POST\t/aws/saves');
-console.log('GET\t/aws/saves/:trackID');
+console.log('GET \t/aws/saves/:trackID');
 
 module.exports = router;
