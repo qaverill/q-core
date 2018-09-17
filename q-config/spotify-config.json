@@ -1,6 +1,0 @@
-{
-  "client_id": "5628fccaeec24c7498daa74229fc3ed5",
-  "client_secret": "37d037347fcd4410a5d12326a65b8995",
-  "redirect_uri": "http://localhost:8888/spotify/callback",
-  "scope": "user-library-read user-read-recently-played playlist-modify-public playlist-modify-private"
-}
