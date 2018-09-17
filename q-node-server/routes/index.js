@@ -1,8 +1,8 @@
-const router = require('express').Router();
+const routes = require('express').Router();
 const aws = require('./aws');
 const spotify = require('./spotify');
 
-router.use(function(req, res, next) {
+routes.use(function(req, res, next) {
   const timestamp = new Date();
   console.log('%s-%s: %s %s %s',
     timestamp.toLocaleDateString(),
@@ -14,8 +14,8 @@ router.use(function(req, res, next) {
   next();
 });
 
-router.use('./aws', aws);
-router.use('./spotify', spotify);
+routes.use('./aws', aws);
+routes.use('./spotify', spotify);
 
 routes.get('/', (req, res) => {
   res.status(200).json({ message: 'hey man' });

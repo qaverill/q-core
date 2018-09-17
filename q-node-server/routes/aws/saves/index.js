@@ -1,8 +1,11 @@
-let saves = require('express').Router();
+const saves = require('express').Router();
+
+const AWS = require('aws-sdk');
+AWS.config.loadFromPath('./routes/aws/config.json');
+AWS.config.update({endpoint: "https://dynamodb.us-east-2.amazonaws.com"});
+const docClient = new AWS.DynamoDB.DocumentClient();
 
 saves.post('/saves', function(req, res) {
-  console.log("POST\t/aws/saves");
-
   const saves = req.body.saves;
   let totalAdded = 0;
   saves.forEach(save => {
@@ -28,8 +31,6 @@ saves.post('/saves', function(req, res) {
   res.send ("Successfully added " + totalAdded + " out of " + QSaves.length + " QSaves");
 });
 saves.get('/saves/:trackID', function(req, res){
-  console.log(`GET\t/dynamo/saves/${req.params.trackID}`);
-
   const params = {
     TableName : 'QSaves',
     KeyConditionExpression: '#tid = :trackID',
@@ -54,4 +55,4 @@ saves.get('/saves/:trackID', function(req, res){
 console.log('POST\t/aws/saves');
 console.log('GET \t/aws/saves/:trackID');
 
-module.exports = router;
+module.exports = saves;

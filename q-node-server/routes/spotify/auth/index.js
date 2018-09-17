@@ -1,13 +1,15 @@
-let request = require('request');
-let querystring = require('querystring');
-let cookieParser = require('cookie-parser');
+const auth = require('express').Router();
+const express = require('express');
+const request = require('request');
+const querystring = require('querystring');
+const cookieParser = require('cookie-parser');
 
-console.log('GET\t/spotify/login');
-console.log('GET\t/spotify/callback');
-console.log('GET\t/spotify/refresh_token');
-console.log('GET\t/spotify/tokens');
+const stateKey = 'spotify_auth_state';
+const spotifyConfig = require('../config');
 
-let generateRandomString = function(length) {
+let spotifyAuthTokens;
+
+const generateRandomString = function(length) {
   let text = '';
   let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -17,9 +19,9 @@ let generateRandomString = function(length) {
   return text;
 };
 
-router.use(express.static(__dirname + '/public')).use(cookieParser());
+auth.use(express.static(__dirname + '/public')).use(cookieParser());
 
-router.get('/login', function(req, res) {
+auth.get('/login', function(req, res) {
   let state = generateRandomString(16);
   res.cookie(stateKey, state);
 
@@ -32,7 +34,8 @@ router.get('/login', function(req, res) {
       state: state
     }));
 });
-router.get('/callback', function(req, res) {
+
+auth.get('/callback', function(req, res) {
   let code = req.query.code || null;
   let state = req.query.state || null;
   let storedState = req.cookies ? req.cookies[stateKey] : null;
@@ -59,7 +62,7 @@ router.get('/callback', function(req, res) {
 
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
-        global.spotifyAuth = body;
+        spotifyAuthTokens = body;
 
         let access_token = body.access_token;
         let refresh_token = body.refresh_token;
@@ -79,7 +82,8 @@ router.get('/callback', function(req, res) {
     });
   }
 });
-router.get('/refresh_token', function(req, res) {
+
+auth.get('/refresh_token', function(req, res) {
   // requesting access token from refresh token
   let refresh_token = req.query.refresh_token;
   let authOptions = {
@@ -101,8 +105,13 @@ router.get('/refresh_token', function(req, res) {
     }
   });
 });
-router.get('/tokens', function(req, res) {
-  res.send(global.spotifyAuth);
+auth.get('/tokens', function(req, res) {
+  res.send(spotifyAuthTokens);
 });
 
-module.exports = router;
+console.log('GET\t/spotify/auth/login');
+console.log('GET\t/spotify/auth/callback');
+console.log('GET\t/spotify/auth/refresh_token');
+console.log('GET\t/spotify/auth/tokens');
+
+module.exports = auth;

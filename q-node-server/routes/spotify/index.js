@@ -3,4 +3,4 @@ const auth = require('./auth');
 
 spotify.get('/auth', auth);
 
-module.exports = aws;
+module.exports = spotify;

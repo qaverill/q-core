@@ -1,8 +1,11 @@
-let listens = require('express').Router();
+const listens = require('express').Router();
+
+const AWS = require('aws-sdk');
+AWS.config.loadFromPath('./routes/aws/config.json');
+AWS.config.update({endpoint: "https://dynamodb.us-east-2.amazonaws.com"});
+const docClient = new AWS.DynamoDB.DocumentClient();
 
 listens.post('/listens', function(req, res) {
-  console.log('POST\t/aws/listens');
-
   const listens = req.body.listens;
   listens.forEach(listen => {
     let qListen = {
@@ -22,8 +25,6 @@ listens.post('/listens', function(req, res) {
   res.end()
 });
 listens.get('/listens/:timestamp', function(req, res){
-  console.log(`GET\t/dynamo/listens/${parseInt(req.params.timestamp)}`);
-
   const params = {
     TableName : 'QListens',
     KeyConditionExpression: '#tstmp = :timestamp',
@@ -48,4 +49,4 @@ listens.get('/listens/:timestamp', function(req, res){
 console.log('POST\t/aws/listens');
 console.log('GET \t/aws/listens/:timestamp');
 
-module.exports = router;
+module.exports = listens;
