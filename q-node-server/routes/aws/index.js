@@ -2,7 +2,7 @@ const aws = require('express').Router();
 const listens = require('./listens');
 const saves = require('./saves');
 
-aws.get('/listens', listens);
-aws.get('/saves', saves);
+aws.use('/listens', listens);
+aws.use('/saves', saves);
 
 module.exports = aws;

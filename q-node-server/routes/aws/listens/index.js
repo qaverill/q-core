@@ -5,7 +5,7 @@ AWS.config.loadFromPath('./routes/aws/config.json');
 AWS.config.update({endpoint: "https://dynamodb.us-east-2.amazonaws.com"});
 const docClient = new AWS.DynamoDB.DocumentClient();
 
-listens.post('/listens', function(req, res) {
+listens.post('/', function(req, res) {
   const listens = req.body.listens;
   listens.forEach(listen => {
     let qListen = {
@@ -24,7 +24,7 @@ listens.post('/listens', function(req, res) {
 
   res.end()
 });
-listens.get('/listens/:timestamp', function(req, res){
+listens.get('/:timestamp', function(req, res){
   const params = {
     TableName : 'QListens',
     KeyConditionExpression: '#tstmp = :timestamp',

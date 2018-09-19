@@ -14,8 +14,8 @@ routes.use(function(req, res, next) {
   next();
 });
 
-routes.use('./aws', aws);
-routes.use('./spotify', spotify);
+routes.use('/aws', aws);
+routes.use('/spotify', spotify);
 
 routes.get('/', (req, res) => {
   res.status(200).json({ message: 'hey man' });

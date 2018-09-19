@@ -1,13 +1,11 @@
-const auth = require('express').Router();
 const express = require('express');
+const auth = express.Router();
 const request = require('request');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 
 const stateKey = 'spotify_auth_state';
 const spotifyConfig = require('../config');
-
-let spotifyAuthTokens;
 
 const generateRandomString = function(length) {
   let text = '';
@@ -62,7 +60,7 @@ auth.get('/callback', function(req, res) {
 
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
-        spotifyAuthTokens = body;
+        global.spotifyAuthTokens = body;
 
         let access_token = body.access_token;
         let refresh_token = body.refresh_token;
@@ -106,7 +104,7 @@ auth.get('/refresh_token', function(req, res) {
   });
 });
 auth.get('/tokens', function(req, res) {
-  res.send(spotifyAuthTokens);
+  res.send(global.spotifyAuthTokens);
 });
 
 console.log('GET\t/spotify/auth/login');
