@@ -44,8 +44,35 @@ listens.get('/:timestamp', function(req, res){
     }
   });
 });
+listens.get('/', function(req, res){
+  const params = {
+    TableName : 'QListens'
+  };
+
+  let allListens = [];
+  docClient.scan(params, onScan);
+
+  function onScan(err, data) {
+    if (err) {
+      console.error("Unable to scan QListens. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+      data.Items.forEach(listen => {
+        allListens.push(listen)
+      });
+
+      if (data.LastEvaluatedKey != null) {
+        params.ExclusiveStartKey = data.LastEvaluatedKey;
+        docClient.scan(params, onScan);
+      } else {
+        console.log(allListens.length);
+        res.send(allListens)
+      }
+    }
+  }
+});
 
 console.log('POST\t/aws/listens');
 console.log('GET \t/aws/listens/:timestamp');
+console.log('GET \t/aws/listens');
 
 module.exports = listens;
