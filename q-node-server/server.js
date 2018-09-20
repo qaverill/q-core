@@ -1,15 +1,14 @@
 const server = require('express')();
 const routes = require('./routes');
-const PORT = 8888;
+const bodyParser = require('body-parser');
+require('dotenv').load();
 
 server.use(require('cors')());
-
-const bodyParser = require('body-parser');
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 
 server.use('/', routes);
 
-server.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}\n`)
+server.listen(process.env.PORT, () => {
+  console.log(`Server listening on port ${process.env.PORT}\n`)
 });
