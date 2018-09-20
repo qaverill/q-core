@@ -1,8 +1,7 @@
 const saves = require('express').Router();
 
 const AWS = require('aws-sdk');
-AWS.config.loadFromPath('./routes/aws/config.json');
-AWS.config.update({endpoint: "https://dynamodb.us-east-2.amazonaws.com"});
+AWS.config.update({region: "us-east-2"});
 const docClient = new AWS.DynamoDB.DocumentClient();
 
 saves.post('/saves', function(req, res) {
