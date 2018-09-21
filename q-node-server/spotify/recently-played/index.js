@@ -1,7 +1,7 @@
-const recentlyPlayed = require('express').Router();
+const routes = require('express').Router();
 const request = require('request');
 
-recentlyPlayed.get('/', function(req, res) {
+routes.get('/', function(req, res) {
   const requestOptions = {
     url: 'https://api.spotify.com/v1/me/player/recently-played?limit=50',
     headers: {
@@ -19,4 +19,4 @@ recentlyPlayed.get('/', function(req, res) {
 
 console.log('GET \t/spotify/recently-played');
 
-module.exports = recentlyPlayed;
+module.exports = routes;

@@ -20,11 +20,6 @@ dynamo_db = boto3.resource(
 ) 
 
 pg_db = psycopg2.connect(
-	database='spotify_q_db', 
-	user='q', 
-	password='d55rd%Rdsa33wa#W', 
-	host='spotify-q.cnedh5avhjry.us-east-2.rds.amazonaws.com', 
-	port='5432'
 )
 pg_cursor = pg_db.cursor()
 

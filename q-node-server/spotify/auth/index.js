@@ -1,5 +1,5 @@
 const express = require('express');
-const auth = express.Router();
+const routes = express.Router();
 const request = require('request');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
@@ -16,9 +16,9 @@ const generateRandomString = function(length) {
   return text;
 };
 
-auth.use(express.static(__dirname + '/public')).use(cookieParser());
+routes.use(express.static(__dirname + '/public')).use(cookieParser());
 
-auth.get('/login', function(req, res) {
+routes.get('/login', function(req, res) {
   let state = generateRandomString(16);
   res.cookie(stateKey, state);
 
@@ -32,7 +32,7 @@ auth.get('/login', function(req, res) {
     }));
 });
 
-auth.get('/callback', function(req, res) {
+routes.get('/callback', function(req, res) {
   let code = req.query.code || null;
   let state = req.query.state || null;
   let storedState = req.cookies ? req.cookies[stateKey] : null;
@@ -80,7 +80,7 @@ auth.get('/callback', function(req, res) {
   }
 });
 
-auth.get('/refresh_token', function(req, res) {
+routes.get('/refresh_token', function(req, res) {
   // requesting access token from refresh token
   let refresh_token = req.query.refresh_token;
   let authOptions = {
@@ -102,13 +102,14 @@ auth.get('/refresh_token', function(req, res) {
     }
   });
 });
-auth.get('/tokens', function(req, res) {
+
+routes.get('/tokens', function(req, res) {
   res.send(global.spotifyAuthTokens);
 });
 
-console.log('GET\t/spotify/auth/login');
-console.log('GET\t/spotify/auth/callback');
-console.log('GET\t/spotify/auth/refresh_token');
-console.log('GET\t/spotify/auth/tokens');
+console.log('GET \t/spotify/auth/login');
+console.log('GET \t/spotify/auth/callback');
+console.log('GET \t/spotify/auth/refresh_token');
+console.log('GET \t/spotify/auth/tokens');
 
-module.exports = auth;
+module.exports = routes;
