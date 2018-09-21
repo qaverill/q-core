@@ -1,8 +1,6 @@
 const routes = require('express').Router();
-const auth = require('./auth');
-const recentlyPlayed = require('./recently-played');
 
-routes.use('/auth', auth);
-routes.use('/recently-played', recentlyPlayed);
+routes.use('/auth', require('./auth'));
+routes.use('/recently-played', require('./recently-played'));
 
 module.exports = routes;

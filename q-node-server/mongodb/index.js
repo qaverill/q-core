@@ -1,6 +1,5 @@
 const routes = require('express').Router();
-const listens = require('./listens');
 
-routes.use('/listens', listens);
+routes.use('/listens', require('./listens'));
 
 module.exports = routes;

@@ -1,11 +1,7 @@
 const server = require('express')();
 const bodyParser = require('body-parser');
-const dotenv = require('dotenv');
-const aws = require('./aws');
-const spotify = require('./spotify');
-const mongo = require('./mongo');
 
-dotenv.load();
+require('dotenv').load();
 
 server.use(require('cors')());
 server.use(bodyParser.json());
@@ -18,14 +14,14 @@ server.use(function(req, res, next) {
     timestamp.toLocaleTimeString(),
     req.method,
     req.originalUrl,
-    req.method === "GET" ? JSON.stringify(req.query) : JSON.stringify(req.params)
+    req.method === "GET" ? JSON.stringify(req.query) : JSON.stringify(req.body)
   );
   next();
 });
 
-server.use('/aws', aws);
-server.use('/spotify', spotify);
-server.use('/mongo', mongo);
+server.use('/aws', require('./aws'));
+server.use('/spotify', require('./spotify'));
+server.use('/mongodb', require('./mongodb'));
 
 server.get('/', (req, res) => {
   res.status(200).json({ message: 'hey man' });

@@ -23,7 +23,7 @@ routes.post('/', (request, response) => {
     }
   }
 
-  // Insert listensToInsert to mongo if there are any
+  // Insert listensToInsert to mongodb if there are any
   if (listensToInsert.length > 0){
     MongoClient.connect(process.env.MONGO_URI, {useNewUrlParser: true}, (err, db) => {
       if (err) throw err;
@@ -33,9 +33,11 @@ routes.post('/', (request, response) => {
         db.close();
       });
     });
+  } else {
+    response.status(400).send()
   }
 });
 
-console.log('POST \t/mongo/listens');
+console.log('POST \t/mongodb/listens');
 
 module.exports = routes;
