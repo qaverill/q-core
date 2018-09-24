@@ -3,16 +3,13 @@ import axios from 'axios'
 import 'react-notifications/lib/notifications.css'
 import { NotificationManager } from 'react-notifications'
 
-let serverUrl = require('../../../../globals').server.url;
-
 class SpotifyHistory extends Component {
   constructor(props){
     super(props);
     this.state = {
-      unsavedListens: [],
-      listensChecked: 0,
+      unsavedListens: []
     };
-    this.writeListensToDB = this.writeListensToDB.bind(this);
+    this.writeListensToMongo = this.writeListensToMongo.bind(this);
   }
   render() {
     if (this.state.unsavedListens.length !== 0){
@@ -20,9 +17,10 @@ class SpotifyHistory extends Component {
         <div className="collector dark">
           <button 
             className="collector purple" 
-            onClick={this.writeListensToDB} 
-            style={{width: (this.state.unsavedListens.length * 2) - 1 + "%" }} >
-            Unsaved Listens: {this.state.unsavedListens.length}/{this.state.listensChecked}
+            onClick={this.writeListensToMongo}
+            style={{width: (this.state.unsavedListens.length * 2) - 1 + "%" }}
+          >
+            Unsaved Listens: {this.state.unsavedListens.length}/50
           </button>
         </div>
       );
@@ -30,55 +28,44 @@ class SpotifyHistory extends Component {
   }
 
   componentWillMount(){
+    //TODO: Make this applicable to any historical dataQ
     const _this = this;
-    axios.get(`${serverUrl}/spotify/recently-played`)
-      .then(function(res) {
-        _this.getUnsavedListens(_this.spotifyHistoryToListens(res.data.items));
+    axios.get('/spotify/recently-played')
+      .then(res => {
+        const listens = this.parseSpotifyRecentlyPlayedToListens(res.data.items);
+        axios.get('/mongodb/listens', {params: {start: Math.min(Object.keys(listens))}})
+          .then(res => {
+            const alreadySavedTimestamps = res.data.map(listen => listen.timestamp);
+            _this.setState({
+              unsavedListens: listens.filter(listen => {
+                !alreadySavedTimestamps.includes(listen.timestamp)
+              })
+            });
+          });
       });
   }
 
-  spotifyHistoryToListens(data){
-    let listens = [];
-    data.forEach(history_item => {
-      let artistIDs = [];
-      for (let a = 0; a < history_item.track.artists.length; a++){
-        artistIDs.push(history_item.track.artists[a].id);
+  parseSpotifyRecentlyPlayedToListens(recentlyPlayed) {
+    return recentlyPlayed.map(play => {
+      return {
+        timestamp: parseInt(new Date(play.played_at).getTime()/1000, 10),
+        trackID: play.track.id,
+        artistIDs: play.track.artists.map(artist => artist.id),
+        albumID: play.track.album.id,
+        duration: play.track.duration_ms,
+        popularity: play.track.popularity
       }
-      listens.push({
-        timestamp: parseInt(new Date(history_item.played_at).getTime()/1000, 10),
-        trackID: history_item.track.id,
-        artistIDs: JSON.stringify(artistIDs),
-        albumID: history_item.track.album.id,
-        duration: history_item.track.duration_ms,
-        popularity: history_item.track.popularity
-
-      });
-    });
-    return listens;
+    })
   }
 
-  getUnsavedListens(listens){
+  writeListensToMongo(){
     const _this = this;
-    listens.forEach(listen => {
-      axios.get(`http://localhost:8888/aws/listens/${listen.timestamp}`)
-        .then(function(res){
-          if (res.data === ""){
-            _this.state.unsavedListens.push(listen);
-          }
-          _this.setState({listensChecked: _this.state.listensChecked + 1});
-        })
-    });
-  }
-
-  writeListensToDB(){
-    const _this = this;
-    return axios.post('http://localhost:8888/aws/listens/', {
-      listens: _this.state.unsavedListens
-    }).then(function(){
+    axios.post('/mongodb/listens', _this.state.unsavedListens)
+      .then(() => {
         _this.setState({unsavedListens: []});
         _this.componentWillMount();
         NotificationManager.success('Synced History');
-      });
+      })
   }
 }
 

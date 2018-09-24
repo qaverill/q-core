@@ -19,7 +19,7 @@ print("Total listens:", len(listens))
 
 listensToAdd = []
 for i in range(len(listens)):
-    if len(listensToAdd) == 500 or i == len(listens) - 1:
+    if len(listensToAdd) == 500 or i == len(listens):
         response = requests.post('http://localhost:8888/mongodb/listens', json=listensToAdd)
         print(response.status_code, response.reason)
         listensToAdd = []
