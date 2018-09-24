@@ -6,7 +6,7 @@ module.exports = (req, res, next) => {
       case "POST":
         return (
           Array.isArray(req.body)
-            ? {"numberOfItems": req.body.length}
+            ? JSON.stringify({"numberOfItems": req.body.length})
             : JSON.stringify(req.body)
         );
       default:
