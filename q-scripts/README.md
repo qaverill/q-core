@@ -1,2 +1,2 @@
 # q-scripts
-Scripts for Q
+Does stuff for Q
