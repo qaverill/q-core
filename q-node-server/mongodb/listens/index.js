@@ -38,6 +38,40 @@ routes.post('/', (request, response) => {
   }
 });
 
+routes.get('/', (request, response) => {
+  let query = {};
+  if (request.query.start != null || request.query.end != null){
+    query._id = {};
+    if (request.query.start != null){
+      query._id.$gte = parseInt(request.query.start, 10)
+    }
+    if (request.query.end != null){
+      query._id.$lte = parseInt(request.query.end, 10)
+    }
+  }
+  if (request.query.trackID != null){
+    query.track = request.query.trackID
+  }
+  if (request.query.artistID != null){
+    query.artists = request.query.artistID
+  }
+  if (request.query.albumID != null){
+    query.album = request.query.albumID
+  }
+
+  console.log(query);
+  MongoClient.connect(process.env.MONGO_URI, {useNewUrlParser: true}, (err, db) => {
+    if (err) throw err;
+    const dbo = db.db('q-mongodb');
+    dbo.collection('listens').find(query).toArray((err, res) => {
+      if (err) throw err;
+      response.status(200).json(res);
+      db.close();
+    });
+  });
+});
+
 console.log('POST \t/mongodb/listens');
+console.log('GET \t/mongodb/listens');
 
 module.exports = routes;

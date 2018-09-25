@@ -12,6 +12,7 @@ class SpotifyHistory extends Component {
     this.writeListensToMongo = this.writeListensToMongo.bind(this);
   }
   render() {
+    console.log(this.state.unsavedListens)
     if (this.state.unsavedListens.length !== 0){
       return (
         <div className="collector dark">
@@ -28,17 +29,16 @@ class SpotifyHistory extends Component {
   }
 
   componentWillMount(){
-    //TODO: Make this applicable to any historical dataQ
     const _this = this;
     axios.get('/spotify/recently-played')
       .then(res => {
         const listens = this.parseSpotifyRecentlyPlayedToListens(res.data.items);
-        axios.get('/mongodb/listens', {params: {start: Math.min(Object.keys(listens))}})
+        axios.get('/mongodb/listens', {params: {start: listens[49].timestamp}})
           .then(res => {
             const alreadySavedTimestamps = res.data.map(listen => listen.timestamp);
             _this.setState({
               unsavedListens: listens.filter(listen => {
-                !alreadySavedTimestamps.includes(listen.timestamp)
+                return !alreadySavedTimestamps.includes(listen.timestamp)
               })
             });
           });
@@ -49,9 +49,9 @@ class SpotifyHistory extends Component {
     return recentlyPlayed.map(play => {
       return {
         timestamp: parseInt(new Date(play.played_at).getTime()/1000, 10),
-        trackID: play.track.id,
-        artistIDs: play.track.artists.map(artist => artist.id),
-        albumID: play.track.album.id,
+        track: play.track.id,
+        artists: play.track.artists.map(artist => artist.id),
+        album: play.track.album.id,
         duration: play.track.duration_ms,
         popularity: play.track.popularity
       }
