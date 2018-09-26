@@ -11,7 +11,7 @@ class ApiAuth extends React.Component {
     }
   }
 
-  componentDidMount(){
+  componentWillMount(){
     const pathParams = window.location.hash;
     const accessToken = pathParams.substring(pathParams.indexOf('#access_token=') + 1, pathParams.indexOf('&'));
     sessionStorage.setItem('spotify_access_token', accessToken);
