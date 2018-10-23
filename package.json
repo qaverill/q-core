@@ -17,6 +17,7 @@
     "react-sidebar": "^3.0.2"
   },
   "scripts": {
+    "prod": "concurrently --kill-others-on-fail \"cd q-node-server && nodem server\" \"cd q-react-app && react-scripts start\"",
     "dev": "concurrently --kill-others-on-fail \"cd q-node-server && nodemon server\" \"cd q-react-app && react-scripts start\""
   }
 }
