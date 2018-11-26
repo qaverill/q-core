@@ -1,20 +1,21 @@
-let express = require('express');
-let cors = require('cors');
-let bodyParser = require('body-parser');
+const server = require('express')();
+const bodyParser = require('body-parser');
 
-let QSaves = require('./QSaves');
-let QListens = require('./QListens');
-let SpotifyAuth = require('./SpotifyAuth');
+require('dotenv').load();
 
-let app = express();
+server.use(require('cors')());
+server.use(require('./logRequests'));
+server.use(bodyParser.json());
+server.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+server.use('/aws', require('./aws'));
+server.use('/spotify', require('./spotify'));
+server.use('/mongodb', require('./mongodb'));
 
-app.use('/spotifyAuth', SpotifyAuth);
-app.use('/QListens', QListens);
-app.use('/QSaves', QSaves);
+server.get('/', (req, res) => {
+  res.status(200).json({ message: 'hey man' });
+});
 
-console.log('Listening on 8888');
-app.listen(8888);
+server.listen(process.env.PORT, () => {
+  console.log(`Server listening on port ${process.env.PORT}\n`)
+});

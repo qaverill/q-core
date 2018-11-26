@@ -3,9 +3,21 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "aws-sdk": "^2.318.0",
+    "axios": "^0.18.0",
+    "concurrently": "^4.0.1",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
+    "mongodb": "^3.1.6",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "react-notifications": "^1.4.3",
+    "react-scripts": "^1.1.5",
+    "react-sidebar": "^3.0.2"
   },
   "scripts": {
-    "dev": "cd q-node-server && yarn dev",
-    "install": "cd q-node-server && npm install && cd ../q-react-app && npm install"
+    "prod": "concurrently --kill-others-on-fail \"cd q-node-server && node server\" \"cd q-react-app && react-scripts start\"",
+    "dev": "concurrently --kill-others-on-fail \"cd q-node-server && nodemon server\" \"cd q-react-app && react-scripts start\""
   }
 }
