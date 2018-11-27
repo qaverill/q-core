@@ -8,7 +8,7 @@ server.use(require('./logRequests'));
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 
-//server.use('/aws', require('./aws'));
+server.use('/aws', require('./aws'));
 server.use('/spotify', require('./spotify'));
 server.use('/mongodb', require('./mongodb'));
 
