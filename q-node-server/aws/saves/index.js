@@ -29,6 +29,7 @@ saves.post('/saves', function(req, res) {
   }
   res.send ("Successfully added " + totalAdded + " out of " + QSaves.length + " QSaves");
 });
+
 saves.get('/saves/:trackID', function(req, res){
   const params = {
     TableName : 'QSaves',
@@ -51,7 +52,34 @@ saves.get('/saves/:trackID', function(req, res){
   });
 });
 
+saves.get('/', function(req, res){
+  const params = {
+    TableName : 'QSaves'
+  };
+
+  let allSaves = [];
+  docClient.scan(params, onScan);
+
+  function onScan(err, data) {
+    if (err) {
+      console.error("Unable to scan QSaves. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+      data.Items.forEach(listen => {
+        allSaves.push(listen)
+      });
+
+      if (data.LastEvaluatedKey != null) {
+        params.ExclusiveStartKey = data.LastEvaluatedKey;
+        docClient.scan(params, onScan);
+      } else {
+        res.send(allSaves)
+      }
+    }
+  }
+});
+
 console.log('POST\t/aws/saves');
 console.log('GET \t/aws/saves/:trackID');
+console.log('GET \t/aws/saves');
 
 module.exports = saves;
