@@ -1,6 +1,6 @@
 import React from 'react'
 import SpotifyQ from '../SpotifyQ'
-import DataQ from '../DataQ'
+import DataQ from '../DataQ/index'
 import './menu.css'
 
 class Menu extends React.Component {

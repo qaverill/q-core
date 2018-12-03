@@ -2,7 +2,6 @@ import styled from 'styled-components'
 
 export const Button = styled.button`
   border: none;
-  border-radius: 50px;
   color: white;
   padding: 15px 32px;
   text-align: center;
@@ -20,7 +19,7 @@ export const Text = styled.p`
   cursor: default;
 `;
 
-export const TextInput = styped.input`
+export const TextInput = styled.input`
   font-size: 20px;
   padding: 5px;
   border: 2px solid black;
@@ -35,4 +34,18 @@ export const TextInput = styped.input`
   :focus {
     outline: none;
   }
+`;
+
+export const PageBorder = styled.div`
+  margin: 10px;
+  height: calc(100% - 20px);
+  width: 100%;
+  background-position: center;
+`;
+
+export const Page = styled.div`
+  height: calc(100% - 10px);
+  width: calc(100% - 10px);
+  margin: 5px;
+  background-color: #222222;
 `;

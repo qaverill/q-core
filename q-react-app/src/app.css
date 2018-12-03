@@ -1,64 +1,7 @@
-#root {
-  height: 100%;
-}
-
-#app {
-  height: 100%;
-  overflow: hidden;
-
-  display: flex;
-  flex-direction: column;
-}
-
-#app-header {
-  font-size: 20px;
-  font-weight: bold;
-  background-color: black;
-  color: white;
-  height: 50px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: nowrap;
-}
-
-#menu-icon {
-  float: left;
-  height: 30px;
-  width: 30px;
-  cursor: pointer;
-  margin-right: auto;
-  margin-left: 10px;
-}
 
 #api-status {
   cursor: pointer;
   float: right;
   margin-left: auto;
   margin-right: 10px;
-}
-
-#app-body {
-  height: calc(100% - 50px);
-  background-color: #222222;
-
-  display: flex;
-  justify-content: center;
-}
-
-.page-border {
-  margin: 10px;
-  height: calc(100% - 20px);
-  width: 100%;
-  background-position: center;
-  border-radius: 15px;
-}
-
-.page {
-  height: calc(100% - 10px);
-  width: calc(100% - 10px);
-  margin: 5px;
-  background-color: #222222;
-  border-radius: 15px;
 }
