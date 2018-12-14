@@ -5,11 +5,12 @@
   "dependencies": {
     "aws-sdk": "^2.318.0",
     "axios": "^0.18.0",
-    "concurrently": "^4.0.1",
+    "concurrently": "^4.1.0",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",
     "mongodb": "^3.1.6",
+    "nodemon": "^1.18.8",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-notifications": "^1.4.3",
