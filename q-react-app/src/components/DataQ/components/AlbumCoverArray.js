@@ -29,7 +29,7 @@ class AlbumCoverArray extends Component {
 
   removeAlbum(item){
     this.props.parent.setState({
-      unsavedListens: this.props.parent.state.unsavedListens.filter(listen => listen !== item)
+      unsaved: this.props.parent.state.unsaved.filter(listen => listen !== item)
     })
   }
 }

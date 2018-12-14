@@ -1,5 +1,5 @@
 import React from 'react'
-import SpotifyQ from '../SpotifyQ'
+import SpotifyQ from '../SpotifyQ/SpotifyQ'
 import DataQ from '../DataQ/index'
 import './menu.css'
 

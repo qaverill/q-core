@@ -1,18 +1,18 @@
+const isListOfStrings = (list) => {
+  let result = false;
+  if (Array.isArray(list)){
+    result = true;
+    list.forEach(item => {
+      if (typeof item !== "string"){
+        result = false;
+      }
+    });
+  }
+  return result
+};
+
 module.exports = {
   listen: (listen) => {
-    const isListOfStrings = (list) => {
-      let result = false;
-      if (Array.isArray(list)){
-        result = true;
-        list.forEach(item => {
-          if (typeof item !== "string"){
-            result = false;
-          }
-        });
-      }
-      return result
-    };
-
     return (
       listen.timestamp != null && typeof listen.timestamp === "number" &&
       listen.track != null && typeof listen.track === "string" &&
@@ -23,19 +23,6 @@ module.exports = {
     )
   },
   save: (save) => {
-    const isListOfStrings = (list) => {
-      let result = false;
-      if (Array.isArray(list)){
-        result = true;
-        list.forEach(item => {
-          if (typeof item !== "string"){
-            result = false;
-          }
-        });
-      }
-      return result
-    };
-
     return (
       save.timestamp != null && typeof save.timestamp === "number" &&
       save.track != null && typeof save.track === "string" &&

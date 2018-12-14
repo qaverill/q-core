@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Explorer from './Explorer/Explorer';
+import Explorer from '../Explorer/Explorer';
 import { NotificationContainer } from 'react-notifications';
 
 class SpotifyQ extends Component {
