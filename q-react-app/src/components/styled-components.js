@@ -13,6 +13,10 @@ export const Button = styled.button`
   }
 `;
 
+export const Select = styled.select`
+
+`;
+
 export const Text = styled.p`
   font-size: 16px;
   margin: 0;

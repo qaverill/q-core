@@ -1,10 +1,10 @@
 import React from 'react'
 import SpotifyCollector from './components/SpotifyCollector'
-import { PageBorder, Page, Button } from "../styled-components";
+import { PageBorder, Page } from "../styled-components";
+import Select from '../../components/Select'
 import styled from 'styled-components'
 import theme from './theme.jpg'
-import ErrorPage from '../ErrorPage'
-import Select from 'react-select'
+import ErrorPage from "../ErrorPage";
 
 const DataQBorder = styled(PageBorder)`
   background-image: url(${theme});
@@ -24,17 +24,6 @@ const SpotifySavesCollector = {
   timeParam: "added_at"
 };
 
-const SelectOptions = [
-  { value: SpotifyListensCollector, label: 'Listens' },
-  { value: SpotifySavesCollector, label: 'Saves'}
-];
-
-const SelectContainer = styled.div`
-  width: 100px;
-  margin: auto;
-  padding: 10px 0;
-`;
-
 class DataQ extends React.Component {
   constructor(props){
     super(props);
@@ -47,30 +36,29 @@ class DataQ extends React.Component {
     if (sessionStorage.getItem('spotify_access_token').length === 0) {
       return <ErrorPage />
     }
-
     return (
       <DataQBorder>
         <Page>
-          <SelectContainer>
-            <Select
-              options={SelectOptions}
-              onChange={(selectedOption) => {this.setState({currentCollector: selectedOption.value})}}
-              value={this.getSelectedOption()} />
-          </SelectContainer>
+          <Select onChange={(item) => this.getSelectedOption(item)} id="option" width="200px;"/>
           <SpotifyCollector collector={this.state.currentCollector}/>
         </Page>
       </DataQBorder>
     )
   }
 
-  getSelectedOption(){
-    let selectedOption = null;
-    SelectOptions.forEach(option => {
-      if (option.value === this.state.currentCollector){
-        selectedOption = option
-      }
-    });
-    return selectedOption
+  getSelectedOption(optionSelect){
+    console.log('ahhh')
+    switch (optionSelect) {
+      case "Listens":
+        this.setState({ currentCollector: SpotifyListensCollector });
+        return;
+      case "Saves":
+        this.setState({ currentCollector: SpotifySavesCollector });
+        return;
+      default:
+        this.setState({ currentCollector: null });
+        return;
+    }
   }
 }
 

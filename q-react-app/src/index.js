@@ -55,8 +55,6 @@ class App extends React.Component {
       sidebarOpen: false,
       currentPage: <DataQ title="DataQ"/>
     };
-    this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
-    this.setCurrentPage = this.setCurrentPage.bind(this);
   }
 
   onSetSidebarOpen(open) {
@@ -71,12 +69,9 @@ class App extends React.Component {
   }
 
   render() {
+    const menu = <Menu setPage={() => this.setCurrentPage()} />;
     return (
-      <Sidebar
-        sidebar={<Menu setPage={this.setCurrentPage}/>}
-        open={this.state.sidebarOpen}
-        onSetOpen={this.onSetSidebarOpen}
-      >
+      <Sidebar sidebar={menu} open={this.state.sidebarOpen} onSetOpen={() => this.onSetSidebarOpen()}>
         <AppContainer>
           <NotificationContainer />
           <ReactTooltip />
