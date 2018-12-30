@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom'
 import Sidebar from 'react-sidebar'
 import Menu from './components/Menu/index'
 import ApiStatus from './components/ApiAuth/index'
-import DataQ from './components/DataQ/index';
-import ReactTooltip from 'react-tooltip'
+import DataQ from './pages/DataQ/index';
 import styled from 'styled-components';
 import { NotificationContainer } from 'react-notifications';
 
@@ -74,7 +73,6 @@ class App extends React.Component {
       <Sidebar sidebar={menu} open={this.state.sidebarOpen} onSetOpen={() => this.onSetSidebarOpen()}>
         <AppContainer>
           <NotificationContainer />
-          <ReactTooltip />
           <AppHeader>
             <MenuIcon onClick={() => this.onSetSidebarOpen(true)} />
             <h3>{this.state.currentPage.props.title}</h3>

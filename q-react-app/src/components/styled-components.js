@@ -2,8 +2,9 @@ import styled from 'styled-components'
 
 export const Button = styled.button`
   border: none;
-  color: black;
-  padding: 15px 32px;
+  color: white;
+  padding: 5px 10px;
+  margin: 10px 10px 0 10px;
   text-align: center;
   text-decoration: none;
   font-size: 16px;
@@ -11,16 +12,20 @@ export const Button = styled.button`
   :focus {
     outline: none;
   }
-`;
-
-export const Select = styled.select`
-
+  background-color: ${props => props.color == null ? "#016FB9" : props.color};
+  :hover {
+    opacity: 0.8;
+  }
 `;
 
 export const Text = styled.p`
   font-size: 16px;
   margin: 0;
   cursor: default;
+`;
+
+export const Header = styled.h1`
+  color: white;
 `;
 
 export const TextInput = styled.input`

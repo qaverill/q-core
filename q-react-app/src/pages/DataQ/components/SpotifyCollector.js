@@ -2,24 +2,25 @@ import React, {Component} from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
 import AlbumCoverArray from './AlbumCoverArray'
-import { Button } from "../../styled-components";
+import { Button } from "../../../components/styled-components";
 import { dark, purple } from "../../../colors";
 import 'react-notifications/lib/notifications.css'
 import { NotificationManager } from 'react-notifications'
+import { loadingSpinner } from "../../../components/components";
+import ReactTooltip from "react-tooltip";
 
 const SpotifyCollectorContainer = styled.div`
   width: 100%;
-  height: calc(100% - 68px);
+  height: calc(100% - 48px);
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   color: white;
   background-color: ${dark};
 `;
 
 const UnsavedContainer = styled.div`
-  height: 100%;
+  max-height: 100%;
   width: calc(100% - 10px);
   margin-top: 5px;
   display: flex;
@@ -29,10 +30,7 @@ const UnsavedContainer = styled.div`
 `;
 
 const SaveButton = styled(Button)`
-  padding: 5px 5px;
-  margin: 10px 10px;
   min-width: 180px;
-  background-color: ${purple};
   width: ${props => props.width};
 `;
 
@@ -41,24 +39,26 @@ class SpotifyCollector extends Component {
     super(props);
     this.state = {
       unsaved: [],
-      total: null,
+      loading: true
     };
-    this.writeToMongo = this.writeToMongo.bind(this);
   }
 
   render() {
     if (this.state.unsaved.length !== 0){
       return (
         <SpotifyCollectorContainer>
-          <SaveButton onClick={this.writeToMongo} width={(this.state.unsaved.length * 2) - 1 + "%" }>
-            Unsaved {this.props.collector.name}: {this.state.unsaved.length}/50
+          <SaveButton onClick={() => this.writeToMongo()} width={(this.state.unsaved.length * 2) - 1 + "%" } color={purple}>
+            Write {this.state.unsaved.length} {this.props.collector.name}
           </SaveButton>
           <UnsavedContainer>
+            <ReactTooltip />
             <AlbumCoverArray items={(this.state.unsaved)} parent={this}/>
           </UnsavedContainer>
         </SpotifyCollectorContainer>
       );
-    } else return null;
+    } else if (this.state.loading) {
+      return loadingSpinner(`Loading ${this.props.collector.name}...`);
+    } else return <h1>No unsaved {this.props.collector.name}</h1>
   }
 
   componentWillMount(){
@@ -67,7 +67,11 @@ class SpotifyCollector extends Component {
 
   componentDidUpdate(prevProps){
     if (prevProps !== this.props){
-      this.getSpotifyData()
+      this.getSpotifyData();
+      this.setState({
+        unsaved: [],
+        loading: true
+      })
     }
   }
 
@@ -75,7 +79,6 @@ class SpotifyCollector extends Component {
     const _this = this;
     axios.get(this.props.collector.spotifyPath)
       .then(res => {
-        const next = res.data.next;
         const items = res.data.items;
         axios.get(this.props.collector.mongodbPath, {params: {start: items[49].timestamp}})
           .then(res => {
@@ -84,38 +87,10 @@ class SpotifyCollector extends Component {
               unsaved: items.filter(item => {
                 return parseInt(new Date(item[_this.props.collector.timeParam]).getTime()/1000, 10) > youngestTimestamp
               }),
-            });
-            if (next != null){
-              _this.getNextSpotifyData(next, youngestTimestamp)
-            }
-          });
-      });
-  }
-
-  getNextSpotifyData(url, youngestTimestamp){
-    const _this = this;
-    axios.get(`/spotify?url=${url}`)
-      .then(res => {
-        const items = res.data.items;
-        if (items.length > 0){
-          // If the code reaches here, then it is guaranteed to be spotify/saved-tracks
-          let newUnsaved = _this.state.unsaved;
-          let allDone = false;
-          items.forEach(item => {
-            if (parseInt(new Date(item[_this.props.collector.timeParam]).getTime()/1000, 10) > youngestTimestamp){
-              newUnsaved.push(item)
-            } else {
-              allDone = true
-            }
-          });
-          _this.setState({
-            unsaved: newUnsaved
-          });
-          if (!allDone && res.data.next != null){
-            _this.getNextSpotifyData(res.data.next, youngestTimestamp)
-          }
-        }
-      });
+              loading: false
+            })
+          })
+      })
   }
 
   getYoungestTimestamp(items){

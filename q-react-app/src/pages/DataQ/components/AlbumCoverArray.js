@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
 
-const AlbumCover = styled.img`
+const AlbumCover = styled.div`
   margin: 5px;
   cursor: pointer;
-  width: 150px;
-  height: 150px;
+  width: calc(20% - 10px);
   :hover {
     opacity:0.5;
   }
@@ -19,11 +18,11 @@ class AlbumCoverArray extends Component {
   render() {
     return this.props.items.map(item => (
       <AlbumCover
-        src={item.track.album.images[0].url}
         key={item.played_at}
         onClick={() => this.removeAlbum(item)}
-        data-tip={item.track.name}
-      />
+        data-tip={item.track.name} >
+        <img src={item.track.album.images[0].url} height="100%" width="100%"/>
+      </AlbumCover>
     ))
   }
 

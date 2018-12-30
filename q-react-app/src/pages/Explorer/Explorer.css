@@ -100,7 +100,7 @@ button.search-result:hover{
 }
 
 input.search {
-  background-image: url('./Images/search-icon.png');
+  background-image: url('Images/search-icon.png');
   background-position: 6px 5px;
   background-repeat: no-repeat;
   width: 400px;

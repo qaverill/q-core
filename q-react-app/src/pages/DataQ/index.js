@@ -1,10 +1,10 @@
 import React from 'react'
 import SpotifyCollector from './components/SpotifyCollector'
-import { PageBorder, Page } from "../styled-components";
-import Select from '../../components/Select'
+import { PageBorder, Page } from "../../components/styled-components";
+import MatterSelector from '../../components/MatterSelector/index'
 import styled from 'styled-components'
 import theme from './theme.jpg'
-import ErrorPage from "../ErrorPage";
+import { errorPage } from "../../components/components";
 
 const DataQBorder = styled(PageBorder)`
   background-image: url(${theme});
@@ -28,37 +28,22 @@ class DataQ extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      currentCollector: SpotifyListensCollector
+      selectedMatter: SpotifyListensCollector
     }
   }
 
   render() {
     if (sessionStorage.getItem('spotify_access_token').length === 0) {
-      return <ErrorPage />
+      return errorPage("Not connected to the Spotify API")
     }
     return (
       <DataQBorder>
         <Page>
-          <Select onChange={(item) => this.getSelectedOption(item)} id="option" width="200px;"/>
-          <SpotifyCollector collector={this.state.currentCollector}/>
+          <MatterSelector matter={[SpotifyListensCollector, SpotifySavesCollector]} parent={this} />
+          <SpotifyCollector collector={this.state.selectedMatter}/>
         </Page>
       </DataQBorder>
     )
-  }
-
-  getSelectedOption(optionSelect){
-    console.log('ahhh')
-    switch (optionSelect) {
-      case "Listens":
-        this.setState({ currentCollector: SpotifyListensCollector });
-        return;
-      case "Saves":
-        this.setState({ currentCollector: SpotifySavesCollector });
-        return;
-      default:
-        this.setState({ currentCollector: null });
-        return;
-    }
   }
 }
 

@@ -1,10 +1,10 @@
 import React from 'react'
-import SpotifyQ from '../SpotifyQ/SpotifyQ'
-import DataQ from '../DataQ/index'
+import SpotifyQ from '../../pages/SpotifyQ/SpotifyQ'
+import DataQ from '../../pages/DataQ/index'
 import styled from 'styled-components';
 
-import spotifyQTheme from '../SpotifyQ/theme.jpg';
-import dataQTheme from '../DataQ/theme.jpg';
+import spotifyQTheme from '../../pages/SpotifyQ/theme.jpg';
+import dataQTheme from '../../pages/DataQ/theme.jpg';
 
 const theme = {
   SpotifyQ: spotifyQTheme,
