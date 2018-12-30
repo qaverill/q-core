@@ -1,13 +1,9 @@
 const routes = require('express').Router();
 const request = require('request');
 
-routes.use('/auth', require('./auth'));
-routes.use('/recently-played', require('./recently-played'));
-routes.use('/saved-tracks', require('./saved-tracks'));
-
 routes.get('/', function(req, res) {
   const requestOptions = {
-    url: `${req.query.url}&limit=50`,
+    url: 'https://api.spotify.com/v1/me/tracks?limit=50',
     headers: {
       Authorization: 'Bearer ' + global.spotifyAuthTokens['access_token']
     }
@@ -16,11 +12,11 @@ routes.get('/', function(req, res) {
     if (!error && response.statusCode === 200) {
       res.send(body)
     } else {
-      res.send({error: error})
+      res.send({error: 'Cannot connect to the Spotify API'})
     }
   });
 });
 
-console.log('GET \t/spotify/');
+console.log('GET \t/spotify/saved-tracks');
 
 module.exports = routes;

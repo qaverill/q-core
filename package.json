@@ -15,7 +15,10 @@
     "react-dom": "^16.5.2",
     "react-notifications": "^1.4.3",
     "react-scripts": "^1.1.5",
-    "react-sidebar": "^3.0.2"
+    "react-sidebar": "^3.0.2",
+    "react-spinners": "^0.4.8",
+    "react-tooltip": "^3.9.0",
+    "styled-components": "^4.1.2"
   },
   "scripts": {
     "prod": "concurrently --kill-others-on-fail \"cd q-node-server && node server\" \"cd q-react-app && react-scripts start\"",

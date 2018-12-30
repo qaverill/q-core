@@ -44,6 +44,7 @@ listens.get('/:timestamp', function(req, res){
     }
   });
 });
+
 listens.get('/', function(req, res){
   const params = {
     TableName : 'QListens'
