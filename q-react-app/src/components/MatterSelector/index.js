@@ -21,7 +21,6 @@ class MatterSelector extends React.Component {
             <Button onClick={() => this.props.parent.setState({selectedMatter: matter})}>
               {capitolFirstLetter(matter.name)}
             </Button>
-            {this.circle(this.props.parent.state.selectedMatter === matter)}
           </div>
         )}
       </MatterContainer>
