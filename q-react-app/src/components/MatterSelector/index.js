@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from "../styled-components";
+import {Button, Page} from "../styled-components";
 import { capitolFirstLetter } from "../../utils";
 import styled from 'styled-components'
 
@@ -12,6 +12,7 @@ const MatterContainer = styled.div`
 `;
 
 class MatterSelector extends React.Component {
+  // <MatterSelector matter={[SpotifyListensCollector, SpotifySavesCollector]} parent={this} />
   render() {
     return (
       <MatterContainer>

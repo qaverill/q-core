@@ -4,7 +4,7 @@ export const Button = styled.button`
   border: none;
   color: white;
   padding: 5px 10px;
-  margin: 10px 10px 0 10px;
+  margin: 2.5px;
   text-align: center;
   text-decoration: none;
   font-size: 16px;
@@ -12,7 +12,7 @@ export const Button = styled.button`
   :focus {
     outline: none;
   }
-  background-color: ${props => props.color == null ? "#016FB9" : props.color};
+  background-color: ${props => props.color == null ? "#4A483F" : props.color};
   :hover {
     opacity: 0.8;
   }
@@ -46,15 +46,34 @@ export const TextInput = styled.input`
 `;
 
 export const PageBorder = styled.div`
-  margin: 10px;
-  height: calc(100% - 20px);
-  width: 100%;
+  height: calc(100% - 10px);
+  width: calc(100% - 10px);
   background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const Page = styled.div`
-  height: calc(100% - 10px);
-  width: calc(100% - 10px);
-  margin: 5px;
+  height: calc(100% - 12.5px);
+  width: calc(100% - 12.5px);
   background-color: #222222;
+  padding: 2.5px;
+`;
+
+export const RightArrow = styled.img
+  .attrs({
+    src: require('./SVGs/arrow.svg')
+  })`
+  cursor: pointer;
+  height: ${props => props.size};
+  width: ${props => props.size};
+  margin: 2.5px;
+  :hover {
+    opacity: 0.8;
+  }
+`;
+
+export const LeftArrow = styled(RightArrow)`
+  transform: rotate(180deg);
 `;

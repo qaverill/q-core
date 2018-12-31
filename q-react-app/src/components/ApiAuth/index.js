@@ -1,13 +1,27 @@
 import React from 'react'
-import './apiAuth.css'
+import styled from 'styled-components'
 
-let serverUrl = require('../../globals').server.url;
+const SpotifyIcon = styled.img
+  .attrs({
+    src: require('./spotify-icon.png')
+  })`
+    height: 30px;
+    width: 30px;
+    ${props => props.active ? `` : `filter: grayscale(100%);`}
+`;
+
+const ApiAuthContainer = styled.div`
+  cursor: pointer;
+  float: right;
+  margin-left: auto;
+  margin-right: 10px;
+`;
 
 class ApiAuth extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      spotifyAuth: false
+      connectedToSpotify: false
     }
   }
 
@@ -15,20 +29,16 @@ class ApiAuth extends React.Component {
     const pathParams = window.location.hash;
     const accessToken = pathParams.substring(pathParams.indexOf('#access_token=') + 1, pathParams.indexOf('&'));
     sessionStorage.setItem('spotify_access_token', accessToken);
-    this.setState({spotifyAuth: accessToken.length > 0});
+    this.setState({connectedToSpotify: accessToken.length > 0});
   }
 
   render(){
     return(
-      <div id="api-status">
-        <a href={`${serverUrl}/spotify/auth/login`}>
-          <img
-            id="spotify-icon"
-            src={require('./spotify-icon.png')}
-            className={this.state.spotifyAuth ? null : "disconnected"}
-          />
+      <ApiAuthContainer>
+        <a href={`${require('../../globals').server.url}/spotify/auth/login`}>
+          <SpotifyIcon active={this.state.connectedToSpotify} />
         </a>
-      </div>
+      </ApiAuthContainer>
     )
   }
 }

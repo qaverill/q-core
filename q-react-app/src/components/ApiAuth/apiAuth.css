@@ -1,8 +1,0 @@
-#spotify-icon {
-    height: 30px;
-    width: 30px;
-}
-
-.disconnected {
-    filter: grayscale(100%);
-}

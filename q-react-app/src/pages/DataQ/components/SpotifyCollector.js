@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
 import AlbumCoverArray from './AlbumCoverArray'
-import { Button } from "../../../components/styled-components";
+import { Button, LeftArrow, RightArrow } from "../../../components/styled-components";
 import { dark, purple } from "../../../colors";
 import 'react-notifications/lib/notifications.css'
 import { NotificationManager } from 'react-notifications'
@@ -11,7 +11,7 @@ import ReactTooltip from "react-tooltip";
 
 const SpotifyCollectorContainer = styled.div`
   width: 100%;
-  height: calc(100% - 48px);
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,10 +19,17 @@ const SpotifyCollectorContainer = styled.div`
   background-color: ${dark};
 `;
 
+const Controls = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
+
 const UnsavedContainer = styled.div`
   max-height: 100%;
-  width: calc(100% - 10px);
-  margin-top: 5px;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   overflow: auto;
@@ -38,26 +45,32 @@ class SpotifyCollector extends Component {
   constructor(props){
     super(props);
     this.state = {
-      unsaved: [],
-      loading: true
+      unsaved: null
     };
   }
 
   render() {
-    if (this.state.unsaved.length !== 0){
+    if (this.state.unsaved === null) {
+      return loadingSpinner(`Loading ${this.props.collector.name}...`, this.props.collector.color);
+    } else if (this.state.unsaved.length !== 0){
       return (
         <SpotifyCollectorContainer>
-          <SaveButton onClick={() => this.writeToMongo()} width={(this.state.unsaved.length * 2) - 1 + "%" } color={purple}>
-            Write {this.state.unsaved.length} {this.props.collector.name}
-          </SaveButton>
+          <Controls>
+            <LeftArrow size="28px" onClick={() => this.props.parent.decreaseCollectorIndex()} />
+            <SaveButton
+              onClick={() => this.writeToMongo()}
+              width={`calc(${this.state.unsaved.length * 2}% - 56px)`}
+              color={this.props.collector.color}>
+              Write {this.state.unsaved.length} {this.props.collector.name}
+            </SaveButton>
+            <RightArrow size="28px" onClick={() => this.props.parent.increaseCollectorIndex()} />
+          </Controls>
           <UnsavedContainer>
             <ReactTooltip />
             <AlbumCoverArray items={(this.state.unsaved)} parent={this}/>
           </UnsavedContainer>
         </SpotifyCollectorContainer>
       );
-    } else if (this.state.loading) {
-      return loadingSpinner(`Loading ${this.props.collector.name}...`);
     } else return <h1>No unsaved {this.props.collector.name}</h1>
   }
 
@@ -69,8 +82,7 @@ class SpotifyCollector extends Component {
     if (prevProps !== this.props){
       this.getSpotifyData();
       this.setState({
-        unsaved: [],
-        loading: true
+        unsaved: null
       })
     }
   }
@@ -86,8 +98,7 @@ class SpotifyCollector extends Component {
             _this.setState({
               unsaved: items.filter(item => {
                 return parseInt(new Date(item[_this.props.collector.timeParam]).getTime()/1000, 10) > youngestTimestamp
-              }),
-              loading: false
+              })
             })
           })
       })

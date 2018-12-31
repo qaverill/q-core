@@ -1,16 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Sidebar from 'react-sidebar'
-import Menu from './components/Menu/index'
 import ApiStatus from './components/ApiAuth/index'
 import DataQ from './pages/DataQ/index';
 import styled from 'styled-components';
 import { NotificationContainer } from 'react-notifications';
 
-import './app.css'
-
 const AppContainer = styled.div`
   height: 100%;
+  width: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -28,61 +25,39 @@ const AppHeader = styled.div`
   flex-wrap: nowrap;
 `;
 
-const MenuIcon = styled.img
-  .attrs({
-    src: require('./components/Menu/menu-icon.png')
-  })`
-  float: left;
-  height: 30px;
-  width: 30px;
-  cursor: pointer;
-  margin-right: auto;
-  margin-left: 10px;
-`;
-
 const AppBody = styled.div`
   height: calc(100% - 50px);
+  width: 100%;
   background-color: #222222;
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
+
+const PageTitle = styled.h3`
+  
+`
 
 class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      sidebarOpen: false,
       currentPage: <DataQ title="DataQ"/>
     };
   }
 
-  onSetSidebarOpen(open) {
-    this.setState({ sidebarOpen: open });
-  }
-
-  setCurrentPage(page) {
-    this.setState({
-      currentPage: page,
-      sidebarOpen: false
-    })
-  }
-
   render() {
-    const menu = <Menu setPage={() => this.setCurrentPage()} />;
     return (
-      <Sidebar sidebar={menu} open={this.state.sidebarOpen} onSetOpen={() => this.onSetSidebarOpen()}>
-        <AppContainer>
-          <NotificationContainer />
-          <AppHeader>
-            <MenuIcon onClick={() => this.onSetSidebarOpen(true)} />
-            <h3>{this.state.currentPage.props.title}</h3>
-            <ApiStatus />
-          </AppHeader>
-          <AppBody>
-            {this.state.currentPage}
-          </AppBody>
-        </AppContainer>
-      </Sidebar>
+      <AppContainer>
+        <NotificationContainer />
+        <AppHeader>
+          <h3>{this.state.currentPage.props.title}</h3>
+          <ApiStatus />
+        </AppHeader>
+        <AppBody>
+          {this.state.currentPage}
+        </AppBody>
+      </AppContainer>
     );
   }
 }

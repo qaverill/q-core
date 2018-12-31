@@ -2,9 +2,9 @@ import React, {Component} from 'react'
 import styled from 'styled-components'
 
 const AlbumCover = styled.div`
-  margin: 5px;
+  margin: 2.5px;
   cursor: pointer;
-  width: calc(20% - 10px);
+  width: calc(20% - 5px);
   :hover {
     opacity:0.5;
   }

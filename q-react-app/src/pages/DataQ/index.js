@@ -1,34 +1,36 @@
 import React from 'react'
 import SpotifyCollector from './components/SpotifyCollector'
 import { PageBorder, Page } from "../../components/styled-components";
-import MatterSelector from '../../components/MatterSelector/index'
 import styled from 'styled-components'
-import theme from './theme.jpg'
 import { errorPage } from "../../components/components";
+import { purple, green } from "../../colors";
 
 const DataQBorder = styled(PageBorder)`
-  background-image: url(${theme});
+  background-color: ${props => props.color}
 `;
 
-const SpotifyListensCollector = {
-  name: "listens",
-  spotifyPath: "/spotify/recently-played",
-  mongodbPath: "/mongodb/listens",
-  timeParam: "played_at"
-};
-
-const SpotifySavesCollector = {
-  name: "saves",
-  spotifyPath: "/spotify/saved-tracks",
-  mongodbPath: "/mongodb/saves",
-  timeParam: "added_at"
-};
+const Collectors = [
+  {
+    name: "listens",
+    spotifyPath: "/spotify/recently-played",
+    mongodbPath: "/mongodb/listens",
+    timeParam: "played_at",
+    color: purple
+  },
+  {
+    name: "saves",
+    spotifyPath: "/spotify/saved-tracks",
+    mongodbPath: "/mongodb/saves",
+    timeParam: "added_at",
+    color: green
+  }
+];
 
 class DataQ extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      selectedMatter: SpotifyListensCollector
+      collectorIndex: 0
     }
   }
 
@@ -37,13 +39,26 @@ class DataQ extends React.Component {
       return errorPage("Not connected to the Spotify API")
     }
     return (
-      <DataQBorder>
+      <DataQBorder color={Collectors[this.state.collectorIndex].color}>
         <Page>
-          <MatterSelector matter={[SpotifyListensCollector, SpotifySavesCollector]} parent={this} />
-          <SpotifyCollector collector={this.state.selectedMatter}/>
+          <SpotifyCollector collector={Collectors[this.state.collectorIndex]} parent={this} />
         </Page>
       </DataQBorder>
     )
+  }
+
+  increaseCollectorIndex() {
+    const increasedIndex = this.state.collectorIndex + 1;
+    this.setState({
+      collectorIndex: (increasedIndex > Collectors.length - 1 ? 0 : increasedIndex)
+    })
+  }
+
+  decreaseCollectorIndex() {
+    const decreasedIndex = this.state.collectorIndex - 1;
+    this.setState({
+      collectorIndex: (decreasedIndex < 0 ? Collectors.length - 1 : decreasedIndex)
+    })
   }
 }
 

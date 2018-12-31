@@ -30,13 +30,13 @@ export const errorPage = (message) => {
   )
 };
 
-export const loadingSpinner = (message) => {
+export const loadingSpinner = (message, color) => {
   return (
     <FullDiv>
       <RiseLoader
         sizeUnit={"px"}
         size={100}
-        color={purple} />
+        color={color} />
       <Header>{message}</Header>
     </FullDiv>
   )
