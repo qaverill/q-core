@@ -5,16 +5,15 @@ const SpotifyIcon = styled.img
   .attrs({
     src: require('./spotify-icon.png')
   })`
-    height: 30px;
-    width: 30px;
+    height: 35px;
+    width: 35px;
     ${props => props.active ? `` : `filter: grayscale(100%);`}
 `;
 
 const ApiAuthContainer = styled.div`
   cursor: pointer;
-  float: right;
-  margin-left: auto;
-  margin-right: 10px;
+  margin-left: calc(50% - 25px);
+  position: absolute;
 `;
 
 class ApiAuth extends React.Component {

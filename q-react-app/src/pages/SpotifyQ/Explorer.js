@@ -4,9 +4,9 @@
 // import Track from './Components/Track/Track';
 // import { getArtist, getAlbum, getTrack, searchSpotify } from '../../utilities/SpotifyAPI/Getters'
 // import { getRandomColor } from '../functions';
-// import './Explorer.css';
+// import './SpotifyQ.css';
 //
-// class Explorer extends Component {
+// class SpotifyQ extends Component {
 //   constructor(props) {
 //     super(props);
 //     this.state = {
@@ -135,4 +135,4 @@
 //     )
 //   }
 // }
-// export default Explorer;
+// export default SpotifyQ;

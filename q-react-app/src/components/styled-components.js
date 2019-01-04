@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import {dark, medium, light, red, white} from "../colors";
 
 export const Button = styled.button`
   border: none;
@@ -12,7 +13,7 @@ export const Button = styled.button`
   :focus {
     outline: none;
   }
-  background-color: ${props => props.color == null ? "#4A483F" : props.color};
+  background-color: ${props => props.color == null ? medium : props.color};
   :hover {
     opacity: 0.8;
   }
@@ -21,28 +22,13 @@ export const Button = styled.button`
 export const Text = styled.p`
   font-size: 16px;
   margin: 0;
+  color: ${white};
   cursor: default;
+  margin: 2.5px;
 `;
 
 export const Header = styled.h1`
   color: white;
-`;
-
-export const TextInput = styled.input`
-  font-size: 20px;
-  padding: 5px;
-  border: 2px solid black;
-  margin: 8px 0;
-  box-sizing: border-box;
-  padding-left: 40px;
-  background-color: white;
-  color: black;
-  -webkit-border-radius: 50px;
-  -moz-border-radius: 50px;
-  border-radius: 50px;
-  :focus {
-    outline: none;
-  }
 `;
 
 export const PageBorder = styled.div`
@@ -57,7 +43,7 @@ export const PageBorder = styled.div`
 export const Page = styled.div`
   height: calc(100% - 12.5px);
   width: calc(100% - 12.5px);
-  background-color: #222222;
+  background-color: ${dark};
   padding: 2.5px;
 `;
 
@@ -66,8 +52,8 @@ export const RightArrow = styled.img
     src: require('./SVGs/arrow.svg')
   })`
   cursor: pointer;
-  height: ${props => props.size};
-  width: ${props => props.size};
+  height: ${props => props.size == null ? `28px` : props.size};
+  width: ${props => props.size == null ? `28px` : props.size};
   margin: 2.5px;
   :hover {
     opacity: 0.8;

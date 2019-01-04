@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Header, Page, PageBorder } from './styled-components'
 import { RiseLoader } from 'react-spinners'
-import { purple, red } from "../colors";
+import { red } from "../colors";
 
 const FullDiv = styled.div`
   display: flex;

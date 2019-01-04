@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
 import AlbumCoverArray from './AlbumCoverArray'
-import { Button, LeftArrow, RightArrow } from "../../../components/styled-components";
+import { Button, LeftArrow, RightArrow, Text } from "../../../components/styled-components";
 import { dark, purple } from "../../../colors";
 import 'react-notifications/lib/notifications.css'
 import { NotificationManager } from 'react-notifications'
@@ -45,7 +45,8 @@ class SpotifyCollector extends Component {
   constructor(props){
     super(props);
     this.state = {
-      unsaved: null
+      unsaved: null,
+      results: null
     };
   }
 
@@ -56,14 +57,14 @@ class SpotifyCollector extends Component {
       return (
         <SpotifyCollectorContainer>
           <Controls>
-            <LeftArrow size="28px" onClick={() => this.props.parent.decreaseCollectorIndex()} />
+            <LeftArrow onClick={() => this.props.parent.decreaseCollectorIndex()} />
             <SaveButton
               onClick={() => this.writeToMongo()}
               width={`calc(${this.state.unsaved.length * 2}% - 56px)`}
               color={this.props.collector.color}>
               Write {this.state.unsaved.length} {this.props.collector.name}
             </SaveButton>
-            <RightArrow size="28px" onClick={() => this.props.parent.increaseCollectorIndex()} />
+            <RightArrow onClick={() => this.props.parent.increaseCollectorIndex()} />
           </Controls>
           <UnsavedContainer>
             <ReactTooltip />
@@ -71,7 +72,15 @@ class SpotifyCollector extends Component {
           </UnsavedContainer>
         </SpotifyCollectorContainer>
       );
-    } else return <h1>No unsaved {this.props.collector.name}</h1>
+    } else return (
+      <SpotifyCollectorContainer>
+        <Controls>
+          <LeftArrow onClick={() => this.props.parent.decreaseCollectorIndex()} />
+          <Text>No unsaved {this.props.collector.name}</Text>
+          <RightArrow onClick={() => this.props.parent.increaseCollectorIndex()} />
+        </Controls>
+      </SpotifyCollectorContainer>
+    )
   }
 
   componentWillMount(){
