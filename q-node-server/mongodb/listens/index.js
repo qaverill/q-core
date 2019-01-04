@@ -40,12 +40,12 @@ routes.post('/', (request, response) => {
 
 routes.get('/', (request, response) => {
   let query = {};
-  if (request.query.start != null || request.query.end != null){
+  if ((request.query.start != null && !isNaN(request.query.start)) || (request.query.end != null && !isNaN(request.query.end))){
     query._id = {};
-    if (request.query.start != null){
+    if (request.query.start != null && !isNaN(request.query.start)){
       query._id.$gte = parseInt(request.query.start, 10)
     }
-    if (request.query.end != null){
+    if (request.query.end != null && !isNaN(request.query.end)){
       query._id.$lte = parseInt(request.query.end, 10)
     }
   }

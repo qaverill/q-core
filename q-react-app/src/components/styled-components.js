@@ -21,14 +21,48 @@ export const Button = styled.button`
 
 export const Text = styled.p`
   font-size: 16px;
-  margin: 0;
+  margin: 2.5px;
   color: ${white};
   cursor: default;
   margin: 2.5px;
 `;
 
+export const BoldText = styled(Text)`
+  font-weight: bold;
+`;
+
 export const Header = styled.h1`
   color: white;
+`;
+
+export const TextInput = styled.input`
+  font-size: 16px;
+  padding: 2.5px;
+  border: 2px solid black;
+  margin: 2.5px;
+  box-sizing: border-box;
+  background-color: white;
+  color: black;
+  :focus {
+    outline: none;
+  }
+`;
+
+export const SearchBar = styled.input`
+  font-size: 16px;
+  padding: 5px;
+  border: 2px solid black;
+  margin: 2.5px;
+  box-sizing: border-box;
+  padding-left: 40px;
+  background-color: white;
+  color: black;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px;
+  :focus {
+    outline: none;
+  }
 `;
 
 export const PageBorder = styled.div`
