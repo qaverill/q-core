@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import axios from 'axios'
 import ExploreAll from './components/ExploreAll'
 import { loadingSpinner } from "../../components/components";
-import { stringToDate } from "../../utils";
+import {epochToString, stringToDate} from "../../utils";
 import { NotificationManager } from 'react-notifications'
 import { errorPage } from "../../components/components";
 import {green} from "../../colors";
@@ -17,8 +17,18 @@ const DateInput = styled(TextInput)`
   width: 100px;
 `;
 
-const Results = styled.div`
+const ExploreButton = styled.div`
+  width: 100%;
+  margin: 2.5px
   display: flex;
+  justify-content: center;
+`;
+
+const Results = styled.div`
+  height: calc(100% - 35px);
+  margin: 2.5px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 `;
@@ -26,6 +36,7 @@ const Results = styled.div`
 const Controls = styled.div`
   margin: 2.5px;
   padding: 2.5px
+  height: 35px;
   background-color: ${green};
   display: flex;
   align-items: center;
@@ -65,17 +76,23 @@ class SpotifyQ extends React.Component {
           <Controls>
             <Start>
               <BoldText>Start</BoldText>
-              <DateInput id="start" value={this.state.start} onBlur={() => this.setStart()} />
+              <DateInput id="start" onBlur={() => this.setStart()} />
             </Start>
             <SearchBar/>
             <End>
-              <DateInput id="end" value={this.state.end} onBlur={() => this.setEnd()} />
+              <DateInput id="end" onBlur={() => this.setEnd()} />
               <BoldText>End</BoldText>
             </End>
           </Controls>
+          <ExploreButton>
+            <Button color={green} onClick={() => this.explore()}>
+              Explore {this.state.subject}
+              from {this.state.start == null ? 'start ' : epochToString(this.state.start) + " "}
+              to {this.state.end == null ? 'end ' : epochToString(this.state.end) + " "}
+            </Button>
+          </ExploreButton>
           <Results>
             {this.state.results}
-            <Button onClick={() => this.explore()}>Explore</Button>
           </Results>
         </Page>
       </SpotifyQBorder>

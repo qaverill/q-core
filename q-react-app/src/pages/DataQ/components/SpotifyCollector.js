@@ -62,7 +62,7 @@ class SpotifyCollector extends Component {
               onClick={() => this.writeToMongo()}
               width={`calc(${this.state.unsaved.length * 2}% - 56px)`}
               color={this.props.collector.color}>
-              Write {this.state.unsaved.length} {this.props.collector.name}
+              Document {this.state.unsaved.length} {this.props.collector.name}
             </SaveButton>
             <RightArrow onClick={() => this.props.parent.increaseCollectorIndex()} />
           </Controls>
@@ -76,7 +76,7 @@ class SpotifyCollector extends Component {
       <SpotifyCollectorContainer>
         <Controls>
           <LeftArrow onClick={() => this.props.parent.decreaseCollectorIndex()} />
-          <Text>No unsaved {this.props.collector.name}</Text>
+          <Text>No undocumented {this.props.collector.name}</Text>
           <RightArrow onClick={() => this.props.parent.increaseCollectorIndex()} />
         </Controls>
       </SpotifyCollectorContainer>
