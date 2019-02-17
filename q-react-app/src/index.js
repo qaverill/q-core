@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import ArraySelector from './components/ArraySelector/index'
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-import { spotifyQTheme, bassQTheme, dataQTheme } from "./colors";
 import { moveIndexLeft, moveIndexRight } from "./utils";
 import {errorPage} from "./components/components";
 
@@ -59,7 +58,7 @@ class App extends React.Component {
       <BassQ title={<Title>BassQ</Title>} />
     ];
     this.state = {
-      selectedItem: this.pages[0]
+      selectedItem: this.pages[1]
     };
   }
 

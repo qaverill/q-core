@@ -3,7 +3,7 @@ import {PageBorder, Page, Text, Button} from "../../components/styled-components
 import styled from 'styled-components'
 import {errorPage, LoadingSpinner, SpotifyAPIErrorPage} from "../../components/components";
 import { dataQTheme } from "../../colors";
-import Index from "../../components/ArraySelector/index";
+import ArraySelector from "../../components/ArraySelector/index";
 import axios from "axios";
 import {NotificationManager} from "react-notifications";
 import AlbumCoverArray from "./components/AlbumCoverArray";
@@ -69,7 +69,7 @@ class DataQ extends React.Component {
       return (
         <DataQBorder>
           <Page>
-            <Index array={this.collectors} parent={this} title={this.saveButton()}/>
+            <ArraySelector array={this.collectors} parent={this} title={this.saveButton()} />
             <UnsavedContainer>
               <AlbumCoverArray items={this.state.unsaved} parent={this}/>
             </UnsavedContainer>

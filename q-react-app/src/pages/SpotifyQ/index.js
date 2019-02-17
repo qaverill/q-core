@@ -2,11 +2,13 @@ import React from 'react'
 import { PageBorder, Page, BoldText, TextInput, SearchBar, Button } from "../../components/styled-components";
 import styled from 'styled-components'
 import axios from 'axios'
-import ExploreAll from './components/ExploreAll'
 import {LoadingSpinner} from "../../components/components";
 import {epochToString, stringToDate} from "../../utils";
 import { NotificationManager} from 'react-notifications'
 import { spotifyQTheme } from "../../colors";
+import ArraySelector from "../../components/ArraySelector";
+import Overview from "./components/Overview";
+import Detail from './components/Detail';
 
 const SpotifyQBorder = styled(PageBorder)`
   background-color: ${spotifyQTheme.primary};
@@ -57,11 +59,17 @@ const End = styled.div`
 class SpotifyQ extends React.Component {
   constructor(props){
     super(props);
+    this.displays = [
+      "Overview",
+      "Detail"
+    ];
     this.state = {
       start: null,
       end: null,
       subject: null,
-      results: null
+      data: null,
+      loading: false,
+      selectedItem: this.displays[0]
     }
   }
 
@@ -80,8 +88,9 @@ class SpotifyQ extends React.Component {
               <BoldText>End</BoldText>
             </End>
           </Controls>
+          <ArraySelector array={this.displays} parent={this} title={<h2>{this.state.selectedItem}</h2>} />
           <Results>
-            {this.state.results}
+            {this.displayResults()}
           </Results>
         </Page>
       </SpotifyQBorder>
@@ -92,34 +101,55 @@ class SpotifyQ extends React.Component {
     this.explore()
   }
 
+  componentDidUpdate() {
+    if (this.state.data == null){
+      this.explore()
+    }
+  }
+
+  displayResults(){
+    if (this.state.data == null) {
+      return <LoadingSpinner message={`Loading results...`} color={spotifyQTheme.tertiary}/>
+    } else if (this.state.selectedItem === "Overview") {
+      return <Overview data={this.state.data} />
+    } else if (this.state.selectedItem === "Detail") {
+      return <Detail data={this.state.data} />
+    }
+  }
+
   setStart(){
     const input = document.getElementById('start').value;
-    if (input.length === 0){
-      this.setState({ start: null });
-    } else if (isNaN(stringToDate(input))){
+    const start = input.length === 0 ? null : stringToDate(input);
+    if (start != null && isNaN(start)){
       NotificationManager.error('Must be mm/dd/yyyy', 'Bad Date Format')
-    } else {
-      this.setState({ start: stringToDate(input) })
+    } else if (start !== this.state.start) {
+      this.setState({
+        start: start,
+        data: null
+      });
     }
   }
 
   setEnd(){
     const input = document.getElementById('end').value;
-    if (input.length === 0){
-      this.setState({ start: null });
-    } else if (isNaN(stringToDate(input))){
+    const end = input.length === 0 ? null : stringToDate(input);
+    if (end != null && isNaN(end)){
       NotificationManager.error('Must be mm/dd/yyyy', 'Bad Date Format')
-    } else {
-      this.setState({ end: stringToDate(input) })
+    } else if (end !== this.state.end) {
+      this.setState({
+        end: end,
+        data: null
+      });
     }
   }
 
   explore(){
     const _this = this;
-    this.setState({ results: <LoadingSpinner message={`Loading results...`} color={spotifyQTheme.tertiary}/>});
     axios.get(`/mongodb/listens?start=${this.state.start}&end=${this.state.end}`)
       .then(res => {
-        _this.setState({ results: <ExploreAll data={res.data} /> })
+        _this.setState({
+          data: res.data,
+        })
       })
   }
 }
