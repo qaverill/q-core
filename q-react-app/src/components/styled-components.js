@@ -77,7 +77,7 @@ export const Page = styled.div`
 
 export const RightArrow = styled.img
   .attrs({
-    src: require('./SVGs/arrow.svg')
+    src: require('./Images/arrow.svg')
   })`
   cursor: pointer;
   height: ${props => props.size == null ? `28px` : props.size};

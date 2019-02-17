@@ -59,7 +59,10 @@ routes.get('/callback', function(req, res) {
 
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
-        global.spotifyAuthTokens = body;
+        global.spotifyAuth = {
+          "token": body.access_token,
+          "expiresTimestampMs": body.expires_in * 1000 + Date.now()
+        };
 
         let access_token = body.access_token;
         let refresh_token = body.refresh_token;
@@ -80,36 +83,12 @@ routes.get('/callback', function(req, res) {
   }
 });
 
-routes.get('/refresh_token', function(req, res) {
-  // requesting access token from refresh token
-  let refresh_token = req.query.refresh_token;
-  let authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    headers: { 'Authorization': 'Basic ' + (new Buffer(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')) },
-    form: {
-      grant_type: 'refresh_token',
-      refresh_token: refresh_token
-    },
-    json: true
-  };
-
-  request.post(authOptions, function(error, response, body) {
-    if (!error && response.statusCode === 200) {
-      let access_token = body.access_token;
-      res.send({
-        'access_token': access_token
-      });
-    }
-  });
-});
-
 routes.get('/tokens', function(req, res) {
-  res.send(global.spotifyAuthTokens);
+  res.send(global.spotifyAuth);
 });
 
 console.log('GET \t/spotify/auth/login');
 console.log('GET \t/spotify/auth/callback');
-console.log('GET \t/spotify/auth/refresh_token');
 console.log('GET \t/spotify/auth/tokens');
 
 module.exports = routes;

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text } from "../../../components/styled-components";
+import { Text, Header } from "../../../components/styled-components";
 import styled from 'styled-components'
 
 const TopChartsContainer = styled.div`
@@ -32,15 +32,15 @@ class ExploreAll extends React.Component {
     return (
       <TopChartsContainer>
         <TopChart>
-          <h2>Top Tracks:</h2>
+          <Header>Top Tracks:</Header>
           {this.getTopN(this.state.rankedTracks, 5)}
         </TopChart>
         <TopChart>
-          <h2>Top Artists:</h2>
+          <Header>Top Artists:</Header>
           {this.getTopN(this.state.rankedArtists, 5)}
         </TopChart>
         <TopChart>
-          <h2>Top Albums:</h2>
+          <Header>Top Albums:</Header>
           {this.getTopN(this.state.rankedAlbums, 5)}
         </TopChart>
       </TopChartsContainer>

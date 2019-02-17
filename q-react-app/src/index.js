@@ -1,13 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import ApiStatus from './components/ApiAuth'
 import DataQ from './pages/DataQ';
-import SpotifyQ from './pages/SpotifyQ'
+import SpotifyQ from './pages/SpotifyQ';
+import BassQ from './pages/BassQ';
 import styled from 'styled-components';
-import { LeftArrow, RightArrow } from "./components/styled-components";
+import ArraySelector from './components/ArraySelector/arraySelector'
 import { NotificationContainer } from 'react-notifications';
 import { blue, green } from "./colors";
 import { moveIndexLeft, moveIndexRight } from "./utils";
+import {ErrorPage, errorPage} from "./components/components";
 
 const AppContainer = styled.div`
   height: 100%;
@@ -44,55 +45,44 @@ const PageColor = styled.div`
   background-color: ${props => props.color};
 `;
 
-const PageTitle = styled.h2`
+const Title = styled.h2`
   margin: 0 10px;
 `;
-
-const Pages = [
-  <DataQ title="DataQ" color={blue} />,
-  <SpotifyQ title="SpotifyQ" color={green} />
-];
 
 class App extends React.Component {
   constructor(props){
     super(props);
+    this.pages = [
+      <DataQ title={<Title>DataQ</Title>} color={blue} root={this} />,
+      <SpotifyQ title={<Title>SpotifyQ</Title>} color={green} root={this} />,
+      <BassQ title={<Title>BassQ</Title>} color={green} />
+    ];
     this.state = {
-      currentPageIndex: 1
+      selectedItem: this.pages[0]
     };
   }
 
   render() {
-    const currentPage = Pages[this.state.currentPageIndex];
     return (
       <AppContainer>
         <NotificationContainer />
-        <PageColor color={currentPage.props.color} />
+        <PageColor color={this.state.selectedItem.props.color} />
         <AppHeader>
-          <LeftArrow onClick={() => this.movePageLeft()} />
-          <PageTitle>{currentPage.props.title}</PageTitle>
-          <RightArrow onClick={() => this.movePageRight()} />
-          <ApiStatus />
+          <ArraySelector array={this.pages} parent={this} title={this.state.selectedItem.props.title}/>
         </AppHeader>
         <AppBody>
-          {currentPage}
+          {this.renderPage()}
         </AppBody>
       </AppContainer>
     );
   }
 
-  movePageRight() {
-    const nextPageIndex = this.state.currentPageIndex + 1;
-    this.setState({
-      currentPageIndex: nextPageIndex > Pages.length - 1 ? 0 : nextPageIndex
-    })
-  }
-
-  movePageLeft() {
-    const lastPageIndex = this.state.currentPageIndex - 1;
-    this.setState({
-      currentPageIndex: lastPageIndex < 0 ? Pages.length - 1 : lastPageIndex
-    })
-
+  renderPage() {
+    if (this.state.error != null){
+      return this.state.error
+    } else {
+      return this.state.selectedItem
+    }
   }
 }
 

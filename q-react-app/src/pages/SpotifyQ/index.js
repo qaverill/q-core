@@ -67,9 +67,6 @@ class SpotifyQ extends React.Component {
   }
 
   render() {
-    if (sessionStorage.getItem('spotify_access_token').length === 0) {
-      return errorPage("Not connected to the Spotify API")
-    }
     return (
       <SpotifyQBorder>
         <Page>
