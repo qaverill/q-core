@@ -3,14 +3,13 @@ import { PageBorder, Page, BoldText, TextInput, SearchBar, Button } from "../../
 import styled from 'styled-components'
 import axios from 'axios'
 import ExploreAll from './components/ExploreAll'
-import { loadingSpinner } from "../../components/components";
+import {LoadingSpinner} from "../../components/components";
 import {epochToString, stringToDate} from "../../utils";
-import { NotificationManager } from 'react-notifications'
-import { errorPage } from "../../components/components";
-import {green} from "../../colors";
+import { NotificationManager} from 'react-notifications'
+import { spotifyQTheme } from "../../colors";
 
 const SpotifyQBorder = styled(PageBorder)`
-  background-color: ${green};
+  background-color: ${spotifyQTheme.primary};
 `;
 
 const DateInput = styled(TextInput)`
@@ -37,7 +36,7 @@ const Controls = styled.div`
   margin: 2.5px;
   padding: 2.5px
   height: 35px;
-  background-color: ${green};
+  background-color: ${spotifyQTheme.primary};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,19 +80,16 @@ class SpotifyQ extends React.Component {
               <BoldText>End</BoldText>
             </End>
           </Controls>
-          <ExploreButton>
-            <Button color={green} onClick={() => this.explore()}>
-              Explore {this.state.subject}
-              from {this.state.start == null ? 'start ' : epochToString(this.state.start) + " "}
-              to {this.state.end == null ? 'end ' : epochToString(this.state.end) + " "}
-            </Button>
-          </ExploreButton>
           <Results>
             {this.state.results}
           </Results>
         </Page>
       </SpotifyQBorder>
     )
+  }
+
+  componentDidMount() {
+    this.explore()
   }
 
   setStart(){
@@ -120,7 +116,7 @@ class SpotifyQ extends React.Component {
 
   explore(){
     const _this = this;
-    this.setState({ results: loadingSpinner(`Loading results...`, green)});
+    this.setState({ results: <LoadingSpinner message={`Loading results...`} color={spotifyQTheme.tertiary}/>});
     axios.get(`/mongodb/listens?start=${this.state.start}&end=${this.state.end}`)
       .then(res => {
         _this.setState({ results: <ExploreAll data={res.data} /> })

@@ -4,11 +4,12 @@ import DataQ from './pages/DataQ';
 import SpotifyQ from './pages/SpotifyQ';
 import BassQ from './pages/BassQ';
 import styled from 'styled-components';
-import ArraySelector from './components/ArraySelector/arraySelector'
+import ArraySelector from './components/ArraySelector/index'
 import { NotificationContainer } from 'react-notifications';
-import { blue, green } from "./colors";
+import 'react-notifications/lib/notifications.css';
+import { spotifyQTheme, bassQTheme, dataQTheme } from "./colors";
 import { moveIndexLeft, moveIndexRight } from "./utils";
-import {ErrorPage, errorPage} from "./components/components";
+import {errorPage} from "./components/components";
 
 const AppContainer = styled.div`
   height: 100%;
@@ -53,9 +54,9 @@ class App extends React.Component {
   constructor(props){
     super(props);
     this.pages = [
-      <DataQ title={<Title>DataQ</Title>} color={blue} root={this} />,
-      <SpotifyQ title={<Title>SpotifyQ</Title>} color={green} root={this} />,
-      <BassQ title={<Title>BassQ</Title>} color={green} />
+      <DataQ title={<Title>DataQ</Title>} root={this} />,
+      <SpotifyQ title={<Title>SpotifyQ</Title>} root={this} />,
+      <BassQ title={<Title>BassQ</Title>} />
     ];
     this.state = {
       selectedItem: this.pages[0]
@@ -66,7 +67,6 @@ class App extends React.Component {
     return (
       <AppContainer>
         <NotificationContainer />
-        <PageColor color={this.state.selectedItem.props.color} />
         <AppHeader>
           <ArraySelector array={this.pages} parent={this} title={this.state.selectedItem.props.title}/>
         </AppHeader>

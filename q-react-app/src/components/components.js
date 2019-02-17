@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Header, Page, PageBorder } from './styled-components'
 import { RiseLoader } from 'react-spinners'
-import { red, green } from "../colors";
+import { red } from "../colors";
 
 const FullDiv = styled.div`
   display: flex;
@@ -18,7 +18,7 @@ const ErrorBorder = styled(PageBorder)`
 `;
 
 const SpotifyErrorBorder = styled(PageBorder)`
-  background-color: ${green};
+  background-color: ${red};
 `;
 
 export class ErrorPage extends React.PureComponent {
@@ -53,14 +53,16 @@ export class SpotifyAPIErrorPage extends React.PureComponent {
   }
 }
 
-export const loadingSpinner = (message, color) => {
-  return (
-    <FullDiv>
-      <RiseLoader
-        sizeUnit={"px"}
-        size={100}
-        color={color} />
-      <Header>{message}</Header>
-    </FullDiv>
-  )
+export class LoadingSpinner extends React.PureComponent {
+  render() {
+    return (
+      <FullDiv>
+        <RiseLoader
+          sizeUnit={"px"}
+          size={100}
+          color={this.props.color} />
+        <Header>{this.props.message}</Header>
+      </FullDiv>
+    )
+  }
 };

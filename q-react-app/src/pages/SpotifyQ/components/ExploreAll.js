@@ -66,7 +66,6 @@ class ExploreAll extends React.Component {
   }
 
   playsToSortedList(plays){
-    console.log(plays)
     return Object.keys(plays).map(key => ({
       item: key,
       count: plays[key]

@@ -1,16 +1,15 @@
 import React from 'react'
 import {PageBorder, Page, Text, Button} from "../../components/styled-components";
 import styled from 'styled-components'
-import {errorPage, loadingSpinner, SpotifyAPIErrorPage} from "../../components/components";
-import { purple, green } from "../../colors";
-import ArraySelector from "../../components/ArraySelector/arraySelector";
+import {errorPage, LoadingSpinner, SpotifyAPIErrorPage} from "../../components/components";
+import { dataQTheme } from "../../colors";
+import Index from "../../components/ArraySelector/index";
 import axios from "axios";
 import {NotificationManager} from "react-notifications";
-import ReactTooltip from "react-tooltip";
 import AlbumCoverArray from "./components/AlbumCoverArray";
 
 const DataQBorder = styled(PageBorder)`
-  background-color: ${props => props.color}
+  background-color: ${dataQTheme.primary}
 `;
 
 const SaveButton = styled(Button)`
@@ -19,7 +18,7 @@ const SaveButton = styled(Button)`
 `;
 
 const UnsavedContainer = styled.div`
-  max-height: 100%;
+  max-height: calc(100% - 35px);
   width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -36,14 +35,14 @@ class DataQ extends React.Component {
         spotifyPath: "/spotify/recently-played",
         mongodbPath: "/mongodb/listens",
         timeParam: "played_at",
-        color: purple
+        color: dataQTheme.secondary
       },
       {
         name: "saves",
         spotifyPath: "/spotify/saved-tracks",
         mongodbPath: "/mongodb/saves",
         timeParam: "added_at",
-        color: green
+        color: dataQTheme.tertiary
       }
     ];
     this.state = {
@@ -59,14 +58,19 @@ class DataQ extends React.Component {
 
   render() {
     if (this.state.unsaved === null) {
-      return loadingSpinner(`Loading ${this.state.selectedItem.name}...`, this.state.selectedItem.color);
+      return (
+        <DataQBorder>
+          <Page>
+            <LoadingSpinner message={`Loading ${this.state.selectedItem.name}...`} color={this.state.selectedItem.color}/>
+          </Page>
+        </DataQBorder>
+      )
     } else {
       return (
-        <DataQBorder color={this.state.selectedItem.color}>
+        <DataQBorder>
           <Page>
-            <ArraySelector array={this.collectors} parent={this} title={this.saveButton()}/>
+            <Index array={this.collectors} parent={this} title={this.saveButton()}/>
             <UnsavedContainer>
-              <ReactTooltip/>
               <AlbumCoverArray items={this.state.unsaved} parent={this}/>
             </UnsavedContainer>
           </Page>
@@ -149,7 +153,7 @@ class DataQ extends React.Component {
     const _this = this;
     axios.post(this.state.selectedItem.mongodbPath, this.makeMongodbFriendly(_this.state.unsaved))
       .then(() => {
-        _this.setState({unsaved: []});
+        _this.setState({unsaved: null});
         _this.componentWillMount();
         NotificationManager.success(`Synced ${this.state.selectedItem.name}`);
       })

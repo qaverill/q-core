@@ -34,7 +34,8 @@ class ArraySelector extends React.Component {
       iterator: nextIterator > this.props.array.length - 1 ? 0 : nextIterator
     });
     this.props.parent.setState({
-      selectedItem: this.props.array[nextIterator > this.props.array.length - 1 ? 0 : nextIterator]
+      selectedItem: this.props.array[nextIterator > this.props.array.length - 1 ? 0 : nextIterator],
+      error: null
     })
   }
 
@@ -44,7 +45,8 @@ class ArraySelector extends React.Component {
       iterator: lastIterator < 0 ? this.props.array.length - 1 : lastIterator
     });
     this.props.parent.setState({
-      selectedItem: this.props.array[lastIterator < 0 ? this.props.array.length - 1 : lastIterator]
+      selectedItem: this.props.array[lastIterator < 0 ? this.props.array.length - 1 : lastIterator],
+      error: null
     })
   }
 }
