@@ -14,6 +14,9 @@ routes.use((req, res, next) => {
 });
 routes.use('/recently-played', require('./recently-played'));
 routes.use('/saved-tracks', require('./saved-tracks'));
+routes.use('/tracks', require('./tracks'));
+routes.use('/artists', require('./artists'));
+routes.use('/albums', require('./albums'));
 
 routes.get('/', (req, res) => {
   const requestOptions = {

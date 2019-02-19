@@ -1,6 +1,9 @@
 import React from 'react'
 import { Text, Header } from "../../../components/styled-components";
 import styled from 'styled-components'
+import axios from 'axios'
+import {SpotifyAPIErrorPage} from "../../../components/components";
+import {capitolFirstLetter} from "../../../utils";
 
 const TopChartsContainer = styled.div`
   display: flex;
@@ -17,10 +20,11 @@ class Overview extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      N: 15,
       totalDuration: null,
-      rankedTracks: null,
-      rankedArtists: null,
-      rankedAlbums: null
+      topNTracks: null,
+      topNArtists: null,
+      topNAlbums: null
     }
   }
 
@@ -33,15 +37,15 @@ class Overview extends React.Component {
       <TopChartsContainer>
         <TopChart>
           <Header>Top Tracks:</Header>
-          {this.getTopN(this.state.rankedTracks, 5)}
+          {this.state.topNTracks}
         </TopChart>
         <TopChart>
           <Header>Top Artists:</Header>
-          {this.getTopN(this.state.rankedArtists, 5)}
+          {this.state.topNArtists}
         </TopChart>
         <TopChart>
           <Header>Top Albums:</Header>
-          {this.getTopN(this.state.rankedAlbums, 5)}
+          {this.state.topNAlbums}
         </TopChart>
       </TopChartsContainer>
     )
@@ -57,25 +61,41 @@ class Overview extends React.Component {
       albumPlays[listen.album] == null ? albumPlays[listen.album] = 1 : albumPlays[listen.album] += 1
     });
 
-    this.setState({
-      totalDuration: totalDuration,
-      rankedTracks: this.playsToSortedList(trackPlays),
-      rankedArtists: this.playsToSortedList(artistPlays),
-      rankedAlbums: this.playsToSortedList(albumPlays)
-    })
+    this.getSpotifyData(this.playsToSortedList(trackPlays), "tracks");
+    this.getSpotifyData(this.playsToSortedList(artistPlays), "artists");
+    this.getSpotifyData(this.playsToSortedList(albumPlays), "albums");
+
+    this.setState({ totalDuration: totalDuration })
   }
 
   playsToSortedList(plays){
     return Object.keys(plays).map(key => ({
-      item: key,
+      id: key,
       count: plays[key]
     })).sort(Overview.sortByCount)
   }
 
-  getTopN(list, N){
-    return list.splice(0, N).map((item, i) =>
-      <Text>{i + 1}. {item.item} ({item.count})</Text>
-    )
+  getSpotifyData(list, type) {
+    const _this = this;
+    axios.get(`/spotify/${type}?ids=${list.splice(0, this.state.N).map(item => item.id).join()}`)
+      .then(res => {
+        console.log(res.data);
+        _this.setState({
+          [`topN${capitolFirstLetter(type)}`]: res.data[type].map(item =>
+          <div>
+            <h3>{item.name}</h3>
+            <Text>{list.find(e => e.id === item.id)}</Text>
+          </div>
+        )
+        })
+      }).catch(error => {
+      console.log(error)
+      if (error.response.status === 401) {
+        this.props.root.setState({
+          error: <SpotifyAPIErrorPage />
+        })
+      }
+    })
   }
 
   static sortByCount(a, b){

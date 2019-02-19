@@ -33,7 +33,6 @@ server.use((req, res, next) => {
   next();
 });
 
-server.use('/aws', require('./aws'));
 server.use('/spotify', require('./spotify'));
 server.use('/mongodb', require('./mongodb'));
 

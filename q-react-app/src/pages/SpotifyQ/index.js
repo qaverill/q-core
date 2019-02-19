@@ -2,7 +2,7 @@ import React from 'react'
 import { PageBorder, Page, BoldText, TextInput, SearchBar, Button } from "../../components/styled-components";
 import styled from 'styled-components'
 import axios from 'axios'
-import {LoadingSpinner} from "../../components/components";
+import {LoadingSpinner, SpotifyAPIErrorPage} from "../../components/components";
 import {epochToString, stringToDate} from "../../utils";
 import { NotificationManager} from 'react-notifications'
 import { spotifyQTheme } from "../../colors";
@@ -111,7 +111,7 @@ class SpotifyQ extends React.Component {
     if (this.state.data == null) {
       return <LoadingSpinner message={`Loading results...`} color={spotifyQTheme.tertiary}/>
     } else if (this.state.selectedItem === "Overview") {
-      return <Overview data={this.state.data} />
+      return <Overview data={this.state.data} root={this.props.root}/>
     } else if (this.state.selectedItem === "Detail") {
       return <Detail data={this.state.data} />
     }
