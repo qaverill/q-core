@@ -11,17 +11,15 @@ const AlbumCover = styled.div`
 `;
 
 class AlbumCoverArray extends Component {
-  constructor(props){
-    super(props);
-  }
-
   render() {
     return this.props.items.map(item => (
       <AlbumCover
         key={item.played_at}
         onClick={() => this.removeAlbum(item)}
         data-tip={item.track.name} >
-        <img src={item.track.album.images[0].url} height="100%" width="100%"/>
+        <img
+          src={item.track.album.images[0].url} height="100%" width="100%"
+          alt={item.track.album.images[0].url}/>
       </AlbumCover>
     ))
   }

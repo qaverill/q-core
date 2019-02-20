@@ -13,28 +13,9 @@ const FullDiv = styled.div`
   height: 100%;
 `;
 
-const ErrorBorder = styled(PageBorder)`
-  background-color: ${red};
-`;
-
 const SpotifyErrorBorder = styled(PageBorder)`
   background-color: ${red};
 `;
-
-export class ErrorPage extends React.PureComponent {
-  render() {
-    return (
-      <ErrorBorder>
-        <Page>
-          <FullDiv>
-            <img src={require('./Images/error-triangle.svg')} />
-            <Header>{this.props.message}</Header>
-          </FullDiv>
-        </Page>
-      </ErrorBorder>
-    )
-  }
-}
 
 export class SpotifyAPIErrorPage extends React.PureComponent {
   render() {
@@ -43,7 +24,9 @@ export class SpotifyAPIErrorPage extends React.PureComponent {
         <Page>
           <FullDiv>
             <a href={`${require('../globals').server.url}/spotify/auth/login`}>
-              <img src={require('./Images/Spotify_Icon_RGB_Green.svg')} />
+              <img
+                src={require('./Images/Spotify_Icon_RGB_Green.svg')}
+                alt={"spotify"} />
             </a>
             <Header>Connect to Spotify API</Header>
           </FullDiv>

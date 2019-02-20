@@ -1,26 +1,61 @@
 import React from 'react'
-import { Text, Header } from "../../../components/styled-components";
+import { Header, Text } from "../../../components/styled-components";
 import styled from 'styled-components'
 import axios from 'axios'
 import {SpotifyAPIErrorPage} from "../../../components/components";
 import {capitolFirstLetter} from "../../../utils";
+import ReactTooltip from "react-tooltip";
 
 const TopChartsContainer = styled.div`
   display: flex;
   width: 100%;
-  justify-content: space-evenly;
+  height: 100%;
 `;
 
 const TopChart = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 33%;
+  height: 100%;
+`;
+
+const Item = styled.div`
+  display: flex;
+  align-self: stretch;
+  flex-shrink: 1;
+  
+  border: none;
+
+  margin: 10px;
+  height: 20%;
+  
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  transition-duration: 0.4s;
+  
+  :hover {
+    height: 100%;
+    overflow: auto;
+    white-space: normal;
+    text-overflow: initial;
+  }
+`;
+
+const ToolTip = styled.div`
+  display: flex;
+  flex-direction: column
+  align-items: center;
+  justify-content: center;
 `;
 
 class Overview extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      N: 15,
+      N: 5,
       totalDuration: null,
       topNTracks: null,
       topNArtists: null,
@@ -35,6 +70,12 @@ class Overview extends React.Component {
   render() {
     return (
       <TopChartsContainer>
+        <ReactTooltip getContent={dataTip =>
+          <ToolTip>
+            <h2>{dataTip != null ? dataTip.split(':::')[0] : null}</h2>
+            <h3>{dataTip != null ? dataTip.split(':::')[1] : null}</h3>
+          </ToolTip>
+        } />
         <TopChart>
           <Header>Top Tracks:</Header>
           {this.state.topNTracks}
@@ -77,19 +118,20 @@ class Overview extends React.Component {
 
   getSpotifyData(list, type) {
     const _this = this;
-    axios.get(`/spotify/${type}?ids=${list.splice(0, this.state.N).map(item => item.id).join()}`)
+    const topN = list.splice(0, this.state.N);
+    axios.get(`/spotify/${type}?ids=${topN.map(item => item.id).join()}`)
       .then(res => {
-        console.log(res.data);
         _this.setState({
           [`topN${capitolFirstLetter(type)}`]: res.data[type].map(item =>
-          <div>
-            <h3>{item.name}</h3>
-            <Text>{list.find(e => e.id === item.id)}</Text>
-          </div>
-        )
-        })
+            <Item
+              key={item.id}
+              style={{backgroundImage: `url(${_this.getItemImage(item, type)}`}}
+              data-tip={`${item.name} ::: ${topN.find(e => e.id === item.id).count}`} />
+          )
+        });
+        ReactTooltip.rebuild();
       }).catch(error => {
-      console.log(error)
+      console.log(error);
       if (error.response.status === 401) {
         this.props.root.setState({
           error: <SpotifyAPIErrorPage />
@@ -97,6 +139,20 @@ class Overview extends React.Component {
       }
     })
   }
+
+  getItemImage(item, type) {
+    switch (type) {
+      case "tracks":
+        return item.album.images[0].url;
+      case "artists":
+        return item.images[0].url;
+      case "albums":
+        return item.images[0].url;
+      default:
+        return null;
+    }
+  }
+
 
   static sortByCount(a, b){
     if (a.count < b.count) {

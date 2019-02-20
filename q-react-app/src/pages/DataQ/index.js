@@ -1,12 +1,13 @@
 import React from 'react'
 import {PageBorder, Page, Text, Button} from "../../components/styled-components";
 import styled from 'styled-components'
-import {errorPage, LoadingSpinner, SpotifyAPIErrorPage} from "../../components/components";
+import { LoadingSpinner, SpotifyAPIErrorPage} from "../../components/components";
 import { dataQTheme } from "../../colors";
 import ArraySelector from "../../components/ArraySelector/index";
 import axios from "axios";
 import {NotificationManager} from "react-notifications";
 import AlbumCoverArray from "./components/AlbumCoverArray";
+import ReactTooltip from "react-tooltip";
 
 const DataQBorder = styled(PageBorder)`
   background-color: ${dataQTheme.primary}
@@ -68,6 +69,8 @@ class DataQ extends React.Component {
     } else {
       return (
         <DataQBorder>
+          <ReactTooltip />
+
           <Page>
             <ArraySelector array={this.collectors} parent={this} title={this.saveButton()} />
             <UnsavedContainer>

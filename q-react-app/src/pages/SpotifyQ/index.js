@@ -1,9 +1,9 @@
 import React from 'react'
-import { PageBorder, Page, BoldText, TextInput, SearchBar, Button } from "../../components/styled-components";
+import { PageBorder, Page, BoldText, TextInput, SearchBar } from "../../components/styled-components";
 import styled from 'styled-components'
 import axios from 'axios'
-import {LoadingSpinner, SpotifyAPIErrorPage} from "../../components/components";
-import {epochToString, stringToDate} from "../../utils";
+import {LoadingSpinner} from "../../components/components";
+import { stringToDate} from "../../utils";
 import { NotificationManager} from 'react-notifications'
 import { spotifyQTheme } from "../../colors";
 import ArraySelector from "../../components/ArraySelector";
@@ -16,13 +16,6 @@ const SpotifyQBorder = styled(PageBorder)`
 
 const DateInput = styled(TextInput)`
   width: 100px;
-`;
-
-const ExploreButton = styled.div`
-  width: 100%;
-  margin: 2.5px
-  display: flex;
-  justify-content: center;
 `;
 
 const Results = styled.div`

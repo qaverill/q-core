@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {dark, medium, light, red, white} from "../colors";
+import {dark, medium, white} from "../colors";
 
 export const Button = styled.button`
   border: none;

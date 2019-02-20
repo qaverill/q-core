@@ -7,8 +7,6 @@ import styled from 'styled-components';
 import ArraySelector from './components/ArraySelector/index'
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-import { moveIndexLeft, moveIndexRight } from "./utils";
-import {errorPage} from "./components/components";
 
 const AppContainer = styled.div`
   height: 100%;
@@ -37,12 +35,6 @@ const AppBody = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const PageColor = styled.div`
-  height: 2.5px;
-  width: 100%;
-  background-color: ${props => props.color};
 `;
 
 const Title = styled.h2`
