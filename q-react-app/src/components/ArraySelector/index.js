@@ -7,7 +7,8 @@ const ArraySelectorContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  margin: 2.5px;
+  height: 35px;
 `;
 
 class ArraySelector extends React.Component {

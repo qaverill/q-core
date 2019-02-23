@@ -13,5 +13,6 @@ html, body {
 }
 
 h1, h2 {
-  color: white
+  color: white;
+  margin: 5px;
 }

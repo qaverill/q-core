@@ -33,6 +33,8 @@ export const BoldText = styled(Text)`
 
 export const Header = styled.h1`
   color: white;
+  padding: 2.5px;
+  height: 25px;
 `;
 
 export const TextInput = styled.input`

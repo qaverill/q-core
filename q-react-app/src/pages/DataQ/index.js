@@ -19,7 +19,7 @@ const SaveButton = styled(Button)`
 `;
 
 const UnsavedContainer = styled.div`
-  max-height: calc(100% - 35px);
+  max-height: calc(100% - 42.5px);
   width: 100%;
   display: flex;
   flex-wrap: wrap;

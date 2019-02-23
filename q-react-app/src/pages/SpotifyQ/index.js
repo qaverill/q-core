@@ -3,7 +3,7 @@ import { PageBorder, Page, BoldText, TextInput, SearchBar } from "../../componen
 import styled from 'styled-components'
 import axios from 'axios'
 import {LoadingSpinner} from "../../components/components";
-import { stringToDate} from "../../utils";
+import {epochToString, ONE_EPOCH_DAY, stringToDate} from "../../utils";
 import { NotificationManager} from 'react-notifications'
 import { spotifyQTheme } from "../../colors";
 import ArraySelector from "../../components/ArraySelector";
@@ -18,15 +18,6 @@ const DateInput = styled(TextInput)`
   width: 100px;
 `;
 
-const Results = styled.div`
-  height: calc(100% - 35px);
-  margin: 2.5px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
 const Controls = styled.div`
   margin: 2.5px;
   padding: 2.5px
@@ -35,6 +26,11 @@ const Controls = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const Results = styled.div`
+  height: calc(100% - 82.5px);
+  display: flex;
 `;
 
 const Start = styled.div`
@@ -57,7 +53,7 @@ class SpotifyQ extends React.Component {
       "Detail"
     ];
     this.state = {
-      start: null,
+      start: Math.round(new Date().getTime() / 1000) - 5 * ONE_EPOCH_DAY,
       end: null,
       subject: null,
       data: null,
@@ -91,6 +87,7 @@ class SpotifyQ extends React.Component {
   }
 
   componentDidMount() {
+    document.getElementById('start').value = epochToString(this.state.start);
     this.explore()
   }
 
@@ -138,6 +135,7 @@ class SpotifyQ extends React.Component {
 
   explore(){
     const _this = this;
+    console.log(this.state.start)
     axios.get(`/mongodb/listens?start=${this.state.start}&end=${this.state.end}`)
       .then(res => {
         _this.setState({

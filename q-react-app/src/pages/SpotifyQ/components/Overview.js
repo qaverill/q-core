@@ -16,7 +16,7 @@ const TopChart = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 33%;
+  width: calc(100% / 3);
   height: 100%;
 `;
 
@@ -24,23 +24,21 @@ const Item = styled.div`
   display: flex;
   align-self: stretch;
   flex-shrink: 1;
-  
+  margin: 2.5px;
   border: none;
 
-  margin: 10px;
-  height: 20%;
+  height: calc(100% / 5);
   
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
 
-  transition-duration: 0.4s;
+  transition: all 300ms ease-in;
   
   :hover {
     height: 100%;
     overflow: auto;
     white-space: normal;
-    text-overflow: initial;
   }
 `;
 
