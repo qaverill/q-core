@@ -21,24 +21,17 @@ const TopChart = styled.div`
 `;
 
 const Item = styled.div`
-  display: flex;
   align-self: stretch;
-  flex-shrink: 1;
   margin: 2.5px;
-  border: none;
-
-  height: calc(100% / 5);
+  height: 20%;
   
-  background-position: center center;
-  background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
 
   transition: all 300ms ease-in;
   
   :hover {
     height: 100%;
-    overflow: auto;
-    white-space: normal;
   }
 `;
 
@@ -68,12 +61,13 @@ class Overview extends React.Component {
   render() {
     return (
       <TopChartsContainer>
-        <ReactTooltip getContent={dataTip =>
-          <ToolTip>
-            <h2>{dataTip != null ? dataTip.split(':::')[0] : null}</h2>
-            <h3>{dataTip != null ? dataTip.split(':::')[1] : null}</h3>
-          </ToolTip>
-        } />
+        <ReactTooltip
+          getContent={dataTip =>
+            <ToolTip>
+              <h2>{dataTip != null ? dataTip.split(':::')[0] : null}</h2>
+              <h3>{dataTip != null ? dataTip.split(':::')[1] : null}</h3>
+            </ToolTip>
+          } />
         <TopChart>
           <Header>Top Tracks:</Header>
           {this.state.topNTracks}

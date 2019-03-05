@@ -11,30 +11,24 @@ import 'react-notifications/lib/notifications.css';
 const AppContainer = styled.div`
   height: 100%;
   width: 100%;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  background-color: black;
+  overflow: auto;
+  display: grid;
 `;
 
 const AppHeader = styled.div`
+  background-color: black;
   font-size: 20px;
   font-weight: bold;
-  background-color: black;
   color: white;
   height: 50px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: nowrap;
-`;
-
-const AppBody = styled.div`
-  height: calc(100% - 50px);
-  width: 100%;
-  background-color: #222222;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: fixed;
+  z-index: 100;
 `;
 
 const Title = styled.h2`
@@ -50,7 +44,7 @@ class App extends React.Component {
       <BassQ title={<Title>BassQ</Title>} />
     ];
     this.state = {
-      selectedItem: this.pages[1]
+      selectedItem: this.pages[0]
     };
   }
 
@@ -61,9 +55,7 @@ class App extends React.Component {
         <AppHeader>
           <ArraySelector array={this.pages} parent={this} title={this.state.selectedItem.props.title}/>
         </AppHeader>
-        <AppBody>
-          {this.renderPage()}
-        </AppBody>
+        {this.renderPage()}
       </AppContainer>
     );
   }

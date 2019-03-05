@@ -61,20 +61,12 @@ export const SearchBar = styled(TextInput)`
   border-radius: 50px;
 `;
 
-export const PageBorder = styled.div`
-  height: calc(100% - 10px);
-  width: calc(100% - 10px);
-  background-position: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 export const Page = styled.div`
-  height: calc(100% - 12.5px);
-  width: calc(100% - 12.5px);
   background-color: ${dark};
-  padding: 2.5px;
+  border-radius: 15px;
+  padding: 7.5px;
+  margin: 50px 10px 10px 10px;
+  min-height: calc(100% - 85px);
 `;
 
 export const RightArrow = styled.img

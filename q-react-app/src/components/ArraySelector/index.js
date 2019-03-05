@@ -7,7 +7,6 @@ const ArraySelectorContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin: 2.5px;
   height: 35px;
 `;
 
