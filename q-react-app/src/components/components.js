@@ -1,35 +1,37 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Header, Page } from './styled-components'
+import { Header, Page, PageBorder } from './styled-components'
 import { RiseLoader } from 'react-spinners'
 import { red } from "../colors";
 
 const FullDiv = styled.div`
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center
   justify-content: center;
+  width: 100%;
+  height: 100%;
 `;
 
-const SpotifyErrorPage = styled(Page)`
-  border: 5px solid ${red};
+const SpotifyErrorBorder = styled(PageBorder)`
+  background-color: ${red};
 `;
 
 export class SpotifyAPIErrorPage extends React.PureComponent {
   render() {
     return (
-      <SpotifyErrorPage>
-        <FullDiv>
-          <a href={`${require('../globals').server.url}/spotify/auth/login`}>
-            <img
-              src={require('./Images/Spotify_Icon_RGB_Green.svg')}
-              alt={"spotify"} />
-          </a>
-          <Header>Connect to Spotify API</Header>
-        </FullDiv>
-      </SpotifyErrorPage>
+      <SpotifyErrorBorder>
+        <Page>
+          <FullDiv>
+            <a href={`${require('../globals').server.url}/spotify/auth/login`}>
+              <img
+                src={require('./Images/Spotify_Icon_RGB_Green.svg')}
+                alt={"spotify"} />
+            </a>
+            <Header>Connect to Spotify API</Header>
+          </FullDiv>
+        </Page>
+      </SpotifyErrorBorder>
     )
   }
 }

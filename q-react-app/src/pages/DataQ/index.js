@@ -1,5 +1,5 @@
 import React from 'react'
-import { Page, Text, Button } from "../../components/styled-components";
+import {PageBorder, Page, Text, Button} from "../../components/styled-components";
 import styled from 'styled-components'
 import { LoadingSpinner, SpotifyAPIErrorPage} from "../../components/components";
 import { dataQTheme } from "../../colors";
@@ -9,8 +9,8 @@ import {NotificationManager} from "react-notifications";
 import AlbumCoverArray from "./components/AlbumCoverArray";
 import ReactTooltip from "react-tooltip";
 
-const DataQPage = styled(Page)`
-  border: 5px solid ${dataQTheme.primary}
+const DataQBorder = styled(PageBorder)`
+  background-color: ${dataQTheme.primary}
 `;
 
 const SaveButton = styled(Button)`
@@ -19,13 +19,12 @@ const SaveButton = styled(Button)`
 `;
 
 const UnsavedContainer = styled.div`
+  max-height: calc(100% - 42.5px);
   width: 100%;
-  height: 100%;
   display: flex;
-  flex-grow: 1;
   flex-wrap: wrap;
+  overflow: auto;
   align-content: stretch;
-  margin-top: 2.5px;
 `;
 
 class DataQ extends React.Component {
@@ -61,19 +60,24 @@ class DataQ extends React.Component {
   render() {
     if (this.state.unsaved === null) {
       return (
-        <DataQPage>
-          <LoadingSpinner message={`Loading ${this.state.selectedItem.name}...`} color={this.state.selectedItem.color}/>
-        </DataQPage>
+        <DataQBorder>
+          <Page>
+            <LoadingSpinner message={`Loading ${this.state.selectedItem.name}...`} color={this.state.selectedItem.color}/>
+          </Page>
+        </DataQBorder>
       )
     } else {
       return (
-        <DataQPage>
+        <DataQBorder>
           <ReactTooltip />
-          <ArraySelector array={this.collectors} parent={this} title={this.saveButton()} />
-          <UnsavedContainer>
-            <AlbumCoverArray items={this.state.unsaved} parent={this}/>
-          </UnsavedContainer>
-        </DataQPage>
+
+          <Page>
+            <ArraySelector array={this.collectors} parent={this} title={this.saveButton()} />
+            <UnsavedContainer>
+              <AlbumCoverArray items={this.state.unsaved} parent={this}/>
+            </UnsavedContainer>
+          </Page>
+        </DataQBorder>
       )
     }
   }

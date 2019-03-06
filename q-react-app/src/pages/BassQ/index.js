@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import { bassQTheme } from "../../colors";
-import { Page } from "../../components/styled-components";
+import {PageBorder, Page} from "../../components/styled-components";
 
-const BassQPage = styled(Page)`
-  border: 5px solid ${bassQTheme.primary};
+const BassQBorder = styled(PageBorder)`
+  background-color: ${bassQTheme.primary}
 `;
 
 class BassQ extends React.Component {
@@ -15,9 +15,11 @@ class BassQ extends React.Component {
 
   render() {
     return (
-      <BassQPage>
+      <BassQBorder>
+        <Page>
 
-      </BassQPage>
+        </Page>
+      </BassQBorder>
     )
   }
 }
