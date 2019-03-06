@@ -65,8 +65,9 @@ export const Page = styled.div`
   background-color: ${dark};
   border-radius: 15px;
   padding: 7.5px;
-  margin: 50px 10px 10px 10px;
-  min-height: calc(100% - 85px);
+  height: calc(100% - 100px);
+  margin 0 25px;
+  overflow: auto;
 `;
 
 export const RightArrow = styled.img

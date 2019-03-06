@@ -20,7 +20,7 @@ const SaveButton = styled(Button)`
 
 const UnsavedContainer = styled.div`
   width: 100%;
-  height: 100%;
+  max-height: 100%;
   display: flex;
   flex-grow: 1;
   flex-wrap: wrap;
@@ -48,7 +48,7 @@ class DataQ extends React.Component {
       }
     ];
     this.state = {
-      selectedItem: this.collectors[0],
+      selectedItem: this.collectors[1],
       unsaved: null,
       results: null
     };

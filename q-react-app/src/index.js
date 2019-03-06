@@ -12,8 +12,6 @@ const AppContainer = styled.div`
   height: 100%;
   width: 100%;
   background-color: black;
-  overflow: auto;
-  display: grid;
 `;
 
 const AppHeader = styled.div`
@@ -27,7 +25,6 @@ const AppHeader = styled.div`
   align-items: center;
   justify-content: center;
   flex-wrap: nowrap;
-  position: fixed;
   z-index: 100;
 `;
 
