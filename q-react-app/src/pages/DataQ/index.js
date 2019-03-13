@@ -48,7 +48,7 @@ class DataQ extends React.Component {
       }
     ];
     this.state = {
-      selectedItem: this.collectors[1],
+      selectedItem: this.collectors[0],
       unsaved: null,
       results: null
     };

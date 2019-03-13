@@ -17,21 +17,33 @@ const TopChart = styled.div`
   flex-direction: column;
   align-items: center;
   width: calc(100% / 3);
+  flex-shrink: 1;
   height: 100%;
+  :hover {
+  }
 `;
 
 const Item = styled.div`
+  display: flex;
   align-self: stretch;
+  flex-shrink: 1;
   margin: 2.5px;
-  height: 20%;
+  border: none;
+
+  height: calc(100% / 5);
   
-  background-position: center;
+  background-image: ${props => `url(${props.image.url})`};
+  background-position: center center;
+  background-repeat: no-repeat;
   background-size: cover;
 
   transition: all 300ms ease-in;
   
   :hover {
     height: 100%;
+    padding-top: ${props => props.image.width / props.image.height}%;
+    overflow: auto;
+    white-space: normal;
   }
 `;
 
@@ -117,8 +129,8 @@ class Overview extends React.Component {
           [`topN${capitolFirstLetter(type)}`]: res.data[type].map(item =>
             <Item
               key={item.id}
-              style={{backgroundImage: `url(${_this.getItemImage(item, type)}`}}
-              data-tip={`${item.name} ::: ${topN.find(e => e.id === item.id).count}`} />
+              data-tip={`${item.name} ::: ${topN.find(e => e.id === item.id).count}`}
+              image={_this.getItemImage(item, type)} />
           )
         });
         ReactTooltip.rebuild();
@@ -135,16 +147,15 @@ class Overview extends React.Component {
   getItemImage(item, type) {
     switch (type) {
       case "tracks":
-        return item.album.images[0].url;
+        return item.album.images[0];
       case "artists":
-        return item.images[0].url;
+        return item.images[0];
       case "albums":
-        return item.images[0].url;
+        return item.images[0];
       default:
         return null;
     }
   }
-
 
   static sortByCount(a, b){
     if (a.count < b.count) {
