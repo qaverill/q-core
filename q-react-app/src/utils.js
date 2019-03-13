@@ -18,7 +18,10 @@ export const dateToEpoch = (date) => {
 };
 
 export const dateToString = (date) => {
-  return `${date.getMonth() + 1}/${date.getDate() + 1}/${date.getFullYear()}`
+  const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+  const day = date.getDate() + 1 < 10 ? `0${date.getDate() + 1}` : date.getDate() + 1;
+  return `${month}/${day}/${date.getFullYear()}`
 };
 
 export const ONE_EPOCH_DAY = 86400;
+

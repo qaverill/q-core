@@ -3,19 +3,22 @@ import {dark, medium, white} from "../colors";
 
 export const Button = styled.button`
   border: none;
-  color: white;
-  padding: 5px 10px;
+  color: white;  
+  height: 30px;
+  padding: 2.5px 7.5px;
+  border-radius: 15px;
   margin: 2.5px;
   text-align: center;
   text-decoration: none;
   font-size: 16px;
+  border: 2px solid black;
   cursor: pointer;
   :focus {
     outline: none;
   }
   background-color: ${props => props.color == null ? medium : props.color};
   :hover {
-    opacity: 0.8;
+    filter: brightness(1.25);
   }
 `;
 
@@ -40,8 +43,9 @@ export const Header = styled.h1`
 export const TextInput = styled.input`
   font-size: 16px;
   height: 30px;
-  padding: 2.5px;
+  padding: 2.5px 7.5px;
   border: 2px solid black;
+  border-radius: 15px;
   margin: 2.5px;
   box-sizing: border-box;
   background-color: white;
@@ -49,16 +53,9 @@ export const TextInput = styled.input`
   :focus {
     outline: none;
     border: 3px solid black;
-  padding: 1.5px;
+    padding: 1.5px;
+    padding-left: 6.5px;
   }
-`;
-
-export const SearchBar = styled(TextInput)`
-  padding: 5px;
-  padding-left: 40px;
-  -webkit-border-radius: 50px;
-  -moz-border-radius: 50px;
-  border-radius: 50px;
 `;
 
 export const Page = styled.div`
@@ -79,7 +76,7 @@ export const RightArrow = styled.img
   width: ${props => props.size == null ? `28px` : props.size};
   margin: 2.5px;
   :hover {
-    opacity: 0.8;
+    filter: brightness(1.25);
   }
 `;
 

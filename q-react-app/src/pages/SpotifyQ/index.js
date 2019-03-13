@@ -1,5 +1,5 @@
 import React from 'react'
-import { Page, BoldText, TextInput, SearchBar } from "../../components/styled-components";
+import { Page, BoldText, TextInput, SearchBar, Button } from "../../components/styled-components";
 import styled from 'styled-components'
 import axios from 'axios'
 import {LoadingSpinner} from "../../components/components";
@@ -26,7 +26,7 @@ const Controls = styled.div`
 `;
 
 const DateInput = styled(TextInput)`
-  width: 100px;
+  width: 105px;
 `;
 
 const Start = styled.div`
@@ -56,7 +56,7 @@ class SpotifyQ extends React.Component {
     ];
     this.state = {
       start: Math.round(new Date().getTime() / 1000) - 5 * ONE_EPOCH_DAY,
-      end: null,
+      end: Math.round(new Date().getTime() / 1000),
       subject: null,
       data: null,
       loading: false,
@@ -71,9 +71,18 @@ class SpotifyQ extends React.Component {
           <Start>
             <BoldText>Start</BoldText>
             <DateInput id="start" onBlur={() => this.setStart()} />
+            <Button color={spotifyQTheme.tertiary} onClick={() => this.removeFromStart(ONE_EPOCH_DAY)}>Back 1 Day</Button>
+            <Button color={spotifyQTheme.tertiary} onClick={() => this.removeFromStart(ONE_EPOCH_DAY) * 7}>Back 1 Week</Button>
+            <Button color={spotifyQTheme.tertiary} onClick={() => this.removeFromStart("month")}>Back 1 Month</Button>
+            <Button color={spotifyQTheme.tertiary} onClick={() => this.removeFromStart("year")}>Back 1 Year</Button>
+
           </Start>
-          <SearchBar/>
+          <TextInput />
           <End>
+            <Button color={spotifyQTheme.secondary} onClick={() => this.removeFromEnd("year")}>Back 1 Year</Button>
+            <Button color={spotifyQTheme.secondary} onClick={() => this.removeFromEnd("month")}>Back 1 Month</Button>
+            <Button color={spotifyQTheme.secondary} onClick={() => this.removeFromEnd(ONE_EPOCH_DAY * 7)}>Back 1 Week</Button>
+            <Button color={spotifyQTheme.secondary} onClick={() => this.removeFromEnd(ONE_EPOCH_DAY)}>Back 1 Day</Button>
             <DateInput id="end" onBlur={() => this.setEnd()} />
             <BoldText>End</BoldText>
           </End>
@@ -88,6 +97,7 @@ class SpotifyQ extends React.Component {
 
   componentDidMount() {
     document.getElementById('start').value = epochToString(this.state.start);
+    document.getElementById('end').value = epochToString(this.state.end);
     this.explore()
   }
 
@@ -112,6 +122,8 @@ class SpotifyQ extends React.Component {
     const start = input.length === 0 ? null : stringToDate(input);
     if (start != null && isNaN(start)){
       NotificationManager.error('Must be mm/dd/yyyy', 'Bad Date Format')
+    } else if(start != null && start === this.state.end){
+      NotificationManager.error("Cannot be the same date as End")
     } else if (start !== this.state.start) {
       this.setState({
         start: start,
@@ -125,6 +137,8 @@ class SpotifyQ extends React.Component {
     const end = input.length === 0 ? null : stringToDate(input);
     if (end != null && isNaN(end)){
       NotificationManager.error('Must be mm/dd/yyyy', 'Bad Date Format')
+    } else if(end != null && end === this.state.start){
+      NotificationManager.error("Cannot be the same date as Start")
     } else if (end !== this.state.end) {
       this.setState({
         end: end,
@@ -135,13 +149,52 @@ class SpotifyQ extends React.Component {
 
   explore(){
     const _this = this;
-    console.log(this.state.start)
     axios.get(`/mongodb/listens?start=${this.state.start}&end=${this.state.end}`)
       .then(res => {
         _this.setState({
           data: res.data,
         })
       })
+  }
+
+  removeFromStart(amount){
+    let newStart = null;
+    if (amount === "month"){
+      let adjustedDate = new Date(this.state.start * 1000);
+      adjustedDate.setMonth(adjustedDate.getMonth() - 1);
+      newStart = Math.round(adjustedDate.getTime() / 1000)
+    } else if (amount === "year"){
+      let adjustedDate = new Date(this.state.start * 1000);
+      adjustedDate.setFullYear(adjustedDate.getFullYear() - 1);
+      newStart = Math.round(adjustedDate.getTime() / 1000)
+    } else {
+      newStart = this.state.start - amount
+    }
+    document.getElementById('start').value = epochToString(newStart);
+    this.setState({
+      start: newStart, 
+      data: null
+    })
+  }
+
+  removeFromEnd(amount){
+    let newEnd = null;
+    if (amount === "month"){
+      let adjustedDate = new Date(this.state.end * 1000);
+      adjustedDate.setMonth(adjustedDate.getMonth() - 1);
+      newEnd = Math.round(adjustedDate.getTime() / 1000)
+    } else if (amount === "year"){
+      let adjustedDate = new Date(this.state.end * 1000);
+      adjustedDate.setFullYear(adjustedDate.getFullYear() - 1);
+      newEnd = Math.round(adjustedDate.getTime() / 1000)
+    } else {
+      newEnd = this.state.end - amount
+    }
+    document.getElementById('end').value = epochToString(newEnd);
+    this.setState({
+      end: newEnd,
+      data: null
+    })
   }
 }
 
