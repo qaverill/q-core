@@ -2,16 +2,15 @@ import styled from 'styled-components'
 import {dark, medium, white} from "../colors";
 
 export const Button = styled.button`
-  border: none;
   color: white;  
   height: 30px;
   padding: 2.5px 7.5px;
-  border-radius: 15px;
   margin: 2.5px;
   text-align: center;
   text-decoration: none;
   font-size: 16px;
   border: 2px solid black;
+  border-radius: 15px;
   cursor: pointer;
   :focus {
     outline: none;
@@ -25,7 +24,7 @@ export const Button = styled.button`
 export const Text = styled.p`
   font-size: 16px;
   margin: 2.5px;
-  color: ${white};
+  color: ${props => props.color == null ? white : props.color};
   cursor: default;
   margin: 2.5px;
 `;
