@@ -19,7 +19,7 @@ const TopChart = styled.div`
   flex-grow: 1;
   transition: all 300ms ease-in;
   :hover {
-    flex-grow: 2;
+    flex-grow: 3;
   }
 `;
 
@@ -40,7 +40,7 @@ const Item = styled.div`
   transition: all 300ms ease-in;
   
   :hover {
-    flex-grow: 6;
+    flex-grow: 10;
     padding-top: ${props => props.image.width / props.image.height}%;
   }
 `;
