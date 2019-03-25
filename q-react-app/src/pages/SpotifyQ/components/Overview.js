@@ -16,10 +16,10 @@ const TopChart = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: calc(100% / 3);
-  flex-shrink: 1;
-  height: 100%;
+  flex-grow: 1;
+  transition: all 300ms ease-in;
   :hover {
+    flex-grow: 2;
   }
 `;
 
@@ -27,10 +27,10 @@ const Item = styled.div`
   display: flex;
   align-self: stretch;
   flex-shrink: 1;
+  flex-grow: 1;
   margin: 2.5px;
   border: none;
 
-  height: calc(100% / 5);
   
   background-image: ${props => `url(${props.image.url})`};
   background-position: center center;
@@ -40,10 +40,8 @@ const Item = styled.div`
   transition: all 300ms ease-in;
   
   :hover {
-    height: 100%;
+    flex-grow: 6;
     padding-top: ${props => props.image.width / props.image.height}%;
-    overflow: auto;
-    white-space: normal;
   }
 `;
 
@@ -58,7 +56,7 @@ class Overview extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      N: 5,
+      N: 6,
       totalDuration: null,
       topNTracks: null,
       topNArtists: null,
