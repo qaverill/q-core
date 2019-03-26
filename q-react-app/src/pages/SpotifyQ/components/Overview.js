@@ -108,7 +108,7 @@ class Overview extends React.Component {
     this.getSpotifyData(this.playsToSortedList(artistPlays), "artists");
     this.getSpotifyData(this.playsToSortedList(albumPlays), "albums");
 
-    this.setState({ totalDuration: totalDuration })
+    this.setState({ totalDurationMs: totalDuration })
   }
 
   playsToSortedList(plays){

@@ -58,12 +58,12 @@ class SpotifyQ extends React.Component {
       "Detail"
     ];
     this.state = {
-      start: Math.round(new Date().getTime() / 1000) - 5 * ONE_EPOCH_DAY,
+      start: Math.round(new Date().getTime() / 1000) - 3 * ONE_EPOCH_DAY,
       end: Math.round(new Date().getTime() / 1000),
       subject: null,
       data: null,
       loading: false,
-      selectedItem: this.displays[0]
+      selectedItem: this.displays[1]
     }
   }
 
@@ -117,7 +117,7 @@ class SpotifyQ extends React.Component {
         case "Overview":
           return <Overview data={this.state.data} root={this.props.root}/>;
         case "Detail":
-          return <Detail data={this.state.data} />
+          return <Detail data={this.state.data} totalTimeMs={(this.state.end - this.state.start) * 1000}/>
       }
     }
   }
