@@ -41,7 +41,7 @@ class App extends React.Component {
       <BassQ title={<Title>BassQ</Title>} />
     ];
     this.state = {
-      selectedItem: this.pages[1]
+      selectedItem: this.pages[2]
     };
   }
 

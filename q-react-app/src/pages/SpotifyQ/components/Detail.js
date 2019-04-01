@@ -24,7 +24,7 @@ class Detail extends React.Component {
       <DetailContainer>
         <h2>Detail</h2>
         <Text>Total Listening Time: {msToString(this.state.totalDurationMs)}</Text>
-        <Text>Percent of time Listening: %{parseInt((this.state.totalDurationMs / this.props.totalTimeMs) * 100)}</Text>
+        <Text>Percent of time Listening: {parseInt((this.state.totalDurationMs / this.props.totalTimeMs) * 100)}%</Text>
         <Text>Total Unique Tracks: {this.state.uniqueNUmberOfTracks}</Text>
         <Text>Total Unique Artists: {this.state.uniqueNumberOfArtists}</Text>
         <Text>Total Unique Albums: {this.state.uniqueNumberOfAlbums}</Text>
