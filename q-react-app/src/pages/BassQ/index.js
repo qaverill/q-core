@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
+import Settings from "./components/Settings";
 import { bassQTheme } from "../../colors";
-import { Page } from "../../components/styled-components";
+import { Page, SettingsGear, StyledPopup } from "../../components/styled-components";
 
 const BassQPage = styled(Page)`
   border: 5px solid ${bassQTheme.primary};
@@ -11,30 +12,37 @@ const BassQPage = styled(Page)`
 `;
 
 const Controls = styled.div`
-  width: 100%;
+  width: calc(100% - 5px);
   margin: 2.5px;
   height: 50px;
   background-color: blue;
+  display: flex;
+  align-items: center;
+  
+`;
+
+const SettingsButton = styled(SettingsGear)`
+  margin-left: auto;
 `;
 
 const FretBoard = styled.div`
-  width: 100%;
+  width: calc(100% - 10px);
   height: calc(100% - 50px);
   overflow: auto;
-  background-color: red;
+  background-color: black;
   margin: 2.5px;
   border: 2.5px solid black;
 `;
 
 const String = styled.div`
-  height: calc(100% / ${props => props.rows});
+  height: calc(100% / ${props => props.numStrings});
   width: 100%;
   display: flex;
 `;
 
 const Fret = styled.div`
-  height: ${props => props.size}px;
-  width: ${props => props.size}px;
+  height: calc(100% / 0);
+  width: calc(100%);
   margin: 2.5px;
   background-color: gray;
   display: flex;
@@ -46,9 +54,9 @@ class BassQ extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      fretSize: 50,
-      rows: 8,
-      columns: 8
+      numStrings: 8,
+      numFrets: 8,
+      lowestString: "B"
     }
   }
 
@@ -56,7 +64,9 @@ class BassQ extends React.Component {
     return (
       <BassQPage>
         <Controls>
-          hey
+          <StyledPopup trigger={<SettingsButton size="40px" />} modal>
+            <Settings parent={this}/>
+          </StyledPopup>
         </Controls>
         <FretBoard>
           {this.generateStrings()}
@@ -66,30 +76,28 @@ class BassQ extends React.Component {
   }
 
   generateStrings() {
-    let rows = [];
-    for (let row = 0; row < this.state.rows; row++){
-      rows.push(
-        <String rows={this.state.rows} key={row}>
-          {this.generateFrets(row)}
+    let strings = [];
+    for (let string = 0; string < this.state.numStrings; string++){
+      strings.push(
+        <String numStrings={this.state.numStrings} key={string}>
+          {this.generateFrets(string)}
         </String>
       )
     }
-    return rows;
+    return strings;
   }
 
-  generateFrets(row) {
+  generateFrets(string) {
     let columns = [];
-    for (let col = 0; col < this.state.columns; col++){
+    for (let col = 0; col < this.state.numFrets; col++){
       columns.push(
-          <Fret size={this.state.fretSize} key={row + "-" + col}>
-            {row + "-" + col}
+          <Fret key={string + "-" + col}>
+            {string + "-" + col}
           </Fret>
       )
     }
     return columns;
   }
-
-
 }
 
 export default BassQ

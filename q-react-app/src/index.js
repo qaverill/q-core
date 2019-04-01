@@ -32,6 +32,7 @@ const Title = styled.h2`
   margin: 0 10px;
 `;
 
+
 class App extends React.Component {
   constructor(props){
     super(props);

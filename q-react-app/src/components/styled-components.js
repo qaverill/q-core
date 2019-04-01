@@ -1,5 +1,6 @@
 import styled from 'styled-components'
-import {dark, medium, white} from "../colors";
+import Popup from "reactjs-popup";
+import {dark, light, medium, white} from "../colors";
 
 export const Button = styled.button`
   color: white;  
@@ -81,4 +82,23 @@ export const RightArrow = styled.img
 
 export const LeftArrow = styled(RightArrow)`
   transform: rotate(180deg);
+`;
+
+export const SettingsGear = styled.img
+  .attrs({
+    src: require('./Images/settings-gear.svg')
+  })`
+  cursor: pointer;
+  height: ${props => props.size == null ? `28px` : props.size};
+  width: ${props => props.size == null ? `28px` : props.size};
+  margin: 2.5px;
+  :hover {
+    filter: brightness(1.25);
+  }
+`;
+
+export const StyledPopup = styled(Popup)`
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 15px;
 `;
