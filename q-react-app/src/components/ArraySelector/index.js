@@ -14,7 +14,7 @@ class ArraySelector extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      iterator: this.props.array.indexOf(this.props.parent.state.selectedItem)
+      index: this.props.parent.state.selectedIndex
     }
   }
 
@@ -29,23 +29,23 @@ class ArraySelector extends React.Component {
   }
 
   movePageRight() {
-    const nextIterator = this.state.iterator + 1;
+    const nextIndex = this.state.index + 1;
     this.setState({
-      iterator: nextIterator > this.props.array.length - 1 ? 0 : nextIterator
+      index: nextIndex > this.props.array.length - 1 ? 0 : nextIndex
     });
     this.props.parent.setState({
-      selectedItem: this.props.array[nextIterator > this.props.array.length - 1 ? 0 : nextIterator],
+      selectedIndex: nextIndex > this.props.array.length - 1 ? 0 : nextIndex,
       error: null
     })
   }
 
   movePageLeft() {
-    const lastIterator = this.state.iterator - 1;
+    const lastIndex = this.state.index - 1;
     this.setState({
-      iterator: lastIterator < 0 ? this.props.array.length - 1 : lastIterator
+      index: lastIndex < 0 ? this.props.array.length - 1 : lastIndex
     });
     this.props.parent.setState({
-      selectedItem: this.props.array[lastIterator < 0 ? this.props.array.length - 1 : lastIterator],
+      selectedIndex: lastIndex < 0 ? this.props.array.length - 1 : lastIndex,
       error: null
     })
   }

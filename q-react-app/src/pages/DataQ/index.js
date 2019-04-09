@@ -48,7 +48,7 @@ class DataQ extends React.Component {
       }
     ];
     this.state = {
-      selectedItem: this.collectors[0],
+      selectedIndex: 0,
       unsaved: null,
       results: null
     };
@@ -62,7 +62,8 @@ class DataQ extends React.Component {
     if (this.state.unsaved === null) {
       return (
         <DataQPage>
-          <LoadingSpinner message={`Loading ${this.state.selectedItem.name}...`} color={this.state.selectedItem.color}/>
+          <LoadingSpinner message={`Loading ${this.collectors[this.state.selectedIndex].name}...`}
+                          color={this.collectors[this.state.selectedIndex].color} />
         </DataQPage>
       )
     } else {
@@ -79,7 +80,7 @@ class DataQ extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState){
-    if (prevState.selectedItem !== this.state.selectedItem){
+    if (prevState.selectedIndex !== this.state.selectedIndex){
       this.getSpotifyData();
       this.setState({
         unsaved: null
@@ -89,13 +90,13 @@ class DataQ extends React.Component {
 
   getSpotifyData(){
     const _this = this;
-    axios.get(this.state.selectedItem.spotifyPath).then(res => {
+    axios.get(this.collectors[this.state.selectedIndex].spotifyPath).then(res => {
       const items = res.data.items;
-      axios.get(this.state.selectedItem.mongodbPath, {params: {start: items[49].timestamp}}).then(res => {
+      axios.get(this.collectors[this.state.selectedIndex].mongodbPath, {params: {start: items[49].timestamp}}).then(res => {
         const youngestTimestamp = _this.getYoungestTimestamp(res.data);
         _this.setState({
           unsaved: items.filter(item => {
-            return parseInt(new Date(item[_this.state.selectedItem.timeParam]).getTime() / 1000, 10) > youngestTimestamp
+            return parseInt(new Date(item[_this.collectors[_this.state.selectedIndex].timeParam]).getTime() / 1000, 10) > youngestTimestamp
           })
         })
       })
@@ -121,7 +122,7 @@ class DataQ extends React.Component {
   makeMongodbFriendly(items){
     return items.map(item => {
       return {
-        timestamp: parseInt(new Date(item[this.state.selectedItem.timeParam]).getTime()/1000, 10),
+        timestamp: parseInt(new Date(item[this.collectors[this.state.selectedIndex].timeParam]).getTime()/1000, 10),
         track: item.track.id,
         artists: item.track.artists.map(artist => artist.id),
         album: item.track.album.id,
@@ -137,24 +138,24 @@ class DataQ extends React.Component {
         <SaveButton
           onClick={() => this.writeToMongo()}
           width={`calc(${this.state.unsaved.length * 2}% - 56px)`}
-          color={this.state.selectedItem.color}>
-          Document {this.state.unsaved.length} {this.state.selectedItem.name}
+          color={this.collectors[this.state.selectedIndex].color}>
+          Document {this.state.unsaved.length} {this.collectors[this.state.selectedIndex].name}
         </SaveButton>
       )
     } else {
       return (
-        <Text>No undocumented {this.state.selectedItem.name}</Text>
+        <Text>No undocumented {this.collectors[this.state.selectedIndex].name}</Text>
       )
     }
   }
 
   writeToMongo(){
     const _this = this;
-    axios.post(this.state.selectedItem.mongodbPath, this.makeMongodbFriendly(_this.state.unsaved))
+    axios.post(this.collectors[this.state.selectedIndex].mongodbPath, this.makeMongodbFriendly(_this.state.unsaved))
       .then(() => {
         _this.setState({unsaved: null});
         _this.componentWillMount();
-        NotificationManager.success(`Synced ${this.state.selectedItem.name}`);
+        NotificationManager.success(`Synced ${this.collectors[this.state.selectedIndex].name}`);
       })
   }
 }

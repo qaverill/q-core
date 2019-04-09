@@ -42,7 +42,8 @@ class App extends React.Component {
       <BassQ title={<Title>BassQ</Title>} />
     ];
     this.state = {
-      selectedItem: this.pages[2]
+      selectedIndex: 2,
+      error: null
     };
   }
 
@@ -51,7 +52,7 @@ class App extends React.Component {
       <AppContainer>
         <NotificationContainer />
         <AppHeader>
-          <ArraySelector array={this.pages} parent={this} title={this.state.selectedItem.props.title}/>
+          <ArraySelector array={this.pages} parent={this} title={this.pages[this.state.selectedIndex].props.title}/>
         </AppHeader>
         {this.renderPage()}
       </AppContainer>
@@ -62,7 +63,7 @@ class App extends React.Component {
     if (this.state.error != null){
       return this.state.error
     } else {
-      return this.state.selectedItem
+      return this.pages[this.state.selectedIndex]
     }
   }
 }

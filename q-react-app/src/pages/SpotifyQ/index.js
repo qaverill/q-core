@@ -63,7 +63,7 @@ class SpotifyQ extends React.Component {
       subject: null,
       data: null,
       loading: false,
-      selectedItem: this.displays[1]
+      selectedIndex: 0
     }
   }
 
@@ -89,7 +89,7 @@ class SpotifyQ extends React.Component {
             <BoldText>End</BoldText>
           </End>
         </Controls>
-        <ArraySelector array={this.displays} parent={this} title={<h2>{this.state.selectedItem}</h2>} />
+        <ArraySelector array={this.displays} parent={this} title={<h2>{this.state.selectedIndex}</h2>} />
         <Results>
           {this.displayResults()}
         </Results>
@@ -113,11 +113,11 @@ class SpotifyQ extends React.Component {
     if (this.state.data == null) {
       return <LoadingSpinner message={`Loading results...`} color={spotifyQTheme.tertiary}/>
     } else {
-      switch(this.state.selectedItem){
+      switch(this.displays[this.state.selectedIndex]){
         case "Overview":
-          return <Overview data={this.state.data} root={this.props.root}/>;
+          return <Overview data={this.state.data} root={this.props.root} />;
         case "Detail":
-          return <Detail data={this.state.data} totalTimeMs={(this.state.end - this.state.start) * 1000}/>
+          return <Detail data={this.state.data} totalTimeMs={(this.state.end - this.state.start) * 1000} />
       }
     }
   }
