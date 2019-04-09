@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import {LeftArrow, RightArrow} from "../styled-components";
+import {setSettings} from "../../utils";
 
 const ArraySelectorContainer = styled.div`
   display: flex;
@@ -21,33 +22,32 @@ class ArraySelector extends React.Component {
   render() {
     return (
       <ArraySelectorContainer key={this.props.title}>
-        <LeftArrow onClick={() => this.movePageLeft()} />
+        <LeftArrow onClick={() => this.moveSelectorLeft()} />
         {this.props.title}
-        <RightArrow onClick={() => this.movePageRight()} />
+        <RightArrow onClick={() => this.moveSelectorRight()} />
       </ArraySelectorContainer>
     )
   }
 
-  movePageRight() {
-    const nextIndex = this.state.index + 1;
-    this.setState({
-      index: nextIndex > this.props.array.length - 1 ? 0 : nextIndex
-    });
-    this.props.parent.setState({
-      selectedIndex: nextIndex > this.props.array.length - 1 ? 0 : nextIndex,
-      error: null
-    })
+  moveSelectorRight() {
+    this.saveSelectedIndex(this.state.index + 1 > this.props.array.length - 1 ? 0 : this.state.index + 1)
   }
 
-  movePageLeft() {
-    const lastIndex = this.state.index - 1;
+  moveSelectorLeft() {
+    this.saveSelectedIndex(this.state.index - 1 < 0 ? this.props.array.length - 1 : this.state.index - 1)
+  }
+
+  saveSelectedIndex(selectedIndex) {
     this.setState({
-      index: lastIndex < 0 ? this.props.array.length - 1 : lastIndex
+      index: selectedIndex
     });
     this.props.parent.setState({
-      selectedIndex: lastIndex < 0 ? this.props.array.length - 1 : lastIndex,
+      selectedIndex: selectedIndex,
       error: null
-    })
+    });
+    if (this.props.settingsKey != null) {
+      setSettings(this.props.settingsKey, selectedIndex)
+    }
   }
 }
 

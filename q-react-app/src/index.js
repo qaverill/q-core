@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import ArraySelector from './components/ArraySelector/index'
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
+import axios from "axios";
+import { getSettings } from "./utils";
 
 const AppContainer = styled.div`
   height: 100%;
@@ -42,17 +44,39 @@ class App extends React.Component {
       <BassQ title={<Title>BassQ</Title>} />
     ];
     this.state = {
-      selectedIndex: 2,
+      selectedIndex: getSettings() != null ? getSettings().lastPageIndex : 2,
       error: null
     };
   }
 
+  componentWillMount() {
+    axios.get(`/mongodb/settings`)
+      .then(res => {
+        sessionStorage.setItem("settings", JSON.stringify(res.data));
+        this.forceUpdate()
+      })
+  }
+
   render() {
+    if (getSettings() == null) {
+      return (
+        <AppContainer>
+          <AppHeader>
+            <h2>Loading...</h2>
+          </AppHeader>
+        </AppContainer>
+      )
+    }
+    console.log(getSettings());
     return (
       <AppContainer>
         <NotificationContainer />
         <AppHeader>
-          <ArraySelector array={this.pages} parent={this} title={this.pages[this.state.selectedIndex].props.title}/>
+          <ArraySelector
+            array={this.pages}
+            parent={this}
+            title={this.pages[this.state.selectedIndex].props.title}
+            settingsKey={"lastPageIndex"} />
         </AppHeader>
         {this.renderPage()}
       </AppContainer>

@@ -89,7 +89,7 @@ class SpotifyQ extends React.Component {
             <BoldText>End</BoldText>
           </End>
         </Controls>
-        <ArraySelector array={this.displays} parent={this} title={<h2>{this.state.selectedIndex}</h2>} />
+        <ArraySelector array={this.displays} parent={this} title={<h2>{this.displays[this.state.selectedIndex]}</h2>} />
         <Results>
           {this.displayResults()}
         </Results>

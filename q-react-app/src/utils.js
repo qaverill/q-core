@@ -1,3 +1,4 @@
+import axios from "axios";
 
 export const ONE_EPOCH_DAY = 86400;
 
@@ -37,4 +38,21 @@ export const msToString = (durationInMs) => {
        + (minutes < 10 ? "0" + minutes : minutes) + 'm '
        + (seconds < 10 ? "0" + seconds : seconds) + 's';
 };
+
+export const getSettings = () => {
+  if (sessionStorage.getItem("settings") != null) {
+    return JSON.parse(sessionStorage.getItem("settings"))
+  }
+};
+
+export const setSettings = (key, value) => {
+  if (sessionStorage.getItem("settings") != null) {
+    let updatedSettings = JSON.parse(sessionStorage.getItem("settings"));
+    updatedSettings[key] = value;
+    axios.post('/mongodb/settings', updatedSettings)
+      .then(() => {
+        sessionStorage.setItem("settings", JSON.stringify(updatedSettings));
+      })
+  }
+}
 
