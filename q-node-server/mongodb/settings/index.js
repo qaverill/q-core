@@ -5,7 +5,7 @@ routes.post('/', (request, response) => {
   MongoClient.connect(process.env.MONGO_URI, {useNewUrlParser: true}, (err, db) => {
     if (err) throw err;
     const dbo = db.db('q-mongodb');
-    dbo.collection("serttings").drop((err, delOK) => {
+    dbo.collection("settings").drop((err, delOK) => {
       if (err) throw err;
       if (delOK) {
         dbo.collection('settings').insertOne(request.body, (err, res) => {

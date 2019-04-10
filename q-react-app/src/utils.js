@@ -40,8 +40,11 @@ export const msToString = (durationInMs) => {
 };
 
 export const getSettings = () => {
+  console.log("getting settings")
   if (sessionStorage.getItem("settings") != null) {
     return JSON.parse(sessionStorage.getItem("settings"))
+  } else {
+    return null
   }
 };
 

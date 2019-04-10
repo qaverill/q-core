@@ -50,10 +50,13 @@ class App extends React.Component {
   }
 
   componentWillMount() {
+    const _this = this;
     axios.get(`/mongodb/settings`)
       .then(res => {
         sessionStorage.setItem("settings", JSON.stringify(res.data));
-        this.forceUpdate()
+        this.setState({
+          selectedIndex: res.data.lastPageIndex
+        })
       })
   }
 
