@@ -57,5 +57,5 @@ export const setSettings = (key, value) => {
         sessionStorage.setItem("settings", JSON.stringify(updatedSettings));
       })
   }
-}
+};
 

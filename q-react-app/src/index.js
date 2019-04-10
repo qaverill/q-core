@@ -54,7 +54,7 @@ class App extends React.Component {
     axios.get(`/mongodb/settings`)
       .then(res => {
         sessionStorage.setItem("settings", JSON.stringify(res.data));
-        this.setState({
+        _this.setState({
           selectedIndex: res.data.lastPageIndex
         })
       })
@@ -70,7 +70,6 @@ class App extends React.Component {
         </AppContainer>
       )
     }
-    console.log(getSettings());
     return (
       <AppContainer>
         <NotificationContainer />

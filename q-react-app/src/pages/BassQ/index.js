@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Settings from "./components/Settings";
 import { bassQTheme } from "../../colors";
 import { Page, SettingsGear, StyledPopup } from "../../components/styled-components";
+import {getSettings} from "../../utils";
 
 const BassQPage = styled(Page)`
   border: 5px solid ${bassQTheme.primary};
@@ -54,9 +55,9 @@ class BassQ extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      numStrings: 8,
-      numFrets: 8,
-      lowestString: "B"
+      numStrings: getSettings() != null ? getSettings().numStrings : 8,
+      numFrets: getSettings() != null ? getSettings().numFrets : 8,
+      lowestString: getSettings() != null ? getSettings().lowestString : "B",
     }
   }
 
