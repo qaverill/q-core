@@ -60,6 +60,11 @@ const Fret = styled.div`
   justify-content: center;
 `;
 
+function getNoteFromValue(string, fret, lowestString) {
+  const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  return notes[(notes.indexOf(lowestString) + fret + (string * 7)) % 12]
+}
+
 class BassQ extends React.Component {
   notes = [];
 
@@ -68,7 +73,7 @@ class BassQ extends React.Component {
     { value: "1", label: "min" },
   ];
 
-  rootsIterator = new Iterator([
+  roots = [
       { value: "0", label: "C" },
       { value: "1", label: "C#" },
       { value: "2", label: "D" },
@@ -81,7 +86,7 @@ class BassQ extends React.Component {
       { value: "9", label: "A" },
       { value: "10", label: "A#" },
       { value: "11", label: "B" }
-  ]);
+  ];
 
   constructor(props) {
     super(props);
@@ -96,7 +101,7 @@ class BassQ extends React.Component {
     return (
       <BassQPage>
         <Controls>
-          <RootSelector options={this.rootsIterator.list} placeholder={"Root..."}/>
+          <RootSelector options={this.roots} placeholder={"Root..."}/>
           <ModeSelector options={this.modes} placeholder={"Mode..."}/>
           <StyledPopup trigger={<SettingsButton size="40px" />} modal>
             <Settings parent={this}/>
@@ -123,12 +128,12 @@ class BassQ extends React.Component {
 
   generateFrets(string) {
     let columns = [];
-    for (let col = 0; col < this.state.numFrets; col++){
-      const noteValue = col + (string * this.state.numFrets);
+    for (let fret = 0; fret < this.state.numFrets; fret++){
+      const noteValue = fret + (string * this.state.numFrets);
       this.notes.push(noteValue);
       columns.push(
-          <Fret noteValue={noteValue} key={string + "-" + col}>
-            {this.rootsIterator.next().label}
+          <Fret noteValue={noteValue} key={string + "-" + fret}>
+            {getNoteFromValue(string, fret, this.state.lowestString)}
           </Fret>
       )
     }
