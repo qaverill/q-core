@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import {Button, Header, Page} from './styled-components'
-import { RiseLoader } from 'react-spinners'
+import { ClipLoader } from 'react-spinners'
 import {red, spotifyQTheme} from "../colors";
 
 const FullDiv = styled.div`
@@ -38,7 +38,7 @@ export class LoadingSpinner extends React.PureComponent {
   render() {
     return (
       <FullDiv>
-        <RiseLoader
+        <ClipLoader
           sizeUnit={"px"}
           size={100}
           color={this.props.color} />

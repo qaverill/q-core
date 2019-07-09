@@ -7,14 +7,22 @@ import {setSettings} from "../../../utils";
 const SettingsContainer = styled.div`
   border-radius: 15px;
   background-color: ${dark};
-  disply: flex;
+  display: flex;
   flex-direction: column;
+  align-items: center;
   border: 5px solid ${light};
-  padding: 2.5px;
+  padding: 20% 2.5px;
 `;
 
 const Setting = styled.div`
   display: flex;
+`;
+
+const SettingTitle= styled.h2`
+`;
+
+const SettingInput = styled(TextInput)`
+  width: 50px;
 `;
 
 class settings extends React.Component {
@@ -26,16 +34,16 @@ class settings extends React.Component {
     return (
       <SettingsContainer>
         <Setting>
-          <h2>Number of Frets: </h2>
-          <TextInput id="numFrets" onBlur={() => this.setNumFrets()}/>
+          <SettingTitle>Number of Frets: </SettingTitle>
+          <SettingInput id="numFrets" onBlur={() => this.setNumFrets()}/>
         </Setting>
         <Setting>
-          <h2>Number of Strings: </h2>
-          <TextInput id="numStrings" onBlur={() => this.setNumStrings()}/>
+          <SettingTitle>Number of Strings: </SettingTitle>
+          <SettingInput id="numStrings" onBlur={() => this.setNumStrings()}/>
         </Setting>
         <Setting>
-          <h2>Lowest String: </h2>
-          <TextInput id="lowestString" onBlur={() => this.setLowestString()}/>
+          <SettingTitle>Lowest String: </SettingTitle>
+          <SettingInput id="lowestString" onBlur={() => this.setLowestString()}/>
         </Setting>
       </SettingsContainer>
     )

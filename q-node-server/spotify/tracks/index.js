@@ -1,27 +1,16 @@
 const routes = require('express').Router();
 const request = require('request');
 
-routes.get('/', (req, res) => {
-  if (req.query.ids.split(',').length > 50){
-    res.send({error: 'Cannot process over 50 Track IDs'})
-  }
-  const requestOptions = {
-    url: `https://api.spotify.com/v1/tracks?ids=${req.query.ids}`,
-    headers: {
-      Authorization: 'Bearer ' + global.spotifyAuth.token
-    }
-  };
-  request.get(requestOptions, (error, response, body) => {
+routes.post('/:playlist_id/tracks', (request, response) => {
+  request.get(requestOptions, function(error, response, body) {
     if (!error && response.statusCode === 200) {
       res.send(body)
     } else {
-      console.log(response.statusCode);
-      console.log(error);
       res.send({error: 'Cannot connect to the Spotify API'})
     }
   });
 });
 
-console.log('GET \t/spotify/tracks?ids={csv}');
+console.log('POST \t/spotify/playlists/{playlist_id}/tracks');
 
 module.exports = routes;
