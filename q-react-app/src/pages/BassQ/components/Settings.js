@@ -35,24 +35,18 @@ class settings extends React.Component {
       <SettingsContainer>
         <Setting>
           <SettingTitle>Number of Frets: </SettingTitle>
-          <SettingInput id="numFrets" onBlur={() => this.setNumFrets()}/>
+          <SettingInput id="numFrets" onBlur={() => this.setNumFrets()} defaultValue={this.props.parent.state.numFrets}/>
         </Setting>
         <Setting>
           <SettingTitle>Number of Strings: </SettingTitle>
-          <SettingInput id="numStrings" onBlur={() => this.setNumStrings()}/>
+          <SettingInput id="numStrings" onBlur={() => this.setNumStrings()} defaultValue={this.props.parent.state.numStrings}/>
         </Setting>
         <Setting>
           <SettingTitle>Lowest String: </SettingTitle>
-          <SettingInput id="lowestString" onBlur={() => this.setLowestString()}/>
+          <SettingInput id="lowestString" onBlur={() => this.setLowestString()} defaultValue={this.props.parent.state.lowestString}/>
         </Setting>
       </SettingsContainer>
     )
-  }
-
-  componentDidMount() {
-    document.getElementById("numFrets").value = this.props.parent.state.numFrets;
-    document.getElementById("numStrings").value = this.props.parent.state.numStrings;
-    document.getElementById("lowestString").value = this.props.parent.state.lowestString;
   }
 
   setNumFrets() {

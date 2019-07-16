@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import Popup from "reactjs-popup";
+import Select from 'react-select';
 import {dark, light, medium, white} from "../colors";
 
 export const Button = styled.button`
@@ -101,4 +102,8 @@ export const StyledPopup = styled(Popup)`
   padding: 0 !important;
   border: none !important;
   border-radius: 15px;
+`;
+
+export const Selector = styled(Select)`
+  margin: 2.5px;
 `;

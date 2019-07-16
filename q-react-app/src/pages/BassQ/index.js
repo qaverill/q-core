@@ -1,11 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import Select from 'react-select';
 import Settings from "./components/Settings";
 import { bassQTheme } from "../../colors";
-import { Page, SettingsGear, StyledPopup, Text } from "../../components/styled-components";
-import {getSettings} from "../../utils";
-import {Iterator} from "../../objects";
+import { Page, SettingsGear, StyledPopup, Text, Selector } from "../../components/styled-components";
+import {getSettings, setSettings} from "../../utils";
 
 const BassQPage = styled(Page)`
   border: 5px solid ${bassQTheme.primary};
@@ -14,34 +12,34 @@ const BassQPage = styled(Page)`
   justify-content: center;
 `;
 
-const Controls = styled.div`
-  width: calc(100% - 5px);
+const CreatorBar = styled.div`
   margin: 2.5px;
-  height: 50px;
-  background-color: blue;
+  height: 60px;
+  background-color: black;
+  padding: 5px;
   display: flex;
   align-items: center;
 `;
 
-const RootSelector = styled(Select)`
-  width: 100px;
+const FretBoard = styled.div`
+  width: calc(100% - 10px);
+  overflow: auto;
+  background-color: black;
+  height: calc(100% - 50px);
+  margin: 2.5px;
+  border: 2.5px solid black;
 `;
 
-const ModeSelector = styled(Select)`
-  width: 100px;
+const RootSelector = styled(Selector)`
+  width: 110px;
+`;
+
+const ModeSelector = styled(Selector)`
+  width: 120px;
 `;
 
 const SettingsButton = styled(SettingsGear)`
   margin-left: auto;
-`;
-
-const FretBoard = styled.div`
-  width: calc(100% - 10px);
-  height: calc(100% - 50px);
-  overflow: auto;
-  background-color: black;
-  margin: 2.5px;
-  border: 2.5px solid black;
 `;
 
 const String = styled.div`
@@ -58,19 +56,13 @@ const Fret = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: ${props => props.color}
 `;
 
-function getNoteFromValue(string, fret, lowestString) {
-  const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-  return notes[(notes.indexOf(lowestString) + fret + (string * 7)) % 12]
-}
-
 class BassQ extends React.Component {
-  notes = [];
-
   modes = [
-    { value: "0", label: "maj" },
-    { value: "1", label: "min" },
+    { value: [0, 4, 7, 11], label: "maj" },
+    { value: [0, 3, 7, 10], label: "min" },
   ];
 
   roots = [
@@ -94,19 +86,21 @@ class BassQ extends React.Component {
       numStrings: getSettings() != null ? getSettings().numStrings : 8,
       numFrets: getSettings() != null ? getSettings().numFrets : 8,
       lowestString: getSettings() != null ? getSettings().lowestString : "B",
+      root: getSettings() != null ? getSettings().root : null,
+      mode: getSettings() != null ? getSettings().mode : null,
     };
   }
 
   render() {
     return (
       <BassQPage>
-        <Controls>
-          <RootSelector options={this.roots} placeholder={"Root..."}/>
-          <ModeSelector options={this.modes} placeholder={"Mode..."}/>
+        <CreatorBar>
+          <RootSelector options={this.roots} placeholder={"Root..."} onChange={this.setRoot} value={this.state.root}/>
+          <ModeSelector options={this.modes} placeholder={"Mode..."} onChange={this.setMode} value={this.state.mode}/>
           <StyledPopup trigger={<SettingsButton size="40px" />} modal>
             <Settings parent={this}/>
           </StyledPopup>
-        </Controls>
+        </CreatorBar>
         <FretBoard>
           {this.generateStrings()}
         </FretBoard>
@@ -129,15 +123,44 @@ class BassQ extends React.Component {
   generateFrets(string) {
     let columns = [];
     for (let fret = 0; fret < this.state.numFrets; fret++){
-      const noteValue = fret + (string * this.state.numFrets);
-      this.notes.push(noteValue);
+      const note = this.getNoteFromValue(string, fret, this.state.lowestString);
       columns.push(
-          <Fret noteValue={noteValue} key={string + "-" + fret}>
-            {getNoteFromValue(string, fret, this.state.lowestString)}
+          <Fret key={string + "-" + fret} color={this.getNoteColor(note)}>
+            {note}
           </Fret>
       )
     }
     return columns;
+  }
+
+  getNoteFromValue(string, fret, lowestString) {
+    const notes = this.roots.map(root => root.label);
+    return notes[(notes.indexOf(lowestString) + fret + (string * 7)) % 12]
+  }
+
+  getNoteColor = (note) => {
+    const notes = this.roots.map(root => root.label);
+    let color = null;
+    this.state.mode.value.forEach((interval, rank) => {
+      if ((note === notes[((notes.indexOf(this.state.root.label) + interval) % 12)])) {
+        color = ["green", "yellow", "orange", "red", "purple"][rank];
+      }
+    });
+    return color;
+  };
+
+  setRoot = root => {
+    setSettings("root", root);
+    this.setState({
+      root: root
+    })
+  };
+
+  setMode = mode => {
+    setSettings("mode", mode);
+    this.setState({
+      mode: mode
+    })
   }
 }
 

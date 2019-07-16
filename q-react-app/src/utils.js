@@ -40,7 +40,6 @@ export const msToString = (durationInMs) => {
 };
 
 export const getSettings = () => {
-  console.log("getting settings")
   if (sessionStorage.getItem("settings") != null) {
     return JSON.parse(sessionStorage.getItem("settings"))
   } else {
@@ -55,7 +54,9 @@ export const setSettings = (key, value) => {
     axios.post('/mongodb/settings', updatedSettings)
       .then(() => {
         sessionStorage.setItem("settings", JSON.stringify(updatedSettings));
-      })
+      }).catch((e) => {
+        console.log("Error settting settings...", e);
+    })
   }
 };
 
