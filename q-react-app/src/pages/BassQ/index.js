@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Settings from "./components/Settings";
 import { bassQTheme } from "../../colors";
-import { Page, SettingsGear, StyledPopup, Selector } from "../../components/styled-components";
+import { Page, SettingsGear, StyledPopup, Selector, Button } from "../../components/styled-components";
 import {getSettings, setSettings} from "../../utils";
 
 const BassQPage = styled(Page)`
@@ -97,6 +97,9 @@ class BassQ extends React.Component {
         <CreatorBar>
           <RootSelector options={this.roots} placeholder={"Root..."} onChange={this.setRoot} value={this.state.root}/>
           <ModeSelector options={this.modes} placeholder={"Mode..."} onChange={this.setMode} value={this.state.mode}/>
+          <Button color={"red"} onClick={this.clearFretColors}>
+            Clear
+          </Button>
           <StyledPopup trigger={<SettingsButton size="40px" />} modal>
             <Settings parent={this}/>
           </StyledPopup>
@@ -125,7 +128,7 @@ class BassQ extends React.Component {
     for (let fret = 0; fret < this.state.numFrets; fret++){
       const note = this.getNoteFromValue(string, fret, this.state.lowestString);
       columns.push(
-          <Fret key={string + "-" + fret} color={this.getNoteColor(note)}>
+          <Fret color={this.getNoteColor(note)} onClick={() => this.colorFret(note)}>
             {note}
           </Fret>
       )
@@ -141,13 +144,21 @@ class BassQ extends React.Component {
   getNoteColor = (note) => {
     const notes = this.roots.map(root => root.label);
     let color = null;
-    this.state.mode.value.forEach((interval, rank) => {
-      if ((note === notes[((notes.indexOf(this.state.root.label) + interval) % 12)])) {
-        color = ["green", "yellow", "orange", "red", "purple"][rank];
-      }
-    });
+    if (this.state.mode !== null) {
+      this.state.mode.value.forEach((interval, rank) => {
+        if ((note === notes[((notes.indexOf(this.state.root.label) + interval) % 12)])) {
+          color = ["green", "yellow", "orange", "red", "purple", "blue"][rank];
+        }
+      });
+    }
     return color;
   };
+
+  colorFret = (note) => {
+    this.setState({
+      root: this.roots.find(root => root.label === note)
+    })
+  }
 
   setRoot = root => {
     setSettings("root", root);
@@ -160,6 +171,13 @@ class BassQ extends React.Component {
     setSettings("mode", mode);
     this.setState({
       mode: mode
+    })
+  };
+
+  clearFretColors = () => {
+    this.setState({
+      root: null,
+      mode: null
     })
   }
 }
