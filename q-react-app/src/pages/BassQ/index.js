@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Settings from "./components/Settings";
 import { bassQTheme } from "../../colors";
-import { Page, SettingsGear, StyledPopup, Text, Selector } from "../../components/styled-components";
+import { Page, SettingsGear, StyledPopup, Selector } from "../../components/styled-components";
 import {getSettings, setSettings} from "../../utils";
 
 const BassQPage = styled(Page)`

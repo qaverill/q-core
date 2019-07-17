@@ -26,10 +26,6 @@ const SettingInput = styled(TextInput)`
 `;
 
 class settings extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <SettingsContainer>

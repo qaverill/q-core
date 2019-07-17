@@ -50,7 +50,7 @@ class Detail extends React.Component {
   }
 
   getUniqueNumberOfTracks() {
-    return [... new Set(this.props.data.map(listen => listen.track))].length
+    return [...new Set(this.props.data.map(listen => listen.track))].length
   }
 
   getUniqeuNumberOfAlbums() {

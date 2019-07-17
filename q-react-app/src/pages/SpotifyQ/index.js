@@ -1,9 +1,9 @@
 import React from 'react'
-import { Page, BoldText, TextInput, SearchBar, Button, Text } from "../../components/styled-components";
+import { Page, BoldText, TextInput } from "../../components/styled-components";
 import styled from 'styled-components'
 import axios from 'axios'
 import {LoadingSpinner} from "../../components/components";
-import {CharButton, DateAdjuster} from "./components/components";
+import {DateAdjuster} from "./components/components";
 import {dateToEpoch, epochToDate, epochToString, ONE_EPOCH_DAY, stringToEpoch} from "../../utils";
 import { NotificationManager} from 'react-notifications'
 import { spotifyQTheme } from "../../colors";
@@ -113,7 +113,7 @@ class SpotifyQ extends React.Component {
     if (this.state.data == null) {
       return <LoadingSpinner message={`Loading results...`} color={spotifyQTheme.tertiary}/>
     } else {
-      switch(this.displays[this.state.selectedIndex]){
+      switch(this.displays[this.state.selectedIndex]) {
         case "Overview":
           return <Overview data={this.state.data} root={this.props.root} />;
         case "Detail":
@@ -155,7 +155,7 @@ class SpotifyQ extends React.Component {
 
   adjustTimeframe(side, amount, vector){
     const date = epochToDate(this.state[side]);
-    switch(amount){
+    switch(amount) {
       case "day":
         date.setDate(date.getDate() + vector);
         break;

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header, Text } from "../../../components/styled-components";
+import { Header } from "../../../components/styled-components";
 import styled from 'styled-components'
 import axios from 'axios'
 import {SpotifyAPIErrorPage} from "../../../components/components";

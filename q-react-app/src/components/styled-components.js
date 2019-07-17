@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import Popup from "reactjs-popup";
 import Select from 'react-select';
-import {dark, light, medium, white} from "../colors";
+import {dark, medium, white} from "../colors";
 
 export const Button = styled.button`
   color: white;  
