@@ -1,5 +1,6 @@
 const server = require('express')();
 const bodyParser = require('body-parser');
+const q_logger = require('./q_logger');
 
 require('dotenv').load();
 
@@ -23,7 +24,7 @@ server.use((req, res, next) => {
   };
 
   const timestamp = new Date();
-  console.log('%s-%s: %s %s %s',
+  q_logger.info('%s-%s: %s %s %s',
     timestamp.toLocaleDateString(),
     timestamp.toLocaleTimeString(),
     req.method,
@@ -41,5 +42,5 @@ server.get('/', (req, res) => {
 });
 
 server.listen(process.env.PORT, () => {
-  console.log(`Server listening on port ${process.env.PORT}\n`)
+  console.log(`Server listening on port ${process.env.PORT}`)
 });

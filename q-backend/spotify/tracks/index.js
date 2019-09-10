@@ -1,7 +1,6 @@
 const routes = require('express').Router();
-const request = require('request');
 
-routes.post('/:playlist_id/tracks', (request, response) => {
+routes.post('/:playlist_id/tracks', (request) => {
   request.get(requestOptions, function(error, response, body) {
     if (!error && response.statusCode === 200) {
       res.send(body)
