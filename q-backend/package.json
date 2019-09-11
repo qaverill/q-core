@@ -1,0 +1,21 @@
+{
+  "name": "q-backend",
+  "version": "1.0.0",
+  "description": "backend for Q",
+  "main": "index.js",
+  "repository": "https://github.com/qaverill/q-core/tree/master/q-backend",
+  "author": "Quinn",
+  "license": "Q",
+  "private": true,
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongodb": "^3.3.2",
+    "q-logger": "file:q-modules/q-logger",
+    "request": "^2.88.0"
+  }
+}

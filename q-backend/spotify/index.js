@@ -1,6 +1,7 @@
 const routes = require('express').Router();
 const request = require('request');
 
+q_logger.info("spot");
 routes.use('/auth', require('./auth'));
 routes.use((req, res, next) => {
   if (global.spotifyAuth == null || global.spotifyAuth.expiresTimestampMs < Date.now()){
