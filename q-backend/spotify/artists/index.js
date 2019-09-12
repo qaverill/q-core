@@ -22,6 +22,6 @@ routes.get('/', (req, res) => {
   });
 });
 
-console.log('GET \t/spotify/artists?ids={csv}');
+console.log('  GET  /spotify/artists?ids={csv}');
 
 module.exports = routes;

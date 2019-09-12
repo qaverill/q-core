@@ -3,6 +3,7 @@ const routes = express.Router();
 const request = require('request');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
+const q_logger = require('q-logger');
 
 const stateKey = 'spotify_auth_state';
 
@@ -87,8 +88,8 @@ routes.get('/tokens', function(req, res) {
   res.send(global.spotifyAuth);
 });
 
-console.log('GET \t/spotify/auth/login');
-console.log('GET \t/spotify/auth/callback');
-console.log('GET \t/spotify/auth/tokens');
+console.log('  GET  /spotify/auth/login');
+console.log('  GET  /spotify/auth/callback');
+console.log('  GET  /spotify/auth/tokens');
 
 module.exports = routes;

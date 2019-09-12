@@ -1,44 +1,32 @@
 const server = require('express')();
 const bodyParser = require('body-parser');
 const q_logger = require('q-logger');
+try {
+    const config = require("./config.json");
+    global.config = config
+} catch (error) {
+    q_logger.error("Missing Config.js file in /q-backend");
+    return
+}
+
+q_logger.info("Starting server...")
 
 server.use(require('cors')());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use((req, res, next) => {
-  const getRequestDataByMethod = method => {
-    switch (method) {
-      case "GET":
-        return JSON.stringify(req.query);
-      case "POST":
-        return (
-          Array.isArray(req.body)
-            ? JSON.stringify({"numberOfItems": req.body.length})
-            : JSON.stringify(req.body)
-        );
-      default:
-        return "The server does not know what to print for this HTTP method"
-    }
-  };
-
-  const timestamp = new Date();
-  q_logger.info('%s-%s: %s %s %s',
-    timestamp.toLocaleDateString(),
-    timestamp.toLocaleTimeString(),
-    req.method,
-    req.originalUrl,
-    getRequestDataByMethod(req.method)
-  );
+  q_logger.info(`${req.method} ${req.originalUrl}`, {query: req.query, body: req.body});
   next();
 });
 
-q_logger.info("ok")
-
+server.use((req, res, next) => {
+    // TODO: log error when endpoint called does not exist
+    next()
+});
 
 server.use('/spotify', require('./spotify'));
 server.use('/mongodb', require('./mongodb'));
 
-q_logger.warn("ahhh")
-server.listen(process.env.PORT, () => {
-  console.log(`Server listening on port ${process.env.PORT}`)
+server.listen(global.config.port, () => {
+  q_logger.info(`Started Q on port ${global.config.port}`)
 });

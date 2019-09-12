@@ -17,6 +17,6 @@ routes.get('/', function(req, res) {
   });
 });
 
-console.log('GET \t/spotify/saved-tracks');
+console.log('  GET  /spotify/saved-tracks');
 
 module.exports = routes;

@@ -73,7 +73,7 @@ routes.get('/', (request, response) => {
   });
 });
 
-console.log('POST \t/mongodb/saves');
-console.log('GET \t/mongodb/saves');
+console.log('  POST /mongodb/saves');
+console.log('  GET  /mongodb/saves');
 
 module.exports = routes;

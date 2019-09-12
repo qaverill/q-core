@@ -1,11 +1,11 @@
 const routes = require('express').Router();
 const request = require('request');
+const q_logger = require('q-logger');
 
-q_logger.info("spot");
 routes.use('/auth', require('./auth'));
 routes.use((req, res, next) => {
   if (global.spotifyAuth == null || global.spotifyAuth.expiresTimestampMs < Date.now()){
-    console.log("Missing Spotify Auth!");
+    q_logger.error("Missing Spotify Auth!");
     res.status(401).send({
       "message": "Missing Spotify Auth"
     })
@@ -35,6 +35,6 @@ routes.get('/', (req, res) => {
   });
 });
 
-console.log('GET \t/spotify/');
+console.log('  GET  /spotify/');
 
 module.exports = routes;

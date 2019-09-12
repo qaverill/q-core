@@ -17,6 +17,6 @@ routes.get('/', function(req, res) {
   });
 });
 
-console.log('GET \t/spotify/recently-played');
+console.log('  GET  /spotify/recently-played');
 
 module.exports = routes;

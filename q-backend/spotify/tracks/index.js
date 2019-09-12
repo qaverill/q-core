@@ -10,6 +10,6 @@ routes.post('/:playlist_id/tracks', (request) => {
   });
 });
 
-console.log('POST \t/spotify/playlists/{playlist_id}/tracks');
+console.log('  POST /spotify/playlists/{playlist_id}/tracks');
 
 module.exports = routes;

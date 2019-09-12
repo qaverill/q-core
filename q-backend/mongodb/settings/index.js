@@ -29,7 +29,7 @@ routes.get('/', (request, response) => {
   });
 });
 
-console.log('POST \t/mongodb/settings');
-console.log('GET \t/mongodb/settings');
+console.log('  POST /mongodb/settings');
+console.log('  GET  /mongodb/settings');
 
 module.exports = routes;

@@ -71,7 +71,7 @@ routes.get('/', (request, response) => {
   });
 });
 
-console.log('POST \t/mongodb/listens');
-console.log('GET \t/mongodb/listens');
+console.log('  POST /mongodb/listens');
+console.log('  GET  /mongodb/listens');
 
 module.exports = routes;
