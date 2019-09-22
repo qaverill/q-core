@@ -1,5 +1,6 @@
 const routes = require('express').Router();
 const MongoClient = require('mongodb').MongoClient;
+const config = require('config');
 const validation = require('../validation');
 
 routes.post('/', (request, response) => {
@@ -25,7 +26,7 @@ routes.post('/', (request, response) => {
 
   // Insert listensToInsert to mongodb if there are any
   if (listensToInsert.length > 0){
-    MongoClient.connect(process.env.MONGO_URI, {useNewUrlParser: true}, (err, db) => {
+    MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (err, db) => {
       if (err) throw err;
       const dbo = db.db('q-mongodb');
       dbo.collection('listens').insertMany(listensToInsert, {ordered: false}, (err, res) => {
@@ -60,7 +61,7 @@ routes.get('/', (request, response) => {
   }
 
   console.log(query);
-  MongoClient.connect(process.env.MONGO_URI, {useNewUrlParser: true}, (err, db) => {
+  MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (err, db) => {
     if (err) throw err;
     const dbo = db.db('q-mongodb');
     dbo.collection('listens').find(query).toArray((err, res) => {

@@ -6,4 +6,5 @@ module.exports = {
     info: (message, payload) => log("\x1b[32mINFO", message, payload),
     warn: (message, payload) => log("\x1b[33mWARN", message, payload),
     error: (message, payload) => log("\x1b[31mERROR", message, payload),
+    request_error: (message, response) => log("\x1b[31mERROR", message, JSON.parse(response.body))
 };

@@ -12,6 +12,7 @@ const STATE_KEY = 'spotify_auth_state';
 routes.use(express.static(__dirname + '/public')).use(cookieParser());
 
 routes.get('/login', (req, res) => {
+  const state = q_utils.generateRandomString(16);
   res.cookie(STATE_KEY, state);
 
   res.redirect('https://accounts.spotify.com/authorize?' +
@@ -20,7 +21,7 @@ routes.get('/login', (req, res) => {
       client_id: config.spotify.client_id,
       scope: config.spotify.scope,
       redirect_uri: config.spotify.redirect_uri,
-      state: q_utils.generateRandomString(16)
+      state: state
     }));
 });
 
@@ -50,8 +51,7 @@ routes.get('/callback', (req, res) => {
 
     request.post(authOptions, (error, response, body) => {
       if (!error && response.statusCode === 200) {
-        q_logger.warn("TODO: make better use of this data from GET spotify/auth/callback", body);
-        config.setTokens('spotify', body.access_token, body.refresh_token);
+        config.persistTokens('spotify', body.access_token, body.refresh_token, body.expires_in * 1000 + Date.now());
 
         res.redirect('http://localhost:3000/#' +
           querystring.stringify({
@@ -59,6 +59,7 @@ routes.get('/callback', (req, res) => {
             refresh_token: body.refresh_token
           }));
       } else {
+        q_logger.request_error('Error posting Spotify auth', response);
         res.redirect('/#' +
           querystring.stringify({
             error: 'invalid_token'

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import Popup from "reactjs-popup";
+import Popup from 'reactjs-popup';
 import Select from 'react-select';
 import {dark, medium, white} from "../colors";
 

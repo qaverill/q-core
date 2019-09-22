@@ -4,7 +4,7 @@ import DataQ from './pages/DataQ';
 import SpotifyQ from './pages/SpotifyQ';
 import BassQ from './pages/BassQ';
 import styled from 'styled-components';
-import ArraySelector from './components/ArraySelector/index'
+import ArraySelector from './components/ArraySelector'
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import axios from "axios";

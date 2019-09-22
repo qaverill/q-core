@@ -1,6 +1,7 @@
 const routes = require('express').Router();
 const MongoClient = require('mongodb').MongoClient;
 const validation = require('../validation');
+const config = require('config');
 
 routes.post('/', (request, response) => {
   // Validate the request body and if OK, set (each) listen._id to it's timestamp
@@ -27,7 +28,7 @@ routes.post('/', (request, response) => {
 
   // Insert savesToInsert to mongodb if there are any
   if (savesToInsert.length > 0){
-    MongoClient.connect(process.env.MONGO_URI, {useNewUrlParser: true}, (err, db) => {
+    MongoClient.connect(config.mongo_uri, {useUnifiedTopology: true}, (err, db) => {
       if (err) throw err;
       const dbo = db.db('q-mongodb');
       dbo.collection('saves').insertMany(savesToInsert, {ordered: false}, (err, res) => {
@@ -62,7 +63,7 @@ routes.get('/', (request, response) => {
   }
 
   console.log(query);
-  MongoClient.connect(process.env.MONGO_URI, {useNewUrlParser: true}, (err, db) => {
+  MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (err, db) => {
     if (err) throw err;
     const dbo = db.db('q-mongodb');
     dbo.collection('saves').find(query).toArray((err, res) => {

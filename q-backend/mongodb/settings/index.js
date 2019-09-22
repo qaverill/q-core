@@ -1,8 +1,9 @@
 const routes = require('express').Router();
 const MongoClient = require('mongodb').MongoClient;
+const config = require('config');
 
 routes.post('/', (request, response) => {
-  MongoClient.connect(process.env.MONGO_URI, {useNewUrlParser: true}, (err, db) => {
+  MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (err, db) => {
     if (err) throw err;
     const dbo = db.db('q-mongodb');
     dbo.collection("settings").drop((err, delOK) => {
@@ -18,7 +19,7 @@ routes.post('/', (request, response) => {
 });
 
 routes.get('/', (request, response) => {
-  MongoClient.connect(process.env.MONGO_URI, {useNewUrlParser: true}, (err, db) => {
+  MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (err, db) => {
     if (err) throw err;
     const dbo = db.db('q-mongodb');
     dbo.collection('settings').findOne({}, (err, res) => {

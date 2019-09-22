@@ -3,7 +3,7 @@ import { Page, Text, Button } from "../../components/styled-components";
 import styled from 'styled-components'
 import { LoadingSpinner, SpotifyAPIErrorPage} from "../../components/components";
 import { dataQTheme } from "../../colors";
-import ArraySelector from "../../components/ArraySelector/index";
+import ArraySelector from "../../components/ArraySelector";
 import axios from "axios";
 import {NotificationManager} from "react-notifications";
 import AlbumCoverArray from "./components/AlbumCoverArray";

@@ -1,17 +1,20 @@
 const routes = require('express').Router();
 const request = require('request');
+const config = require('config');
+const q_logger = require('q-logger');
 
-routes.get('/', function(req, res) {
+routes.get('/', (req, res) => {
     const requestOptions = {
         url: 'https://api.spotify.com/v1/me/tracks?limit=50',
         headers: {
-            Authorization: 'Bearer ' + global.spotifyAuth.token
+            Authorization: 'Bearer ' + config.spotify.access_token
         }
     };
-    request.get(requestOptions, function(error, response, body) {
+    request.get(requestOptions, (error, response, body) => {
         if (!error && response.statusCode === 200) {
             res.send(body)
         } else {
+            q_logger.request_error('Error getting Spotify playlists', response);
             res.send({error: 'Cannot connect to the Spotify API'})
         }
     });

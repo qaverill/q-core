@@ -1,0 +1,38 @@
+{
+  "name": "q-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for Q",
+  "main": "src/index.js",
+  "author": "Quinn Averill",
+  "repository": "https://github.com/qaverill/q-core/tree/master/q-frontend",
+  "license": "Q",
+  "private": true,
+  "proxy": "http://localhost:8888",
+  "scripts": {
+    "start": "react-scripts start"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-notifications": "^1.4.3",
+    "react-scripts": "^3.1.2",
+    "react-select": "^3.0.5",
+    "react-spinners": "^0.6.1",
+    "react-tooltip": "^3.11.1",
+    "reactjs-popup": "^1.5.0",
+    "styled-components": "^4.3.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
