@@ -3,7 +3,8 @@
 **/.DS_Store
 **/._.DS_Store
 
-**/config.json
+q-backend/config/config.json
+q-backend/config/tokens.json
 
 node_modules/
 

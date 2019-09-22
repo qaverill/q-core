@@ -3,7 +3,7 @@
   "description": "Logger for Q",
   "version": "1.0.0",
   "author": "Quinn Averill",
-  "main": "./q-logger.js",
+  "main": "q-logger.js",
   "files": [
     "q-logger.js"
   ]

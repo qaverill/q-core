@@ -1,15 +1,9 @@
 const server = require('express')();
 const bodyParser = require('body-parser');
 const q_logger = require('q-logger');
-try {
-    const config = require("./config.json");
-    global.config = config
-} catch (error) {
-    q_logger.error("Missing Config.js file in /q-backend");
-    return
-}
+const config = require('config');
 
-q_logger.info("Starting server...")
+q_logger.info("Starting server...");
 
 server.use(require('cors')());
 server.use(bodyParser.json());
@@ -19,14 +13,8 @@ server.use((req, res, next) => {
   next();
 });
 
-server.use((req, res, next) => {
-    // TODO: log error when endpoint called does not exist
-    next()
-});
-
 server.use('/spotify', require('./spotify'));
 server.use('/mongodb', require('./mongodb'));
+server.use('/lifx', require('./lifx'));
 
-server.listen(global.config.port, () => {
-  q_logger.info(`Started Q on port ${global.config.port}`)
-});
+server.listen(config.port, () => q_logger.info(`Started Q on port ${config.port}`));

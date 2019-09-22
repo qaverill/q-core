@@ -12,11 +12,14 @@
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "config": "file:config",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongodb": "^3.3.2",
-    "q-logger": "file:q-modules/q-logger",
+    "path": "^0.12.7",
+    "q-logger": "file:q-utils/q-logger",
+    "q-utils": "file:q-utils",
     "request": "^2.88.0"
   }
 }

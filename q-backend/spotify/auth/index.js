@@ -3,40 +3,30 @@ const routes = express.Router();
 const request = require('request');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
+const config = require('config');
 const q_logger = require('q-logger');
+const q_utils = require('q-utils');
 
-const stateKey = 'spotify_auth_state';
-
-const generateRandomString = function(length) {
-  let text = '';
-  let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-  for (let i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-};
+const STATE_KEY = 'spotify_auth_state';
 
 routes.use(express.static(__dirname + '/public')).use(cookieParser());
 
-routes.get('/login', function(req, res) {
-  let state = generateRandomString(16);
-  res.cookie(stateKey, state);
+routes.get('/login', (req, res) => {
+  res.cookie(STATE_KEY, state);
 
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
-      client_id: process.env.SPOTIFY_CLIENT_ID,
-      scope: process.env.SPOTIFY_SCOPE,
-      redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
-      state: state
+      client_id: config.spotify.client_id,
+      scope: config.spotify.scope,
+      redirect_uri: config.spotify.redirect_uri,
+      state: q_utils.generateRandomString(16)
     }));
 });
 
-routes.get('/callback', function(req, res) {
-  let code = req.query.code || null;
+routes.get('/callback', (req, res) => {
   let state = req.query.state || null;
-  let storedState = req.cookies ? req.cookies[stateKey] : null;
+  let storedState = req.cookies ? req.cookies[STATE_KEY] : null;
 
   if (state === null || state !== storedState) {
     res.redirect('/#' +
@@ -44,35 +34,29 @@ routes.get('/callback', function(req, res) {
         error: 'state_mismatch'
       }));
   } else {
-    res.clearCookie(stateKey);
+    res.clearCookie(STATE_KEY);
     let authOptions = {
       url: 'https://accounts.spotify.com/api/token',
       form: {
-        code: code,
-        redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
+        code: req.query.code || null,
+        redirect_uri: config.spotify.redirect_uri,
         grant_type: 'authorization_code'
       },
       headers: {
-        'Authorization': 'Basic ' + (new Buffer(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64'))
+        'Authorization': `Basic ${new Buffer(config.spotify.client_id + ':' + config.spotify.client_secret).toString('base64')}`
       },
       json: true
     };
 
-    request.post(authOptions, function(error, response, body) {
+    request.post(authOptions, (error, response, body) => {
       if (!error && response.statusCode === 200) {
-        global.spotifyAuth = {
-          "token": body.access_token,
-          "expiresTimestampMs": body.expires_in * 1000 + Date.now()
-        };
+        q_logger.warn("TODO: make better use of this data from GET spotify/auth/callback", body);
+        config.setTokens('spotify', body.access_token, body.refresh_token);
 
-        let access_token = body.access_token;
-        let refresh_token = body.refresh_token;
-
-        // we can also pass the token to the browser to make requests from there
         res.redirect('http://localhost:3000/#' +
           querystring.stringify({
-            access_token: access_token,
-            refresh_token: refresh_token
+            access_token: body.access_token,
+            refresh_token: body.refresh_token
           }));
       } else {
         res.redirect('/#' +
@@ -84,12 +68,7 @@ routes.get('/callback', function(req, res) {
   }
 });
 
-routes.get('/tokens', function(req, res) {
-  res.send(global.spotifyAuth);
-});
-
 console.log('  GET  /spotify/auth/login');
 console.log('  GET  /spotify/auth/callback');
-console.log('  GET  /spotify/auth/tokens');
 
 module.exports = routes;

@@ -1,0 +1,10 @@
+{
+  "name": "config",
+  "description": "config file for Q",
+  "version": "1.0.0",
+  "author": "Quinn Averill",
+  "main": "config.js",
+  "files": [
+    "config.js"
+  ]
+}
