@@ -9,7 +9,7 @@
   "private": true,
   "proxy": "http://localhost:8888",
   "scripts": {
-    "start": "react-scripts start"
+    "start": "PORT=3333 react-scripts start"
   },
   "dependencies": {
     "axios": "^0.19.0",

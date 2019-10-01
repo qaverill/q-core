@@ -6,7 +6,7 @@ const q_logger = require('q-logger');
 routes.use('/auth', require('./auth'));
 routes.use((req, res, next) => {
   if (config.spotify.valid_until < Date.now()){
-    q_logger.error("Missing Spotify Auth!");
+    q_logger.warn("Missing Spotify Auth!");
     res.status(401).send({
       "message": "Missing Spotify Auth"
     })
