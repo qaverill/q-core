@@ -1,6 +1,7 @@
 const routes = require('express').Router();
 const MongoClient = require('mongodb').MongoClient;
 const config = require('config');
+const q_logger = require('q-logger');
 
 routes.post('/', (request, response) => {
   MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (err, db) => {
@@ -24,6 +25,7 @@ routes.get('/', (request, response) => {
     const dbo = db.db('q-mongodb');
     dbo.collection('settings').findOne({}, (err, res) => {
       if (err) throw err;
+      q_logger.debug("boutta return mongo/settings");
       response.status(200).json(res);
       db.close();
     });

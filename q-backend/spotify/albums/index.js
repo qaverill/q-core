@@ -17,7 +17,7 @@ routes.get('/', (req, res) => {
     if (!error && response.statusCode === 200) {
       res.send(body)
     } else {
-      q_logger.request_error('Error getting Spotify Albums', response);
+      q_logger.error('Error getting Spotify Albums', response);
       res.send({error: 'Error connecting to the Spotify API'})
     }
   });

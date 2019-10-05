@@ -59,7 +59,7 @@ routes.get('/callback', (req, res) => {
             refresh_token: body.refresh_token
           }));
       } else {
-        q_logger.request_error('Error posting Spotify auth', response);
+        q_logger.error('Error posting Spotify auth', response);
         res.redirect('/#' +
           querystring.stringify({
             error: 'invalid_token'
