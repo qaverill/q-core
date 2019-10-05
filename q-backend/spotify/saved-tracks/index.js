@@ -14,7 +14,7 @@ routes.get('/', function(req, res) {
     if (!error && response.statusCode === 200) {
       res.send(body)
     } else {
-      q_logger.error('Error getting Spotify saved-tracks', response);
+      q_logger.request_error('Error getting Spotify saved-tracks', response);
       res.send({error: 'Cannot connect to the Spotify API'})
     }
   });
