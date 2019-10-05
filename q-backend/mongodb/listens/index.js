@@ -1,14 +1,9 @@
 const routes = require('express').Router();
 const MongoClient = require('mongodb').MongoClient;
 const config = require('config');
-const q_logger = require('q-logger');
 const validation = require('../validation');
-const q_api = require('q-api');
 
-const GET = 'GET  /mongodb/listens';
-const POST = 'POST /mongodb/listens';
-
-q_api.makePostEndpoint(routes, '/', POST, (request, response) => {
+routes.post('/', (request, response) => {
   // Validate the request body and if OK, set (each) listen._id to it's timestamp
   let listensToInsert = [];
   if (Array.isArray(request.body)){
@@ -44,7 +39,7 @@ q_api.makePostEndpoint(routes, '/', POST, (request, response) => {
   }
 });
 
-q_api.makeGetEndpoint(routes, '/', GET, (request, response) => {
+routes.get('/', (request, response) => {
   let query = {};
   if ((request.query.start != null && !isNaN(request.query.start)) || (request.query.end != null && !isNaN(request.query.end))){
     query._id = {};
@@ -65,6 +60,7 @@ q_api.makeGetEndpoint(routes, '/', GET, (request, response) => {
     query.album = request.query.albumID
   }
 
+  console.log(query);
   MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (err, db) => {
     if (err) throw err;
     const dbo = db.db('q-mongodb');
@@ -76,7 +72,7 @@ q_api.makeGetEndpoint(routes, '/', GET, (request, response) => {
   });
 });
 
-console.log('  ' + POST);
-console.log('  ' + GET);
+console.log('  POST /mongodb/listens');
+console.log('  GET  /mongodb/listens');
 
 module.exports = routes;

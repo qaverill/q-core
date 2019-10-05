@@ -19,7 +19,6 @@
     "mongodb": "^3.3.2",
     "nodemon": "^1.19.2",
     "path": "^0.12.7",
-    "q-api": "file:q-utils/q-api",
     "q-logger": "file:q-utils/q-logger",
     "q-utils": "file:q-utils",
     "request": "^2.88.0"

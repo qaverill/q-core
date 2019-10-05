@@ -1,16 +1,14 @@
 const log = (status, message, payload) => {
     const formattedPayload = () => {
         if (payload != null) {
-            if (typeof payload == 'object') {
-                if (payload.body != null) {
-                    return JSON.stringify(payload.body, null, 2);
-                } else {
-                    return JSON.stringify(payload, null, 2)
-                }
+            if (payload.body != null) {
+                return JSON.parse(payload.body);
+            } else {
+                return JSON.stringify(payload, null, 2)
             }
-            return payload;
+        } else {
+            return "";
         }
-        return "";
     };
     console.log(`${status} \x1b[0m [${new Date().toISOString()}]  ${message} ${formattedPayload()}`)
 };

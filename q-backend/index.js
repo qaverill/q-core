@@ -24,7 +24,12 @@ server.use((req, res, next) => {
   next();
 });
 
-server.use('/spotify', require('./spotify'));
+server.use('/spotify', require('./spotify'));server.use((req, res, next) => {
+  // q_logger.info("req", req);
+  // q_logger.info("res", res);
+  // q_logger.info("next", next);
+  q_logger.debug("HEYYYY")
+});
 server.use('/mongodb', require('./mongodb'));
 server.use('/lifx', require('./lifx'));
 
