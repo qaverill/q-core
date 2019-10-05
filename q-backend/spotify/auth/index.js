@@ -53,7 +53,7 @@ routes.get('/callback', (req, res) => {
       if (!error && response.statusCode === 200) {
         config.persistTokens('spotify', body.access_token, body.refresh_token, body.expires_in * 1000 + Date.now());
 
-        res.redirect('http://localhost:3000/#' +
+        res.redirect('http://localhost:3333/#' +
           querystring.stringify({
             access_token: body.access_token,
             refresh_token: body.refresh_token
