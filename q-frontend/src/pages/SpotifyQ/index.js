@@ -4,12 +4,13 @@ import styled from 'styled-components'
 import axios from 'axios'
 import {LoadingSpinner} from "../../components/components";
 import {DateAdjuster} from "./components/components";
-import {dateToEpoch, epochToDate, epochToString, ONE_EPOCH_DAY, stringToEpoch} from "../../utils";
 import { NotificationManager} from 'react-notifications'
-import { spotifyQTheme } from "../../colors";
 import ArraySelector from "../../components/ArraySelector";
 import Overview from "./components/Overview";
 import Detail from './components/Detail';
+
+const q_utils = require('q-utils');
+const { spotifyQTheme } = require('q-colors');
 
 const SpotifyQPage = styled(Page)`
   border: 5px solid ${spotifyQTheme.primary};
@@ -58,7 +59,7 @@ class SpotifyQ extends React.Component {
       "Detail"
     ];
     this.state = {
-      start: Math.round(new Date().getTime() / 1000) - 3 * ONE_EPOCH_DAY,
+      start: Math.round(new Date().getTime() / 1000) - 3 * q_utils.ONE_EPOCH_DAY,
       end: Math.round(new Date().getTime() / 1000),
       subject: null,
       data: null,
@@ -98,8 +99,8 @@ class SpotifyQ extends React.Component {
   }
 
   componentDidMount() {
-    document.getElementById('start').value = epochToString(this.state.start);
-    document.getElementById('end').value = epochToString(this.state.end);
+    document.getElementById('start').value = q_utils.epochToString(this.state.start);
+    document.getElementById('end').value = q_utils.epochToString(this.state.end);
     this.explore()
   }
 
@@ -135,7 +136,7 @@ class SpotifyQ extends React.Component {
   setTimeframeSide(side, value) {
     if (value == null) {
       const input = document.getElementById(side).value;
-      value = input.length === 0 ? null : stringToEpoch(input);
+      value = input.length === 0 ? null : q_utils.stringToEpoch(input);
     }
 
     if (value != null && isNaN(value)) {
@@ -145,7 +146,7 @@ class SpotifyQ extends React.Component {
     } else if (side === "end" && value != null && value <= this.state.start) {
       NotificationManager.error(`Must be after the Start`, "Impossible Range");
     } else if (value !== this.state[side]) {
-      document.getElementById(side).value = epochToString(value);
+      document.getElementById(side).value = q_utils.epochToString(value);
       this.setState({
         [side]: value,
         data: null
@@ -154,7 +155,7 @@ class SpotifyQ extends React.Component {
   }
 
   adjustTimeframe(side, amount, vector){
-    const date = epochToDate(this.state[side]);
+    const date = q_utils.epochToDate(this.state[side]);
     switch(amount) {
       case "day":
         date.setDate(date.getDate() + vector);
@@ -169,7 +170,7 @@ class SpotifyQ extends React.Component {
         date.setFullYear(date.getFullYear() + vector);
         break;
     }
-    this.setTimeframeSide(side, dateToEpoch(date))
+    this.setTimeframeSide(side, q_utils.dateToEpoch(date))
   }
 }
 

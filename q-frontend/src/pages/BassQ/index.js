@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import Settings from "./components/Settings";
-import { bassQTheme } from "../../colors";
 import { Page, SettingsGear, StyledPopup, Selector, Button } from "../../components/styled-components";
-import {getSettings, setSettings} from "../../utils";
+const { bassQTheme } = require('q-colors');
+const q_settings = require('q-settings');
 
 const BassQPage = styled(Page)`
   border: 5px solid ${bassQTheme.primary};
@@ -83,11 +83,11 @@ class BassQ extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      numStrings: getSettings() != null ? getSettings().numStrings : 8,
-      numFrets: getSettings() != null ? getSettings().numFrets : 8,
-      lowestString: getSettings() != null ? getSettings().lowestString : "B",
-      root: getSettings() != null ? getSettings().root : null,
-      mode: getSettings() != null ? getSettings().mode : null,
+      numStrings: q_settings.get() != null ? q_settings.get().numStrings : 8,
+      numFrets: q_settings.get() != null ? q_settings.get().numFrets : 8,
+      lowestString: q_settings.get() != null ? q_settings.get().lowestString : "B",
+      root: q_settings.get() != null ? q_settings.get().root : null,
+      mode: q_settings.get() != null ? q_settings.get().mode : null,
     };
   }
 
@@ -161,14 +161,14 @@ class BassQ extends React.Component {
   }
 
   setRoot = root => {
-    setSettings("root", root);
+    q_settings.set("root", root);
     this.setState({
       root: root
     })
   };
 
   setMode = mode => {
-    setSettings("mode", mode);
+    q_settings.set("mode", mode);
     this.setState({
       mode: mode
     })

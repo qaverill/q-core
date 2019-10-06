@@ -2,7 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { Header, Page } from './styled-components'
 import { ClipLoader } from 'react-spinners'
-import { red } from "../colors";
+
+const { red } = require('q-colors');
 
 const FullDiv = styled.div`
   width: 100%;

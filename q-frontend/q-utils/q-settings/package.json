@@ -1,0 +1,10 @@
+{
+  "name": "q-settings",
+  "description": "Settings for Q",
+  "version": "1.0.0",
+  "author": "Quinn Averill",
+  "main": "q-settings.js",
+  "files": [
+    "q-settings.js"
+  ]
+}

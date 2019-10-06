@@ -1,7 +1,8 @@
 import React from 'react'
 import { Text } from "../../../components/styled-components";
-import { msToString } from "../../../utils";
 import styled from 'styled-components'
+
+const { msToString } = require('q-utils');
 
 const DetailContainer = styled.div`
   width: 100%;

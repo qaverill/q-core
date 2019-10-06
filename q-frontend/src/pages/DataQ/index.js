@@ -2,12 +2,14 @@ import React from 'react'
 import { Page, Text, Button } from "../../components/styled-components";
 import styled from 'styled-components'
 import { LoadingSpinner, SpotifyAPIErrorPage} from "../../components/components";
-import { dataQTheme } from "../../colors";
 import ArraySelector from "../../components/ArraySelector";
 import axios from "axios";
 import {NotificationManager} from "react-notifications";
 import AlbumCoverArray from "./components/AlbumCoverArray";
 import ReactTooltip from "react-tooltip";
+
+const q_settings = require('q-settings');
+const { dataQTheme } = require('q-colors');
 
 const DataQPage = styled(Page)`
   border: 5px solid ${dataQTheme.primary}
@@ -45,6 +47,11 @@ class DataQ extends React.Component {
         mongodbPath: "/mongodb/saves",
         timeParam: "added_at",
         color: dataQTheme.tertiary
+      },
+      {
+        name: "money",
+        mongodbPath: "/mongodb/money",
+        color: dataQTheme.quaternary
       }
     ];
     this.state = {
@@ -70,7 +77,7 @@ class DataQ extends React.Component {
       return (
         <DataQPage>
           <ReactTooltip />
-          <ArraySelector array={this.collectors} parent={this} title={this.saveButton()} />
+          <ArraySelector array={this.collectors} parent={this} title={this.saveButton()} settingsKey="dataQIndex"/>
           <UnsavedContainer>
             <AlbumCoverArray items={this.state.unsaved} parent={this}/>
           </UnsavedContainer>

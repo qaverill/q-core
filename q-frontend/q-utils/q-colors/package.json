@@ -1,0 +1,10 @@
+{
+  "name": "q-colors",
+  "description": "Colors for Q",
+  "version": "1.0.0",
+  "author": "Quinn Averill",
+  "main": "q-colors.js",
+  "files": [
+    "q-colors.js"
+  ]
+}

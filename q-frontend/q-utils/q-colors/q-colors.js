@@ -7,11 +7,13 @@ export const white = '#FFFFFF';
 export const green = '#1DB954';
 export const purple = '#541DB9';
 export const orange = '#B9541D';
+export const aqua = '#3BA99C';
 
-export const dataQTheme = {
+export const dataQTheme= {
   primary: purple,
   secondary: green,
-  tertiary: orange
+  tertiary: orange,
+  quaternary: aqua
 };
 
 export const spotifyQTheme = {
@@ -25,3 +27,9 @@ export const bassQTheme = {
   secondary: purple,
   tertiary: green
 };
+
+export const accountingQTheme = {
+  primary: aqua,
+  secondary: green,
+  tertiary: purple
+}

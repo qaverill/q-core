@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import {LeftArrow, RightArrow} from "../styled-components";
-import {setSettings} from "../../utils";
+
+const q_settings = require('q-settings');
 
 const ArraySelectorContainer = styled.div`
   display: flex;
@@ -46,7 +47,7 @@ class ArraySelector extends React.Component {
       error: null
     });
     if (this.props.settingsKey != null) {
-      setSettings(this.props.settingsKey, selectedIndex)
+      q_settings.set(this.props.settingsKey, selectedIndex)
     }
   }
 }

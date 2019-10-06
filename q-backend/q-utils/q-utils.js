@@ -1,4 +1,4 @@
-module.exports =  {
+module.exports = {
     generateRandomString: length => {
         let text = '';
         let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

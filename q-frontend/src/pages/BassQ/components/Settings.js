@@ -1,8 +1,9 @@
 import React from 'react'
 import { TextInput } from "../../../components/styled-components";
-import { dark, light } from "../../../colors";
 import styled from 'styled-components'
-import {setSettings} from "../../../utils";
+
+const q_settings = require('q-settings');
+const { dark, light } = require('q-colors');
 
 const SettingsContainer = styled.div`
   border-radius: 15px;
@@ -46,21 +47,21 @@ class settings extends React.Component {
   }
 
   setNumFrets() {
-    setSettings("numFrets", parseInt(document.getElementById("numFrets").value));
+    q_settings.set("numFrets", parseInt(document.getElementById("numFrets").value));
     this.props.parent.setState({
       numFrets: parseInt(document.getElementById("numFrets").value)
     })
   }
 
   setNumStrings() {
-    setSettings("numStrings", parseInt(document.getElementById("numStrings").value));
+    q_settings.set("numStrings", parseInt(document.getElementById("numStrings").value));
     this.props.parent.setState({
       numStrings: parseInt(document.getElementById("numStrings").value)
     })
   }
 
   setLowestString() {
-    setSettings("lowestString", document.getElementById("lowestString").value);
+    q_settings.set("lowestString", document.getElementById("lowestString").value);
     this.props.parent.setState({
       lowestString: document.getElementById("lowestString").value
     })

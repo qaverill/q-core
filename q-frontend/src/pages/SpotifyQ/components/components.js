@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import {Button, Text} from "../../../components/styled-components";
 import React from "react";
-import {capitolFirstLetter} from "../../../utils";
+const q_utils = require('q-utils');
 
 const SmallButton = styled(Button)`
   height: 20px;
@@ -52,7 +52,7 @@ export class DateAdjuster extends React.PureComponent {
           color={this.props.color}
           onClick={() => this.props.parent.adjustTimeframe(this.props.side, this.props.amount, -1)}
           title="-" />
-        <Text color="black">{capitolFirstLetter(this.props.amount)}</Text>
+        <Text color="black">{q_utils.capitolFirstLetter(this.props.amount)}</Text>
         <AdjustButton
           color={this.props.color}
           onClick={() => this.props.parent.adjustTimeframe(this.props.side, this.props.amount, 1)}

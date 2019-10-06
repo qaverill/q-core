@@ -1,0 +1,10 @@
+{
+  "name": "q-utils",
+  "description": "Utils for Q",
+  "version": "1.0.0",
+  "author": "Quinn Averill",
+  "main": "q-utils.js",
+  "files": [
+    "q-utils.js"
+  ]
+}
