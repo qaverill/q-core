@@ -5,7 +5,7 @@ import axios from 'axios'
 import {SpotifyAPIErrorPage} from "../../../components/components";
 import ReactTooltip from "react-tooltip";
 
-const q_utils = require('q-utils');
+const { capitolFirstLetter } = require('q-utils');
 
 const TopChartsContainer = styled.div`
   display: flex;
@@ -125,7 +125,7 @@ class Overview extends React.Component {
     axios.get(`/spotify/${type}?ids=${topN.map(item => item.id).join()}`)
       .then(res => {
         _this.setState({
-          [`topN${q_utils.capitolFirstLetter(type)}`]: res.data[type].map(item =>
+          [`topN${capitolFirstLetter(type)}`]: res.data[type].map(item =>
             <Item
               key={item.id}
               data-tip={`${item.name} ::: ${topN.find(e => e.id === item.id).count}`}

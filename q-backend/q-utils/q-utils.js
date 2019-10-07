@@ -7,5 +7,6 @@ module.exports = {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
         return text;
-    }
+    },
+    dateToTimestamp: date => parseInt(new Date(date).getTime() / 1000, 10)
 }

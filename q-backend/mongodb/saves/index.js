@@ -62,7 +62,6 @@ routes.get('/', (request, response) => {
     query.album = request.query.albumID
   }
 
-  console.log(query);
   MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (err, db) => {
     if (err) throw err;
     const dbo = db.db('q-mongodb');

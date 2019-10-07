@@ -1,13 +1,16 @@
 import React from 'react'
-import { Page, Text, Button } from "../../components/styled-components";
 import styled from 'styled-components'
-import { LoadingSpinner, SpotifyAPIErrorPage} from "../../components/components";
-import ArraySelector from "../../components/ArraySelector";
-import axios from "axios";
-import {NotificationManager} from "react-notifications";
-import AlbumCoverArray from "./components/AlbumCoverArray";
-import ReactTooltip from "react-tooltip";
+import ArraySelector from '../../components/ArraySelector';
+import axios from 'axios';
+import AlbumCoverArray from './components/AlbumCoverArray';
+import AccountingData from './components/AccountingData';
+import ReactTooltip from 'react-tooltip';
 
+import { Page, Text, Button } from '../../components/styled-components';
+import { LoadingSpinner, SpotifyAPIErrorPage} from '../../components/components';
+import { NotificationManager } from 'react-notifications';
+
+const { dateToEpoch } = require('q-utils');
 const q_settings = require('q-settings');
 const { dataQTheme } = require('q-colors');
 
@@ -35,34 +38,35 @@ class DataQ extends React.Component {
     super(props);
     this.collectors = [
       {
-        name: "listens",
-        spotifyPath: "/spotify/recently-played",
-        mongodbPath: "/mongodb/listens",
-        timeParam: "played_at",
+        name: 'listens',
+        sourcePath: '/spotify/recently-played',
+        mongodbPath: '/mongodb/listens',
+        timeParam: 'played_at',
         color: dataQTheme.secondary
       },
       {
-        name: "saves",
-        spotifyPath: "/spotify/saved-tracks",
-        mongodbPath: "/mongodb/saves",
-        timeParam: "added_at",
+        name: 'saves',
+        sourcePath: '/spotify/saved-tracks',
+        mongodbPath: '/mongodb/saves',
+        timeParam: 'added_at',
         color: dataQTheme.tertiary
       },
       {
-        name: "money",
-        mongodbPath: "/mongodb/money",
+        name: 'accounting data',
+        sourcePath: '/accounting',
+        mongodbPath: '/mongodb/accounting',
         color: dataQTheme.quaternary
       }
     ];
     this.state = {
-      selectedIndex: 0,
+      selectedIndex: q_settings.get().dataQSelectedIndex,
       unsaved: null,
       results: null
     };
   }
 
-  componentWillMount(){
-    this.getSpotifyData()
+  componentWillMount() {
+    this.getData();
   }
 
   render() {
@@ -77,9 +81,12 @@ class DataQ extends React.Component {
       return (
         <DataQPage>
           <ReactTooltip />
-          <ArraySelector array={this.collectors} parent={this} title={this.saveButton()} settingsKey="dataQIndex"/>
+          <ArraySelector array={this.collectors} parent={this} title={this.saveButton()} settingsKey="dataQSelectedIndex"/>
           <UnsavedContainer>
-            <AlbumCoverArray items={this.state.unsaved} parent={this}/>
+            {this.collectors[this.state.selectedIndex].sourcePath.indexOf('spotify') > -1
+              ? <AlbumCoverArray items={this.state.unsaved} parent={this}/>
+              : <AccountingData items={this.state.unsaved} />
+            }
           </UnsavedContainer>
         </DataQPage>
       )
@@ -88,23 +95,24 @@ class DataQ extends React.Component {
 
   componentDidUpdate(prevProps, prevState){
     if (prevState.selectedIndex !== this.state.selectedIndex){
-      this.getSpotifyData();
+      this.getData();
       this.setState({
         unsaved: null
       })
     }
   }
 
-  getSpotifyData(){
+  getData() {
     const _this = this;
-    axios.get(this.collectors[this.state.selectedIndex].spotifyPath).then(res => {
+    axios.get(this.collectors[this.state.selectedIndex].sourcePath).then(res => {
       const items = res.data.items;
-      axios.get(this.collectors[this.state.selectedIndex].mongodbPath, {params: {start: items[49].timestamp}}).then(res => {
-        const youngestTimestamp = _this.getYoungestTimestamp(res.data);
+      const params = {params: {start: items[items.length - 1].timestamp}}
+      axios.get(this.collectors[this.state.selectedIndex].mongodbPath, params).then(res => {
+        const maxTimestamp = _this.getMaxTimestamp(res.data);
         _this.setState({
-          unsaved: items.filter(item => {
-            return parseInt(new Date(item[_this.collectors[_this.state.selectedIndex].timeParam]).getTime() / 1000, 10) > youngestTimestamp
-          })
+          unsaved: items.filter(item => (
+            dateToEpoch(item[_this.collectors[_this.state.selectedIndex].timeParam]) > maxTimestamp)
+          )
         })
       })
     }).catch(error => {
@@ -116,20 +124,20 @@ class DataQ extends React.Component {
     })
   }
 
-  getYoungestTimestamp(items){
-    let youngestTimestamp = 0;
+  getMaxTimestamp(items) {
+    let maxTimestamp = 0;
     items.forEach(item => {
-      if (item.timestamp > youngestTimestamp){
-        youngestTimestamp = item.timestamp
+      if (item.timestamp > maxTimestamp){
+        maxTimestamp = item.timestamp
       }
     });
-    return youngestTimestamp
+    return maxTimestamp
   }
 
-  makeMongodbFriendly(items){
+  transformDataForMongo(items) {
     return items.map(item => {
       return {
-        timestamp: parseInt(new Date(item[this.collectors[this.state.selectedIndex].timeParam]).getTime()/1000, 10),
+        timestamp: dateToEpoch(item[this.collectors[this.state.selectedIndex].timeParam]),
         track: item.track.id,
         artists: item.track.artists.map(artist => artist.id),
         album: item.track.album.id,
@@ -158,7 +166,7 @@ class DataQ extends React.Component {
 
   writeToMongo(){
     const _this = this;
-    axios.post(this.collectors[this.state.selectedIndex].mongodbPath, this.makeMongodbFriendly(_this.state.unsaved))
+    axios.post(this.collectors[this.state.selectedIndex].mongodbPath, this.transformDataForMongo(_this.state.unsaved))
       .then(() => {
         _this.setState({unsaved: null});
         _this.componentWillMount();

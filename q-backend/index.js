@@ -20,12 +20,13 @@ server.use((req, res, next) => {
       payload.body = req.body;
     }
   }
-  q_logger.info(`${req.method} ${req.originalUrl}`, payload);
+  q_logger.apiIn(`${req.method} ${req.originalUrl}`, payload);
   next();
 });
 
 server.use('/spotify', require('./spotify'));
 server.use('/mongodb', require('./mongodb'));
 server.use('/lifx', require('./lifx'));
+server.use('/accounting', require('./accounting'));
 
 server.listen(config.port, () => q_logger.info(`Started Q on port ${config.port}`));

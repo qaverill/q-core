@@ -2,15 +2,16 @@ const routes = require('express').Router();
 const request = require('request');
 const config = require('config');
 const q_logger = require('q-logger');
+const q_api = require('q-api');
 
-routes.get('/', (req, res) => {
+q_api.makePostEndpoint(routes, '/', '/spotify/recently-played', (req, res) => {
   const requestOptions = {
     url: 'https://api.spotify.com/v1/me/player/recently-played?limit=50',
     headers: {
       Authorization: 'Bearer ' + config.spotify.access_token
     }
   };
-  request.get(requestOptions, function(error, response, body) {
+  request.get(requestOptions, (error, response, body) => {
     if (!error && response.statusCode === 200) {
       res.send(body)
     } else {
@@ -19,7 +20,5 @@ routes.get('/', (req, res) => {
     }
   });
 });
-
-console.log('  GET  /spotify/recently-played');
 
 module.exports = routes;
