@@ -4,7 +4,7 @@ const config = require('config');
 const q_logger = require('q-logger');
 const q_api = require('q-api');
 
-q_api.makePostEndpoint(routes, '/', '/spotify/recently-played', (req, res) => {
+q_api.makeGetEndpoint(routes, '/', '/spotify/recently-played', (req, res) => {
   const requestOptions = {
     url: 'https://api.spotify.com/v1/me/player/recently-played?limit=50',
     headers: {
