@@ -16,7 +16,7 @@ module.exports = {
           return makeAccountingDTO(
             row[0].indexOf('S0020') > -1 ? 'mvcu-checkings' : 'mvcu-savings',
             q_utils.dateToTimestamp(row[1]),
-            row[2].indexOf('(') > -1 ? parseFloat(`-${row[2].replace('$', '')}`) : parseFloat(row[2].replace('$', '')),
+            row[2].indexOf('(') > -1 ? parseFloat(`-${row[2].replace(/[)$(]/g, '')}`) : parseFloat(row[2].replace('$', '')),
             row[5]
           )
         case 'citi':

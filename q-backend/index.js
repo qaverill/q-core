@@ -24,9 +24,9 @@ server.use((req, res, next) => {
   next();
 });
 
-server.use('/spotify', require('./spotify'));
-server.use('/mongodb', require('./mongodb'));
-server.use('/lifx', require('./lifx'));
-server.use('/accounting', require('./accounting'));
+server.use('/spotify', require('./routes/spotify'));
+server.use('/mongodb', require('./routes/mongodb'));
+server.use('/lifx', require('./routes/lifx'));
+server.use('/accounting', require('./routes/accounting'));
 
 server.listen(config.port, () => q_logger.info(`Started Q on port ${config.port}`));

@@ -2,6 +2,7 @@ const routes = require('express').Router();
 const request = require('request');
 const config = require('config');
 const q_logger = require('q-logger');
+const q_api = require('q-api');
 
 routes.use('/auth', require('./auth'));
 routes.use((req, res, next) => {
@@ -16,11 +17,10 @@ routes.use((req, res, next) => {
 });
 routes.use('/recently-played', require('./recently-played'));
 routes.use('/saved-tracks', require('./saved-tracks'));
-routes.use('/tracks', require('./tracks'));
 routes.use('/artists', require('./artists'));
 routes.use('/albums', require('./albums'));
 
-routes.get('/', (req, res) => {
+q_api.makeGetEndpoint(routes, '/', '/spotify', (req, res) => {
   q_logger.info("THAT WEIRD ENDPOINT WAS HIT!!!!!");
   const requestOptions = {
     url: `${req.query.url}&limit=50`,
@@ -36,7 +36,5 @@ routes.get('/', (req, res) => {
     }
   });
 });
-
-console.log('  GET  /spotify/');
 
 module.exports = routes;
