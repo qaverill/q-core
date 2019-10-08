@@ -2,8 +2,9 @@ const routes = require('express').Router();
 const MongoClient = require('mongodb').MongoClient;
 const validation = require('../validation');
 const config = require('config');
+const q_api = require('q-api');
 
-routes.post('/', (request, response) => {
+q_api.makePostEndpoint(routes, '/', '/mongodb/saves', (request, response) => {
   // Validate the request body and if OK, set (each) listen._id to it's timestamp
   let savesToInsert = [];
   if (Array.isArray(request.body)){
@@ -41,7 +42,7 @@ routes.post('/', (request, response) => {
   }
 });
 
-routes.get('/', (request, response) => {
+q_api.makeGetEndpoint(routes, '/', '/mongodb/saves', (request, response) => {
   let query = {};
   if (request.query.start != null || request.query.end != null){
     query._id = {};
@@ -72,8 +73,5 @@ routes.get('/', (request, response) => {
     });
   });
 });
-
-console.log('  POST /mongodb/saves');
-console.log('  GET  /mongodb/saves');
 
 module.exports = routes;

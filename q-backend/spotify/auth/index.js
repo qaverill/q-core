@@ -6,12 +6,13 @@ const cookieParser = require('cookie-parser');
 const config = require('config');
 const q_logger = require('q-logger');
 const q_utils = require('q-utils');
+const q_api = require('q-api');
 
 const STATE_KEY = 'spotify_auth_state';
 
 routes.use(express.static(__dirname + '/public')).use(cookieParser());
 
-routes.get('/login', (req, res) => {
+q_api.makeGetEndpoint(routes, '/login', '/spotify/auth/login', (req, res) => {
   const state = q_utils.generateRandomString(16);
   res.cookie(STATE_KEY, state);
 
@@ -25,7 +26,7 @@ routes.get('/login', (req, res) => {
     }));
 });
 
-routes.get('/callback', (req, res) => {
+q_api.makeGetEndpoint(routes, '/callback', '/spotify/auth/login', (req, res) => {
   let state = req.query.state || null;
   let storedState = req.cookies ? req.cookies[STATE_KEY] : null;
 
@@ -68,8 +69,5 @@ routes.get('/callback', (req, res) => {
     });
   }
 });
-
-console.log('  GET  /spotify/auth/login');
-console.log('  GET  /spotify/auth/callback');
 
 module.exports = routes;

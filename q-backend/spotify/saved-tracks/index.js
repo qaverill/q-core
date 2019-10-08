@@ -2,8 +2,9 @@ const routes = require('express').Router();
 const request = require('request');
 const config = require('config');
 const q_logger = require('q-logger');
+const q_api = require('q-api');
 
-routes.get('/', function(req, res) {
+q_api.makeGetEndpoint(routes, '/', '/spotify/saved-tracks', (req, res) => {
   const requestOptions = {
     url: 'https://api.spotify.com/v1/me/tracks?limit=50',
     headers: {
@@ -19,7 +20,5 @@ routes.get('/', function(req, res) {
     }
   });
 });
-
-console.log('  GET  /spotify/saved-tracks');
 
 module.exports = routes;

@@ -2,8 +2,9 @@ const routes = require('express').Router();
 const config = require('config');
 const q_logger = require('q-logger');
 const request = require('request');
+const q_api = require('q-api');
 
-routes.get('/', (req, res) => {
+q_api.makeGetEndpoint(routes, '/', '/spotify/albums', (req, res) => {
   if (req.query.ids.split(',').length > 20){
     res.send({error: 'Cannot process over 20 Track IDs'})
   }
@@ -22,7 +23,5 @@ routes.get('/', (req, res) => {
     }
   });
 });
-
-console.log('  GET  /spotify/albums?ids={csv}');
 
 module.exports = routes;
