@@ -1,4 +1,4 @@
-const q_logger = require('q-logger');
+const q_logger = require('./q-logger');
 
 module.exports = {
   makeGetEndpoint: (routes, path, title, action) => {
@@ -6,7 +6,7 @@ module.exports = {
     routes.get(path, (request, response) => {
       const start = new Date().getTime();
       action(request, response);
-      q_logger.apiout(`${title} returned in ${new Date().getTime() - start}ms`);
+      q_logger.apiout(`GET ${title} returned in ${new Date().getTime() - start}ms`);
     });
   },
   makePostEndpoint: (routes, path, title, action) => {
@@ -14,7 +14,7 @@ module.exports = {
     routes.post(path, (request, response) => {
       const start = new Date().getTime();
       action(request, response);
-      q_logger.apiout(`${title} returned in ${new Date().getTime() - start}ms`);
+      q_logger.apiout(`POST ${title} returned in ${new Date().getTime() - start}ms`);
     });
   }
 };

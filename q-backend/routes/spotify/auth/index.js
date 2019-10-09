@@ -4,9 +4,7 @@ const request = require('request');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 const config = require('config');
-const q_logger = require('q-logger');
-const q_utils = require('q-utils');
-const q_api = require('q-api');
+const { q_api, q_logger, q_utils } = require('q-lib');
 
 const STATE_KEY = 'spotify_auth_state';
 
@@ -26,7 +24,7 @@ q_api.makeGetEndpoint(routes, '/login', '/spotify/auth/login', (req, res) => {
     }));
 });
 
-q_api.makeGetEndpoint(routes, '/callback', '/spotify/auth/login', (req, res) => {
+q_api.makeGetEndpoint(routes, '/callback', '/spotify/auth/callback', (req, res) => {
   let state = req.query.state || null;
   let storedState = req.cookies ? req.cookies[STATE_KEY] : null;
 

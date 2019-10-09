@@ -1,4 +1,4 @@
-const q_utils = require('q-utils')
+const { q_utils } = require('q-lib')
 
 const makeAccountingDTO = (account, timestamp, amount, description) => {
   return { account, timestamp, amount, description };

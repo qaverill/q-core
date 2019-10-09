@@ -12,16 +12,14 @@
   },
   "dependencies": {
     "body-parser": "^1.19.0",
-    "config": "file:config",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongodb": "^3.3.2",
     "nodemon": "^1.19.2",
     "path": "^0.12.7",
-    "q-api": "file:q-utils/q-api",
-    "q-logger": "file:q-utils/q-logger",
-    "q-utils": "file:q-utils",
+    "config": "file:config",
+    "q-lib": "file:q-lib",
     "request": "^2.88.0"
   },
   "nodemonConfig": {

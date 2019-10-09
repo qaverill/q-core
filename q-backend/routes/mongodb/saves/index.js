@@ -2,7 +2,7 @@ const routes = require('express').Router();
 const MongoClient = require('mongodb').MongoClient;
 const validation = require('../validation');
 const config = require('config');
-const q_api = require('q-api');
+const { q_api } = require('q-lib');
 
 q_api.makePostEndpoint(routes, '/', '/mongodb/saves', (request, response) => {
   // Validate the request body and if OK, set (each) listen._id to it's timestamp

@@ -1,8 +1,7 @@
 const routes = require('express').Router();
 const request = require('request');
 const config = require('config');
-const q_logger = require('q-logger');
-const q_api = require('q-api');
+const { q_api, q_logger } = require('q-lib');
 
 q_api.makeGetEndpoint(routes, '/', '/spotify/saved-tracks', (req, res) => {
   const requestOptions = {

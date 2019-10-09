@@ -1,7 +1,7 @@
 const routes = require('express').Router();
 const querystring = require('querystring');
 const config = require('config').lifx;
-const q_api = require('q-api');
+const { q_api } = require('q-lib');
 
 q_api.makeGetEndpoint(routes, '/', '/lifx/login', (req, res) => {
     res.redirect(`https://cloud.lifx.com/oauth/authorize?${

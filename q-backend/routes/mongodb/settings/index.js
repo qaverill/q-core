@@ -1,8 +1,7 @@
 const routes = require('express').Router();
 const MongoClient = require('mongodb').MongoClient;
 const config = require('config');
-const q_logger = require('q-logger');
-const q_api = require('q-api');
+const { q_api, q_logger } = require('q-lib');
 
 q_api.makePostEndpoint(routes, '/', '/mongodb/settings', (request, response) => {
   MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (err, db) => {

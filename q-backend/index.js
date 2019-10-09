@@ -1,7 +1,8 @@
 const server = require('express')();
 const bodyParser = require('body-parser');
-const q_logger = require('q-logger');
 const config = require('config');
+
+const { q_logger, } = require('q-lib');
 
 q_logger.info("Starting server...");
 

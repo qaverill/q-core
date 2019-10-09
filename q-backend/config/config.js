@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const q_logger = require('q-logger');
+const { q_logger } = require('q-lib');
 
 const tokensPath = path.join(__dirname, './../../config/tokens.json');
 

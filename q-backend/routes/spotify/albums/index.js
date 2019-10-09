@@ -1,8 +1,7 @@
 const routes = require('express').Router();
 const config = require('config');
-const q_logger = require('q-logger');
 const request = require('request');
-const q_api = require('q-api');
+const { q_logger, q_api } = require('q-lib');
 
 q_api.makeGetEndpoint(routes, '/', '/spotify/albums', (req, res) => {
   if (req.query.ids.split(',').length > 20){
