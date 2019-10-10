@@ -46,7 +46,7 @@ class ArraySelector extends React.Component {
       selectedIndex: selectedIndex,
       error: null
     });
-    if (this.props.settingsKey != null) {
+    if (this.props.settingsKey) {
       q_settings.set(this.props.settingsKey, selectedIndex)
     }
   }
