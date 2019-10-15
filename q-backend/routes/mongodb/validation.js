@@ -1,35 +1,26 @@
-const isListOfStrings = (list) => {
-  let result = false;
-  if (Array.isArray(list)){
-    result = true;
-    list.forEach(item => {
-      if (typeof item !== "string"){
-        result = false;
-      }
-    });
-  }
-  return result
-};
+const isListOfStrings = list => (
+  Array.isArray(list) && list.filter(item => typeof item === 'string').length === list.length
+);
 
 module.exports = {
-  listen: (listen) => {
-    return (
-      listen.timestamp != null && typeof listen.timestamp === "number" &&
-      listen.track != null && typeof listen.track === "string" &&
-      listen.album != null && typeof listen.album === "string" &&
-      listen.artists != null && isListOfStrings(listen.artists) &&
-      listen.popularity != null && typeof listen.popularity === "number" &&
-      listen.duration != null && typeof listen.duration === "number"
-    )
-  },
-  save: (save) => {
-    return (
-      save.timestamp != null && typeof save.timestamp === "number" &&
-      save.track != null && typeof save.track === "string" &&
-      save.album != null && typeof save.album === "string" &&
-      save.artists != null && isListOfStrings(save.artists) &&
-      save.popularity != null && typeof save.popularity === "number" &&
-      save.duration != null && typeof save.duration === "number"
-    )
-  }
+  validateListens: (listens) => (
+    listens.length > 0 && listens.filter(listen => (
+      typeof listen.timestamp === 'number'
+      && typeof listen.track === 'string'
+      && typeof listen.album === 'string'
+      && isListOfStrings(listen.artists)
+      && typeof listen.popularity === 'number'
+      && typeof listen.duration === 'number'
+    )).length === listens.length
+  ),
+  validateSaves: (saves) => (
+    saves.length > 0 && saves.filter(save => (
+      typeof save.timestamp === 'number'
+      && typeof save.track === 'string'
+      && typeof save.album === 'string'
+      && isListOfStrings(save.artists)
+      && typeof save.popularity === 'number'
+      && typeof save.duration === 'number'
+    )).length === saves.length
+  ),
 };

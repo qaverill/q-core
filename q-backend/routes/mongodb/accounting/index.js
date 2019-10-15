@@ -1,24 +1,39 @@
 const routes = require('express').Router();
 const { MongoClient } = require('mongodb');
 const config = require('config');
-const { q_api, q_logger } = require('q-lib');
-const { validateListens } = require('../validation');
+const { q_api } = require('q-lib');
+const validation = require('../validation');
 
-q_api.makePostEndpoint(routes, '/', '/mongodb/listens', (request, response) => {
-  const listens = Array.isArray(request.body) ? request.body : [request.body];
-  if (!validateListens(listens)) {
-    response.status(400).send();
+q_api.makePostEndpoint(routes, '/', '/mongodb/accounting', (request, response) => {
+  if (Array.isArray(request.body)) {
+    request.body.forEach((listen) => {
+      if (validation.listen(listen)) {
+        listen._id = listen.timestamp;
+        itemsToInsert.push(listen);
+      } else {
+        response.status(400).send();
+      }
+    });
+  } else if (validation.listen(request.body)) {
+    request.body._id = request.body.timestamp;
+    itemsToInsert.push(request.body)
+  } else {
+    response.status(400).send()
   }
 
-  listens.map(listen => ({ ...listen, _id: listen.timestamp }));
-  MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (connectError, db) => {
-    if (connectError) return q_logger.error('Cannot connect to mongo');
-    db.db('q-mongodb').collection('listens').insertMany(listens, { ordered: false }, (insertError) => {
-      if (insertError) return q_logger.error('Cannot insert listens into mongo');
-      response.status(204).send();
-      db.close();
+  // Insert listensToInsert to mongodb if there are any
+  if (itemsToInsert.length > 0) {
+    MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (err, db) => {
+      if (err) throw err;
+      const dbo = db.db('q-mongodb');
+      dbo.collection('listens').insertMany(itemsToInsert, { ordered: false }, (err, res) => {
+        response.status(204).send();
+        db.close();
+      });
     });
-  });
+  } else {
+    response.status(400).send();
+  }
 });
 
 q_api.makeGetEndpoint(routes, '/', '/mongodb/listens', (request, response) => {
