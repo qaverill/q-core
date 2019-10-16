@@ -7,15 +7,15 @@ q_api.makeGetEndpoint(routes, '/', '/spotify/recently-played', (req, res) => {
   const requestOptions = {
     url: 'https://api.spotify.com/v1/me/player/recently-played?limit=50',
     headers: {
-      Authorization: 'Bearer ' + config.spotify.access_token
-    }
+      Authorization: `Bearer ${config.spotify.access_token}`,
+    },
   };
   request.get(requestOptions, (error, response, body) => {
     if (!error && response.statusCode === 200) {
-      res.send(body)
+      res.send(body);
     } else {
       q_logger.error('Error getting Spotify recently-played', response);
-      res.send({ error: 'Cannot connect to the Spotify API' })
+      res.send({ error: 'Cannot connect to the Spotify API' });
     }
   });
 });

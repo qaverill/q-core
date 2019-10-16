@@ -9,14 +9,6 @@ const isListOfStrings = list => (
 const validateDataForPost = (collection, items) => {
   switch (collection) {
     case 'listens':
-      return items.length > 0 && items.filter(listen => (
-        typeof listen.timestamp === 'number'
-        && typeof listen.track === 'string'
-        && typeof listen.album === 'string'
-        && isListOfStrings(listen.artists)
-        && typeof listen.popularity === 'number'
-        && typeof listen.duration === 'number'
-      )).length === items.length;
     case 'saves':
       return items.length > 0 && items.filter(save => (
         typeof save.timestamp === 'number'
@@ -26,6 +18,13 @@ const validateDataForPost = (collection, items) => {
         && typeof save.popularity === 'number'
         && typeof save.duration === 'number'
       )).length === items.length;
+    case 'transactions':
+      return items.length > 0 && items.filter(transaction => (
+        typeof transaction.account === 'string'
+        && typeof transaction.timestamp === 'number'
+        && typeof transaction.amount === 'number'
+        && typeof transaction.description === 'string'
+      )).length === items.length;
     default:
       q_logger.error('Tried to validate items in an unknown collection: ', collection);
       return false;
@@ -33,37 +32,40 @@ const validateDataForPost = (collection, items) => {
 };
 
 const craftQueryForGet = (collection, requestQuery) => {
+  const query = {};
   switch (collection) {
-    case 'listens': {
-      const query = {};
-      const { start, end, trackID, artistID, albumID } = requestQuery;
-      if (typeof start === 'number') query._id.$gte = parseInt(start, 10);
-      if (typeof end === 'number') query._id.$lte = parseInt(end, 10);
-      if (trackID != null) query.track = trackID;
-      if (artistID != null) query.artists = artistID;
-      if (albumID != null) query.album = albumID;
-      return query;
-    }
+    case 'listens':
     case 'saves':
-      return null;
+      if (requestQuery.trackID) query.track = requestQuery.trackID;
+      if (requestQuery.artistID) query.artists = requestQuery.artistID;
+      if (requestQuery.albumID) query.album = requestQuery.albumID;
+      break;
+    case 'transactions':
+      // No other query params for this... yet
+      break;
     default:
       q_logger.error('Tried to craft a query for an unknown collection: ', collection);
-      return false;
+      return null;
   }
-}
+  if (requestQuery.start || requestQuery.end) {
+    query._id = {};
+    if (requestQuery.start) query._id.$gte = parseInt(requestQuery.start, 10);
+    if (requestQuery.end) query._id.$lte = parseInt(requestQuery.end, 10);
+  }
+  return query;
+};
 
 module.exports = {
   handleCommonPostEndpoint: (requestBody, response, collection) => {
-    const items = Array.isArray(requestBody) ? requestBody : [requestBody];
-    if (!validateDataForPost(collection, items)) {
-      response.status(400).send();
-    }
+    let items = Array.isArray(requestBody) ? requestBody : [requestBody];
+    if (!validateDataForPost(collection, items)) response.status(400).send();
 
-    items.map(item => ({ ...item, _id: item.timestamp }));
+    items = items.map(item => ({ ...item, _id: item.timestamp }));
     MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (connectError, db) => {
       if (connectError) return q_logger.error('Cannot connect to mongo', connectError);
-      db.db('q-mongodb').collection(collection).insertMany(items, { ordered: false }, (insertError) => {
+      db.db('q-mongodb').collection(collection).insertMany(items, { ordered: false }, (insertError, insertResponse) => {
         if (insertError) return q_logger.error(`Cannot insert ${collection} into mongo`);
+        q_logger.info(`Inserted ${insertResponse.insertedCount} ${collection} into mongo`);
         response.status(204).send();
         db.close();
       });
@@ -73,9 +75,8 @@ module.exports = {
     const query = craftQueryForGet(collection, requestQuery);
     MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (connectError, db) => {
       if (connectError) return q_logger.error('Cannot connect to mongo', connectError);
-      const dbo = db.db('q-mongodb');
-      dbo.collection('listens').find(query).toArray((findError, res) => {
-        if (findError) throw q_logger.error('Cannot query mongo', findError);
+      db.db('q-mongodb').collection(collection).find(query).toArray((findError, res) => {
+        if (findError) throw q_logger.error(`Cannot query mongo ${collection}`, findError);
         response.status(200).json(res);
         db.close();
       });

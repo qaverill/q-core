@@ -61,7 +61,7 @@ class DataQ extends React.Component {
     const { sourcePath, mongodbPath, timeParam } = this.collector();
     axios.get(sourcePath).then(sourceResults => {
       const { items } = sourceResults.data;
-      const mongoParams = { params: { start: items[items.length - 1].timestamp } };
+      const mongoParams = { params: { start: dateToEpoch(items[items.length - 1][timeParam]) } };
       axios.get(mongodbPath, mongoParams).then(mongoResults => {
         const maxTimestamp = Math.max(...mongoResults.data.map(d => d.timestamp));
         _this.setState({ unsaved: items.filter(i => dateToEpoch(i[timeParam]) > maxTimestamp) });
