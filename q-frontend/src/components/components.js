@@ -43,6 +43,7 @@ export class LoadingSpinner extends React.PureComponent {
           sizeUnit={"px"}
           size={100}
           color={this.props.color} />
+        <h2>{this.props.message}</h2>
       </FullDiv>
     )
   }

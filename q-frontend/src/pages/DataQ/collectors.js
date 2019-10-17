@@ -17,7 +17,7 @@ module.exports = {
       color: dataQTheme.tertiary,
     },
     {
-      name: 'transactions data',
+      name: 'transactions',
       sourcePath: '/transactions',
       mongodbPath: '/mongodb/transactions',
       timeParam: 'timestamp',

@@ -16,7 +16,7 @@ module.exports = {
           return {
             account: 'citi-credit',
             timestamp: q_utils.dateToTimestamp(row[1]),
-            amount: row[3] !== '' ? parseFloat(row[3]) : parseFloat(row[4]),
+            amount: row[3] !== '' ? parseFloat(row[3]) * -1 : parseFloat(row[4]) * -1,
             description: row[2],
           };
         default:

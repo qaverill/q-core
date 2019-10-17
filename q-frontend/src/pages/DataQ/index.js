@@ -3,35 +3,25 @@ import styled from 'styled-components';
 import axios from 'axios';
 import ReactTooltip from 'react-tooltip';
 import { NotificationManager } from 'react-notifications';
+
 import ArraySelector from '../../components/ArraySelector';
 import AlbumCoverArray from './components/AlbumCoverArray';
-import AccountingData from './components/AccountingData';
+import AccountingData from './components/AccountingData/index';
 import { collectors } from './collectors';
-
 import { Page, Text, Button } from '../../components/styled-components';
 import { LoadingSpinner, SpotifyAPIErrorPage } from '../../components/components';
 
-const { dateToEpoch } = require('q-utils');
 const q_settings = require('q-settings');
+const { dateToEpoch } = require('q-utils');
 const { dataQTheme } = require('q-colors');
 
 const DataQPage = styled(Page)`
-  border: 5px solid ${dataQTheme.primary}
+  border: 5px solid ${dataQTheme.primary};
 `;
 
 const SaveButton = styled(Button)`
   min-width: 180px;
   width: ${props => props.width};
-`;
-
-const UnsavedContainer = styled.div`
-  width: 100%;
-  max-height: 100%;
-  display: flex;
-  flex-grow: 1;
-  flex-wrap: wrap;
-  align-content: stretch;
-  margin-top: 2.5px;
 `;
 
 class DataQ extends React.Component {
@@ -79,14 +69,15 @@ class DataQ extends React.Component {
   writeToMongo() {
     const _this = this;
     const { unsaved } = this.state;
-    axios.post(this.collector().mongodbPath, this.transformDataForMongo(unsaved)).then(() => {
+    const data = this.collector().name === 'transactions' ? unsaved : this.transformSpotifyDataForMongo(unsaved);
+    axios.post(this.collector().mongodbPath, data).then(() => {
       _this.setState({ unsaved: null });
       _this.getData();
       NotificationManager.success(`Synced ${this.collector().name}`);
     });
   }
 
-  transformDataForMongo(items) {
+  transformSpotifyDataForMongo(items) {
     return items.map(item => ({
       timestamp: dateToEpoch(item[this.collector().timeParam]),
       track: item.track.id,
@@ -134,11 +125,9 @@ class DataQ extends React.Component {
           title={this.SaveButton({ unsaved, name, color })}
           settingsKey="dataQSelectedIndex"
         />
-        <UnsavedContainer>
-          {sourcePath.indexOf('spotify') > -1
-            ? <AlbumCoverArray items={unsaved} parent={this} />
-            : <AccountingData items={unsaved} />}
-        </UnsavedContainer>
+        {sourcePath.indexOf('spotify') > -1
+          ? <AlbumCoverArray items={unsaved} parent={this} />
+          : <AccountingData items={unsaved} />}
       </DataQPage>
     );
   }
