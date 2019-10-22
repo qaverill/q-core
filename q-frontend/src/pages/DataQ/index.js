@@ -54,7 +54,13 @@ class DataQ extends React.Component {
       const mongoParams = { params: { start: dateToEpoch(items[items.length - 1][timeParam]) } };
       axios.get(mongodbPath, mongoParams).then(mongoResults => {
         const maxTimestamp = Math.max(...mongoResults.data.map(d => d.timestamp));
-        _this.setState({ unsaved: items.filter(i => dateToEpoch(i[timeParam]) > maxTimestamp) });
+        const lastDataEntry = mongoResults.data.find(d => d.timestamp === maxTimestamp);
+        const nextOrdinal = lastDataEntry.ordinal ? lastDataEntry.ordinal + 1 : 0;
+        _this.setState({
+          unsaved: items
+            .filter(i => dateToEpoch(i[timeParam]) > maxTimestamp)
+            .map((i, n) => ({ ...i, ordinal: nextOrdinal + n })),
+        });
       });
     }).catch(error => {
       if (error.response.status === 401) root.setState({ error: <SpotifyAPIErrorPage /> });

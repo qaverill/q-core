@@ -9,3 +9,5 @@ q-backend/config/tokens.json
 node_modules/
 
 **/.env
+
+**/data-dump

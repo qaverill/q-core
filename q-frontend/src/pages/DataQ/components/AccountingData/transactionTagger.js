@@ -1,10 +1,8 @@
 
 module.exports = {
   tagTransaction: transaction => {
-    if (transaction.description.indexOf('Online Payment') > -1) {
-      console.log(transaction)
-    }
-    const tags = ['AH', 'SHIT'];
+    const tags = [];
+    console.log(transaction);
     return [...new Set(tags)];
   },
 };

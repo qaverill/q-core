@@ -21,15 +21,31 @@ const Transaction = styled.div`
   display: flex;
 `;
 
-const SmallProp = styled.h2`
+const DateColumn = styled.div`
   display: flex;
-  flex-grow: 1;
+  width: 110px;
+  flex-shrink: 0;
 `;
 
-const BigProp = styled.h2`
+const AmountColumn = styled.div`
   display: flex;
-  flex-grow: 2;
+  flex-direction: row-reverse;
+  width: 90px;
+  flex-shrink: 0;
 `;
+
+const DescriptionColumn = styled.div`
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+`;
+
+const TagsColumn = styled.div`
+  display: flex;
+  flex-shrink: 0;
+  width: 200px;
+`;
+
 
 class AccountingData extends Component {
   constructor(props) {
@@ -62,10 +78,10 @@ class AccountingData extends Component {
           const { timestamp, amount, description, tags } = transaction;
           return (
             <Transaction>
-              <SmallProp>{epochToString(timestamp)}</SmallProp>
-              <SmallProp>{amount}</SmallProp>
-              <BigProp>{description}</BigProp>
-              <SmallProp>{tags}</SmallProp>
+              <DateColumn><h2>{epochToString(timestamp)}</h2></DateColumn>
+              <AmountColumn><h2>{amount}</h2></AmountColumn>
+              <DescriptionColumn><h2>{description}</h2></DescriptionColumn>
+              <TagsColumn><h2>{tags}</h2></TagsColumn>
             </Transaction>
           );
         })}
