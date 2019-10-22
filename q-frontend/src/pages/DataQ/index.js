@@ -48,19 +48,23 @@ class DataQ extends React.Component {
   getData() {
     const _this = this;
     const { root } = this.props;
-    const { sourcePath, mongodbPath, timeParam } = this.collector();
+    const { sourcePath, mongodbPath, timeParam, name } = this.collector();
     axios.get(sourcePath).then(sourceResults => {
       const { items } = sourceResults.data;
       const mongoParams = { params: { start: dateToEpoch(items[items.length - 1][timeParam]) } };
       axios.get(mongodbPath, mongoParams).then(mongoResults => {
         const maxTimestamp = Math.max(...mongoResults.data.map(d => d.timestamp));
-        const lastDataEntry = mongoResults.data.find(d => d.timestamp === maxTimestamp);
-        const nextOrdinal = lastDataEntry.ordinal ? lastDataEntry.ordinal + 1 : 0;
-        _this.setState({
-          unsaved: items
-            .filter(i => dateToEpoch(i[timeParam]) > maxTimestamp)
-            .map((i, n) => ({ ...i, ordinal: nextOrdinal + n })),
-        });
+        if (name === 'transactions') {
+          const lastDataEntry = mongoResults.data.find(d => d.timestamp === maxTimestamp);
+          const nextOrdinal = lastDataEntry.ordinal ? lastDataEntry.ordinal + 1 : 0;
+          _this.setState({
+            unsaved: items
+              .filter(i => dateToEpoch(i[timeParam]) > maxTimestamp)
+              .map((i, n) => ({ ...i, ordinal: nextOrdinal + n })),
+          });
+        } else {
+          _this.setState({ unsaved: items.filter(i => dateToEpoch(i[timeParam]) > maxTimestamp) });
+        }
       });
     }).catch(error => {
       if (error.response.status === 401) root.setState({ error: <SpotifyAPIErrorPage /> });

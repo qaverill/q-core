@@ -14,7 +14,7 @@ html, body {
   width: 100%;
 }
 
-h1, h2, div {
+h1, h2 {
   color: white;
   margin: 5px;
 }
