@@ -15,9 +15,9 @@ const log = (status, message, payload) => {
 };
 
 module.exports = {
-  apiIn: (message, payload) => log('\x1b[36mIN', message, payload), // cyan
-  apiout: (message, payload) => log('\x1b[35mOUT', message, payload), // magenta
-  info: (message, payload) => log('\x1b[32mINFO', message, payload), // green
-  warn: (message, payload) => log('\x1b[33mWARN', message, payload), // yellow
+  apiIn: (message, payload) => log('\x1b[36mIN   ', message, payload), // cyan
+  apiout: (message, payload) => log('\x1b[35mOUT  ', message, payload), // magenta
+  info: (message, payload) => log('\x1b[32mINFO ', message, payload), // green
+  warn: (message, payload) => log('\x1b[33mWARN ', message, payload), // yellow
   error: (message, payload) => log('\x1b[31mERROR', message, payload), // red
 };

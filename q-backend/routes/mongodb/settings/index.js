@@ -1,18 +1,16 @@
 const routes = require('express').Router();
-const MongoClient = require('mongodb').MongoClient;
+const { MongoClient } = require('mongodb');
 const config = require('config');
-const { q_api, q_logger } = require('q-lib');
+const { q_api } = require('q-lib');
 
 q_api.makePostEndpoint(routes, '/', '/mongodb/settings', (request, response) => {
-  MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (err, db) => {
-    if (err) throw err;
+  MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (connectError, db) => {
+    if (connectError) throw connectError;
     const dbo = db.db('q-mongodb');
-    dbo.collection("settings").drop((err, delOK) => {
-      if (err) throw err;
+    dbo.collection('settings').drop((dropError, delOK) => {
+      if (dropError) throw dropError;
       if (delOK) {
-        dbo.collection('settings').insertOne(request.body, (err, res) => {
-          response.status(204).send();
-        });
+        dbo.collection('settings').insertOne(request.body, () => response.status(204).send());
       }
       db.close();
     });
