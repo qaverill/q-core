@@ -13,7 +13,7 @@ module.exports = {
     MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (connectError, db) => {
       if (connectError) return q_logger.error('Cannot connect to mongo', connectError);
       db.db('q-mongodb').collection(collection).insertMany(items, { ordered: false }, (insertError, insertResponse) => {
-        if (insertError) return q_logger.error(`Cannot insert ${collection} into mongo`);
+        if (insertError) return q_logger.error(`Cannot insert ${collection} into mongo`, insertError.writeErrors[0].errmsg);
         q_logger.info(`Inserted ${insertResponse.insertedCount} ${collection} into mongo`);
         response.status(204).send();
         db.close();
