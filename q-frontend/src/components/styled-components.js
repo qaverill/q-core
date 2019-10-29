@@ -2,10 +2,10 @@ import styled from 'styled-components'
 import Popup from 'reactjs-popup';
 import Select from 'react-select';
 
-const { dark, medium, white } = require('q-colors');
+const { dark, medium, white, yellow } = require('q-colors');
 
 export const Button = styled.button`
-  color: white;  
+  color: ${props => (props.color === yellow ? dark : white)};  
   height: 30px;
   padding: 2.5px 7.5px;
   margin: 2.5px;
@@ -18,7 +18,7 @@ export const Button = styled.button`
   :focus {
     outline: none;
   }
-  background-color: ${props => props.color == null ? medium : props.color};
+  background-color: ${props => (props.color == null ? medium : props.color)};
   :hover {
     filter: brightness(1.25);
   }
@@ -27,7 +27,7 @@ export const Button = styled.button`
 export const Text = styled.p`
   font-size: 16px;
   margin: 2.5px;
-  color: ${props => props.color == null ? white : props.color};
+  color: ${props => (props.color == null ? white : props.color)};
   cursor: default;
   margin: 2.5px;
 `;
@@ -71,11 +71,11 @@ export const Page = styled.div`
 
 export const RightArrow = styled.img
   .attrs({
-    src: require('./Images/arrow.svg')
+    src: require('./Images/arrow.svg'),
   })`
   cursor: pointer;
-  height: ${props => props.size == null ? `28px` : props.size};
-  width: ${props => props.size == null ? `28px` : props.size};
+  height: ${props => (props.size == null ? '28px' : props.size)};
+  width: ${props => (props.size == null ? '28px' : props.size)};
   margin: 2.5px;
   :hover {
     filter: brightness(1.25);
@@ -88,11 +88,11 @@ export const LeftArrow = styled(RightArrow)`
 
 export const SettingsGear = styled.img
   .attrs({
-    src: require('./Images/settings-gear.svg')
+    src: require('./Images/settings-gear.svg'),
   })`
   cursor: pointer;
-  height: ${props => props.size == null ? `28px` : props.size};
-  width: ${props => props.size == null ? `28px` : props.size};
+  height: ${props => (props.size == null ? '28px' : props.size)};
+  width: ${props => (props.size == null ? '28px' : props.size)};
   margin: 2.5px;
   :hover {
     filter: brightness(1.25);

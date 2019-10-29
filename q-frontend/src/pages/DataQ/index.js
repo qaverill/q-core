@@ -34,7 +34,12 @@ class DataQ extends React.Component {
   }
 
   componentWillMount() {
-    this.getData();
+    if (sessionStorage.getItem('dataQUnsaved')) {
+      this.setState({ unsaved: JSON.parse(sessionStorage.getItem('dataQUnsaved')) });
+      console.log('Got unsaved from settings!');
+    } else {
+      this.getData();
+    }
   }
 
   componentDidUpdate(_prevProps, prevState) {
@@ -58,7 +63,10 @@ class DataQ extends React.Component {
         if (name === 'transactions') {
           const lastDataEntry = mongoResults.data.find(d => d.timestamp === maxTimestamp);
           const nextOrdinal = lastDataEntry != null ? lastDataEntry.ordinal + 1 : 1;
-          items = items.map((item, n) => ({ ...item, ordinal: nextOrdinal + n }));
+          items = items
+            .reverse()
+            .map((item, n) => ({ ...item, ordinal: nextOrdinal + n, tags: [] }))
+            .reverse();
         }
         _this.setState({ unsaved: items });
       });
@@ -75,6 +83,12 @@ class DataQ extends React.Component {
   writeToMongo() {
     const _this = this;
     const { unsaved } = this.state;
+    if (this.collector().name === 'transactions') {
+      if (unsaved.filter(i => i.tags.length > 0).length !== unsaved.length) {
+        NotificationManager.error('Missing tags for a transaction!');
+        return;
+      }
+    }
     const data = this.collector().name === 'transactions' ? unsaved : this.transformSpotifyDataForMongo(unsaved);
     axios.post(this.collector().mongodbPath, data).then(() => {
       _this.setState({ unsaved: null });
@@ -115,6 +129,7 @@ class DataQ extends React.Component {
   render() {
     const { unsaved } = this.state;
     const { name, color, sourcePath } = this.collector();
+    console.log(unsaved)
     if (unsaved === null) {
       return (
         <DataQPage>
@@ -133,7 +148,7 @@ class DataQ extends React.Component {
         />
         {sourcePath.indexOf('spotify') > -1
           ? <AlbumCoverArray items={unsaved} parent={this} />
-          : <AccountingData items={unsaved} />}
+          : <AccountingData items={unsaved} parent={this} />}
       </DataQPage>
     );
   }
