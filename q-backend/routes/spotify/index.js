@@ -16,6 +16,7 @@ routes.use('/recently-played', require('./recently-played'));
 routes.use('/saved-tracks', require('./saved-tracks'));
 routes.use('/artists', require('./artists'));
 routes.use('/albums', require('./albums'));
+routes.use('/playlists', require('./playlists'));
 
 q_api.makeGetEndpoint(routes, '/', '/spotify', (req, res) => {
   q_logger.info('THAT WEIRD ENDPOINT WAS HIT!!!!!');

@@ -3,21 +3,35 @@ const request = require('request');
 const config = require('config');
 const { q_api, q_logger } = require('q-lib');
 
-q_api.makeGetEndpoint(routes, '/', '/spotify/saved-tracks', (req, res) => {
-    const requestOptions = {
-        url: 'https://api.spotify.com/v1/me/tracks?limit=50',
-        headers: {
-            Authorization: 'Bearer ' + config.spotify.access_token
-        }
-    };
-    request.get(requestOptions, (error, response, body) => {
-        if (!error && response.statusCode === 200) {
-            res.send(body)
-        } else {
-            q_logger.error('Error getting Spotify playlists', response);
-            res.send({error: 'Cannot connect to the Spotify API'})
-        }
-    });
+const validateUris = uris => {
+  uris.forEach(uri => {
+    if (uri.indexOf('spotify:track:') < 0) {
+      return false;
+    }
+  });
+  return true;
+};
+
+q_api.makePostEndpoint(routes, '/', '/spotify/playlists', (req, res) => {
+  const requestOptions = {
+    url: `https://api.spotify.com/v1/playlists/${req.body.playlistId}/tracks`,
+    headers: {
+      Authorization: `Bearer ${config.spotify.access_token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      uris: req.body.uris,
+      position: req.body.position,
+    }),
+  };
+  request.post(requestOptions, (error, response, body) => {
+    if (!error && response.statusCode === 201) {
+      res.send(body);
+    } else {
+      q_logger.error('Error posting to Spotify playlist', response);
+      res.send({ error: 'Cannot connect to the Spotify API' });
+    }
+  });
 });
 
 module.exports = routes;

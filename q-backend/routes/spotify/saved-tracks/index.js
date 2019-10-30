@@ -7,15 +7,15 @@ q_api.makeGetEndpoint(routes, '/', '/spotify/saved-tracks', (req, res) => {
   const requestOptions = {
     url: 'https://api.spotify.com/v1/me/tracks?limit=50',
     headers: {
-      Authorization: 'Bearer ' + config.spotify.access_token
-    }
+      Authorization: `Bearer ${config.spotify.access_token}`,
+    },
   };
-  request.get(requestOptions, function(error, response, body) {
+  request.get(requestOptions, (error, response, body) => {
     if (!error && response.statusCode === 200) {
-      res.send(body)
+      res.send(body);
     } else {
-      q_logger.error('Error getting Spotify saved-tracks', response);
-      res.send({error: 'Cannot connect to the Spotify API'})
+      q_logger.error('Error getting Spotify playlists', response);
+      res.send({ error: 'Cannot connect to the Spotify API' });
     }
   });
 });

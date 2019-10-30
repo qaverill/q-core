@@ -15,6 +15,8 @@ const q_settings = require('q-settings');
 const { dateToEpoch } = require('q-utils');
 const { dataQTheme } = require('q-colors');
 
+const Q_PLAYLIST_ID = '6d2V7fQS4CV0XvZr1iOVXJ';
+
 const DataQPage = styled(Page)`
   border: 5px solid ${dataQTheme.primary};
 `;
@@ -23,6 +25,18 @@ const SaveButton = styled(Button)`
   min-width: 180px;
   width: ${props => props.width};
 `;
+
+const addSavesToQPlaylist = data => {
+  const requestBody = {
+    playlistId: Q_PLAYLIST_ID,
+    uris: data.map(d => `spotify:track:${d.track}`),
+    position: 0,
+  };
+  axios.post('/spotify/playlists', requestBody).then((response) => {
+    console.log(response);
+    NotificationManager.success('Wrote saves to Q playlist');
+  });
+};
 
 class DataQ extends React.Component {
   constructor(props) {
@@ -33,7 +47,7 @@ class DataQ extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (sessionStorage.getItem('dataQUnsaved')) {
       this.setState({ unsaved: JSON.parse(sessionStorage.getItem('dataQUnsaved')) });
       console.log('Got unsaved from settings!');
@@ -83,17 +97,19 @@ class DataQ extends React.Component {
   writeToMongo() {
     const _this = this;
     const { unsaved } = this.state;
-    if (this.collector().name === 'transactions') {
+    const collector = this.collector()
+    if (collector.name === 'transactions') {
       if (unsaved.filter(i => i.tags.length > 0).length !== unsaved.length) {
         NotificationManager.error('Missing tags for a transaction!');
         return;
       }
     }
-    const data = this.collector().name === 'transactions' ? unsaved : this.transformSpotifyDataForMongo(unsaved);
-    axios.post(this.collector().mongodbPath, data).then(() => {
+    const data = collector.name === 'transactions' ? unsaved : this.transformSpotifyDataForMongo(unsaved);
+    axios.post(collector.mongodbPath, data).then(() => {
       _this.setState({ unsaved: null });
       _this.getData();
-      NotificationManager.success(`Synced ${this.collector().name}`);
+      NotificationManager.success(`Synced ${collector.name}`);
+      if (collector.name === 'saves') addSavesToQPlaylist(data);
     });
   }
 
