@@ -3,15 +3,6 @@ const request = require('request');
 const config = require('config');
 const { q_api, q_logger } = require('q-lib');
 
-const validateUris = uris => {
-  uris.forEach(uri => {
-    if (uri.indexOf('spotify:track:') < 0) {
-      return false;
-    }
-  });
-  return true;
-};
-
 q_api.makePostEndpoint(routes, '/', '/spotify/playlists', (req, res) => {
   const requestOptions = {
     url: `https://api.spotify.com/v1/playlists/${req.body.playlistId}/tracks`,
