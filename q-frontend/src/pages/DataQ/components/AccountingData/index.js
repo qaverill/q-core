@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { epochToString } from 'q-utils';
+import ManualTagger from './components/ManualTagger';
 import { LoadingSpinner } from '../../../../components/components';
-import { Button } from '../../../../components/styled-components';
-import { tagTransaction } from './transactionTagger';
+import { Button, StyledPopup } from '../../../../components/styled-components';
+import { autoTagTransaction } from './autoTagger';
 
 const { accountingQTheme, green, red, yellow } = require('q-colors');
 
@@ -54,10 +55,19 @@ const TagsColumn = styled.div`
   width: 200px;
 `;
 
-const calculateTagButtonColor = tags => {
-  if (tags.includes('NEEDS ORDINAL')) return yellow;
-  if (tags.length > 0) return green;
-  return red;
+const craftTagButton = transaction => {
+  const { tags } = transaction;
+  let color = tags.length === 0 ? red : green;
+  let label = tags.length === 0 ? 'TAG ME' : `${tags.length} ${tags.length === 1 ? 'Tag' : 'Tags'}`;
+  if (tags.includes('NEEDS ORDINAL')) {
+    color = yellow;
+    label = 'NEEDS ORDINAL';
+  }
+  return (
+    <Button color={color} data-tip={tags.join(' | ')}>
+      {label}
+    </Button>
+  );
 };
 
 class AccountingData extends Component {
@@ -70,22 +80,9 @@ class AccountingData extends Component {
     parent.setState({
       unsaved: parent.state.unsaved.map(transaction => ({
         ...transaction,
-        tags: tagTransaction(transaction),
+        tags: autoTagTransaction(transaction),
       })),
     });
-  }
-
-  tagTransaction(idx) {
-    const newTag = 'test tag';
-    const { parent } = this.props;
-    const updatedTransactions = parent.state.unsaved.map((transaction, i) => {
-      if (i === idx) {
-        transaction.tags.push(newTag);
-      }
-      return transaction;
-    });
-    sessionStorage.setItem('dataQUnsaved', JSON.stringify(updatedTransactions));
-    parent.setState({ unsaved: updatedTransactions });
   }
 
   render() {
@@ -103,12 +100,9 @@ class AccountingData extends Component {
             <DescriptionColumn><h2>{transaction.description}</h2></DescriptionColumn>
             <TagsColumn>
               <h2>{transaction.tags.length}</h2>
-              <Button
-                color={calculateTagButtonColor(transaction.tags)}
-                onClick={() => this.tagTransaction(i)}
-              >
-                {transaction.tags.length === 0 ? 'TAG ME' : transaction.tags.join(' | ')}
-              </Button>
+              <StyledPopup modal trigger={craftTagButton(transaction)}>
+                <ManualTagger transaction={transaction} transactionIdx={i} parent={parent} />
+              </StyledPopup>
             </TagsColumn>
           </Transaction>
         ))}

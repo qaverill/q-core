@@ -1,19 +1,9 @@
 import React from 'react'
-import { TextInput } from "../../../components/styled-components";
+import { TextInput, PopupContainer } from "../../../components/styled-components";
 import styled from 'styled-components'
 
 const q_settings = require('q-settings');
 const { dark, light } = require('q-colors');
-
-const SettingsContainer = styled.div`
-  border-radius: 15px;
-  background-color: ${dark};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 5px solid ${light};
-  padding: 20% 2.5px;
-`;
 
 const Setting = styled.div`
   display: flex;
@@ -29,7 +19,7 @@ const SettingInput = styled(TextInput)`
 class settings extends React.Component {
   render() {
     return (
-      <SettingsContainer>
+      <PopupContainer>
         <Setting>
           <SettingTitle>Number of Frets: </SettingTitle>
           <SettingInput id="numFrets" onBlur={() => this.setNumFrets()} defaultValue={this.props.parent.state.numFrets}/>
@@ -42,7 +32,7 @@ class settings extends React.Component {
           <SettingTitle>Lowest String: </SettingTitle>
           <SettingInput id="lowestString" onBlur={() => this.setLowestString()} defaultValue={this.props.parent.state.lowestString}/>
         </Setting>
-      </SettingsContainer>
+      </PopupContainer>
     )
   }
 

@@ -6,20 +6,22 @@ const discreteTags = {
 };
 
 module.exports = {
-  tagTransaction: transaction => {
-    const { tags } = transaction;
+  autoTagTransaction: transaction => {
+    const { tags, amount } = transaction;
     const description = transaction.description.toLowerCase();
-    const { amount } = transaction;
     if (description.indexOf('venmo from') > -1) {
       return ['NEEDS ORDINAL'];
     }
     Object.keys(discreteTags).forEach(tagKey => {
-      if (new RegExp(discreteTags[tagKey].join('|')).test(description)) {
-        tags.push(tagKey);
-      }
+      discreteTags[tagKey].forEach(tag => {
+        if (description.indexOf(tag) > -1) {
+          tags.push(tagKey);
+          tags.push(tag);
+        }
+      });
     });
     if (description.indexOf('venmo') > -1) tags.push('venmo');
-    if (description.indexOf('check deposit') > -1 && amount === 1150) tags.push('rent');
+    if (description.indexOf('check withdrawal') > -1 && amount === -1150) tags.push('rent');
     return [...new Set(tags)];
   },
 };

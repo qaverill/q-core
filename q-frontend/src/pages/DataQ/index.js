@@ -99,6 +99,10 @@ class DataQ extends React.Component {
     const { unsaved } = this.state;
     const collector = this.collector()
     if (collector.name === 'transactions') {
+      if (unsaved.filter(i => i.tags.indexOf('NEEDS ORDINAL') > -1).length > 0) {
+        NotificationManager.error('A transaction is missing an ordinal!');
+        return;
+      }
       if (unsaved.filter(i => i.tags.length > 0).length !== unsaved.length) {
         NotificationManager.error('Missing tags for a transaction!');
         return;
@@ -145,7 +149,6 @@ class DataQ extends React.Component {
   render() {
     const { unsaved } = this.state;
     const { name, color, sourcePath } = this.collector();
-    console.log(unsaved)
     if (unsaved === null) {
       return (
         <DataQPage>

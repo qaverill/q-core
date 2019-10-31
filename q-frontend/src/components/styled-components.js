@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import Popup from 'reactjs-popup';
 import Select from 'react-select';
 
-const { dark, medium, white, yellow } = require('q-colors');
+const { dark, medium, white, yellow, light } = require('q-colors');
 
 export const Button = styled.button`
   color: ${props => (props.color === yellow ? dark : white)};  
@@ -107,4 +107,14 @@ export const StyledPopup = styled(Popup)`
 
 export const Selector = styled(Select)`
   margin: 2.5px;
+`;
+
+export const PopupContainer = styled.div`
+  border-radius: 15px;
+  background-color: ${dark};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 5px solid ${light};
+  padding: 20% 2.5px;
 `;
