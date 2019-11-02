@@ -6,11 +6,10 @@ import { NotificationManager } from 'react-notifications';
 
 import ArraySelector from '../../components/ArraySelector';
 import AlbumCoverArray from './components/AlbumCoverArray';
-import AccountingData from './components/AccountingData/index';
+import AccountingData from '../sharedComponents/AccountingData/index';
 import { collectors } from './collectors';
 import { Page, Text, Button } from '../../components/styled-components';
 import { LoadingSpinner, SpotifyAPIErrorPage } from '../../components/components';
-import { epochToDate } from 'q-utils';
 
 let ordinalStart;
 

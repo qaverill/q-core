@@ -1,7 +1,7 @@
 import React from 'react';
 import { red } from 'q-colors';
 import styled from 'styled-components';
-import { PopupContainer, TextInput, Button } from '../../../../../components/styled-components';
+import { PopupContainer, TextInput, Button } from '../../../../components/styled-components';
 
 const { roundToTwoDecimalPlaces } = require('q-utils');
 

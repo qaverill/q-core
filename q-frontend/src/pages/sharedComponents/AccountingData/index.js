@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { epochToString } from 'q-utils';
 import ManualTagger from './components/ManualTagger';
-import { LoadingSpinner } from '../../../../components/components';
-import { Button, StyledPopup } from '../../../../components/styled-components';
+import { LoadingSpinner } from '../../../components/components';
+import { Button, StyledPopup } from '../../../components/styled-components';
 import { autoTagTransaction } from './autoTagger';
 
 const { accountingQTheme, green, red, yellow } = require('q-colors');
