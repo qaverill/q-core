@@ -3,6 +3,8 @@ import { red } from 'q-colors';
 import styled from 'styled-components';
 import { PopupContainer, TextInput, Button } from '../../../../../components/styled-components';
 
+const { roundToTwoDecimalPlaces } = require('q-utils');
+
 const Tag = styled.div`
   display: flex;
 `;
@@ -12,23 +14,44 @@ class manualTagger extends React.Component {
     this.tagInput.focus();
   }
 
-  manuallyTagTransaction(idx, newTag) {
+  updateDataQUnsaved(updatedTransactions) {
+    const { parent } = this.props;
+    sessionStorage.setItem('dataQUnsaved', JSON.stringify(updatedTransactions));
+    parent.setState({ unsaved: updatedTransactions });
+  }
+
+  manuallyTagTransaction(transaction, idx, newTag) {
     if (newTag.replace(/ /g, '').length !== 0) {
-      const { parent } = this.props;
-      const updatedTransactions = parent.state.unsaved.map((transaction, i) => {
-        if (i === idx && transaction.tags.indexOf(newTag) < 0) {
-          transaction.tags.push(newTag);
-        }
-        return transaction;
-      });
-      sessionStorage.setItem('dataQUnsaved', JSON.stringify(updatedTransactions));
-      parent.setState({ unsaved: updatedTransactions });
-      this.tagInput.value = '';
+      const { parent, closeModal, ordinalStart } = this.props;
+      if (!isNaN(newTag)) {
+        this.updateDataQUnsaved(parent.state.unsaved
+          .map((t, i) => {
+            let updatedTransaction = t;
+            if (i === idx) {
+              updatedTransaction = null;
+            } else if (t.ordinal === parseInt(newTag, 10)) {
+              updatedTransaction.amount = roundToTwoDecimalPlaces(transaction.amount + updatedTransaction.amount);
+            }
+            return updatedTransaction;
+          })
+          .filter(t => t != null)
+          .reverse()
+          .map((item, n) => ({...item, ordinal: item.ordinal = ordinalStart + n}))
+          .reverse());
+        closeModal();
+      } else {
+        this.updateDataQUnsaved(parent.state.unsaved.map((t, i) => {
+          if (i === idx && t.tags.indexOf(newTag) < 0) {
+            t.tags.push(newTag);
+          }
+          return t;
+        }));
+        closeModal();
+      }
     }
   }
 
   removeTag(transactionIdx, tagIdx) {
-    console.log(transactionIdx, tagIdx)
     const { parent } = this.props;
     const updatedTransactions = parent.state.unsaved.map((transaction, i) => {
       if (i === transactionIdx) {
@@ -52,8 +75,8 @@ class manualTagger extends React.Component {
         ))}
         <TextInput
           ref={input => { this.tagInput = input; }}
-          onBlur={evt => this.manuallyTagTransaction(transactionIdx, evt.target.value)}
-          onKeyDown={evt => evt.keyCode === 13 && this.manuallyTagTransaction(transactionIdx, evt.target.value)}
+          onBlur={evt => this.manuallyTagTransaction(transaction, transactionIdx, evt.target.value)}
+          onKeyDown={evt => evt.keyCode === 13 && this.manuallyTagTransaction(transaction, transactionIdx, evt.target.value)}
         />
       </PopupContainer>
     );

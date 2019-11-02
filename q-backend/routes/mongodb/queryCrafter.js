@@ -18,9 +18,9 @@ module.exports = {
         return null;
     }
     if (requestQuery.start || requestQuery.end) {
-      query._id = {};
-      if (requestQuery.start) query._id.$gte = parseInt(requestQuery.start, 10);
-      if (requestQuery.end) query._id.$lte = parseInt(requestQuery.end, 10);
+      query.timestamp = {};
+      if (requestQuery.start) query.timestamp.$gte = parseInt(requestQuery.start, 10);
+      if (requestQuery.end) query.timestamp.$lte = parseInt(requestQuery.end, 10);
     }
     return query;
   },

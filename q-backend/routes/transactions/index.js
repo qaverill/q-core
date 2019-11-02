@@ -10,10 +10,15 @@ const unneededFactDescriptions = [
   'Withdrawal VENMO',
   'Online Transfer',
   'Transfer Withdrawal',
+  'ACH Deposit VENMO',
+  'ONLINE PAYMENT THANK YOU',
+  'Withdrawal CITI CARD ONLINE',
+  'Transfer Deposit From Share',
 ];
 
 const isFactNeeded = fact => (
   fact.timestamp >= START_OF_SEPTEMBER
+  && fact.amount !== 0
   && !new RegExp(unneededFactDescriptions
     .map(d => d.toLowerCase())
     .join('|'))

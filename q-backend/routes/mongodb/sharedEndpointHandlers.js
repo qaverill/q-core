@@ -9,7 +9,7 @@ module.exports = {
     let items = Array.isArray(requestBody) ? requestBody : [requestBody];
     if (!validateDataForPost(collection, items)) response.status(400).send(`Failed to validate ${collection}`);
 
-    items = items.map(item => ({ ...item, _id: item.timestamp }));
+    if (collection !== 'transactions') items = items.map(item => ({ ...item, _id: item.timestamp }));
     MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (connectError, db) => {
       if (connectError) return q_logger.error('Cannot connect to mongo', connectError);
       db.db('q-mongodb').collection(collection).insertMany(items, { ordered: false }, (insertError, insertResponse) => {

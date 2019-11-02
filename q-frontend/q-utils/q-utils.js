@@ -12,3 +12,4 @@ export const msToString = (durationInMs) => {
   const seconds = parseInt((durationInMs / 1000) % 60, 10);
   return `${hours < 10 ? `0${hours}` : hours}h ${minutes < 10 ? `0${minutes}` : minutes}m ${seconds < 10 ? `0${seconds}` : seconds}s`;
 };
+export const roundToTwoDecimalPlaces = num => Math.round(num * 100) / 100;

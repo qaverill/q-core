@@ -58,7 +58,7 @@ const TagsColumn = styled.div`
 const craftTagButton = transaction => {
   const { tags } = transaction;
   let color = tags.length === 0 ? red : green;
-  let label = tags.length === 0 ? 'TAG ME' : `${tags.length} ${tags.length === 1 ? 'Tag' : 'Tags'}`;
+  let label = tags.length === 0 ? 'TAG ME' : tags.join(' | ');
   if (tags.includes('NEEDS ORDINAL')) {
     color = yellow;
     label = 'NEEDS ORDINAL';
@@ -86,8 +86,8 @@ class AccountingData extends Component {
   }
 
   render() {
-    const { parent } = this.props;
-    if (parent.state.unsaved.length === 0) {
+    const { parent, ordinalStart } = this.props;
+    if (parent.state.unsaved.length !== 0 && parent.state.unsaved[0].tags == null) {
       return <LoadingSpinner message="Tagging transaction data..." color={accountingQTheme.primary} />;
     }
     return (
@@ -101,7 +101,15 @@ class AccountingData extends Component {
             <TagsColumn>
               <h2>{transaction.tags.length}</h2>
               <StyledPopup modal trigger={craftTagButton(transaction)}>
-                <ManualTagger transaction={transaction} transactionIdx={i} parent={parent} />
+                {close => (
+                  <ManualTagger
+                    transaction={transaction}
+                    transactionIdx={i}
+                    parent={parent}
+                    closeModal={close}
+                    ordinalStart={ordinalStart}
+                  />
+                )}
               </StyledPopup>
             </TagsColumn>
           </Transaction>

@@ -10,12 +10,17 @@ import AccountingData from './components/AccountingData/index';
 import { collectors } from './collectors';
 import { Page, Text, Button } from '../../components/styled-components';
 import { LoadingSpinner, SpotifyAPIErrorPage } from '../../components/components';
+import { epochToDate } from 'q-utils';
+
+let ordinalStart;
 
 const q_settings = require('q-settings');
 const { dateToEpoch } = require('q-utils');
 const { dataQTheme } = require('q-colors');
 
 const Q_PLAYLIST_ID = '6d2V7fQS4CV0XvZr1iOVXJ';
+
+const TRANSACTION_SOURCES = ['mvcu', 'venmo', 'citi'];
 
 const DataQPage = styled(Page)`
   border: 5px solid ${dataQTheme.primary};
@@ -33,9 +38,24 @@ const addSavesToQPlaylist = data => {
     position: 0,
   };
   axios.post('/spotify/playlists', requestBody).then((response) => {
-    console.log(response);
     NotificationManager.success('Wrote saves to Q playlist');
   });
+};
+
+const getUnsavedTransactionData = (items, mongoResults) => {
+  let transactionFacts = items;
+  TRANSACTION_SOURCES.forEach(source => {
+    const sourceMaxTimestamp = Math.max(...mongoResults.data.filter(d => d.account.indexOf(source) > -1).map(d => d.timestamp));
+    transactionFacts = transactionFacts
+      .filter(f => (f.account.indexOf(source) > -1 ? f.timestamp > sourceMaxTimestamp : true));
+  });
+  const lastTimestamp = Math.max(...mongoResults.data.map(d => d.timestamp));
+  const lastDataEntry = mongoResults.data.find(d => d.timestamp === lastTimestamp);
+  ordinalStart = lastDataEntry != null ? lastDataEntry.ordinal + 1 : 1;
+  return transactionFacts
+    .reverse()
+    .map((fact, n) => ({ ...fact, ordinal: ordinalStart + n, tags: [] }))
+    .reverse();
 };
 
 class DataQ extends React.Component {
@@ -50,7 +70,6 @@ class DataQ extends React.Component {
   componentDidMount() {
     if (sessionStorage.getItem('dataQUnsaved')) {
       this.setState({ unsaved: JSON.parse(sessionStorage.getItem('dataQUnsaved')) });
-      console.log('Got unsaved from settings!');
     } else {
       this.getData();
     }
@@ -72,15 +91,11 @@ class DataQ extends React.Component {
       let { items } = sourceResults.data;
       const mongoParams = { params: { start: dateToEpoch(items[items.length - 1][timeParam]) } };
       axios.get(mongodbPath, mongoParams).then(mongoResults => {
-        const maxTimestamp = Math.max(...mongoResults.data.map(d => d.timestamp));
-        items = items.filter(i => dateToEpoch(i[timeParam]) > maxTimestamp);
         if (name === 'transactions') {
-          const lastDataEntry = mongoResults.data.find(d => d.timestamp === maxTimestamp);
-          const nextOrdinal = lastDataEntry != null ? lastDataEntry.ordinal + 1 : 1;
-          items = items
-            .reverse()
-            .map((item, n) => ({ ...item, ordinal: nextOrdinal + n, tags: [] }))
-            .reverse();
+          items = getUnsavedTransactionData(items, mongoResults);
+        } else {
+          const maxTimestamp = Math.max(...mongoResults.data.map(d => d.timestamp));
+          items = items.filter(i => dateToEpoch(i[timeParam]) > maxTimestamp);
         }
         _this.setState({ unsaved: items });
       });
@@ -114,6 +129,7 @@ class DataQ extends React.Component {
       _this.getData();
       NotificationManager.success(`Synced ${collector.name}`);
       if (collector.name === 'saves') addSavesToQPlaylist(data);
+      sessionStorage.removeItem('dataQUnsaved');
     });
   }
 
@@ -130,6 +146,9 @@ class DataQ extends React.Component {
 
   SaveButton(props) {
     const { unsaved, name, color } = props;
+    if (name === 'transactions' && unsaved.filter(i => i.tags.length === 0).length !== 0) {
+      return <Text>TAG SHIT FIRST</Text>;
+    }
     if (unsaved.length !== 0) {
       return (
         <SaveButton
@@ -167,7 +186,7 @@ class DataQ extends React.Component {
         />
         {sourcePath.indexOf('spotify') > -1
           ? <AlbumCoverArray items={unsaved} parent={this} />
-          : <AccountingData items={unsaved} parent={this} />}
+          : <AccountingData items={unsaved} parent={this} ordinalStart={ordinalStart} />}
       </DataQPage>
     );
   }
