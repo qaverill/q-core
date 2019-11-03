@@ -1,22 +1,22 @@
-import axios from "axios";
+/* eslint-disable no-undef */
+import axios from 'axios';
 
 export const get = () => {
-  if (sessionStorage.getItem("settings") != null) {
-    return JSON.parse(sessionStorage.getItem("settings"))
-  } else {
-    return null
+  if (sessionStorage.getItem('settings') != null) {
+    return JSON.parse(sessionStorage.getItem('settings'))
   }
-}
+  return null;
+};
 
 export const set = (key, value) => {
-  if (sessionStorage.getItem("settings") != null) {
-    let updatedSettings = JSON.parse(sessionStorage.getItem("settings"));
+  if (sessionStorage.getItem('settings') != null) {
+    const updatedSettings = JSON.parse(sessionStorage.getItem('settings'));
     updatedSettings[key] = value;
-    axios.post('/mongodb/settings', updatedSettings)
+    axios.post('/mongodb/settings', { [key]: value })
       .then(() => {
-        sessionStorage.setItem("settings", JSON.stringify(updatedSettings));
+        sessionStorage.setItem('settings', JSON.stringify(updatedSettings));
       }).catch((e) => {
-        console.log("Error settting settings...", e);
-    })
+        console.log('Error settting settings...', e);
+      });
   }
-}
+};
