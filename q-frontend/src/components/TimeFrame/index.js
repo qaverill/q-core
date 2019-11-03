@@ -6,14 +6,13 @@ import DateAdjuster from './components/DateAdjuster';
 import { BoldText, TextInput } from '../styled-components';
 
 const q_utils = require('q-utils');
-const { spotifyQTheme } = require('q-colors');
 
 const Controls = styled.div`
   margin: 7.5px;
   padding: 2.5px 5px;
   height: 35px;
   border-radius: 15px;
-  background-color: ${spotifyQTheme.primary};
+  background-color: ${props => props.colorTheme.primary};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,23 +83,23 @@ class TimeFrame extends React.Component {
   }
 
   render() {
-    const { color } = this.props;
+    const { colorTheme } = this.props;
     return (
-      <Controls>
+      <Controls colorTheme={colorTheme}>
         <Start>
           <BoldText>Start</BoldText>
           <DateInput id="start" onBlur={() => this.setTimeframeSide('start')} />
-          <DateAdjuster side="start" amount="d" color={color} parent={this} />
-          <DateAdjuster side="start" amount="w" color={color} parent={this} />
-          <DateAdjuster side="start" amount="m" color={color} parent={this} />
-          <DateAdjuster side="start" amount="y" color={color} parent={this} />
+          <DateAdjuster side="start" amount="d" color={colorTheme.tertiary} parent={this} />
+          <DateAdjuster side="start" amount="w" color={colorTheme.tertiary} parent={this} />
+          <DateAdjuster side="start" amount="m" color={colorTheme.tertiary} parent={this} />
+          <DateAdjuster side="start" amount="y" color={colorTheme.tertiary} parent={this} />
         </Start>
         <TextInput />
         <End>
-          <DateAdjuster side="end" amount="y" color={color} parent={this} />
-          <DateAdjuster side="end" amount="m" color={color} parent={this} />
-          <DateAdjuster side="end" amount="w" color={color} parent={this} />
-          <DateAdjuster side="end" amount="d" color={color} parent={this} />
+          <DateAdjuster side="end" amount="y" color={colorTheme.tertiary} parent={this} />
+          <DateAdjuster side="end" amount="m" color={colorTheme.tertiary} parent={this} />
+          <DateAdjuster side="end" amount="w" color={colorTheme.tertiary} parent={this} />
+          <DateAdjuster side="end" amount="d" color={colorTheme.tertiary} parent={this} />
           <DateInput id="end" onBlur={() => this.setTimeframeSide('end')} />
           <BoldText>End</BoldText>
         </End>

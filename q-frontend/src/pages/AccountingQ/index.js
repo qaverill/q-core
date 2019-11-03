@@ -1,32 +1,53 @@
+/* eslint-disable no-undef */
 import React from 'react';
-import styled from 'styled-components';
-import TimeFrame from '../../components/TimeFrame';
-import { Page } from '../../components/styled-components';
+import ExplorePage from '../sharedComponents/ExplorerPage';
+import Summary from './components/Summary';
+import Tagger from './components/Tagger';
 
+const q_utils = require('q-utils');
 const { accountingQTheme } = require('q-colors');
 
-const AccountingQPage = styled(Page)`
-  border: 5px solid ${accountingQTheme.primary};
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
-class AccountingQ extends React.Component {
+class SpotifyQ extends React.Component {
   constructor(props) {
     super(props);
+    this.displays = [
+      'Summary',
+      'Tagger',
+    ];
     this.state = {
-
+      start: Math.round(new Date(new Date().getFullYear(), new Date().getMonth(), 1) / 1000),
+      end: Math.round(new Date().getTime() / 1000),
+      data: null,
+      selectedIndex: 0,
     };
   }
 
+  displayResults() {
+    const { selectedIndex } = this.state;
+    switch (this.displays[selectedIndex]) {
+      case 'Summary':
+        return <Summary />;
+      case 'Tagger':
+        return <Tagger />;
+      default: return null;
+    }
+  }
+
   render() {
+    const { start, end, data } = this.state;
     return (
-      <AccountingQPage>
-        <TimeFrame parent={this} color={accountingQTheme.tertiary} />
-      </AccountingQPage>
+      <ExplorePage
+        source="transactions"
+        parent={this}
+        colorTheme={accountingQTheme}
+        results={this.displayResults()}
+        displays={this.displays}
+        start={start}
+        end={end}
+        data={data}
+      />
     );
   }
 }
 
-export default AccountingQ;
+export default SpotifyQ;

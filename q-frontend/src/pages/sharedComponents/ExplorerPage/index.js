@@ -46,7 +46,7 @@ class ExplorerPage extends React.PureComponent {
 
   render() {
     const {
-      color,
+      colorTheme,
       results,
       parent,
       displays,
@@ -55,11 +55,11 @@ class ExplorerPage extends React.PureComponent {
     } = this.props;
     const resultsTitle = displays[parent.state.selectedIndex];
     return (
-      <ExplorerPageContainer color={color}>
-        <TimeFrame parent={parent} color={color} />
+      <ExplorerPageContainer color={colorTheme.primary}>
+        <TimeFrame parent={parent} colorTheme={colorTheme} />
         <ArraySelector array={displays} parent={parent} title={<h2>{resultsTitle}</h2>} />
         <Results>
-          {data ? results : <LoadingSpinner message={`Exploring ${source}`} color={color} />}
+          {data ? results : <LoadingSpinner message={`Exploring ${source}`} color={colorTheme.primary} />}
         </Results>
       </ExplorerPageContainer>
     );

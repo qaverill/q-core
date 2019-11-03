@@ -40,8 +40,7 @@ class SpotifyQ extends React.Component {
       <ExplorePage
         source="listens"
         parent={this}
-        color={spotifyQTheme.primary}
-        explore={this.explore}
+        colorTheme={spotifyQTheme}
         results={this.displayResults()}
         displays={this.displays}
         start={start}
