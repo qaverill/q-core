@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-undef */
 import React from 'react';
 import { red } from 'q-colors';
 import styled from 'styled-components';
@@ -36,7 +38,7 @@ class manualTagger extends React.Component {
           })
           .filter(t => t != null)
           .reverse()
-          .map((item, n) => ({...item, ordinal: item.ordinal = ordinalStart + n}))
+          .map((item, n) => ({ ...item, ordinal: ordinalStart + n }))
           .reverse());
         closeModal();
       } else {

@@ -9,5 +9,6 @@ module.exports = {
 		"react/no-did-update-set-state": 0,
 		"react/jsx-filename-extension": 0,
 		"react/prop-types": 0, // TODO
+		"no-restricted-globals": 0,
 	}
 };

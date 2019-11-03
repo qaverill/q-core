@@ -1,6 +1,7 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Page, SettingsGear, StyledPopup, Selector, Button } from "../../components/styled-components";
+import React from 'react';
+import styled from 'styled-components';
+import TimeFrame from '../../components/TimeFrame';
+import { Page } from '../../components/styled-components';
 
 const { accountingQTheme } = require('q-colors');
 
@@ -22,10 +23,10 @@ class AccountingQ extends React.Component {
   render() {
     return (
       <AccountingQPage>
-
+        <TimeFrame parent={this} color={accountingQTheme.tertiary} />
       </AccountingQPage>
-    )
+    );
   }
 }
 
-export default AccountingQ
+export default AccountingQ;
