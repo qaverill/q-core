@@ -1,11 +1,11 @@
-import React from 'react'
-import { Header } from "../../../components/styled-components";
-import styled from 'styled-components'
-import axios from 'axios'
-import {SpotifyAPIErrorPage} from "../../../components/components";
-import ReactTooltip from "react-tooltip";
+import React from 'react';
+import styled from 'styled-components';
+import axios from 'axios';
+import ReactTooltip from 'react-tooltip';
+import { q_styledComponents, q_settings, q_components, q_utils } from 'q-lib';
 
-const { capitolFirstLetter } = require('q-utils');
+const { LeftArrow, RightArrow, Header } = q_styledComponents;
+const { SpotifyErrorPage } = q_components;
 
 const TopChartsContainer = styled.div`
   display: flex;
@@ -48,37 +48,38 @@ const Item = styled.div`
 
 const ToolTip = styled.div`
   display: flex;
-  flex-direction: column
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 `;
 
 class Overview extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       N: 6,
       totalDuration: null,
       topNTracks: null,
       topNArtists: null,
-      topNAlbums: null
-    }
+      topNAlbums: null,
+    };
   }
 
-  componentWillMount(){
-    this.analyzeResults()
+  componentWillMount() {
+    this.analyzeResults();
   }
 
   render() {
     return (
       <TopChartsContainer>
         <ReactTooltip
-          getContent={dataTip =>
-            <ToolTip>
+          getContent={dataTip => (
+<ToolTip>
               <h2>{dataTip != null ? dataTip.split(':::')[0] : null}</h2>
               <h3>{dataTip != null ? dataTip.split(':::')[1] : null}</h3>
             </ToolTip>
-          } />
+)}
+        />
         <TopChart>
           <Header>Top Tracks:</Header>
           {this.state.topNTracks}
@@ -92,31 +93,32 @@ class Overview extends React.Component {
           {this.state.topNAlbums}
         </TopChart>
       </TopChartsContainer>
-    )
+    );
   }
 
-  analyzeResults(){
+  analyzeResults() {
     let totalDuration = 0;
-    let trackPlays = {}, artistPlays = {}, albumPlays = {};
+    const trackPlays = {}; let artistPlays = {}; let 
+albumPlays = {};
     this.props.data.forEach(listen => {
       totalDuration += listen.duration;
       trackPlays[listen.track] == null ? trackPlays[listen.track] = 1 : trackPlays[listen.track] += 1;
-      listen.artists.forEach(artist => { artistPlays[artist] == null ? artistPlays[artist] = 1 : artistPlays[artist] += 1 });
-      albumPlays[listen.album] == null ? albumPlays[listen.album] = 1 : albumPlays[listen.album] += 1
+      listen.artists.forEach(artist => { artistPlays[artist] == null ? artistPlays[artist] = 1 : artistPlays[artist] += 1; });
+      albumPlays[listen.album] == null ? albumPlays[listen.album] = 1 : albumPlays[listen.album] += 1;
     });
 
-    this.getSpotifyData(this.playsToSortedList(trackPlays), "tracks");
-    this.getSpotifyData(this.playsToSortedList(artistPlays), "artists");
-    this.getSpotifyData(this.playsToSortedList(albumPlays), "albums");
+    this.getSpotifyData(this.playsToSortedList(trackPlays), 'tracks');
+    this.getSpotifyData(this.playsToSortedList(artistPlays), 'artists');
+    this.getSpotifyData(this.playsToSortedList(albumPlays), 'albums');
 
-    this.setState({ totalDurationMs: totalDuration })
+    this.setState({ totalDurationMs: totalDuration });
   }
 
-  playsToSortedList(plays){
+  playsToSortedList(plays) {
     return Object.keys(plays).map(key => ({
       id: key,
-      count: plays[key]
-    })).sort(Overview.sortByCount)
+      count: plays[key],
+    })).sort(Overview.sortByCount);
   }
 
   getSpotifyData(list, type) {
@@ -125,31 +127,31 @@ class Overview extends React.Component {
     axios.get(`/spotify/${type}?ids=${topN.map(item => item.id).join()}`)
       .then(res => {
         _this.setState({
-          [`topN${capitolFirstLetter(type)}`]: res.data[type].map(item =>
-            <Item
+          [`topN${q_utils.capitolFirstLetter(type)}`]: res.data[type].map(item => (
+<Item
               key={item.id}
               data-tip={`${item.name} ::: ${topN.find(e => e.id === item.id).count}`}
               image={_this.getItemImage(item, type)} />
-          )
+)),
         });
         ReactTooltip.rebuild();
       }).catch(error => {
-      console.log(error);
-      if (error.response.status === 401) {
-        this.props.root.setState({
-          error: <SpotifyAPIErrorPage />
-        })
-      }
-    })
+        console.log(error);
+        if (error.response.status === 401) {
+          this.props.root.setState({
+            error: <SpotifyErrorPage />,
+          });
+        }
+      });
   }
 
   getItemImage(item, type) {
     switch (type) {
-      case "tracks":
+      case 'tracks':
         return item.album.images[0];
-      case "artists":
+      case 'artists':
         return item.images[0];
-      case "albums":
+      case 'albums':
         return item.images[0];
       default:
         return null;
@@ -159,10 +161,10 @@ class Overview extends React.Component {
   static sortByCount(a, b){
     if (a.count < b.count) {
       return 1;
-    } else if (a.count > b.count){
+    } if (a.count > b.count){
       return -1;
     } else return 0;
   }
 }
 
-export default Overview
+export default Overview;

@@ -1,0 +1,10 @@
+{
+  "name": "q-lib",
+  "description": "Lib for Q",
+  "version": "1.0.0",
+  "author": "Quinn Averill",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ]
+}

@@ -1,11 +1,12 @@
 /* eslint-disable no-undef */
 import React from 'react';
-import ExplorePage from '../sharedComponents/ExplorerPage';
 import Summary from './components/Summary';
 import Tagger from './components/Tagger';
+import { q_colors, q_components } from 'q-lib';
 
-const q_utils = require('q-utils');
-const { accountingQTheme } = require('q-colors');
+const { accountingQTheme } = q_colors;
+const { ExplorePage } = q_components;
+
 
 class SpotifyQ extends React.Component {
   constructor(props) {

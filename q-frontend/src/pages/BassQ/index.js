@@ -1,9 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import Settings from "./components/Settings";
-import { Page, SettingsGear, StyledPopup, Selector, Button } from "../../components/styled-components";
-const { bassQTheme } = require('q-colors');
-const q_settings = require('q-settings');
+import { q_styledComponents, q_settings, q_colors } from 'q-lib';
+
+const { bassQTheme } = q_colors;
+const { Page, SettingsGear, StyledPopup, Selector, Button } = q_styledComponents;
 
 const BassQPage = styled(Page)`
   border: 5px solid ${bassQTheme.primary};
@@ -141,7 +142,7 @@ class BassQ extends React.Component {
     return notes[(notes.indexOf(lowestString) + fret + (string * 7)) % 12]
   }
 
-  getNoteColor = (note) => {
+  getNoteColor(note) {
     const notes = roots.map(root => root.label);
     let color = null;
     if (this.state.mode !== null) {
@@ -154,27 +155,27 @@ class BassQ extends React.Component {
     return color;
   };
 
-  colorFret = (note) => {
+  colorFret(note) {
     this.setState({
       root: roots.find(root => root.label === note)
     })
   }
 
-  setRoot = root => {
+  setRoot(root) {
     q_settings.set("root", root);
     this.setState({
       root: root
     })
   };
 
-  setMode = mode => {
+  setMode(mode) {
     q_settings.set("mode", mode);
     this.setState({
       mode: mode
     })
   };
 
-  clearFretColors = () => {
+  clearFretColors() {
     this.setState({
       root: null,
       mode: null

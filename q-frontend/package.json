@@ -12,10 +12,10 @@
     "start": "PORT=3333 react-scripts start"
   },
   "dependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/preset-react": "^7.6.3",
     "axios": "^0.19.0",
-    "q-colors": "file:q-utils/q-colors",
-    "q-settings": "file:q-utils/q-settings",
-    "q-utils": "file:q-utils",
+    "q-lib": "file:q-lib",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-notifications": "^1.4.3",

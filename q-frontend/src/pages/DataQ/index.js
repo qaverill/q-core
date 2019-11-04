@@ -1,21 +1,29 @@
+/* eslint-disable no-undef */
 import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import ReactTooltip from 'react-tooltip';
 import { NotificationManager } from 'react-notifications';
-
-import ArraySelector from '../../components/ArraySelector';
-import AlbumCoverArray from './components/AlbumCoverArray';
-import AccountingData from '../sharedComponents/AccountingData/index';
+import {
+  q_styledComponents,
+  q_components,
+  q_settings,
+  q_utils,
+  q_colors,
+} from 'q-lib';
 import { collectors } from './collectors';
-import { Page, Text, Button } from '../../components/styled-components';
-import { LoadingSpinner, SpotifyAPIErrorPage } from '../../components/components';
+
+const { dataQTheme } = q_colors;
+const { Page, Text, Button } = q_styledComponents;
+const {
+  LoadingSpinner,
+  SpotifyAPIErrorPage,
+  AccountingData,
+  AlbumCoverArray,
+  ArraySelector,
+} = q_components;
 
 let ordinalStart;
-
-const q_settings = require('q-settings');
-const { dateToEpoch } = require('q-utils');
-const { dataQTheme } = require('q-colors');
 
 const Q_PLAYLIST_ID = '6d2V7fQS4CV0XvZr1iOVXJ';
 
@@ -36,7 +44,7 @@ const addSavesToQPlaylist = data => {
     uris: data.map(d => `spotify:track:${d.track}`),
     position: 0,
   };
-  axios.post('/spotify/playlists', requestBody).then((response) => {
+  axios.post('/spotify/playlists', requestBody).then(() => {
     NotificationManager.success('Wrote saves to Q playlist');
   });
 };
@@ -85,16 +93,23 @@ class DataQ extends React.Component {
   getData() {
     const _this = this;
     const { root } = this.props;
-    const { sourcePath, mongodbPath, timeParam, name } = this.collector();
+    const {
+      sourcePath,
+      mongodbPath,
+      timeParam,
+      name,
+    } = this.collector();
     axios.get(sourcePath).then(sourceResults => {
       let { items } = sourceResults.data;
-      const mongoParams = { params: { start: dateToEpoch(items[items.length - 1][timeParam]) } };
+      const mongoParams = {
+        params: { start: q_utils.dateToEpoch(items[items.length - 1][timeParam]) },
+      };
       axios.get(mongodbPath, mongoParams).then(mongoResults => {
         if (name === 'transactions') {
           items = getUnsavedTransactionData(items, mongoResults);
         } else {
           const maxTimestamp = Math.max(...mongoResults.data.map(d => d.timestamp));
-          items = items.filter(i => dateToEpoch(i[timeParam]) > maxTimestamp);
+          items = items.filter(i => q_utils.dateToEpoch(i[timeParam]) > maxTimestamp);
         }
         _this.setState({ unsaved: items });
       });
@@ -134,7 +149,7 @@ class DataQ extends React.Component {
 
   transformSpotifyDataForMongo(items) {
     return items.map(item => ({
-      timestamp: dateToEpoch(item[this.collector().timeParam]),
+      timestamp: q_utils.dateToEpoch(item[this.collector().timeParam]),
       track: item.track.id,
       artists: item.track.artists.map(artist => artist.id),
       album: item.track.album.id,

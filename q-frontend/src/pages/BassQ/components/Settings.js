@@ -1,9 +1,8 @@
-import React from 'react'
-import { TextInput, PopupContainer } from "../../../components/styled-components";
-import styled from 'styled-components'
+import React from 'react';
+import styled from 'styled-components';
+import { q_styledComponts, q_settings } from 'q-lib';
 
-const q_settings = require('q-settings');
-const { dark, light } = require('q-colors');
+const { TextInput, PopupContainer } = q_styledComponts;
 
 const Setting = styled.div`
   display: flex;

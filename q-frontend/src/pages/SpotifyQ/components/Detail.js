@@ -1,13 +1,21 @@
-import React from 'react'
-import { Text } from "../../../components/styled-components";
-import styled from 'styled-components'
+import React from 'react';
+import styled from 'styled-components';
+import { q_styled_components, q_utils } from 'q-lib';
 
-const { msToString } = require('q-utils');
+const { Text } = q_styled_components;
 
 const DetailContainer = styled.div`
   width: 100%;
   height: 100%;
 `;
+
+const getTotalDuration = data => data.map(l => l.duration).reduce((total, num) => total + num);
+
+const getUniqueNumberOfArtists = data => [...new Set(data.map(l => l.artists).flat())].length;
+
+const getUniqueNumberOfTracks = data => [...new Set(data.map(l => l.track))].length;
+
+const getUniqueNumberOfAlbums = data => [...new Set(data.map(l => l.album))].length;
 
 class Detail extends React.Component {
   constructor(props) {
@@ -16,48 +24,39 @@ class Detail extends React.Component {
       totalDurationMs: 0,
       uniqueNumberOfArtists: 0,
       uniqueNUmberOfTracks: 0,
-      uniqueNumberOfAlbums: 0
+      uniqueNumberOfAlbums: 0,
     }
   }
 
+  componentWillMount() {
+    const { data } = this.props;
+    this.setState({
+      totalDurationMs: getTotalDuration(data),
+      uniqueNumberOfArtists: getUniqueNumberOfArtists(data),
+      uniqueNUmberOfTracks: getUniqueNumberOfTracks(data),
+      uniqueNumberOfAlbums: getUniqueNumberOfAlbums(data),
+    });
+  }
+
   render() {
+    const { totalTimeMs } = this.props;
+    const {
+      totalDurationMs,
+      uniqueNUmberOfTracks,
+      uniqueNumberOfArtists,
+      uniqueNumberOfAlbums,
+    } = this.state;
     return (
       <DetailContainer>
         <h2>Detail</h2>
-        <Text>Total Listening Time: {msToString(this.state.totalDurationMs)}</Text>
-        <Text>Percent of time Listening: {parseInt((this.state.totalDurationMs / this.props.totalTimeMs) * 100)}%</Text>
-        <Text>Total Unique Tracks: {this.state.uniqueNUmberOfTracks}</Text>
-        <Text>Total Unique Artists: {this.state.uniqueNumberOfArtists}</Text>
-        <Text>Total Unique Albums: {this.state.uniqueNumberOfAlbums}</Text>
+        <Text>{`Total Listening Time: ${q_utils.msToString(totalDurationMs)}`}</Text>
+        <Text>{`Percent of time Listening: ${parseInt((totalDurationMs / totalTimeMs) * 100, 10)}%`}</Text>
+        <Text>{`Total Unique Tracks: ${uniqueNUmberOfTracks}`}</Text>
+        <Text>{`Total Unique Artists: ${uniqueNumberOfArtists}`}</Text>
+        <Text>{`Total Unique Albums: ${uniqueNumberOfAlbums}`}</Text>
       </DetailContainer>
-    )
+    );
   }
-
-  componentWillMount() {
-    this.setState({
-      totalDurationMs: this.getTotalDuration(),
-      uniqueNumberOfArtists: this.getUniqueNumberOfArtists(),
-      uniqueNUmberOfTracks: this.getUniqueNumberOfTracks(),
-      uniqueNumberOfAlbums: this.getUniqeuNumberOfAlbums()
-    })
-  }
-
-  getTotalDuration() {
-    return this.props.data.map(listen => listen.duration).reduce((total, num) => total + num)
-  }
-
-  getUniqueNumberOfArtists() {
-    return [...new Set(this.props.data.map(listen => listen.artists).flat())].length
-  }
-
-  getUniqueNumberOfTracks() {
-    return [...new Set(this.props.data.map(listen => listen.track))].length
-  }
-
-  getUniqeuNumberOfAlbums() {
-    return [...new Set(this.props.data.map(listen => listen.album))].length
-  }
-
 }
 
-export default Detail
+export default Detail;
