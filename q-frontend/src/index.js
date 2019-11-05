@@ -3,16 +3,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import styled from 'styled-components';
-import { q_components, q_settings } from 'q-lib';
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
+import { ArraySelector } from '@q/components';
+import { getSettings } from '@q/utils';
 
-import DataQ from './pages/DataQ';
-import SpotifyQ from './pages/SpotifyQ';
-import BassQ from './pages/BassQ';
-import AccountingQ from './pages/AccountingQ';
-
-const { ArraySelector } = q_components;
+import DataQ from './DataQ';
+import SpotifyQ from './SpotifyQ';
+import BassQ from './BassQ';
+import AccountingQ from './AccountingQ';
 
 const AppContainer = styled.div`
   height: 100%;
@@ -49,7 +48,7 @@ class App extends React.Component {
       <AccountingQ title={<Title>AccountingQ</Title>} />,
     ];
     this.state = {
-      selectedIndex: q_settings.get() != null ? q_settings.get().lastPageIndex : 2,
+      selectedIndex: getSettings() != null ? getSettings().lastPageIndex : 2,
       error: null,
     };
   }
@@ -70,7 +69,7 @@ class App extends React.Component {
   }
 
   render() {
-    if (q_settings.get() == null) {
+    if (getSettings() == null) {
       return (
         <AppContainer>
           <AppHeader>

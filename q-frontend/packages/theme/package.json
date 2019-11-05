@@ -3,6 +3,7 @@
   "description": "Themes for Q",
   "version": "1.0.0",
   "author": "Quinn Averill",
+  "license": "Q",
   "main": "build/index.js",
   "files": [
     "build/index.js"

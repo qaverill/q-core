@@ -4,24 +4,19 @@ import styled from 'styled-components';
 import axios from 'axios';
 import ReactTooltip from 'react-tooltip';
 import { NotificationManager } from 'react-notifications';
+import { dataQTheme } from '@q/theme';
+import { Page, Text, Button } from '@q/core';
+import { getSettings } from '@q/utils';
 import {
-  q_styledComponents,
-  q_components,
-  q_settings,
-  q_utils,
-  q_colors,
-} from 'q-lib';
-import { collectors } from './collectors';
-
-const { dataQTheme } = q_colors;
-const { Page, Text, Button } = q_styledComponents;
-const {
   LoadingSpinner,
   SpotifyAPIErrorPage,
   AccountingData,
   AlbumCoverArray,
   ArraySelector,
-} = q_components;
+} from '@q/components';
+
+import { collectors } from './collectors';
+
 
 let ordinalStart;
 
@@ -69,7 +64,7 @@ class DataQ extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedIndex: q_settings.get().dataQSelectedIndex,
+      selectedIndex: getSettings().dataQSelectedIndex,
       unsaved: null,
     };
   }

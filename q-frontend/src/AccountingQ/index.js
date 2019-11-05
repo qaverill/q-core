@@ -2,10 +2,8 @@
 import React from 'react';
 import Summary from './components/Summary';
 import Tagger from './components/Tagger';
-import { q_colors, q_components } from 'q-lib';
-
-const { accountingQTheme } = q_colors;
-const { ExplorePage } = q_components;
+import { accountingQTheme } from '@q/theme';
+import { ExplorePage } from '@q/components';
 
 
 class SpotifyQ extends React.Component {

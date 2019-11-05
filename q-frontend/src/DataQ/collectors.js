@@ -1,7 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { q_colors } from 'q-lib';
-
-const { dataQTheme } = q_colors;
+import { dataQTheme } from '@q/theme';
 
 export const collectors = [
   {

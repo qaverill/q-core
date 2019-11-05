@@ -2,6 +2,7 @@
   "name": "@q/utils",
   "description": "Utils for Q",
   "version": "1.0.0",
+  "license": "Q",
   "author": "Quinn Averill",
   "main": "build/index.js",
   "files": [

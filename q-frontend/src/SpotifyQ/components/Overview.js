@@ -2,10 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import ReactTooltip from 'react-tooltip';
-import { q_styledComponents, q_settings, q_components, q_utils } from 'q-lib';
-
-const { LeftArrow, RightArrow, Header } = q_styledComponents;
-const { SpotifyErrorPage } = q_components;
+import { Header } from '@q/core';
+import { SpotifyErrorPage } from '@q/components';
+import { capitolFirstLetter } from '@q/utils';
 
 const TopChartsContainer = styled.div`
   display: flex;
@@ -127,7 +126,7 @@ albumPlays = {};
     axios.get(`/spotify/${type}?ids=${topN.map(item => item.id).join()}`)
       .then(res => {
         _this.setState({
-          [`topN${q_utils.capitolFirstLetter(type)}`]: res.data[type].map(item => (
+          [`topN${capitolFirstLetter(type)}`]: res.data[type].map(item => (
 <Item
               key={item.id}
               data-tip={`${item.name} ::: ${topN.find(e => e.id === item.id).count}`}

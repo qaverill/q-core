@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { q_styled_components, q_utils } from 'q-lib';
-
-const { Text } = q_styled_components;
+import { msToString } from '@q/utils';
+import { Text } from '@q/core';
 
 const DetailContainer = styled.div`
   width: 100%;
@@ -49,7 +48,7 @@ class Detail extends React.Component {
     return (
       <DetailContainer>
         <h2>Detail</h2>
-        <Text>{`Total Listening Time: ${q_utils.msToString(totalDurationMs)}`}</Text>
+        <Text>{`Total Listening Time: ${msToString(totalDurationMs)}`}</Text>
         <Text>{`Percent of time Listening: ${parseInt((totalDurationMs / totalTimeMs) * 100, 10)}%`}</Text>
         <Text>{`Total Unique Tracks: ${uniqueNUmberOfTracks}`}</Text>
         <Text>{`Total Unique Artists: ${uniqueNumberOfArtists}`}</Text>

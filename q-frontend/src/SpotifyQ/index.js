@@ -2,10 +2,9 @@
 import React from 'react';
 import Overview from './components/Overview';
 import Detail from './components/Detail';
-import { q_components, q_utils, q_colors } from 'q-lib';
-
-const { spotifyQTheme } = q_colors;
-const { ExplorePage } = q_components;
+import { ONE_EPOCH_DAY } from '@q/utils'
+import { spotifyQTheme } from '@q/theme';
+import { ExplorePage } from '@q/components';
 
 class SpotifyQ extends React.Component {
   constructor(props) {
@@ -15,7 +14,7 @@ class SpotifyQ extends React.Component {
       'Detail',
     ];
     this.state = {
-      start: Math.round(new Date().getTime() / 1000) - 3 * q_utils.ONE_EPOCH_DAY,
+      start: Math.round(new Date().getTime() / 1000) - 3 * ONE_EPOCH_DAY,
       end: Math.round(new Date().getTime() / 1000),
       data: null,
       selectedIndex: 0,

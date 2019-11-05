@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { q_styledComponts, q_settings } from 'q-lib';
-
-const { TextInput, PopupContainer } = q_styledComponts;
+import { setSettings } from '@q/utils';
+import { TextInput, PopupContainer } from '@q/core';
 
 const Setting = styled.div`
   display: flex;
@@ -36,21 +35,21 @@ class settings extends React.Component {
   }
 
   setNumFrets() {
-    q_settings.set("numFrets", parseInt(document.getElementById("numFrets").value));
+    setSettings("numFrets", parseInt(document.getElementById("numFrets").value));
     this.props.parent.setState({
       numFrets: parseInt(document.getElementById("numFrets").value)
     })
   }
 
   setNumStrings() {
-    q_settings.set("numStrings", parseInt(document.getElementById("numStrings").value));
+    setSettings("numStrings", parseInt(document.getElementById("numStrings").value));
     this.props.parent.setState({
       numStrings: parseInt(document.getElementById("numStrings").value)
     })
   }
 
   setLowestString() {
-    q_settings.set("lowestString", document.getElementById("lowestString").value);
+    setSettings("lowestString", document.getElementById("lowestString").value);
     this.props.parent.setState({
       lowestString: document.getElementById("lowestString").value
     })

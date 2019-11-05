@@ -3,6 +3,7 @@
   "description": "Images for Q",
   "version": "1.0.0",
   "author": "Quinn Averill",
+  "license": "Q",
   "main": "build/index.js",
   "files": [
     "build/index.js"
@@ -14,6 +15,6 @@
     "@babel/cli": "^7.6.4",
     "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",
-    "@babel/preset-react": "^7.6.3",
+    "@babel/preset-react": "^7.6.3"
   }
 }
