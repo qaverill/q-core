@@ -4,7 +4,7 @@ import Overview from './components/Overview';
 import Detail from './components/Detail';
 import { ONE_EPOCH_DAY } from '@q/utils'
 import { spotifyQTheme } from '@q/theme';
-import { ExplorePage } from '@q/components';
+import ExplorePage from '@q/explore-page';
 
 class SpotifyQ extends React.Component {
   constructor(props) {

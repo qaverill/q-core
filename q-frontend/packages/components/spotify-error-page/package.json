@@ -1,6 +1,6 @@
 {
-  "name": "@q/manual-tagger",
-  "description": "manual tagger component",
+  "name": "@q/spotify-error-page",
+  "description": "Error page component for when spotify needs a new auth token",
   "version": "1.0.0",
   "author": "Quinn Averill",
   "license": "Q",
@@ -9,7 +9,7 @@
     "build/index.js"
   ],
   "scripts": {
-    "build": "../../../../../../node_modules/.bin/babel src --out-file build/index.js"
+    "build": "../../../node_modules/.bin/babel src --out-file build/index.js"
   },
   "peerDependencies": {
     "@babel/cli": "^7.6.4",
@@ -18,9 +18,8 @@
     "@babel/preset-react": "^7.6.3",
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "@q/core": "file:packages/core",
-    "@q/utils": "file:packages/utils",
     "@q/theme": "file:packages/theme",
-    "react": "^16.9.0",
+    "@q/images": "file:packages/images",
     "styled-components": "^4.3.2"
   }
 }

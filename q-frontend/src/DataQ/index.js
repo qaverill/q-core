@@ -3,18 +3,15 @@ import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import ReactTooltip from 'react-tooltip';
+import LoadingSpinner from '@q/loading-spinner';
+import SpotifyAPIErrorPage from '@q/spotify-error-page';
+import AccountingData from '@q/accounting-data';
+import ArraySelector from '@q/array-selector';
 import { NotificationManager } from 'react-notifications';
 import { dataQTheme } from '@q/theme';
 import { Page, Text, Button } from '@q/core';
-import { getSettings } from '@q/utils';
-import {
-  LoadingSpinner,
-  SpotifyAPIErrorPage,
-  AccountingData,
-  AlbumCoverArray,
-  ArraySelector,
-} from '@q/components';
-
+import { getSettings, dateToEpoch } from '@q/utils';
+import AlbumCoverArray from './components/AlbumCoverArray';
 import { collectors } from './collectors';
 
 
@@ -97,14 +94,14 @@ class DataQ extends React.Component {
     axios.get(sourcePath).then(sourceResults => {
       let { items } = sourceResults.data;
       const mongoParams = {
-        params: { start: q_utils.dateToEpoch(items[items.length - 1][timeParam]) },
+        params: { start: dateToEpoch(items[items.length - 1][timeParam]) },
       };
       axios.get(mongodbPath, mongoParams).then(mongoResults => {
         if (name === 'transactions') {
           items = getUnsavedTransactionData(items, mongoResults);
         } else {
           const maxTimestamp = Math.max(...mongoResults.data.map(d => d.timestamp));
-          items = items.filter(i => q_utils.dateToEpoch(i[timeParam]) > maxTimestamp);
+          items = items.filter(i => dateToEpoch(i[timeParam]) > maxTimestamp);
         }
         _this.setState({ unsaved: items });
       });
@@ -144,7 +141,7 @@ class DataQ extends React.Component {
 
   transformSpotifyDataForMongo(items) {
     return items.map(item => ({
-      timestamp: q_utils.dateToEpoch(item[this.collector().timeParam]),
+      timestamp: dateToEpoch(item[this.collector().timeParam]),
       track: item.track.id,
       artists: item.track.artists.map(artist => artist.id),
       album: item.track.album.id,

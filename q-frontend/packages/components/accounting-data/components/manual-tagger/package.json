@@ -1,6 +1,6 @@
 {
-  "name": "@q/time-frame",
-  "description": "Common time frame component",
+  "name": "@q/manual-tagger",
+  "description": "manual tagger component",
   "version": "1.0.0",
   "author": "Quinn Averill",
   "license": "Q",
@@ -9,7 +9,7 @@
     "build/index.js"
   ],
   "scripts": {
-    "build": "cd components/date-adjuster && yarn build && cd ../../ && ../../../../node_modules/.bin/babel src --out-file build/index.js"
+    "build": "../../../../../node_modules/.bin/babel src --out-file build/index.js"
   },
   "peerDependencies": {
     "@babel/cli": "^7.6.4",
@@ -19,8 +19,8 @@
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "@q/core": "file:packages/core",
     "@q/utils": "file:packages/utils",
+    "@q/theme": "file:packages/theme",
     "react": "^16.9.0",
-    "styled-components": "^4.3.2",
-    "react-notifications": "^1.4.3"
+    "styled-components": "^4.3.2"
   }
 }

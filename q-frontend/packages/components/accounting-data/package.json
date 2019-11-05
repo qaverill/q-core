@@ -1,6 +1,6 @@
 {
-  "name": "@q/spotify-error-page",
-  "description": "Error page component for when spotify needs a new auth token",
+  "name": "@q/accounting-data",
+  "description": "Accounting data component",
   "version": "1.0.0",
   "author": "Quinn Averill",
   "license": "Q",
@@ -9,7 +9,7 @@
     "build/index.js"
   ],
   "scripts": {
-    "build": "../../../../node_modules/.bin/babel src --out-file build/index.js"
+    "build": "cd components/manual-tagger && yarn build && cd ../.. && ../../../node_modules/.bin/babel src --out-file build/index.js"
   },
   "peerDependencies": {
     "@babel/cli": "^7.6.4",
@@ -18,8 +18,10 @@
     "@babel/preset-react": "^7.6.3",
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "@q/core": "file:packages/core",
+    "@q/utils": "file:packages/utils",
     "@q/theme": "file:packages/theme",
-    "@q/images": "file:packages/images",
+    "@q/loading-spinner": "file:packages/components/loading-spinner",
+    "react": "^16.9.0",
     "styled-components": "^4.3.2"
   }
 }

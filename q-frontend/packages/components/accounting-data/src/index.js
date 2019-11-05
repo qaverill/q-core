@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import ManualTagger from '../components/manual-tagger/build/index';
 import { Button, StyledPopup } from '@q/core';
-import { LoadingSpinner } from '@q/components';
+import LoadingSpinner from '@q/loading-spinner';
 import { epochToString } from '@q/utils';
 import {
   accountingQTheme,

@@ -2,7 +2,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { ArraySelector, TimeFrame, LoadingSpinner } from '@q/components';
+import ArraySelector from '@q/array-selector';
+import TimeFrame from '@q/time-frame';
+import LoadingSpinner from '@q/loading-spinner'
 import { Page } from '@q/core';
 import { epochToString } from '@q/utils';
 

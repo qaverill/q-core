@@ -3,7 +3,7 @@ import React from 'react';
 import Summary from './components/Summary';
 import Tagger from './components/Tagger';
 import { accountingQTheme } from '@q/theme';
-import { ExplorePage } from '@q/components';
+import ExplorePage from '@q/explore-page';
 
 
 class SpotifyQ extends React.Component {

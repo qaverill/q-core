@@ -1,3 +1,4 @@
+import React from 'react';
 import { ClipLoader } from 'react-spinners';
 import { FullDiv } from '@q/core';
 

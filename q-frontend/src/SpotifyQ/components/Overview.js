@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import ReactTooltip from 'react-tooltip';
 import { Header } from '@q/core';
-import { SpotifyErrorPage } from '@q/components';
+import SpotifyErrorPage from '@q/spotify-error-page';
 import { capitolFirstLetter } from '@q/utils';
 
 const TopChartsContainer = styled.div`

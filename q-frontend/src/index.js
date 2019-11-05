@@ -5,7 +5,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-import { ArraySelector } from '@q/components';
+import ArraySelector from '@q/array-selector';
 import { getSettings } from '@q/utils';
 
 import DataQ from './DataQ';
