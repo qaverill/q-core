@@ -16,7 +16,7 @@ const Results = styled.div`
   margin: 7.5px;
 `;
 
-class ExplorerPage extends React.PureComponent {
+class ExplorePage extends React.PureComponent {
   componentDidMount() {
     const { start, end } = this.props;
     document.getElementById('start').value = epochToString(start);
@@ -62,4 +62,4 @@ class ExplorerPage extends React.PureComponent {
   }
 }
 
-export default ExplorerPage;
+export default ExplorePage;

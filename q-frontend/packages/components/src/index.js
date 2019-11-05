@@ -11,5 +11,5 @@ module.exports = {
   ExplorePage,
   LoadingSpinner,
   SpotifyErrorPage,
-  TimeFrame
+  TimeFrame,
 };
