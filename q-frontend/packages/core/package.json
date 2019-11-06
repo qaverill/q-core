@@ -1,0 +1,26 @@
+{
+  "name": "@q/core",
+  "description": "Core components for Q",
+  "version": "1.0.0",
+  "author": "Quinn Averill",
+  "license": "Q",
+  "main": "build/index.js",
+  "files": [
+    "build/index.js"
+  ],
+  "scripts": {
+    "build": "../../node_modules/.bin/babel src --out-file build/index.js"
+  },
+  "peerDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-react": "^7.6.3",
+    "@q/theme": "file:packages/theme",
+    "@q/images": "file:packages/images",
+    "react": "^16.9.0",
+    "styled-components": "^4.3.2",
+    "reactjs-popup": "^1.5.0",
+    "react-select": "^3.0.5"
+  }
+}
