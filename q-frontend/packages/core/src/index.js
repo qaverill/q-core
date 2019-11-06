@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 import Popup from 'reactjs-popup';
 import Select from 'react-select';
-import { arrowSvg, settingsGearSvg } from '@q/images';
+import { arrow, settingsGear } from '@q/images';
 import {
   dark,
   medium,
@@ -78,7 +78,7 @@ export const Page = styled.div`
 
 export const RightArrow = styled.img
   .attrs({
-    src: arrowSvg,
+    src: arrow,
   })`
   cursor: pointer;
   height: ${props => (props.size == null ? '28px' : props.size)};
@@ -95,7 +95,7 @@ export const LeftArrow = styled(RightArrow)`
 
 export const SettingsGear = styled.img
   .attrs({
-    src: settingsGearSvg,
+    src: settingsGear,
   })`
   cursor: pointer;
   height: ${props => (props.size == null ? '28px' : props.size)};
