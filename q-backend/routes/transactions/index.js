@@ -28,7 +28,10 @@ const isFactNeeded = fact => (
 q_api.makeGetEndpoint(routes, '/', '/transactions', (request, response) => {
   let facts = [];
   fs.readdir(path.join(__dirname, 'data-dump'), (readdirError, files) => {
-    if (readdirError) return q_logger.error('Cannot read files in data-dump dir');
+    if (readdirError) {
+      response.status(500).send()
+      return q_logger.error('Cannot read files in data-dump dir');
+    }
     files.forEach(file => {
       fs.readFile(path.join(__dirname, `./data-dump/${file}`), 'UTF-8', (readFileError, data) => {
         if (readFileError) return q_logger.error(`Cannot read data in ${file}.csv`);

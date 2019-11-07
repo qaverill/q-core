@@ -50,6 +50,8 @@ class TimeFrame extends React.Component {
       NotificationManager.error('Must be before the End', 'Impossible Range');
     } else if (side === 'end' && date != null && date <= start) {
       NotificationManager.error('Must be after the Start', 'Impossible Range');
+    } else if (side === 'end' && date != null && date > new Date().getTime() / 1000) {
+      NotificationManager.error('Must not be in the future', 'Impossible Range');
     } else if (date !== parent.state[side]) {
       document.getElementById(side).value = epochToString(date);
       parent.setState({

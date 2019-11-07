@@ -107,6 +107,7 @@ class DataQ extends React.Component {
       });
     }).catch(error => {
       if (error.response.status === 401) root.setState({ error: <SpotifyAPIErrorPage /> });
+      _this.setState({ unsaved: [] })
     });
   }
 

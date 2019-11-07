@@ -6,6 +6,8 @@ The core of Q
 
 `yarn install`
 
+`yarn build`
+
 `yarn start`
 
 then
