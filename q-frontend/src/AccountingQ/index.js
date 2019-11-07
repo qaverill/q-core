@@ -1,10 +1,9 @@
 /* eslint-disable no-undef */
 import React from 'react';
-import Summary from './components/Summary';
-import Tagger from './components/Tagger';
 import { accountingQTheme } from '@q/theme';
 import ExplorePage from '@q/explore-page';
-
+import Summary from './components/Summary';
+import Tagger from './components/Tagger';
 
 class SpotifyQ extends React.Component {
   constructor(props) {

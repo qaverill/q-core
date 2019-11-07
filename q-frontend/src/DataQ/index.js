@@ -152,7 +152,7 @@ class DataQ extends React.Component {
 
   SaveButton(props) {
     const { unsaved, name, color } = props;
-    if (name === 'transactions' && unsaved.filter(i => i.tags.length === 0).length !== 0) {
+    if (name === 'transactions' && unsaved.filter(i => i.tags == null || i.tags === []).length !== 0) {
       return <Text>TAG SHIT FIRST</Text>;
     }
     if (unsaved.length !== 0) {

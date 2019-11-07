@@ -1,7 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import ManualTagger from '../components/manual-tagger/build/index';
 import { Button, StyledPopup } from '@q/core';
 import LoadingSpinner from '@q/loading-spinner';
 import { epochToString } from '@q/utils';
@@ -11,6 +10,7 @@ import {
   red,
   yellow,
 } from '@q/theme';
+import ManualTagger from '../components/manual-tagger/build/index';
 
 const discreteTags = require('../components/discreteTags.json');
 
@@ -108,6 +108,14 @@ class AccountingData extends Component {
     });
   }
 
+  removeFact(i) {
+    const { parent } = this.props;
+    parent.state.unsaved.splice(i, 1);
+    parent.setState({
+      unsaved: parent.state.unsaved,
+    });
+  }
+
   render() {
     const { parent, ordinalStart } = this.props;
     if (parent.state.unsaved.length !== 0 && parent.state.unsaved[0].tags == null) {
@@ -117,6 +125,7 @@ class AccountingData extends Component {
       <AccountingDataContainer>
         {parent.state.unsaved.map((transaction, i) => (
           <Transaction>
+            <Button color={red} onClick={() => this.removeFact(i)}>X</Button>
             <OrdinalColumn><h2>{transaction.ordinal}</h2></OrdinalColumn>
             <DateColumn><h2>{epochToString(transaction.timestamp)}</h2></DateColumn>
             <AmountColumn><h2>{transaction.amount}</h2></AmountColumn>
