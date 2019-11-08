@@ -10,7 +10,7 @@
   "proxy": "http://localhost:8888",
   "scripts": {
     "start": "PORT=3333 react-scripts start",
-    "build": "cd ./packages/components/accounting-data && yarn build && cd ../array-selector && yarn build && cd ../explore-page && yarn build && cd ../loading-spinner && yarn build && cd ../spotify-error-page && yarn build && cd ../time-frame && yarn build && cd ../../core && yarn build && cd ../images && yarn build && cd ../theme && yarn build && cd ../utils && yarn build && cd .. && yarn upgrade"
+    "build": "yarn install && cd ./packages/components/array-selector && yarn build && cd ../explore-page && yarn build && cd ../loading-spinner && yarn build && cd ../spotify-error-page && yarn build && cd ../time-frame && yarn build && cd ../transaction-fact && yarn build && cd ../../core && yarn build && cd ../images && yarn build && cd ../theme && yarn build && cd ../utils && yarn build && cd .. && yarn upgrade"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
@@ -21,7 +21,6 @@
     "@babel/preset-react": "^7.6.3"
   },
   "dependencies": {
-    "@q/accounting-data": "file:packages/components/accounting-data",
     "@q/array-selector": "file:packages/components/array-selector",
     "@q/core": "file:packages/core",
     "@q/explore-page": "file:packages/components/explore-page",
@@ -30,6 +29,7 @@
     "@q/spotify-error-page": "file:packages/components/spotify-error-page",
     "@q/theme": "file:packages/theme",
     "@q/time-frame": "file:packages/components/time-frame",
+    "@q/transaction-fact": "file:packages/components/transaction-fact",
     "@q/utils": "file:packages/utils",
     "axios": "^0.19.0",
     "react": "^16.9.0",

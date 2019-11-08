@@ -5,15 +5,14 @@ import axios from 'axios';
 import ReactTooltip from 'react-tooltip';
 import LoadingSpinner from '@q/loading-spinner';
 import SpotifyAPIErrorPage from '@q/spotify-error-page';
-import AccountingData from '@q/accounting-data';
 import ArraySelector from '@q/array-selector';
 import { NotificationManager } from 'react-notifications';
 import { dataQTheme } from '@q/theme';
 import { Page, Text, Button } from '@q/core';
 import { getSettings, dateToEpoch } from '@q/utils';
 import AlbumCoverArray from './components/AlbumCoverArray';
+import AccountingData from './components/AccountingData';
 import { collectors } from './collectors';
-
 
 let ordinalStart;
 

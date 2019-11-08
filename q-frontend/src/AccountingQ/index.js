@@ -21,12 +21,12 @@ class SpotifyQ extends React.Component {
   }
 
   displayResults() {
-    const { selectedIndex } = this.state;
+    const { selectedIndex, data } = this.state;
     switch (this.displays[selectedIndex]) {
       case 'Summary':
         return <Summary />;
       case 'Tagger':
-        return <Tagger />;
+        return <Tagger data={data ? data.sort((a, b) => b.ordinal - a.ordinal) : null} />;
       default: return null;
     }
   }

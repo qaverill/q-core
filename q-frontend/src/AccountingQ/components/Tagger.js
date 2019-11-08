@@ -1,15 +1,28 @@
 import React from 'react';
+import styled from 'styled-components';
+import TransactionFact from '@q/transaction-fact';
+
+const TaggerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  width: 100%;
+`;
 
 class Tagger extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
 
   render() {
+    const { data } = this.props;
     return (
-      <h2>Tagger</h2>
+      <TaggerContainer>
+        {data.map(transaction => (
+          <TransactionFact transaction={transaction} />
+        ))}
+      </TaggerContainer>
     );
   }
 }
