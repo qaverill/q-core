@@ -8,6 +8,7 @@ import ManualTagger from '../components/manual-tagger/build/index';
 const Transaction = styled.div`
   width: 100%;
   display: flex;
+  align-items: center;
 `;
 
 const OrdinalColumn = styled.div`
@@ -37,6 +38,7 @@ const DescriptionColumn = styled.div`
 
 const TagsColumn = styled.div`
   display: flex;
+  align-items: center;
   flex-direction: row-reverse;
   flex-shrink: 0;
   width: 260px;

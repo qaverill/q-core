@@ -12,6 +12,7 @@ const unneededFactDescriptions = [
   'Transfer Withdrawal',
   'ACH Deposit VENMO',
   'ONLINE PAYMENT THANK YOU',
+  'PAYMENT THANK YOU',
   'Withdrawal CITI CARD ONLINE',
   'Transfer Deposit From Share',
 ];

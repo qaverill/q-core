@@ -15,7 +15,7 @@
   "income": ["Dividend Deposit", "Deposit TRINETX", "Check Deposit"],
   "video-games": ["blizzard", "Microsoft"],
   "loans": ["NAVI ED", "Withdrawal UAS"],
-  "cash": ["ATM Withdrawal"],
+  "cash": ["ATM Withdrawal", "Cash Withdrawal"],
   "gas": ["CUMBERLAND FARMS"],
   "streaming": ["HULU"],
   "events": ["BROWNPAPERTICKETS"],
