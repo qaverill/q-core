@@ -21,10 +21,10 @@ class SpotifyQ extends React.Component {
   }
 
   displayResults() {
-    const { selectedIndex, data } = this.state;
+    const { selectedIndex, data, start, end } = this.state;
     switch (this.displays[selectedIndex]) {
       case 'Summary':
-        return <Summary />;
+        return <Summary start={start} end={end} />
       case 'Tagger':
         return <Tagger data={data ? data.sort((a, b) => b.ordinal - a.ordinal) : null} />;
       default: return null;

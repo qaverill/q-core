@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import axios from 'axios';
 
 export const ONE_EPOCH_DAY = 86400;

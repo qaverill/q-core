@@ -34,7 +34,12 @@ class ExplorePage extends React.PureComponent {
   }
 
   explore() {
-    const { start, end, parent, source } = this.props;
+    const {
+      start,
+      end,
+      parent,
+      source,
+    } = this.props;
     axios.get(`/mongodb/${source}?start=${start}&end=${end}`).then(res => {
       parent.setState({
         data: res.data,
