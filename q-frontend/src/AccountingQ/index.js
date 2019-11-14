@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import React from 'react';
 import { accountingQTheme } from '@q/theme';
+import { getSettings } from '@q/utils';
 import ExplorePage from '@q/explore-page';
 import Summary from './components/Summary';
 import Tagger from './components/Tagger';
@@ -16,7 +17,7 @@ class SpotifyQ extends React.Component {
       start: Math.round(new Date(new Date().getFullYear(), new Date().getMonth(), 1) / 1000),
       end: Math.round(new Date().getTime() / 1000),
       data: null,
-      selectedIndex: 0,
+      selectedIndex: getSettings().accountingQSelectedIndex,
     };
   }
 
@@ -24,9 +25,9 @@ class SpotifyQ extends React.Component {
     const { selectedIndex, data, start, end } = this.state;
     switch (this.displays[selectedIndex]) {
       case 'Summary':
-        return <Summary start={start} end={end} />
+        return <Summary data={data} start={start} end={end} />;
       case 'Tagger':
-        return <Tagger data={data ? data.sort((a, b) => b.ordinal - a.ordinal) : null} />;
+        return <Tagger data={data} />;
       default: return null;
     }
   }
@@ -43,6 +44,8 @@ class SpotifyQ extends React.Component {
         start={start}
         end={end}
         data={data}
+        dateControls={['W', 'M']}
+        settingsKey="accountingQSelectedIndex"
       />
     );
   }

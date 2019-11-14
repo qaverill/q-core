@@ -46,9 +46,9 @@ class TimeFrame extends React.Component {
     }
     if (date != null && isNaN(date)) {
       NotificationManager.error('Must be mm/dd/yyyy', 'Bad Date Format');
-    } else if (side === 'start' && date != null && date >= end) {
+    } else if (side === 'start' && date != null && date > end) {
       NotificationManager.error('Must be before the End', 'Impossible Range');
-    } else if (side === 'end' && date != null && date <= start) {
+    } else if (side === 'end' && date != null && date < start) {
       NotificationManager.error('Must be after the Start', 'Impossible Range');
     } else if (side === 'end' && date != null && date > new Date().getTime() / 1000) {
       NotificationManager.error('Must not be in the future', 'Impossible Range');
@@ -65,16 +65,16 @@ class TimeFrame extends React.Component {
     const { parent } = this.props;
     const date = epochToDate(parent.state[side]);
     switch (amount) {
-      case 'd':
+      case 'D':
         date.setDate(date.getDate() + vector);
         break;
-      case 'w':
+      case 'W':
         date.setDate(date.getDate() + 7 * vector);
         break;
-      case 'm':
+      case 'M':
         date.setMonth(date.getMonth() + vector);
         break;
-      case 'y':
+      case 'Y':
         date.setFullYear(date.getFullYear() + vector);
         break;
       default:
@@ -84,23 +84,17 @@ class TimeFrame extends React.Component {
   }
 
   render() {
-    const { colorTheme } = this.props;
+    const { colorTheme, dateControls } = this.props;
     return (
       <Controls colorTheme={colorTheme}>
         <Start>
           <BoldText>Start</BoldText>
           <DateInput id="start" onBlur={() => this.setTimeframeSide('start')} />
-          <DateAdjuster side="start" amount="d" color={colorTheme.tertiary} parent={this} />
-          <DateAdjuster side="start" amount="w" color={colorTheme.tertiary} parent={this} />
-          <DateAdjuster side="start" amount="m" color={colorTheme.tertiary} parent={this} />
-          <DateAdjuster side="start" amount="y" color={colorTheme.tertiary} parent={this} />
+          {dateControls.map(control => <DateAdjuster side="start" amount={control} color={colorTheme.tertiary} parent={this} />)}
         </Start>
         <TextInput />
         <End>
-          <DateAdjuster side="end" amount="y" color={colorTheme.tertiary} parent={this} />
-          <DateAdjuster side="end" amount="m" color={colorTheme.tertiary} parent={this} />
-          <DateAdjuster side="end" amount="w" color={colorTheme.tertiary} parent={this} />
-          <DateAdjuster side="end" amount="d" color={colorTheme.tertiary} parent={this} />
+          {dateControls.map(control => <DateAdjuster side="end" amount={control} color={colorTheme.tertiary} parent={this} />).reverse()}
           <DateInput id="end" onBlur={() => this.setTimeframeSide('end')} />
           <BoldText>End</BoldText>
         </End>

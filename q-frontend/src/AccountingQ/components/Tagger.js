@@ -19,9 +19,9 @@ class Tagger extends React.Component {
     const { data } = this.props;
     return (
       <TaggerContainer>
-        {data.map(transaction => (
-          <TransactionFact transaction={transaction} />
-        ))}
+        {data
+          .sort((a, b) => b.timestamp - a.timestamp)
+          .map(transaction => <TransactionFact transaction={transaction} />)}
       </TaggerContainer>
     );
   }

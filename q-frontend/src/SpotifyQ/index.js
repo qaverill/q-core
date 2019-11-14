@@ -45,6 +45,7 @@ class SpotifyQ extends React.Component {
         start={start}
         end={end}
         data={data}
+        dateControls={['D', 'W', 'M', 'Y']}
       />
     );
   }

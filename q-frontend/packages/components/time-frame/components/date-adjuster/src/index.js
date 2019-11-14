@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import React from 'react';
 import { Button, Text } from '@q/core';
-import { capitolFirstLetter } from '@q/utils';
 
 const SmallButton = styled(Button)`
   height: 20px;
@@ -53,7 +52,7 @@ class DateAdjuster extends React.PureComponent {
           onClick={() => parent.adjustTimeframe(side, amount, -1)}
           title="-"
         />
-        <Text color="black">{capitolFirstLetter(amount)}</Text>
+        <Text color="black">{amount}</Text>
         <AdjustButton
           color={color}
           onClick={() => parent.adjustTimeframe(side, amount, 1)}
