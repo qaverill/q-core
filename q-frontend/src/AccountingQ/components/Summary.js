@@ -2,10 +2,25 @@ import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import LoadingSpinner from '@q/loading-spinner';
+import ArraySelector from '@q/array-selector';
+import { Text } from '@q/core';
 import { accountingQTheme } from '@q/theme';
-import { roundToTwoDecimalPlaces } from '@q/utils';
+import { formatAsMoney } from '@q/utils';
 
 const SummaryContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+const SummaryControls = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
+const SummaryBody = styled.div`
   display: flex;
   width: 100%;
 `;
@@ -25,12 +40,32 @@ const Overview = styled.div`
   justify-content: center;
 `;
 
+const Tag = styled.div`
+  display: flex;
+  height: 25px;
+`;
+
+const TagTitle = styled.h2`
+  width: 100px;
+`
+
+const TagTotal = styled.h2`
+  width: 200px;
+`
+
+const TagAverage = styled.h2`
+  width: 300px;
+`
+
+const averageRanges = ['Monthly', 'Weekly'];
+
 class Summary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       tagSummary: null,
       overview: null,
+      selectedIndex: 0,
     };
   }
 
@@ -84,8 +119,8 @@ class Summary extends React.Component {
       // Calculate averages
       Object.keys(tagSummary).forEach(key => {
         const totals = tagSummary[key].average;
-        tagSummary[key].average = roundToTwoDecimalPlaces(totals.reduce((a, b) => a + b, 0) / totals.length);
-        tagSummary[key].total = roundToTwoDecimalPlaces(tagSummary[key].total);
+        tagSummary[key].average = totals.reduce((a, b) => a + b, 0) / totals.length;
+        tagSummary[key].total = tagSummary[key].total;
       });
       _this.setState({ tagSummary });
     });
@@ -102,23 +137,36 @@ class Summary extends React.Component {
   }
 
   render() {
-    const { tagSummary, overview } = this.state;
+    const { tagSummary, overview, selectedIndex } = this.state;
     if (tagSummary == null) {
       return <LoadingSpinner message="Calculating summary..." color={accountingQTheme.tertiary} />;
     }
     const { income, expense } = overview;
     return (
       <SummaryContainer>
-        <TagSummary>
-          {Object.keys(tagSummary).map(key => (
-            <h2>{`${key}: ${tagSummary[key].total} (${tagSummary[key].average} avg)`}</h2>
-          ))}
-        </TagSummary>
-        <Overview>
-          <h2>{`In: $${roundToTwoDecimalPlaces(income)}`}</h2>
-          <h2>{`Out: ${roundToTwoDecimalPlaces(expense)}`}</h2>
-          <h2>{`Total: ${roundToTwoDecimalPlaces(income + expense)}`}</h2>
-        </Overview>
+        <SummaryControls>
+          <ArraySelector
+            parent={this}
+            array={averageRanges}
+            title={<Text>{`Avg calculation: ${averageRanges[selectedIndex]}`}</Text>}
+          />
+        </SummaryControls>
+        <SummaryBody>
+          <Overview>
+            <h2>{`In: ${formatAsMoney(income)}`}</h2>
+            <h2>{`Out: ${formatAsMoney(expense)}`}</h2>
+            <h2>{`Total: ${formatAsMoney(income + expense)}`}</h2>
+          </Overview>
+          <TagSummary>
+            {Object.keys(tagSummary).map(key => (
+              <Tag>
+                <TagTitle>{`${key}:`}</TagTitle>
+                <TagTotal>{`${formatAsMoney(tagSummary[key].total)}`}</TagTotal>
+                <TagAverage>{`(${formatAsMoney(tagSummary[key].average)} avg)`}</TagAverage>
+              </Tag>
+            ))}
+          </TagSummary>
+        </SummaryBody>
       </SummaryContainer>
     );
   }
