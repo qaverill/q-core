@@ -1,12 +1,12 @@
 {
   "dinner": ["Mouse food", "9 TASTES CAMBRIDGE", "DUMPLING HOUSE CAMBRIDGE", "POSTMATES", "Pizza", "🍕", "borgar"],
-  "lunch": ["REVIVAL CAFE", "AUGUSTA SUBS", "GOGI ON THE BL", "CHEF LOUIE Cambridge", "zaaki"],
+  "lunch": ["MOYZILLA", "REVIVAL CAFE", "AUGUSTA SUBS", "GOGI ON THE BL", "CHEF LOUIE Cambridge", "zaaki"],
   "coffee": ["Coofie", "DUNKIN", "PAVEMENT COFFE", "DARWIN S LTD"],
   "dessert": ["JP LICKS", "INSOMNIA COOKIES"],
   "groceries": ["H MART", "Insta🅱️art", "TRADER JOE", "groceries", "tj", "Grocery", "MARKET BASKET"],
-  "alcohol": ["LIQUORS", "BELL IN HAND TAVERN", "DAEDALUS", "TAVERN IN THE SQUARE", "Night cap", "FOUNDRY ON ELM", "ARAMARK FENWAY", "booze", "🍷", "smutty", "snurf", "Margaritas", "truly"],
+  "alcohol": ["TRILLIUM BREWING", "LIQUORS", "BELL IN HAND TAVERN", "DAEDALUS", "TAVERN IN THE SQUARE", "Night cap", "FOUNDRY ON ELM", "ARAMARK FENWAY", "booze", "🍷", "smutty", "snurf", "Margaritas", "truly"],
   "travel": ["BLUEBIKES", "Snoober", "uber", "zoom", "ubr", "MBTA"],
-  "utilities": ["eversource", "wifi"],
+  "utilities": ["eversource", "wifi", "utils", "cell"],
   "misc": ["kodak", "MUSEUM OF SCIENCE"],
   "clothes": ["TERRITORY AHEAD", "GARMENT DISTRICT", "ISLANDERS OUTF"],
   "house-hold": ["TARGET", "BED BATH & BEYOND"],
@@ -18,6 +18,7 @@
   "cash": ["ATM Withdrawal", "Cash Withdrawal"],
   "gas": ["CUMBERLAND FARMS"],
   "streaming": ["HULU"],
+  "subscriptions": ["Amazon Prime"],
   "events": ["BROWNPAPERTICKETS"],
   "movies": ["SOMERVILLE THEATRE"],
   "concerts": ["SOFAR SOUNDS"]

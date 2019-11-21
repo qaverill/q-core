@@ -84,7 +84,7 @@ class TimeFrame extends React.Component {
   }
 
   render() {
-    const { colorTheme, dateControls } = this.props;
+    const { colorTheme, dateControls, parent } = this.props;
     return (
       <Controls colorTheme={colorTheme}>
         <Start>
@@ -92,7 +92,10 @@ class TimeFrame extends React.Component {
           <DateInput id="start" onBlur={() => this.setTimeframeSide('start')} />
           {dateControls.map(control => <DateAdjuster side="start" amount={control} color={colorTheme.tertiary} parent={this} />)}
         </Start>
-        <TextInput />
+        <TextInput
+          onBlur={evt => parent.setState({ filter: evt.target.value })}
+          onKeyDown={evt => evt.keyCode === 13 && parent.setState({ filter: evt.target.value })}
+        />
         <End>
           {dateControls.map(control => <DateAdjuster side="end" amount={control} color={colorTheme.tertiary} parent={this} />).reverse()}
           <DateInput id="end" onBlur={() => this.setTimeframeSide('end')} />

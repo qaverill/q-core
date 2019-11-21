@@ -4,79 +4,95 @@ import axios from 'axios';
 import LoadingSpinner from '@q/loading-spinner';
 import ArraySelector from '@q/array-selector';
 import { Text } from '@q/core';
-import { accountingQTheme } from '@q/theme';
+import { accountingQTheme, red, yellow, green } from '@q/theme';
 import { formatAsMoney } from '@q/utils';
 
-const SummaryContainer = styled.div`
+const AnalyzerContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
 `;
 
-const SummaryControls = styled.div`
+const AnalyzerControls = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
 `;
 
-const SummaryBody = styled.div`
+const AnalyzerBody = styled.div`
   display: flex;
+  height: 100%;
   width: 100%;
-`;
-
-const TagSummary = styled.div`
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 `;
 
 const Overview = styled.div`
-  width: 50%;
+  width: 60%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 `;
 
-const Tag = styled.div`
+const TagAnalysis = styled.div`
+  width: 40%;
+  height: 100%;
+  overflow: auto;
   display: flex;
-  height: 25px;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Tag = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
 `;
 
 const TagTitle = styled.h2`
-  width: 100px;
-`
+  width: 200px;
+`;
 
 const TagTotal = styled.h2`
-  width: 200px;
-`
+  color: ${props => props.color};
+  width: 100px;
+`;
 
 const TagAverage = styled.h2`
   width: 300px;
-`
+`;
+
+const determineAmountColor = (total, average) => {
+  const percentage = total / average;
+  if (total < 0) {
+    if (percentage > 1) return red;
+    if (percentage < 0.8) return green;
+    return yellow;
+  }
+  if (percentage > 1) return green;
+  return yellow;
+};
 
 const averageRanges = ['Monthly', 'Weekly'];
 
-class Summary extends React.Component {
+class Analyzer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tagSummary: null,
+      tagAnalysis: null,
       overview: null,
       selectedIndex: 0,
     };
   }
 
   componentDidMount() {
-    this.calculateTagSummary();
+    this.calculateTagAnalysis();
     this.calculateOverview();
   }
 
-  calculateTagSummary() {
+  calculateTagAnalysis() {
     const { start, end } = this.props;
-    const tagSummary = {};
+    const tagAnalysis = {};
     const _this = this;
     axios.get('/mongodb/transactions').then(res => {
       const chunkInterval = end - start;
@@ -86,8 +102,8 @@ class Summary extends React.Component {
       // Initialize objects used to summarize tags
       res.data.forEach(fact => {
         const tagKey = fact.tags[0];
-        if (Object.keys(tagSummary).indexOf(tagKey) < 0) {
-          tagSummary[tagKey] = { total: 0, average: [] };
+        if (Object.keys(tagAnalysis).indexOf(tagKey) < 0) {
+          tagAnalysis[tagKey] = { total: 0, average: [] };
           chunkTotals[tagKey] = 0;
         }
       });
@@ -98,14 +114,14 @@ class Summary extends React.Component {
           const tagKey = fact.tags[0];
           // Calculate totals for transactions within the explore range
           if (fact.timestamp <= end && fact.timestamp >= start) {
-            tagSummary[tagKey].total += fact.amount;
+            tagAnalysis[tagKey].total += fact.amount;
           }
           // Calculate totals for each chunk period
           if (fact.timestamp <= chunkEnd && fact.timestamp >= chunkStart) {
             chunkTotals[tagKey] += fact.amount;
           } else {
             Object.keys(chunkTotals).forEach(key => {
-              tagSummary[key].average.push(chunkTotals[key]);
+              tagAnalysis[key].average.push(chunkTotals[key]);
               chunkTotals[key] = 0;
             });
             chunkStart -= chunkInterval;
@@ -113,16 +129,16 @@ class Summary extends React.Component {
           }
         });
       Object.keys(chunkTotals).forEach(key => {
-        tagSummary[key].average.push(chunkTotals[key]);
+        tagAnalysis[key].average.push(chunkTotals[key]);
         chunkTotals[key] = 0;
       });
       // Calculate averages
-      Object.keys(tagSummary).forEach(key => {
-        const totals = tagSummary[key].average;
-        tagSummary[key].average = totals.reduce((a, b) => a + b, 0) / totals.length;
-        tagSummary[key].total = tagSummary[key].total;
+      Object.keys(tagAnalysis).forEach(key => {
+        const totals = tagAnalysis[key].average;
+        tagAnalysis[key].average = totals.reduce((a, b) => a + b, 0) / totals.length;
+        tagAnalysis[key].total = tagAnalysis[key].total;
       });
-      _this.setState({ tagSummary });
+      _this.setState({ tagAnalysis });
     });
   }
 
@@ -137,39 +153,44 @@ class Summary extends React.Component {
   }
 
   render() {
-    const { tagSummary, overview, selectedIndex } = this.state;
-    if (tagSummary == null) {
-      return <LoadingSpinner message="Calculating summary..." color={accountingQTheme.tertiary} />;
+    const { tagAnalysis, overview, selectedIndex } = this.state;
+    if (tagAnalysis == null) {
+      return <LoadingSpinner message="Calculating Analyzer..." color={accountingQTheme.tertiary} />;
     }
     const { income, expense } = overview;
     return (
-      <SummaryContainer>
-        <SummaryControls>
+      <AnalyzerContainer>
+        <AnalyzerControls>
           <ArraySelector
             parent={this}
             array={averageRanges}
             title={<Text>{`Avg calculation: ${averageRanges[selectedIndex]}`}</Text>}
           />
-        </SummaryControls>
-        <SummaryBody>
+        </AnalyzerControls>
+        <AnalyzerBody>
           <Overview>
             <h2>{`In: ${formatAsMoney(income)}`}</h2>
             <h2>{`Out: ${formatAsMoney(expense)}`}</h2>
             <h2>{`Total: ${formatAsMoney(income + expense)}`}</h2>
           </Overview>
-          <TagSummary>
-            {Object.keys(tagSummary).map(key => (
-              <Tag>
-                <TagTitle>{`${key}:`}</TagTitle>
-                <TagTotal>{`${formatAsMoney(tagSummary[key].total)}`}</TagTotal>
-                <TagAverage>{`(${formatAsMoney(tagSummary[key].average)} avg)`}</TagAverage>
-              </Tag>
-            ))}
-          </TagSummary>
-        </SummaryBody>
-      </SummaryContainer>
+          <TagAnalysis>
+            {Object.keys(tagAnalysis)
+              .filter(key => tagAnalysis[key].total !== 0)
+              .map(key => {
+                const { total, average } = tagAnalysis[key];
+                return (
+                  <Tag>
+                    <TagTitle>{`${key}:`}</TagTitle>
+                    <TagTotal color={determineAmountColor(total, average)}>{`${formatAsMoney(total)}`}</TagTotal>
+                    <TagAverage>{`(${formatAsMoney(average)} avg)`}</TagAverage>
+                  </Tag>
+                );
+              })}
+          </TagAnalysis>
+        </AnalyzerBody>
+      </AnalyzerContainer>
     );
   }
 }
 
-export default Summary;
+export default Analyzer;

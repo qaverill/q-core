@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { red } from '@q/theme';
 import { PopupContainer, TextInput, Button } from '@q/core';
 import { roundToTwoDecimalPlaces } from '@q/utils';
+import { NotificationManager } from 'react-notifications';
 
 const Tag = styled.div`
   display: flex;
@@ -22,25 +23,35 @@ class manualTagger extends React.Component {
     parent.setState({ unsaved: updatedTransactions });
   }
 
+  deductAmountAccordingToOrdinal(targetOrdinal, transaction, idx) {
+    const { parent, closeModal, ordinalStart } = this.props;
+    if (parent.state.unsaved.map(t => t.ordinal).indexOf(targetOrdinal) > 0) {
+      this.updateDataQUnsaved(parent.state.unsaved
+        .map((t, i) => {
+          let updatedTransaction = t;
+          if (i === idx) {
+            updatedTransaction = null;
+          } else if (t.ordinal === targetOrdinal) {
+            updatedTransaction.amount = roundToTwoDecimalPlaces(transaction.amount + t.amount);
+          }
+          return updatedTransaction;
+        })
+        .filter(t => t != null)
+        .reverse()
+        .map((item, n) => ({ ...item, ordinal: ordinalStart + n }))
+        .reverse());
+      closeModal();
+    } else {
+      NotificationManager.error(`Ordinal ${targetOrdinal} does not exist`);
+    }
+  }
+
   manuallyTagTransaction(transaction, idx, newTag) {
     if (newTag.replace(/ /g, '').length !== 0) {
-      const { parent, closeModal, ordinalStart } = this.props;
+      const { parent, closeModal } = this.props;
       if (!isNaN(newTag)) {
-        this.updateDataQUnsaved(parent.state.unsaved
-          .map((t, i) => {
-            let updatedTransaction = t;
-            if (i === idx) {
-              updatedTransaction = null;
-            } else if (t.ordinal === parseInt(newTag, 10)) {
-              updatedTransaction.amount = roundToTwoDecimalPlaces(transaction.amount + updatedTransaction.amount);
-            }
-            return updatedTransaction;
-          })
-          .filter(t => t != null)
-          .reverse()
-          .map((item, n) => ({ ...item, ordinal: ordinalStart + n }))
-          .reverse());
-        closeModal();
+        const targetOrdinal = parseInt(newTag, 10);
+        this.deductAmountAccordingToOrdinal(targetOrdinal, transaction, idx);
       } else {
         this.updateDataQUnsaved(parent.state.unsaved.map((t, i) => {
           if (i === idx && t.tags.indexOf(newTag) < 0) {

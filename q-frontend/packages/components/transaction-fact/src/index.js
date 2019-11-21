@@ -42,6 +42,8 @@ const TagsColumn = styled.div`
   flex-direction: row-reverse;
   flex-shrink: 0;
   width: 260px;
+  overflow-x: auto;
+  white-space: nowrap;
 `;
 
 const craftTagButton = transaction => {
