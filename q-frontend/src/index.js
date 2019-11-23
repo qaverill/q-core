@@ -12,6 +12,7 @@ import DataQ from './DataQ';
 import SpotifyQ from './SpotifyQ';
 import BassQ from './BassQ';
 import AccountingQ from './AccountingQ';
+import DashboardQ from './DashboardQ';
 
 const AppContainer = styled.div`
   height: 100%;
@@ -46,6 +47,7 @@ class App extends React.Component {
       <SpotifyQ title={<Title>SpotifyQ</Title>} root={this} />,
       <BassQ title={<Title>BassQ</Title>} />,
       <AccountingQ title={<Title>AccountingQ</Title>} />,
+      <DashboardQ title={<Title>DashboardQ</Title>} />,
     ];
     this.state = {
       selectedIndex: getSettings() != null ? getSettings().lastPageIndex : 2,

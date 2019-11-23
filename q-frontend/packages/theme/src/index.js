@@ -4,7 +4,7 @@ export const medium = '#454545';
 export const light = '#747474';
 export const white = '#FFFFFF';
 export const green = '#1DB954';
-export const yellow = '#F2C14E';
+export const yellow = '#F4E409';
 export const red = '#C5283D';
 export const purple = '#541DB9';
 export const orange = '#B9541D';
@@ -34,3 +34,10 @@ export const accountingQTheme = {
   secondary: green,
   tertiary: purple,
 };
+
+export const dashboardQTheme = {
+  primary: yellow,
+  secondary: green,
+  tertiary: aqua,
+  quaternary: purple,
+}
