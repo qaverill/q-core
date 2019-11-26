@@ -46,6 +46,20 @@ class Lights extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const _this = this;
+    axios.get('/lifx/lights')
+      .then(res => {
+        
+      }).catch(error => {
+        // if (error.response.status === 401) {
+        //   this.props.root.setState({
+        //     error: <SpotifyErrorPage />,
+        //   });
+        // }
+      });
+  }
+
   render() {
     return (
       <LightsContainer>

@@ -73,11 +73,11 @@ class Overview extends React.Component {
       <TopChartsContainer>
         <ReactTooltip
           getContent={dataTip => (
-<ToolTip>
-              <h2>{dataTip != null ? dataTip.split(':::')[0] : null}</h2>
-              <h3>{dataTip != null ? dataTip.split(':::')[1] : null}</h3>
-            </ToolTip>
-)}
+            <ToolTip>
+  <h2>{dataTip != null ? dataTip.split(':::')[0] : null}</h2>
+  <h3>{dataTip != null ? dataTip.split(':::')[1] : null}</h3>
+</ToolTip>
+          )}
         />
         <TopChart>
           <Header>Top Tracks:</Header>
@@ -97,8 +97,8 @@ class Overview extends React.Component {
 
   analyzeResults() {
     let totalDuration = 0;
-    const trackPlays = {}; let artistPlays = {}; let 
-albumPlays = {};
+    const trackPlays = {}; const artistPlays = {}; const
+      albumPlays = {};
     this.props.data.forEach(listen => {
       totalDuration += listen.duration;
       trackPlays[listen.track] == null ? trackPlays[listen.track] = 1 : trackPlays[listen.track] += 1;
@@ -127,15 +127,15 @@ albumPlays = {};
       .then(res => {
         _this.setState({
           [`topN${capitolFirstLetter(type)}`]: res.data[type].map(item => (
-<Item
+            <Item
               key={item.id}
               data-tip={`${item.name} ::: ${topN.find(e => e.id === item.id).count}`}
-              image={_this.getItemImage(item, type)} />
-)),
+              image={_this.getItemImage(item, type)}
+            />
+          )),
         });
         ReactTooltip.rebuild();
       }).catch(error => {
-        console.log(error);
         if (error.response.status === 401) {
           this.props.root.setState({
             error: <SpotifyErrorPage />,
@@ -162,7 +162,7 @@ albumPlays = {};
       return 1;
     } if (a.count > b.count){
       return -1;
-    } else return 0;
+    } return 0;
   }
 }
 
