@@ -16,7 +16,8 @@ export const msToString = (durationInMs) => {
   return `${hours < 10 ? `0${hours}` : hours}h ${minutes < 10 ? `0${minutes}` : minutes}m ${seconds < 10 ? `0${seconds}` : seconds}s`;
 };
 export const roundToTwoDecimalPlaces = num => Math.round(num * 100) / 100;
-export const formatAsMoney = num => num < 0 ? `-$${roundToTwoDecimalPlaces(num) * -1}` : `$${roundToTwoDecimalPlaces(num)}`;
+export const formatAsMoney = num => (num < 0 ? `-$${roundToTwoDecimalPlaces(num) * -1}` : `$${roundToTwoDecimalPlaces(num)}`);
+export const averageArray = array => array.reduce((a, b) => a + b, 0) / array.length;
 
 export const getSettings = () => {
   if (sessionStorage.getItem('settings') != null) {

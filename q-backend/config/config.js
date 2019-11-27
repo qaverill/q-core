@@ -1,17 +1,18 @@
 const fs = require('fs');
 const path = require('path');
 const { q_logger } = require('q-lib');
+const config = require('./config.json');
 
 const tokensPath = path.join(__dirname, './../../config/tokens.json');
 
 module.exports = {
-  ...require('./config.json'),
+  ...config,
   spotify: {
-    ...require('./config.json').spotify,
+    ...config.spotify,
     ...require(tokensPath).spotify,
   },
   lifx: {
-    ...require('./config.json').lifx,
+    ...config.lifx,
     ...require(tokensPath).lifx,
   },
   persistTokens: (granter, access_token, refresh_token, valid_until) => {

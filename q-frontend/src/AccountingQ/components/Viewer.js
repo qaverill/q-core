@@ -3,9 +3,6 @@ import styled from 'styled-components';
 import TransactionFact from '@q/transaction-fact';
 
 const ViewContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-content: center;
   width: 100%;
   height: 100%;
   overflow: auto;
