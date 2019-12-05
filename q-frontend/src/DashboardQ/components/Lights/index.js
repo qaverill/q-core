@@ -2,6 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import LoadingSpinner from '@q/loading-spinner';
 
 import { lightOn, lightOff } from '@q/images';
 import { dashboardQTheme } from '@q/theme';
@@ -42,30 +43,40 @@ class Lights extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      on: false,
+      on: null,
     };
   }
 
   componentDidMount() {
     const _this = this;
-    axios.get('/lifx/lights')
+    axios.get('/lifx', { params: { url: 'https://api.lifx.com/v1/lights/label:Q2' } })
       .then(res => {
-        
-      }).catch(error => {
-        // if (error.response.status === 401) {
-        //   this.props.root.setState({
-        //     error: <SpotifyErrorPage />,
-        //   });
-        // }
+        _this.setState({ on: res.data[0].power === 'on' });
+      });
+  }
+
+  toggleLight() {
+    const _this = this;
+    const body = {
+      url: 'https://api.lifx.com/v1/lights/label:Q2/toggle',
+      duration: 0.1,
+    };
+    axios.post('/lifx', body)
+      .then(res => {
+        _this.setState({ on: !_this.state.on });
       });
   }
 
   render() {
-    return (
-      <LightsContainer>
-        <LightButton on={this.state.on} onClick={() => this.setState({ on: !this.state.on })} />
-      </LightsContainer>
-    );
+    const { on } = this.state;
+    if (on != null) {
+      return (
+        <LightsContainer>
+          <LightButton on={on} onClick={() => this.toggleLight()} />
+        </LightsContainer>
+      );
+    }
+    return <LoadingSpinner color={dashboardQTheme.tertiary} />
   }
 }
 

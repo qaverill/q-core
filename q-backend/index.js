@@ -14,8 +14,8 @@ server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use((req, res, next) => {
   const payload = {};
-  if (req.query.length > 0) payload.query = req.query;
-  if (req.body.length > 0) {
+  if (req.query) payload.query = req.query;
+  if (req.body) {
     if (Array.isArray(req.body)) {
       payload.body = { numItems: req.body.length };
     } else {

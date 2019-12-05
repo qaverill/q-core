@@ -13,9 +13,9 @@ q_api.makeGetEndpoint(routes, '/', '/spotify/albums', (req, res) => {
       Authorization: 'Bearer ' + config.spotify.access_token
     }
   };
-  request.get(requestOptions, (error, response, body) => {
+  request.get(requestOptions, (error, response) => {
     if (!error && response.statusCode === 200) {
-      res.send(body)
+      res.send(response.body)
     } else {
       q_logger.error('Error getting Spotify Albums', response);
       res.send({error: 'Error connecting to the Spotify API'})
