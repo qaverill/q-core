@@ -78,7 +78,7 @@ const getStartOfTimeframe = (timeframe, timestamp) => {
 
 const calculateAmountNeededToLiveForAMonth = tagAnalysis => {
   let total = 0;
-  ['dinner', 'lunch', 'groceries', 'alcohol', 'travel', 'utilities', 'loans'].forEach(tag => {
+  ['dinner', 'lunch', 'groceries', 'alcohol', 'travel', 'utilities', 'loans', 'rent'].forEach(tag => {
     total += tagAnalysis[tag].averages.month;
   });
   return total;
