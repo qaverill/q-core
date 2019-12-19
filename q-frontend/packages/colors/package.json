@@ -1,9 +1,9 @@
 {
-  "name": "@q/utils",
-  "description": "Utils for Q",
+  "name": "@q/colors",
+  "description": "Themes for Q",
   "version": "1.0.0",
-  "license": "Q",
   "author": "Quinn Averill",
+  "license": "Q",
   "main": "index.js",
   "files": [
     "index.js"

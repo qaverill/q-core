@@ -5,14 +5,15 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-import ArraySelector from '@q/array-selector';
+
 import { getSettings } from '@q/utils';
 
-import DataQ from './DataQ';
-import SpotifyQ from './SpotifyQ';
-import BassQ from './BassQ';
-import AccountingQ from './AccountingQ';
-import DashboardQ from './DashboardQ';
+import DataQ from './pages/DataQ';
+import SpotifyQ from './pages/SpotifyQ';
+import BassQ from './pages/BassQ';
+import AccountingQ from './pages/AccountingQ';
+import DashboardQ from './pages/DashboardQ';
+import ArraySelector from './components/array-selector';
 
 const AppContainer = styled.div`
   height: 100%;
@@ -45,7 +46,7 @@ class App extends React.Component {
     this.pages = [
       <DataQ title={<Title>DataQ</Title>} root={this} />,
       <SpotifyQ title={<Title>SpotifyQ</Title>} root={this} />,
-      <BassQ title={<Title>BassQ</Title>} />,
+      // <BassQ title={<Title>BassQ</Title>} />,
       <AccountingQ title={<Title>AccountingQ</Title>} />,
       <DashboardQ title={<Title>DashboardQ</Title>} />,
     ];
@@ -55,7 +56,7 @@ class App extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const _this = this;
     axios.get('/mongodb/settings').then(res => {
       sessionStorage.setItem('settings', JSON.stringify(res.data));
