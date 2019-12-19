@@ -25,7 +25,12 @@ class SpotifyQ extends React.Component {
 
   displayResults() {
     const { root } = this.props;
-    const { selectedIndex, data, end, start } = this.state;
+    const {
+      selectedIndex,
+      data,
+      end,
+      start,
+    } = this.state;
     switch (this.displays[selectedIndex]) {
       case 'Overview':
         return <Overview data={data} root={root} />;

@@ -11,7 +11,6 @@ import SpotifyErrorPage from '../../../components/spotify-error-page';
 const TopChartsContainer = styled.div`
   display: flex;
   width: 100%;
-  height: 100%;
 `;
 
 const TopChart = styled.div`
@@ -32,7 +31,6 @@ const Item = styled.div`
   flex-grow: 1;
   margin: 2.5px;
   border: none;
-
   
   background-image: ${props => `url(${props.image.url})`};
   background-position: center center;
@@ -54,117 +52,107 @@ const ToolTip = styled.div`
   justify-content: center;
 `;
 
+const getItemImage = (item, type) => {
+  switch (type) {
+    case 'tracks':
+      return item.album.images[0];
+    case 'artists':
+      return item.images[0];
+    case 'albums':
+      return item.images[0];
+    default:
+      return null;
+  }
+};
+
+const sortByCount = (a, b) => {
+  if (a.count < b.count) {
+    return 1;
+  } if (a.count > b.count) {
+    return -1;
+  } return 0;
+};
+
+const playsToSortedList = plays => (
+  Object.keys(plays)
+    .map(key => ({ id: key, count: plays[key] }))
+    .sort(sortByCount)
+);
+
 class Overview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      N: 6,
-      totalDuration: null,
-      topNTracks: null,
-      topNArtists: null,
-      topNAlbums: null,
+      topTracks: null,
+      topArtists: null,
+      topAlbums: null,
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.analyzeResults();
   }
 
+  getSpotifyData(list, type) {
+    const _this = this;
+    const { root } = this.props;
+    const chunk = list.splice(0, 5);
+    axios.get('/spotify', { params: { url: `https://api.spotify.com/v1/${type}?ids=${chunk.map(i => i.id).join()}` } })
+      .then(res => {
+        const topItems = res.data[type].map(item => (
+          <Item key={item.id} data-tip={`${item.name} ::: ${chunk.find(e => e.id === item.id).count}`} image={getItemImage(item, type)} />
+        ));
+        _this.setState({ [`top${capitolFirstLetter(type)}`]: topItems });
+        ReactTooltip.rebuild();
+      }).catch(error => {
+        if (error.response.status === 401) {
+          root.setState({ error: <SpotifyErrorPage /> });
+        }
+      });
+  }
+
+  analyzeResults() {
+    const { data } = this.props;
+    const trackPlays = {};
+    const artistPlays = {};
+    const albumPlays = {};
+    data.forEach(listen => {
+      const { track, artists, album } = listen;
+      trackPlays[track] = 1 + (trackPlays[track] || 0);
+      artists.forEach(artist => { artistPlays[artist] = 1 + (artistPlays[artist] || 0); });
+      albumPlays[album] = 1 + (albumPlays[album] || 0);
+    });
+    this.getSpotifyData(playsToSortedList(trackPlays), 'tracks');
+    this.getSpotifyData(playsToSortedList(artistPlays), 'artists');
+    this.getSpotifyData(playsToSortedList(albumPlays), 'albums');
+  }
+
   render() {
+    const { topTracks, topArtists, topAlbums } = this.state;
     return (
       <TopChartsContainer>
         <ReactTooltip
           getContent={dataTip => (
             <ToolTip>
-  <h2>{dataTip != null ? dataTip.split(':::')[0] : null}</h2>
-  <h3>{dataTip != null ? dataTip.split(':::')[1] : null}</h3>
-</ToolTip>
+              <h2>{dataTip != null ? dataTip.split(':::')[0] : null}</h2>
+              <h3>{dataTip != null ? dataTip.split(':::')[1] : null}</h3>
+            </ToolTip>
           )}
         />
         <TopChart>
           <Header>Top Tracks:</Header>
-          {this.state.topNTracks}
+          {topTracks}
         </TopChart>
         <TopChart>
           <Header>Top Artists:</Header>
-          {this.state.topNArtists}
+          {topArtists}
         </TopChart>
         <TopChart>
           <Header>Top Albums:</Header>
-          {this.state.topNAlbums}
+          {topAlbums}
         </TopChart>
       </TopChartsContainer>
     );
-  }
-
-  analyzeResults() {
-    let totalDuration = 0;
-    const trackPlays = {}; const artistPlays = {}; const
-      albumPlays = {};
-    this.props.data.forEach(listen => {
-      totalDuration += listen.duration;
-      trackPlays[listen.track] == null ? trackPlays[listen.track] = 1 : trackPlays[listen.track] += 1;
-      listen.artists.forEach(artist => { artistPlays[artist] == null ? artistPlays[artist] = 1 : artistPlays[artist] += 1; });
-      albumPlays[listen.album] == null ? albumPlays[listen.album] = 1 : albumPlays[listen.album] += 1;
-    });
-
-    this.getSpotifyData(this.playsToSortedList(trackPlays), 'tracks');
-    this.getSpotifyData(this.playsToSortedList(artistPlays), 'artists');
-    this.getSpotifyData(this.playsToSortedList(albumPlays), 'albums');
-
-    this.setState({ totalDurationMs: totalDuration });
-  }
-
-  playsToSortedList(plays) {
-    return Object.keys(plays).map(key => ({
-      id: key,
-      count: plays[key],
-    })).sort(Overview.sortByCount);
-  }
-
-  getSpotifyData(list, type) {
-    const _this = this;
-    const topN = list.splice(0, this.state.N);
-    axios.get(`/spotify/${type}?ids=${topN.map(item => item.id).join()}`)
-      .then(res => {
-        _this.setState({
-          [`topN${capitolFirstLetter(type)}`]: res.data[type].map(item => (
-            <Item
-              key={item.id}
-              data-tip={`${item.name} ::: ${topN.find(e => e.id === item.id).count}`}
-              image={_this.getItemImage(item, type)}
-            />
-          )),
-        });
-        ReactTooltip.rebuild();
-      }).catch(error => {
-        if (error.response.status === 401) {
-          this.props.root.setState({
-            error: <SpotifyErrorPage />,
-          });
-        }
-      });
-  }
-
-  getItemImage(item, type) {
-    switch (type) {
-      case 'tracks':
-        return item.album.images[0];
-      case 'artists':
-        return item.images[0];
-      case 'albums':
-        return item.images[0];
-      default:
-        return null;
-    }
-  }
-
-  static sortByCount(a, b){
-    if (a.count < b.count) {
-      return 1;
-    } if (a.count > b.count){
-      return -1;
-    } return 0;
   }
 }
 

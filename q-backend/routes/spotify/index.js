@@ -14,20 +14,35 @@ routes.use((req, res, next) => {
 });
 routes.use('/recently-played', require('./recently-played'));
 routes.use('/saved-tracks', require('./saved-tracks'));
-routes.use('/artists', require('./artists'));
-routes.use('/albums', require('./albums'));
-routes.use('/tracks', require('./tracks'));
 routes.use('/playlists', require('./playlists'));
 
 q_api.makeGetEndpoint(routes, '/', '/spotify', (req, res) => {
-  q_logger.info('THAT WEIRD ENDPOINT WAS HIT!!!!!');
   const requestOptions = {
-    url: `${req.query.url}&limit=50`,
     headers: { Authorization: `Bearer ${config.spotify.access_token}` },
+    url: req.query.url,
   };
-  request.get(requestOptions, (error, response, body) => {
-    if (!error && response.statusCode === 200) res.send(body);
-    res.send({ error });
+  request.get(requestOptions, (error, response) => {
+    if (!error && response.statusCode === 200) {
+      res.send(response.body);
+    } else {
+      q_logger.error(`Error while sending GET to ${req.body.url}`, response);
+      res.send({ error });
+    }
+  });
+});
+
+q_api.makePostEndpoint(routes, '/', '/spotify', (req, res) => {
+  const requestOptions = {
+    headers: { Authorization: `Bearer ${config.spotify.access_token}` },
+    url: req.body.url,
+  };
+  request.post(requestOptions, (error, response) => {
+    if (!error && response.statusCode === 200) {
+      res.send(response.body);
+    } else {
+      q_logger.error(`Error while sending POST to ${req.body.url}`, response);
+      res.send({ error });
+    }
   });
 });
 

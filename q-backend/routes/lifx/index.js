@@ -21,7 +21,6 @@ q_api.makeGetEndpoint(routes, '/', '/lifx', (req, res) => {
 });
 
 q_api.makePostEndpoint(routes, '/', '/lifx', (req, res) => {
-  console.log(req.body)
   const requestOptions = {
     headers: { Authorization: `Bearer ${access_token}` },
     url: req.body.url,
