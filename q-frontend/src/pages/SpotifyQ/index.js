@@ -8,6 +8,19 @@ import Overview from './components/Overview';
 import Detail from './components/Detail';
 import ExplorePage from '../../components/explore-page';
 
+const filterData = (data, filter) => {
+  console.log(data[0].artists)
+  const dataOfArtist = data.filter(listen => listen.artists.includes(filter));
+  if (dataOfArtist.length > 0) {
+    return dataOfArtist;
+  }
+  const dataOfAlbum = data.filter(listen => listen.album === filter);
+  if (dataOfAlbum.length > 0) {
+    return dataOfAlbum;
+  }
+  return data.filter(listen => listen.track === filter);
+};
+
 class SpotifyQ extends React.Component {
   constructor(props) {
     super(props);
@@ -18,6 +31,7 @@ class SpotifyQ extends React.Component {
     this.state = {
       start: Math.round(new Date().getTime() / 1000) - 3 * ONE_EPOCH_DAY,
       end: Math.round(new Date().getTime() / 1000),
+      filter: null,
       data: null,
       selectedIndex: 0,
     };
@@ -30,12 +44,14 @@ class SpotifyQ extends React.Component {
       data,
       end,
       start,
+      filter,
     } = this.state;
+    const filteredData = filter ? filterData(data, filter) : data;
     switch (this.displays[selectedIndex]) {
       case 'Overview':
-        return <Overview data={data} root={root} />;
+        return <Overview data={filteredData} root={root} />;
       case 'Detail':
-        return <Detail data={data} totalTimeMs={(end - start) * 1000} />;
+        return <Detail data={filteredData} totalTimeMs={(end - start) * 1000} />;
       default: return null;
     }
   }

@@ -68,6 +68,13 @@ class TimeFrame extends React.Component {
     }
   }
 
+  setFilter(input) {
+    const { parent } = this.props;
+    parent.setState({
+      filter: input.substring(input.lastIndexOf(':') + 1),
+    });
+  }
+
   adjustTimeframe(side, amount, vector) {
     const { parent } = this.props;
     const date = epochToDate(parent.state[side]);
@@ -91,7 +98,7 @@ class TimeFrame extends React.Component {
   }
 
   render() {
-    const { colorTheme, dateControls, parent } = this.props;
+    const { colorTheme, dateControls } = this.props;
     return (
       <Controls colorTheme={colorTheme}>
         <Start>
@@ -100,8 +107,9 @@ class TimeFrame extends React.Component {
           {dateControls.map(control => <DateAdjuster side="start" amount={control} color={colorTheme.tertiary} parent={this} />)}
         </Start>
         <TextInput
-          onBlur={evt => parent.setState({ filter: evt.target.value })}
-          onKeyDown={evt => evt.keyCode === 13 && parent.setState({ filter: evt.target.value })}
+          onBlur={evt => this.setFilter(evt.target.value)}
+          onKeyDown={evt => evt.keyCode === 13 && this.setFilter(evt.target.value)}
+          placeholder="Filter Data"
         />
         <End>
           {dateControls.map(control => <DateAdjuster side="end" amount={control} color={colorTheme.tertiary} parent={this} />).reverse()}

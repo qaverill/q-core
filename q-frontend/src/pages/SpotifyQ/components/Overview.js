@@ -83,14 +83,20 @@ class Overview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      topTracks: null,
-      topArtists: null,
-      topAlbums: null,
+      topTracks: [],
+      topArtists: [],
+      topAlbums: [],
     };
   }
 
   componentDidMount() {
     this.analyzeResults();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props !== prevProps) {
+      this.analyzeResults();
+    }
   }
 
   getSpotifyData(list, type) {
@@ -113,22 +119,33 @@ class Overview extends React.Component {
 
   analyzeResults() {
     const { data } = this.props;
-    const trackPlays = {};
-    const artistPlays = {};
-    const albumPlays = {};
-    data.forEach(listen => {
-      const { track, artists, album } = listen;
-      trackPlays[track] = 1 + (trackPlays[track] || 0);
-      artists.forEach(artist => { artistPlays[artist] = 1 + (artistPlays[artist] || 0); });
-      albumPlays[album] = 1 + (albumPlays[album] || 0);
-    });
-    this.getSpotifyData(playsToSortedList(trackPlays), 'tracks');
-    this.getSpotifyData(playsToSortedList(artistPlays), 'artists');
-    this.getSpotifyData(playsToSortedList(albumPlays), 'albums');
+    if (data.length > 0) {
+      const trackPlays = {};
+      const artistPlays = {};
+      const albumPlays = {};
+      data.forEach(listen => {
+        const { track, artists, album } = listen;
+        trackPlays[track] = 1 + (trackPlays[track] || 0);
+        artists.forEach(artist => { artistPlays[artist] = 1 + (artistPlays[artist] || 0); });
+        albumPlays[album] = 1 + (albumPlays[album] || 0);
+      });
+      this.getSpotifyData(playsToSortedList(trackPlays), 'tracks');
+      this.getSpotifyData(playsToSortedList(artistPlays), 'artists');
+      this.getSpotifyData(playsToSortedList(albumPlays), 'albums');
+    } else {
+      this.setState({
+        topTracks: null,
+        topArtists: null,
+        topAlbums: null,
+      });
+    }
   }
 
   render() {
     const { topTracks, topArtists, topAlbums } = this.state;
+    if (topTracks == null && topArtists == null && topAlbums == null) {
+      return <Header>No results, check the filter</Header>;
+    }
     return (
       <TopChartsContainer>
         <ReactTooltip
