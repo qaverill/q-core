@@ -43,21 +43,23 @@ const AdjustButton = props => {
 
 class DateAdjuster extends React.PureComponent {
   render() {
-    const { side, color, parent, amount } = this.props;
+    const {
+      side,
+      color,
+      parent,
+      amount,
+    } = this.props;
+
+    const subtractTime = () => parent.adjustTimeframe(side, amount, -1);
+
+    const addTime = () => parent.adjustTimeframe(side, amount, 1);
+
     return [
       side === 'start' ? <Line key="Line" /> : null,
       <DateAdjusterContainer key="DateAdjuster">
-        <AdjustButton
-          color={color}
-          onClick={() => parent.adjustTimeframe(side, amount, -1)}
-          title="-"
-        />
+        <AdjustButton color={color} onClick={subtractTime} title="-" />
         <Text color="black">{amount}</Text>
-        <AdjustButton
-          color={color}
-          onClick={() => parent.adjustTimeframe(side, amount, 1)}
-          title="+"
-        />
+        <AdjustButton color={color} onClick={addTime} title="+" />
       </DateAdjusterContainer>,
       side === 'end' ? <Line key="Line" /> : null,
     ];

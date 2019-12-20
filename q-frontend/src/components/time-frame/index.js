@@ -12,6 +12,7 @@ import {
 } from '@q/utils';
 
 import DateAdjuster from './components/DateAdjuster';
+import SearchBar from '../search-bar';
 
 const Controls = styled.div`
   margin: 7.5px;
@@ -98,7 +99,7 @@ class TimeFrame extends React.Component {
   }
 
   render() {
-    const { colorTheme, dateControls } = this.props;
+    const { colorTheme, dateControls, parent } = this.props;
     return (
       <Controls colorTheme={colorTheme}>
         <Start>
@@ -106,6 +107,7 @@ class TimeFrame extends React.Component {
           <DateInput id="start" onBlur={() => this.setTimeframeSide('start')} />
           {dateControls.map(control => <DateAdjuster side="start" amount={control} color={colorTheme.tertiary} parent={this} />)}
         </Start>
+        <SearchBar parent={parent} />
         <TextInput
           onBlur={evt => this.setFilter(evt.target.value)}
           onKeyDown={evt => evt.keyCode === 13 && this.setFilter(evt.target.value)}
