@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { dashboardQTheme } from '@q/colors';
 import { Page } from '@q/core';
 
-import Lights from './components/Lights';
+import Lights from './components/Lights.js';
 
 const DashboardQPage = styled(Page)`
   border: 5px solid ${dashboardQTheme.primary};
@@ -23,7 +23,7 @@ class DashboardQ extends React.Component {
   render() {
     return (
       <DashboardQPage>
-        <Lights />
+        {/* <Lights /> */}
       </DashboardQPage>
     );
   }

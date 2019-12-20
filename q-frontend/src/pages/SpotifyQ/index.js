@@ -46,7 +46,7 @@ class SpotifyQ extends React.Component {
       start,
       filter,
     } = this.state;
-    const filteredData = filter ? filterData(data, filter) : data;
+    const filteredData = filter && data ? filterData(data, filter) : data;
     switch (this.displays[selectedIndex]) {
       case 'Overview':
         return <Overview data={filteredData} root={root} />;

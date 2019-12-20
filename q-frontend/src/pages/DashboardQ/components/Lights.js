@@ -6,7 +6,7 @@ import { lightOn, lightOff } from '@q/images';
 import { dashboardQTheme } from '@q/colors';
 import { Page } from '@q/core';
 
-import LoadingSpinner from '../../../../components/loading-spinner';
+import LoadingSpinner from '../../../components/loading-spinner';
 
 const LightsContainer = styled(Page)`
   height: 30%;
@@ -50,6 +50,7 @@ class Lights extends React.Component {
     const _this = this;
     axios.get('/lifx', { params: { url: 'https://api.lifx.com/v1/lights/label:Lamp' } })
       .then(res => {
+        console.log(res)
         _this.setState({ on: res.data[0].power === 'on' });
       });
   }
