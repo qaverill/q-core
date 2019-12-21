@@ -50,7 +50,6 @@ class Lights extends React.Component {
     const _this = this;
     axios.get('/lifx', { params: { url: 'https://api.lifx.com/v1/lights/label:Lamp' } })
       .then(res => {
-        console.log(res)
         _this.setState({ on: res.data[0].power === 'on' });
       });
   }

@@ -56,44 +56,47 @@ const renderSuggestion = suggestion => (
 class SearchBar extends React.Component {
   constructor() {
     super();
-
     this.state = {
       value: '',
       suggestions: []
     };    
   }
 
-  onChange = (event, { newValue }) => {
-    this.setState({
-      value: newValue
-    });
+  onChange = (event, { newValue: value }) => {
+    this.setState({ value });
   };
 
-  onBlur = (event, { suggestion }) => {
+  onBlur = () => {
+    const { suggestions, value } = this.state;
+    if (suggestions.length == 0 && value === '') {
+      const { parent } = this.props;
+      parent.setState({ filter: null })
+    }
+  }
+
+  onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {
     const { parent } = this.props;
     const { filter } = suggestion
     parent.setState({ filter })
   }
   
-  onSuggestionsFetchRequested = ({ value }) => {
-    this.setState({
-      suggestions: getSuggestions(value)
-    });
+  onSuggestionsFetchRequested = ({ value, reason }) => {
+    const suggestions = getSuggestions(value);
+    this.setState({ suggestions });
   };
 
   onSuggestionsClearRequested = () => {
-    this.setState({
-      suggestions: []
-    });
+    this.setState({ suggestions: [] });
   };
 
   render() {
     const { value, suggestions } = this.state;
 
     const inputProps = {
-      placeholder: 'Filter Data',
+      placeholder: 'No Filter',
       value,
       onChange: this.onChange,
+      onBlur: this.onBlur
     };
 
     return (
@@ -101,7 +104,7 @@ class SearchBar extends React.Component {
         suggestions={suggestions}
         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
         onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-        onSuggestionSelected={this.onBlur}
+        onSuggestionSelected={this.onSuggestionSelected}
         getSuggestionValue={getSuggestionValue}
         renderSuggestion={renderSuggestion}
         inputProps={inputProps}

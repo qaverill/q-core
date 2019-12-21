@@ -9,7 +9,6 @@ import Detail from './components/Detail';
 import ExplorePage from '../../components/explore-page';
 
 const filterData = (data, filter) => {
-  console.log(data[0].artists)
   const dataOfArtist = data.filter(listen => listen.artists.includes(filter));
   if (dataOfArtist.length > 0) {
     return dataOfArtist;
@@ -29,7 +28,7 @@ class SpotifyQ extends React.Component {
       'Detail',
     ];
     this.state = {
-      start: Math.round(new Date().getTime() / 1000) - 3 * ONE_EPOCH_DAY,
+      start: Math.round(new Date().getTime() / 1000) - 300 * ONE_EPOCH_DAY,
       end: Math.round(new Date().getTime() / 1000),
       filter: null,
       data: null,
@@ -46,6 +45,7 @@ class SpotifyQ extends React.Component {
       start,
       filter,
     } = this.state;
+    console.log(filter)
     const filteredData = filter && data ? filterData(data, filter) : data;
     switch (this.displays[selectedIndex]) {
       case 'Overview':
