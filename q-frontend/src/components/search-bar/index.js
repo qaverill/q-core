@@ -1,50 +1,14 @@
 /* eslint-disable no-undef */
 import React from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 import Autosuggest from 'react-autosuggest';
 import './theme.css';
 
-const people = [
-  {
-    name: 'Thundercat',
-    filter: '4frXpPxQQZwbCu3eTGnZEw',
-    type: 'artist'
-  },
-  {
-    name: 'Thunderstruck',
-    filter: '57bgtoPSgt236HzfBOd8kj',
-    type: 'track'
-  },
-  {
-    name: 'Flying Lotus',
-    filter: '29XOeO6KIWxGthejQqn793',
-    type: 'artist'
-  },
-  { name: 'Flying Microtonal Banana',
-    filter: '4G9ANFGk9579p2uirMbVT0',
-    type: 'album'  
-  }
-];
-
-// https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Regular_Expressions#Using_Special_Characters
-function escapeRegexCharacters(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function getSuggestions(value) {
-  const escapedValue = escapeRegexCharacters(value.trim());
-  
-  if (escapedValue === '') {
-    return [];
-  }
-
-  const regex = new RegExp('\\b' + escapedValue, 'i');
-  
-  return people.filter(person => regex.test(getSuggestionValue(person)));
-}
+const stringSimilarity = require('string-similarity');
 
 function getSuggestionValue(suggestion) {
-  return `${suggestion.name}`;
+  return `${suggestion.name} (${suggestion.type})`;
 }
 
 const renderSuggestion = suggestion => (
@@ -81,8 +45,28 @@ class SearchBar extends React.Component {
   }
   
   onSuggestionsFetchRequested = ({ value, reason }) => {
-    const suggestions = getSuggestions(value);
-    this.setState({ suggestions });
+    if (value === '') {
+      this.setState({ suggestions: [] });
+    }
+    const _this = this;
+    const types = ['track', 'artist', 'album'];
+    axios.get('/spotify', { params: { url: `https://api.spotify.com/v1/search?q=${value}&type=track,artist,album&limit=3` } })
+      .then(res => {
+        _this.setState({
+          suggestions: types
+            .map(type => (
+              res.data[`${type}s`].items.map(item => ({
+                name: item.name,
+                filter: item.id,
+                confidence: stringSimilarity.compareTwoStrings(item.name, value),
+                type,
+              }))
+            ))
+            .flat()
+            .filter(item => item.confidence > 0.5)
+            .sort((a, b) => b.confidence - a.confidence)
+        })
+      }).catch(error => console.log(error));
   };
 
   onSuggestionsClearRequested = () => {
