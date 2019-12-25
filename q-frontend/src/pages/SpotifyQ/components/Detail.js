@@ -2,10 +2,20 @@ import React from 'react';
 import styled from 'styled-components';
 import { msToString } from '@q/utils';
 import { Text } from '@q/core';
+import { Chart } from 'react-charts';
+
 
 const DetailContainer = styled.div`
   width: 100%;
   height: 100%;
+`;
+
+const Details = styled.div`
+  width: 30%;  
+`;
+
+const Visuals = styled.div`
+  width: 70%;
 `;
 
 class Detail extends React.Component {
@@ -38,6 +48,19 @@ class Detail extends React.Component {
     };
   }
 
+  createChartData() {
+    const { data } = this.props;
+    return {
+      chartData: data.map(listen => {
+
+      }),
+      chartAxes: [
+        { primary: true, type: 'ordinal', position: 'bottom' },
+        { position: 'left', type: 'linear', stacked: false }
+      ],
+    }
+  }
+
   render() {
     const { totalTimeMs } = this.props;
     const {
@@ -46,14 +69,22 @@ class Detail extends React.Component {
       uniqueNumberOfArtists,
       uniqueNumberOfAlbums,
     } = this.calculateStats();
+    const {
+      chartData,
+      chartAxes
+    } = this.createChartData();
     return (
       <DetailContainer>
-        <h2>Detail</h2>
-        <Text>{`Total Listening Time: ${msToString(totalDurationMs)}`}</Text>
-        <Text>{`Percent of time Listening: ${parseInt((totalDurationMs / totalTimeMs) * 100, 10)}%`}</Text>
-        <Text>{`Total Unique Tracks: ${uniqueNumberOfTracks}`}</Text>
-        <Text>{`Total Unique Artists: ${uniqueNumberOfArtists}`}</Text>
-        <Text>{`Total Unique Albums: ${uniqueNumberOfAlbums}`}</Text>
+        <Details>
+          <Text>{`Total Listening Time: ${msToString(totalDurationMs)}`}</Text>
+          <Text>{`Percent of time Listening: ${parseInt((totalDurationMs / totalTimeMs) * 100, 10)}%`}</Text>
+          <Text>{`Total Unique Tracks: ${uniqueNumberOfTracks}`}</Text>
+          <Text>{`Total Unique Artists: ${uniqueNumberOfArtists}`}</Text>
+          <Text>{`Total Unique Albums: ${uniqueNumberOfAlbums}`}</Text>
+        </Details>
+        <Visuals>
+          <Chart />
+        </Visuals>
       </DetailContainer>
     );
   }

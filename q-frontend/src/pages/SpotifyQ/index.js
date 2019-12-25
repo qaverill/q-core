@@ -32,7 +32,7 @@ class SpotifyQ extends React.Component {
       end: Math.round(new Date().getTime() / 1000),
       filter: null,
       data: null,
-      selectedIndex: 0,
+      selectedIndex: 1,
     };
   }
 
