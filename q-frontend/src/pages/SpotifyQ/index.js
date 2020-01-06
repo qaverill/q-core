@@ -28,11 +28,11 @@ class SpotifyQ extends React.Component {
       'Detail',
     ];
     this.state = {
-      start: Math.round(new Date().getTime() / 1000) - 300 * ONE_EPOCH_DAY,
+      start: Math.round(new Date().getTime() / 1000) - 3 * ONE_EPOCH_DAY,
       end: Math.round(new Date().getTime() / 1000),
       filter: null,
       data: null,
-      selectedIndex: 1,
+      selectedIndex: 0,
     };
   }
 
