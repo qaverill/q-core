@@ -39,6 +39,11 @@ class ManualTagger extends React.Component {
         .filter(t => t != null));
       closeModal();
     } else {
+      axios.get(`/mongodb/transactions?ordinal=${targetOrdinal}`).then(response => {
+        if (response != null) {
+          axios.put(`/mongodb/transactions`)
+        }
+      });
       NotificationManager.error(`Ordinal ${targetOrdinal} does not exist`);
     }
   }

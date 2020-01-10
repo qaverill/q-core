@@ -11,7 +11,7 @@ module.exports = {
         if (requestQuery.albumID) query.album = requestQuery.albumID;
         break;
       case 'transactions':
-        // No other query params for this... yet
+        if (requestQuery.ordinal) query.ordnal = requestQuery.ordinal;
         break;
       default:
         q_logger.error('Tried to craft a query for an unknown collection: ', collection);
