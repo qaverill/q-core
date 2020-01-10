@@ -193,7 +193,7 @@ class DataQ extends React.Component {
         />
         {sourcePath.indexOf('spotify') > -1
           ? <AlbumCoverArray items={unsaved} parent={this} />
-          : <AccountingData items={unsaved} parent={this} ordinalStart={ordinalStart} />}
+          : <AccountingData items={unsaved} parent={this} />}
       </DataQPage>
     );
   }

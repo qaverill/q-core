@@ -59,7 +59,7 @@ class AccountingData extends Component {
   }
 
   render() {
-    const { parent, ordinalStart } = this.props;
+    const { parent } = this.props;
     if (parent.state.unsaved.length !== 0 && parent.state.unsaved[0].tags == null) {
       return <LoadingSpinner message="Tagging transaction data..." color={accountingQTheme.primary} />;
     }
@@ -70,7 +70,6 @@ class AccountingData extends Component {
             transaction={transaction}
             idx={i}
             parent={parent}
-            ordinalStart={ordinalStart}
             removeFact={(idx) => this.removeFact(idx)}
             editable
           />

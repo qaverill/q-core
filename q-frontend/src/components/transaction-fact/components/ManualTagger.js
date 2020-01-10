@@ -24,7 +24,7 @@ class ManualTagger extends React.Component {
   }
 
   deductAmountAccordingToOrdinal(targetOrdinal, transaction, idx) {
-    const { parent, closeModal, ordinalStart } = this.props;
+    const { parent, closeModal } = this.props;
     if (parent.state.unsaved.map(t => t.ordinal).indexOf(targetOrdinal) > 0) {
       this.updateDataQUnsaved(parent.state.unsaved
         .map((t, i) => {
@@ -36,10 +36,7 @@ class ManualTagger extends React.Component {
           }
           return updatedTransaction;
         })
-        .filter(t => t != null)
-        .reverse()
-        .map((item, n) => ({ ...item, ordinal: ordinalStart + n }))
-        .reverse());
+        .filter(t => t != null));
       closeModal();
     } else {
       NotificationManager.error(`Ordinal ${targetOrdinal} does not exist`);

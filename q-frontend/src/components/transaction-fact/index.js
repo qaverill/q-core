@@ -65,7 +65,6 @@ class TransactionFact extends React.PureComponent {
   render() {
     const {
       transaction,
-      ordinalStart,
       idx,
       editable,
       parent,
@@ -88,7 +87,6 @@ class TransactionFact extends React.PureComponent {
                   transactionIdx={idx}
                   parent={parent}
                   closeModal={close}
-                  ordinalStart={ordinalStart}
                 />
               )}
             </StyledPopup>
