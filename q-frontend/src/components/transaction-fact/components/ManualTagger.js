@@ -48,6 +48,7 @@ class ManualTagger extends React.Component {
           existingTransaction.amount = roundToTwoDecimalPlaces(existingTransaction.amount + transaction.amount);
           axios.post('/mongodb/transactions', existingTransaction).then(postResponse => {
             if (postResponse.status === 204) {
+              parent.state.unsaved[idx] = null;
               NotificationManager.success(`Updated ordinal ${targetOrdinal} (in mongo) from ${oldAmount} to ${existingTransaction.amount}`);
             } else {
               NotificationManager.error('Error when trying to update transaction in mongo', postResponse.statusText);
