@@ -3,6 +3,7 @@
 /* eslint-disable no-undef */
 import React from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import { red } from '@q/colors';
 import { PopupContainer, TextInput, Button } from '@q/core';
 import { roundToTwoDecimalPlaces } from '@q/utils';
@@ -25,26 +26,37 @@ class ManualTagger extends React.Component {
 
   deductAmountAccordingToOrdinal(targetOrdinal, transaction, idx) {
     const { parent, closeModal } = this.props;
-    if (parent.state.unsaved.map(t => t.ordinal).indexOf(targetOrdinal) > 0) {
-      this.updateDataQUnsaved(parent.state.unsaved
-        .map((t, i) => {
-          let updatedTransaction = t;
-          if (i === idx) {
-            updatedTransaction = null;
-          } else if (t.ordinal === targetOrdinal) {
-            updatedTransaction.amount = roundToTwoDecimalPlaces(transaction.amount + t.amount);
-          }
-          return updatedTransaction;
-        })
-        .filter(t => t != null));
-      closeModal();
+    closeModal();
+    if (parent.state.unsaved.find(t => t.ordinal === targetOrdinal)) {
+      let oldAmount;
+      this.updateDataQUnsaved(parent.state.unsaved.map((t, i) => {
+        let updatedTransaction = t;
+        if (i === idx) {
+          updatedTransaction = null;
+        } else if (t.ordinal === targetOrdinal) {
+          oldAmount = t.amount;
+          updatedTransaction.amount = roundToTwoDecimalPlaces(transaction.amount + t.amount);
+        }
+        return updatedTransaction;
+      }).filter(t => t != null));
+      NotificationManager.success(`Updated ordinal ${targetOrdinal} from ${oldAmount} to ${roundToTwoDecimalPlaces(transaction.amount + oldAmount)}`);
     } else {
-      axios.get(`/mongodb/transactions?ordinal=${targetOrdinal}`).then(response => {
-        if (response != null) {
-          axios.put(`/mongodb/transactions`)
+      axios.get(`/mongodb/transactions?ordinal=${targetOrdinal}`).then(getResponse => {
+        const existingTransaction = getResponse.data[0];
+        if (existingTransaction) {
+          const oldAmount = existingTransaction.amount;
+          existingTransaction.amount = roundToTwoDecimalPlaces(existingTransaction.amount + transaction.amount);
+          axios.post('/mongodb/transactions', existingTransaction).then(postResponse => {
+            if (postResponse.status === 204) {
+              NotificationManager.success(`Updated ordinal ${targetOrdinal} (in mongo) from ${oldAmount} to ${existingTransaction.amount}`);
+            } else {
+              NotificationManager.error('Error when trying to update transaction in mongo', postResponse.statusText);
+            }
+          });
+        } else {
+          NotificationManager.error(`Ordinal ${targetOrdinal} does not exist`);
         }
       });
-      NotificationManager.error(`Ordinal ${targetOrdinal} does not exist`);
     }
   }
 
