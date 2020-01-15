@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { accountingQTheme } from '@q/colors';
 
 import LoadingSpinner from '../../../components/loading-spinner';
-import TransactionFact from '../../../components/transaction-fact';
 
 const discreteTags = require('../../../transactionTags.json');
 
@@ -65,7 +64,7 @@ class AccountingData extends Component {
     }
     return (
       <AccountingDataContainer>
-        {parent.state.unsaved.map((transaction, i) => (
+        {/* {parent.state.unsaved.map((transaction, i) => (
           <TransactionFact
             transaction={transaction}
             idx={i}
@@ -73,7 +72,7 @@ class AccountingData extends Component {
             removeFact={(idx) => this.removeFact(idx)}
             editable
           />
-        ))}
+        ))} */}
       </AccountingDataContainer>
     );
   }

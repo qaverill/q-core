@@ -8,9 +8,9 @@ import { dataQTheme } from '@q/colors';
 import { Page, Text, Button } from '@q/core';
 import { getSettings, dateToEpoch } from '@q/utils';
 
+import { collectors } from './collectors';
 import AlbumCoverArray from './components/AlbumCoverArray';
 import AccountingData from './components/AccountingData';
-import { collectors } from './collectors';
 import LoadingSpinner from '../../components/loading-spinner';
 import SpotifyAPIErrorPage from '../../components/spotify-error-page';
 import ArraySelector from '../../components/array-selector';
@@ -86,29 +86,28 @@ class DataQ extends React.Component {
     const _this = this;
     const { root } = this.props;
     const {
-      sourcePath,
       mongodbPath,
-      timeParam,
       name,
     } = this.collector();
-    axios.get(sourcePath).then(sourceResults => {
-      let { items } = sourceResults.data;
-      const mongoParams = {
-        params: { start: dateToEpoch(items[items.length - 1][timeParam]) },
-      };
-      axios.get(mongodbPath, mongoParams).then(mongoResults => {
-        if (name === 'transactions') {
-          items = getUnsavedTransactionData(items, mongoResults);
-        } else {
-          const maxTimestamp = Math.max(...mongoResults.data.map(d => d.timestamp));
-          items = items.filter(i => dateToEpoch(i[timeParam]) > maxTimestamp);
-        }
-        _this.setState({ unsaved: items });
+    if (name === 'transactions') {
+      axios.get('/transactions').then(sourceResults => {
+        const { items } = sourceResults.data;
+        const mongoParams = {
+          params: { start: dateToEpoch(items[items.length - 1].timestamp) },
+        };
+        axios.get(mongodbPath, mongoParams).then(mongoResults => {
+          _this.setState({ unsaved: getUnsavedTransactionData(items, mongoResults) });
+        });
+      }).catch(() => {
+        _this.setState({ unsaved: [] });
       });
-    }).catch(error => {
-      if (error.response.status === 401) root.setState({ error: <SpotifyAPIErrorPage /> });
-      _this.setState({ unsaved: [] });
-    });
+    } else {
+      axios.get(`/spotify/unsaved/${name}`).then(unsaved => {
+        _this.setState({ unsaved: unsaved.data });
+      }).catch(error => {
+        if (error.response.status === 401) root.setState({ error: <SpotifyAPIErrorPage /> });
+      });
+    }
   }
 
   collector() {
