@@ -3,7 +3,7 @@ const request = require('request');
 const config = require('config');
 const { q_api, q_logger } = require('q-lib');
 
-q_api.makePostEndpoint(routes, '/', '/spotify/playlists', (req, res) => {
+q_api.makePostEndpoint(routes, '/', '/spotify/playlists', (req, res, then) => {
   const requestOptions = {
     url: `https://api.spotify.com/v1/playlists/${req.body.playlistId}/tracks`,
     headers: {
@@ -22,6 +22,7 @@ q_api.makePostEndpoint(routes, '/', '/spotify/playlists', (req, res) => {
       q_logger.error('Error posting to Spotify playlist', response);
       res.send({ error: 'Cannot connect to the Spotify API' });
     }
+    then();
   });
 });
 

@@ -1,6 +1,7 @@
 const server = require('express')();
 const bodyParser = require('body-parser');
 const config = require('config');
+const schedule = require('node-schedule');
 
 const { q_logger } = require('q-lib');
 
@@ -26,9 +27,13 @@ server.use((req, res, next) => {
   next();
 });
 
-server.use('/spotify', require('./routes/spotify'));
-server.use('/mongodb', require('./routes/mongodb'));
-server.use('/lifx', require('./routes/lifx'));
-server.use('/transactions', require('./routes/transactions'));
+server.use('/spotify', require('./api/spotify'));
+server.use('/mongodb', require('./api/mongodb'));
+server.use('/lifx', require('./api/lifx'));
+server.use('/transactions', require('./api/transactions'));
+
+// schedule.scheduleJob('0 17 ? * 0,4-6', function(){
+//   console.log('Today is recognized by Rebecca Black!');
+// });
 
 server.listen(config.port, () => q_logger.info(`Started Q on port ${config.port}`));

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import TransactionFact from '../../../components/transaction-fact';
+import TransactionFact from './transaction-fact';
 
 const ViewContainer = styled.div`
   width: 100%;

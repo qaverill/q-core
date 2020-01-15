@@ -18,7 +18,7 @@ const {
 
 routes.use(express.static(`${__dirname}/public`)).use(cookieParser());
 
-q_api.makeGetEndpoint(routes, '/login', '/spotify/auth/login', (req, res) => {
+q_api.makeGetEndpoint(routes, '/login', '/spotify/auth/login', (req, res, then) => {
   const state = q_utils.generateRandomString(16);
   res.cookie(STATE_KEY, state);
 
@@ -30,9 +30,11 @@ q_api.makeGetEndpoint(routes, '/login', '/spotify/auth/login', (req, res) => {
       redirect_uri,
       state,
     })}`);
+
+  then();
 });
 
-q_api.makeGetEndpoint(routes, '/callback', '/spotify/auth/callback', (req, res) => {
+q_api.makeGetEndpoint(routes, '/callback', '/spotify/auth/callback', (req, res, then) => {
   const state = req.query.state || null;
   const storedState = req.cookies ? req.cookies[STATE_KEY] : null;
 
@@ -41,6 +43,7 @@ q_api.makeGetEndpoint(routes, '/callback', '/spotify/auth/callback', (req, res) 
       querystring.stringify({
         error: 'state_mismatch',
       })}`);
+    then();
   } else {
     res.clearCookie(STATE_KEY);
     const authOptions = {
@@ -72,6 +75,7 @@ q_api.makeGetEndpoint(routes, '/callback', '/spotify/auth/callback', (req, res) 
             error: 'invalid_token',
           })}`);
       }
+      then();
     });
   }
 });

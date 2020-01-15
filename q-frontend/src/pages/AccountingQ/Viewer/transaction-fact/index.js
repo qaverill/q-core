@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { red, green, yellow } from '@q/colors';
 import { epochToString } from '@q/utils';
 import { Button, StyledPopup } from '@q/core';
-import ManualTagger from './components/ManualTagger';
+import ManualTagger from './ManualTagger';
 
 const Transaction = styled.div`
   width: 100%;
@@ -64,14 +64,12 @@ class TransactionFact extends React.PureComponent {
   render() {
     const {
       transaction,
-      idx,
-      editable,
       parent,
       removeFact,
     } = this.props;
     return (
       <Transaction>
-        { editable ? <Button color={red} onClick={() => removeFact(idx)}>X</Button> : null }
+        <Button color={red} onClick={() => removeFact(idx)}>X</Button>
         <OrdinalColumn><h2>{transaction.ordinal}</h2></OrdinalColumn>
         <DateColumn><h2>{epochToString(transaction.timestamp)}</h2></DateColumn>
         <AmountColumn><h2>{transaction.amount}</h2></AmountColumn>

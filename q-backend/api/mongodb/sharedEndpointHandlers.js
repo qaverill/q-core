@@ -5,7 +5,7 @@ const { validateDataForPost } = require('./validation');
 const { craftQueryForGet } = require('./queryCrafter');
 
 module.exports = {
-  handleCommonPostEndpoint: (requestBody, response, collection) => {
+  handleCommonPostEndpoint: (requestBody, response, collection, then) => {
     let items = Array.isArray(requestBody) ? requestBody : [requestBody];
     if (!validateDataForPost(collection, items)) response.status(400).send(`Failed to validate ${collection}`);
 
@@ -17,10 +17,11 @@ module.exports = {
         q_logger.info(`Inserted ${insertResponse.insertedCount} ${collection} into mongo`);
         response.status(204).send();
         db.close();
+        then();
       });
     });
   },
-  handleCommonGetEndpoint: (requestQuery, response, collection) => {
+  handleCommonGetEndpoint: (requestQuery, response, collection, then) => {
     const query = craftQueryForGet(collection, requestQuery);
     MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (connectError, db) => {
       if (connectError) return q_logger.error('Cannot connect to mongo', connectError);
@@ -28,6 +29,7 @@ module.exports = {
         if (findError) throw q_logger.error(`Cannot query mongo ${collection}`, findError);
         response.status(200).json(res);
         db.close();
+        then();
       });
     });
   },

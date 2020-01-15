@@ -16,32 +16,32 @@ module.exports = {
     ...require(tokensPath).lifx,
   },
   persistTokens: (granter, access_token, refresh_token, valid_until) => {
-    fs.readFile(tokensPath, (err, data) => {
-      if (err) throw err;
-      let tokens = JSON.parse(data);
+    fs.readFile(tokensPath, (readError, data) => {
+      if (readError) throw readError;
+      const tokens = JSON.parse(data);
       tokens[granter].access_token = access_token;
       tokens[granter].refresh_token = refresh_token;
       tokens[granter].valid_until = valid_until;
       module.exports[granter].access_token = access_token;
       module.exports[granter].refresh_token = refresh_token;
       module.exports[granter].valid_until = valid_until;
-      fs.writeFile(tokensPath, JSON.stringify(tokens, null, 2), err => {
-          if (err) throw err;
-          q_logger.info(`Persisted new tokens for ${granter}`);
+      fs.writeFile(tokensPath, JSON.stringify(tokens, null, 2), writeError => {
+        if (writeError) throw writeError;
+        q_logger.info(`Persisted new tokens for ${granter}`);
       });
     });
   },
   validate: () => {
     const itemsToValidate = [
-      "port",
-      "mongo_uri",
-      "spotify.client_id",
-      "spotify.client_secret",
-      "spotify.redirect_uri",
-      "spotify.scope",
-      "spotify.access_token",
-      "spotify.refresh_token",
-      "spotify.valid_until"
+      'port',
+      'mongo_uri',
+      'spotify.client_id',
+      'spotify.client_secret',
+      'spotify.redirect_uri',
+      'spotify.scope',
+      'spotify.access_token',
+      'spotify.refresh_token',
+      'spotify.valid_until',
     ];
     itemsToValidate.forEach(item => {
       const splitItem = item.split('.');
@@ -49,9 +49,9 @@ module.exports = {
         ? module.exports[splitItem[0]][splitItem[1]]
         : module.exports[item];
       if (itemToValidate == null) {
-        q_logger.error(`Missing config parameter: `, item);
-        process.exit()
+        q_logger.error('Missing config parameter: ', item);
+        process.exit();
       }
-    })
-  }
+    });
+  },
 };

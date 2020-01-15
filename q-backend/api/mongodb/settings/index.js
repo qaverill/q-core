@@ -5,7 +5,7 @@ const { q_api } = require('q-lib');
 
 const SETTINGS_COLLECTION = 'metadata';
 
-q_api.makePostEndpoint(routes, '/', '/mongodb/settings', (request, response) => {
+q_api.makePostEndpoint(routes, '/', '/mongodb/settings', (request, response, then) => {
   MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (connectError, db) => {
     if (connectError) throw connectError;
     const dbo = db.db('q-mongodb');
@@ -15,11 +15,12 @@ q_api.makePostEndpoint(routes, '/', '/mongodb/settings', (request, response) => 
       if (updateError) throw updateError;
       response.status(204).send();
       db.close();
+      then();
     });
   });
 });
 
-q_api.makeGetEndpoint(routes, '/', '/mongodb/settings', (request, response) => {
+q_api.makeGetEndpoint(routes, '/', '/mongodb/settings', (request, response, then) => {
   MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (connectError, db) => {
     if (connectError) throw connectError;
     const dbo = db.db('q-mongodb');
@@ -27,6 +28,7 @@ q_api.makeGetEndpoint(routes, '/', '/mongodb/settings', (request, response) => {
       if (findError) throw findError;
       response.status(200).json(res);
       db.close();
+      then();
     });
   });
 });

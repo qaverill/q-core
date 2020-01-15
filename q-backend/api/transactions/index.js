@@ -26,12 +26,13 @@ const isFactNeeded = fact => (
     .test(fact.description.toLowerCase())
 );
 
-q_api.makeGetEndpoint(routes, '/', '/transactions', (request, response) => {
+q_api.makeGetEndpoint(routes, '/', '/transactions', (request, response, then) => {
   let facts = [];
   fs.readdir(path.join(__dirname, 'data-dump'), (readdirError, files) => {
     if (readdirError) {
-      response.status(500).send()
-      return q_logger.error('Cannot read files in data-dump dir');
+      response.status(500).send();
+      q_logger.error('Cannot read files in data-dump dir');
+      then()
     }
     files.forEach(file => {
       fs.readFile(path.join(__dirname, `./data-dump/${file}`), 'UTF-8', (readFileError, data) => {
@@ -42,6 +43,7 @@ q_api.makeGetEndpoint(routes, '/', '/transactions', (request, response) => {
           response.status(200)
             .json({ items: facts.sort((a, b) => ((a.timestamp > b.timestamp) ? -1 : 1)) });
         }
+        then();
       });
     });
   });

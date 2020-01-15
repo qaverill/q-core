@@ -4,8 +4,8 @@ import React from 'react';
 import { accountingQTheme } from '@q/colors';
 import { getSettings } from '@q/utils';
 
-import Analyzer from './components/Analyzer';
-import Viewer from './components/Viewer';
+import Analyzer from './Analyzer';
+import Viewer from './Viewer';
 import ExplorePage from '../../components/explore-page';
 
 class SpotifyQ extends React.Component {
