@@ -36,7 +36,7 @@ class SpotifyQ extends React.Component {
       case 'Analyzer':
         return <Analyzer data={data} start={start} end={end} />;
       case 'Viewer':
-        return <Viewer data={data} filter={filter} />;
+        return <Viewer data={data} filter={filter} parent={this} />;
       default: return null;
     }
   }

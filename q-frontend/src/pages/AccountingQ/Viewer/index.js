@@ -21,13 +21,13 @@ class Viewer extends React.Component {
   }
 
   render() {
-    const { data, filter } = this.props;
+    const { data, filter, parent } = this.props;
     return (
       <ViewContainer>
         {data
           .filter(t => (filter != null ? transactionContainsFilter(t, filter) : true))
           .sort((a, b) => b.timestamp - a.timestamp)
-          .map(t => <TransactionFact transaction={t} />)}
+          .map(t => <TransactionFact transaction={t} parent={parent} />)}
       </ViewContainer>
     );
   }

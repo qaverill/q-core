@@ -1,9 +1,11 @@
+/* eslint-disable no-alert */
 import React from 'react';
 import styled from 'styled-components';
 import { red, green, yellow } from '@q/colors';
 import { epochToString } from '@q/utils';
 import { Button, StyledPopup } from '@q/core';
 import ManualTagger from './ManualTagger';
+import { removeTransaction } from '../../../../api/mongodb';
 
 const Transaction = styled.div`
   width: 100%;
@@ -61,34 +63,42 @@ const craftTagButton = transaction => {
 };
 
 class TransactionFact extends React.PureComponent {
+  removeTransactionFact() {
+    const { transaction, parent } = this.props;
+    // eslint-disable-next-line no-undef
+    if (window.confirm('Are you sure?')) {
+      removeTransaction(transaction, () => {
+        parent.setState({
+          data: null,
+        });
+      });
+    }
+  }
+
   render() {
     const {
       transaction,
       parent,
-      removeFact,
     } = this.props;
     return (
       <Transaction>
-        <Button color={red} onClick={() => removeFact(idx)}>X</Button>
+        <Button color={red} onClick={() => this.removeTransactionFact()}>X</Button>
         <OrdinalColumn><h2>{transaction.ordinal}</h2></OrdinalColumn>
         <DateColumn><h2>{epochToString(transaction.timestamp)}</h2></DateColumn>
         <AmountColumn><h2>{transaction.amount}</h2></AmountColumn>
         <DescriptionColumn><h2>{transaction.description}</h2></DescriptionColumn>
-        {editable ? (
-          <TagsColumn>
-            <h2>{transaction.tags.length}</h2>
-            <StyledPopup modal trigger={craftTagButton(transaction)}>
-              {close => (
-                <ManualTagger
-                  transaction={transaction}
-                  transactionIdx={idx}
-                  parent={parent}
-                  closeModal={close}
-                />
-              )}
-            </StyledPopup>
-          </TagsColumn>
-        ) : <TagsColumn><h2>{transaction.tags.join(' | ')}</h2></TagsColumn> }
+        <TagsColumn>
+          <h2>{transaction.tags.length}</h2>
+          <StyledPopup modal trigger={craftTagButton(transaction)}>
+            {close => (
+              <ManualTagger
+                transaction={transaction}
+                parent={parent}
+                closeModal={close}
+              />
+            )}
+          </StyledPopup>
+        </TagsColumn>
       </Transaction>
     );
   }
