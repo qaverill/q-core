@@ -6,7 +6,7 @@ module.exports = {
     routes.get(path, (request, response) => {
       const start = new Date().getTime();
       action(request, response, () => {
-        q_logger.apiout(`GET ${request.originalUrl} returned in ${new Date().getTime() - start}ms (${response.statusCode})`);
+        q_logger.apiout(`GET ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
       });
     });
   },
@@ -15,7 +15,7 @@ module.exports = {
     routes.post(path, (request, response) => {
       const start = new Date().getTime();
       action(request, response, () => {
-        q_logger.apiout(`POST ${request.originalUrl} returned in ${new Date().getTime() - start}ms (${response.statusCode})`);
+        q_logger.apiout(`POST ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
       });
     });
   },
@@ -24,7 +24,7 @@ module.exports = {
     routes.delete(path, (request, response) => {
       const start = new Date().getTime();
       action(request, response, () => {
-        q_logger.apiout(`DELETE ${request.originalUrl} returned in ${new Date().getTime() - start}ms (${response.statusCode})`);
+        q_logger.apiout(`DELETE ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
       });
     });
   },

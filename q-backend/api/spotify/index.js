@@ -12,8 +12,6 @@ routes.use((req, res, next) => {
     next();
   }
 });
-routes.use('/recently-played', require('./recently-played'));
-routes.use('/saved-tracks', require('./saved-tracks'));
 routes.use('/playlists', require('./playlists'));
 routes.use('/unsaved', require('./unsaved'));
 
