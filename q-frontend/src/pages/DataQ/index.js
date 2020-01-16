@@ -14,10 +14,10 @@ import AccountingData from './components/AccountingData';
 import LoadingSpinner from '../../components/loading-spinner';
 import SpotifyAPIErrorPage from '../../components/spotify-error-page';
 import ArraySelector from '../../components/array-selector';
+import { getUnsavedListens, getUnsavedSaves } from '../../api/unsaved';
+import { pushTracksOntoQPlaylist } from '../../api/spotify';
 
 let ordinalStart;
-
-const Q_PLAYLIST_ID = '6d2V7fQS4CV0XvZr1iOVXJ';
 
 const TRANSACTION_SOURCES = ['mvcu', 'venmo', 'citi'];
 
@@ -29,17 +29,6 @@ const SaveButton = styled(Button)`
   min-width: 180px;
   width: ${props => props.width};
 `;
-
-const addSavesToQPlaylist = data => {
-  const requestBody = {
-    playlistId: Q_PLAYLIST_ID,
-    uris: data.map(d => `spotify:track:${d.track}`),
-    position: 0,
-  };
-  axios.post('/spotify/playlists', requestBody).then(() => {
-    NotificationManager.success('Wrote saves to Q playlist');
-  });
-};
 
 const getUnsavedTransactionData = (items, mongoResults) => {
   let transactionFacts = items;
@@ -83,30 +72,37 @@ class DataQ extends React.Component {
   }
 
   getData() {
-    const _this = this;
     const { root } = this.props;
     const {
       mongodbPath,
       name,
     } = this.collector();
-    if (name === 'transactions') {
-      axios.get('/transactions').then(sourceResults => {
-        const { items } = sourceResults.data;
-        const mongoParams = {
-          params: { start: dateToEpoch(items[items.length - 1].timestamp) },
-        };
-        axios.get(mongodbPath, mongoParams).then(mongoResults => {
-          _this.setState({ unsaved: getUnsavedTransactionData(items, mongoResults) });
+    switch (name) {
+      case 'transactions':
+        axios.get('/transactions').then(sourceResults => {
+          const { items } = sourceResults.data;
+          const mongoParams = {
+            params: { start: dateToEpoch(items[items.length - 1].timestamp) },
+          };
+          axios.get(mongodbPath, mongoParams).then(mongoResults => {
+            _this.setState({ unsaved: getUnsavedTransactionData(items, mongoResults) });
+          });
+        }).catch(() => {
+          _this.setState({ unsaved: [] });
         });
-      }).catch(() => {
-        _this.setState({ unsaved: [] });
-      });
-    } else {
-      axios.get(`/spotify/unsaved/${name}`).then(unsaved => {
-        _this.setState({ unsaved: unsaved.data });
-      }).catch(error => {
-        if (error.response.status === 401) root.setState({ error: <SpotifyAPIErrorPage /> });
-      });
+        break;
+      case 'saves':
+        getUnsavedSaves({ root, _this: this }, (listens, _this) => {
+          _this.setState({ unsaved: listens.data });
+        });
+        break;
+      case 'listens':
+        getUnsavedListens({ root, _this: this }, (saves, _this) => {
+          _this.setState({ unsaved: saves.data });
+        });
+        break;
+      default:
+        break;
     }
   }
 
@@ -118,7 +114,8 @@ class DataQ extends React.Component {
   writeToMongo() {
     const _this = this;
     const { unsaved } = this.state;
-    const collector = this.collector()
+    const { root } = this.props;
+    const collector = this.collector();
     if (collector.name === 'transactions') {
       if (unsaved.filter(i => i.tags.indexOf('NEEDS ORDINAL') > -1).length > 0) {
         NotificationManager.error('A transaction is missing an ordinal!');
@@ -134,7 +131,7 @@ class DataQ extends React.Component {
       _this.setState({ unsaved: null });
       _this.getData();
       NotificationManager.success(`Synced ${collector.name}`);
-      if (collector.name === 'saves') addSavesToQPlaylist(data);
+      if (collector.name === 'saves') pushTracksOntoQPlaylist({ data, root });
       sessionStorage.removeItem('dataQUnsaved');
     });
   }

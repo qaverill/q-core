@@ -5,7 +5,9 @@ const request = require('request');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 const config = require('config');
-const { q_api, q_logger, q_utils } = require('q-lib');
+const { q_api, q_logger } = require('q-lib');
+
+const { generateRandomString } = require('../../../utils');
 
 const STATE_KEY = 'spotify_auth_state';
 
@@ -19,7 +21,7 @@ const {
 routes.use(express.static(`${__dirname}/public`)).use(cookieParser());
 
 q_api.makeGetEndpoint(routes, '/login', '/spotify/auth/login', (req, res, then) => {
-  const state = q_utils.generateRandomString(16);
+  const state = generateRandomString(16);
   res.cookie(STATE_KEY, state);
 
   res.redirect(`https://accounts.spotify.com/authorize?${
