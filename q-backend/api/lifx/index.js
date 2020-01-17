@@ -1,9 +1,9 @@
 const routes = require('express').Router();
 const { q_api } = require('q-lib');
 
-const { handleGetWrapperRequest, handlePostWrapperRequest } = require('../../handlers');
+const { handleExternalGetRequest, handleExternalPostRequest } = require('../../handlers/external');
 
-q_api.makeGetEndpoint(routes, '/', '/lifx', (req, res, then) => handleGetWrapperRequest({ req, res, then }));
-q_api.makePostEndpoint(routes, '/', '/lifx', (req, res, then) => handlePostWrapperRequest({req, res, then }));
+q_api.makeGetEndpoint(routes, '/', '/lifx', (req, res, then) => handleExternalGetRequest({ req, res, then }));
+q_api.makePostEndpoint(routes, '/', '/lifx', (req, res, then) => handleExternalPostRequest({ req, res, then }));
 
 module.exports = routes;

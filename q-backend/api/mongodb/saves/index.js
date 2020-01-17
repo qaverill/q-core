@@ -1,13 +1,13 @@
 const routes = require('express').Router();
 const { q_api } = require('q-lib');
-const { handleCommonPostEndpoint, handleCommonGetEndpoint } = require('../sharedEndpointHandlers');
+const { handleInternalGetRequest, handleInternalPostRequest } = require('../../../handlers/internal');
 
-q_api.makePostEndpoint(routes, '/', '/mongodb/saves', (request, response, then) => {
-  handleCommonPostEndpoint(request.body, response, 'saves', then);
+q_api.makeGetEndpoint(routes, '/', '/mongodb/saves', (req, res, then) => {
+  handleInternalGetRequest({ req, res, then }, 'saves');
 });
 
-q_api.makeGetEndpoint(routes, '/', '/mongodb/saves', (request, response, then) => {
-  handleCommonGetEndpoint(request.query, response, 'saves', then);
+q_api.makePostEndpoint(routes, '/', '/mongodb/saves', (req, res, then) => {
+  handleInternalPostRequest({ req, res, then }, 'saves');
 });
 
 module.exports = routes;

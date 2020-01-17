@@ -32,7 +32,7 @@ q_api.makeGetEndpoint(routes, '/', '/transactions', (request, response, then) =>
     if (readdirError) {
       response.status(500).send();
       q_logger.error('Cannot read files in data-dump dir');
-      then()
+      then();
     }
     files.forEach(file => {
       fs.readFile(path.join(__dirname, `./data-dump/${file}`), 'UTF-8', (readFileError, data) => {

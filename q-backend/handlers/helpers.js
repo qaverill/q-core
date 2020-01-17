@@ -1,10 +1,26 @@
-const { q_logger } = require('q-lib');
-
 const isListOfStrings = list => (
   Array.isArray(list) && list.filter(item => typeof item === 'string').length === list.length
 );
 
 module.exports = {
+  createQuery: req => {
+    let query;
+    if (req.params) {
+      query = req.params;
+      Object.keys(query).forEach(key => { query[key] = parseInt(query[key], 10) || query[key]; });
+    } else {
+      query = req.query;
+      if (query.start) {
+        query.timeline.$gte = parseInt(query.start, 10);
+        delete query.start;
+      }
+      if (query.end) {
+        query.timeline.$lte = parseInt(query.end, 10);
+        delete query.end;
+      }
+    }
+    return query;
+  },
   validateDataForPost: (collection, items) => {
     switch (collection) {
       case 'listens':
@@ -26,8 +42,7 @@ module.exports = {
           && Array.isArray(transaction.tags) && transaction.tags.length > 0
         )).length === items.length;
       default:
-        q_logger.error('Tried to validate items in an unknown collection: ', collection);
         return false;
     }
   },
-}
+};
