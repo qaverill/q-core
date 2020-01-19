@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { setSettings } from '@q/utils';
 import { TextInput, PopupContainer } from '@q/core';

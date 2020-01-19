@@ -1,12 +1,19 @@
 /* eslint-disable no-undef */
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
 import { accountingQTheme } from '@q/colors';
-import { getSettings } from '@q/utils';
+import { getSettings, times } from '@q/utils';
 
 import Analyzer from './Analyzer';
 import Viewer from './Viewer';
 import ExplorePage from '../../components/explore-page';
+
+const AccountingQ = () => {
+  const [start, setStart] = useState(times.firstOfCurrentMonth());
+  const [end, setEnd] = useState(times.now());
+  const [data, setData] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState()
+}
 
 class SpotifyQ extends React.Component {
   constructor(props) {
@@ -16,9 +23,6 @@ class SpotifyQ extends React.Component {
       'Viewer',
     ];
     this.state = {
-      start: Math.round(new Date(new Date().getFullYear(), new Date().getMonth(), 1) / 1000),
-      end: Math.round(new Date().getTime() / 1000),
-      data: null,
       selectedIndex: getSettings().accountingQSelectedIndex,
       filter: null,
     };
@@ -60,4 +64,4 @@ class SpotifyQ extends React.Component {
   }
 }
 
-export default SpotifyQ;
+export default AccountingQ;

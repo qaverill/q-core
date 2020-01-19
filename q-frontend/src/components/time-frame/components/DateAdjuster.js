@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Text } from '@q/core';
 
 const SmallButton = styled(Button)`

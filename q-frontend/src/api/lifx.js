@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { NotificationManager } from 'react-notifications';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import SpotifyAPIErrorPage from '../components/spotify-error-page';
 
 export const getLights = then => (

@@ -1,11 +1,11 @@
 /* eslint-disable no-alert */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { red, green, yellow } from '@q/colors';
 import { epochToString } from '@q/utils';
 import { Button, StyledPopup } from '@q/core';
 import ManualTagger from './ManualTagger';
-import { removeTransaction } from '../../../../api/mongodb';
+import { removeTransaction } from '../../../../api/transactions';
 
 const Transaction = styled.div`
   width: 100%;

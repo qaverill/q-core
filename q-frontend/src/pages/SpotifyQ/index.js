@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { ONE_EPOCH_DAY } from '@q/utils';
 import { spotifyQTheme } from '@q/colors';

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Header, Page, FullDiv } from '@q/core';
 import { red } from '@q/colors';

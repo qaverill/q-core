@@ -1,12 +1,12 @@
 /* eslint-disable no-undef */
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 
-import { getSettings } from '@q/utils';
+import { readSettings } from '../src/api/metadata';
 
 import DataQ from './pages/DataQ';
 import SpotifyQ from './pages/SpotifyQ';
@@ -14,6 +14,7 @@ import BassQ from './pages/BassQ';
 import AccountingQ from './pages/AccountingQ';
 import DashboardQ from './pages/DashboardQ';
 import ArraySelector from './components/array-selector';
+import LoadingSpinner from './components/loading-spinner';
 
 const AppContainer = styled.div`
   height: 100%;
@@ -39,17 +40,35 @@ const Title = styled.h2`
   margin: 0 10px;
 `;
 
+const App = () => {
+  const [settings, setSettings] = useState(null)
+  const [app, setApp] = useState(<LoadingSpinner message="Setting up app..." />);
+
+  const pages = [
+    <DataQ title={<Title>DataQ</Title>} root={this} />,
+    <SpotifyQ title={<Title>SpotifyQ</Title>} root={this} />,
+    // <BassQ title={<Title>BassQ</Title>} />,
+    <AccountingQ title={<Title>AccountingQ</Title>} />,
+    <DashboardQ title={<Title>DashboardQ</Title>} />,
+  ];
+
+  useEffect(() => {
+    readSettings(settings => {
+      setSettings(settings)
+      setApp(pages[settings.app.lastIdx])
+    })
+  }, [])
+
+  return (
+    <AppContainer>
+
+    </AppContainer>
+  );
+}
+
 
 class App extends React.Component {
   constructor(props) {
-    super(props);
-    this.pages = [
-      <DataQ title={<Title>DataQ</Title>} root={this} />,
-      <SpotifyQ title={<Title>SpotifyQ</Title>} root={this} />,
-      // <BassQ title={<Title>BassQ</Title>} />,
-      <AccountingQ title={<Title>AccountingQ</Title>} />,
-      <DashboardQ title={<Title>DashboardQ</Title>} />,
-    ];
     this.state = {
       // selectedIndex: getSettings() != null ? getSettings().lastPageIndex : 2,
       selectedIndex: 3,
