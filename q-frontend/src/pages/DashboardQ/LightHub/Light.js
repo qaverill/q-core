@@ -2,11 +2,18 @@
 import React, { useState } from 'react';
 import { lightOn, lightOff } from '@q/images';
 import styled from 'styled-components';
-import axios from 'axios';
+
+import { toggleLightPower } from '../../../api/lifx';
+
+const LightContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const LightButton = styled.img
   .attrs(props => ({
-    src: props.power ? lightOn : lightOff,
+    src: props.power === 'on' ? lightOn : lightOff,
   }))`
   cursor: pointer;
   height: 50%;
@@ -21,15 +28,15 @@ const LightButton = styled.img
 
 const Light = ({ light }) => {
   const { label, power: initPower } = light;
-  const [power, setPower] = useState('off');
+  const [power, setPower] = useState(initPower);
 
-  const onClick = () => (
-    axios.post('/lifx', { url: `https://api.lifx.com/v1/lights/label:${label}/toggle` })
-      .then(res => res.data.results.status === 'ok' && setPower(initPower === 'off' ? 'on' : 'off'))
-  );
+  const onClick = () => toggleLightPower(label, () => setPower(power === 'off' ? 'on' : 'off'));
 
   return (
-    <LightButton onClick={onClick} power={power} />
+    <LightContainer>
+      <LightButton onClick={onClick} power={power} />
+      <h2>{label}</h2>
+    </LightContainer>
   );
 };
 

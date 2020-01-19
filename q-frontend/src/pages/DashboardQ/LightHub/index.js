@@ -23,6 +23,10 @@ const LightsStyled = styled(Page)`
   }
 `;
 
+const LightSwitches = styled.div`
+  display: flex;
+`;
+
 const LightHub = () => {
   const [lights, setLights] = useState(null);
 
@@ -30,9 +34,11 @@ const LightHub = () => {
 
   return (
     <LightsStyled>
-      {lights === null
-        ? <LoadingSpinner message="Loading light statuses" color={dashboardQTheme.primary} />
-        : lights.map(light => <Light light={light} />)}
+      <LightSwitches>
+        {lights === null
+          ? <LoadingSpinner message="Loading Lights" color={dashboardQTheme.primary} />
+          : lights.map(light => <Light light={light} />)}
+      </LightSwitches>
     </LightsStyled>
   );
 };
