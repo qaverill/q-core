@@ -3,11 +3,11 @@ const { q_api } = require('q-lib');
 
 const { handleInternalPutRequest, handleInternalGetRequest } = require('../../../handlers/internal');
 
-q_api.makePutEndpoint(routes, '/:name', '/mongodb/metadata/:name', (req, res, then) => {
-  handleInternalPutRequest({ req, res, then }, { _id: req.params.name }, 'metadata');
+q_api.makePutEndpoint(routes, '/:_id', '/mongodb/metadata/:_id', (req, res, then) => {
+  handleInternalPutRequest({ req, res, then }, { _id: req.params._id }, 'metadata');
 });
 
-q_api.makeGetEndpoint(routes, '/:name', '/mongodb/metadata/:name', (req, res, then) => {
+q_api.makeGetEndpoint(routes, '/:_id', '/mongodb/metadata/:_id', (req, res, then) => {
   handleInternalGetRequest({ req, res, then }, 'metadata');
 });
 

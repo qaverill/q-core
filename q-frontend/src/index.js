@@ -1,12 +1,14 @@
 /* eslint-disable no-undef */
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
 import styled from 'styled-components';
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 
-import { readSettings } from '../src/api/metadata';
+import SpotifyErrorPage from './components/spotify-error-page';
+
+import { readSettings, writeSettings } from './api/metadata';
+import { getTokenStatus } from './api/tokens';
 
 import DataQ from './pages/DataQ';
 import SpotifyQ from './pages/SpotifyQ';
@@ -41,82 +43,59 @@ const Title = styled.h2`
 `;
 
 const App = () => {
-  const [settings, setSettings] = useState(null)
+  const [settings, setSettings] = useState(null);
   const [app, setApp] = useState(<LoadingSpinner message="Setting up app..." />);
 
   const pages = [
-    <DataQ title={<Title>DataQ</Title>} root={this} />,
-    <SpotifyQ title={<Title>SpotifyQ</Title>} root={this} />,
-    // <BassQ title={<Title>BassQ</Title>} />,
-    <AccountingQ title={<Title>AccountingQ</Title>} />,
-    <DashboardQ title={<Title>DashboardQ</Title>} />,
+    <DataQ title="DataQ" settings={settings} setSettings={setSettings} />,
+    <SpotifyQ title="SpotifyQ" root={this} />,
+    // <BassQ title={BassQ} />,
+    <AccountingQ title="AccountingQ" />,
+    <DashboardQ title="DashboardQ" />,
   ];
 
   useEffect(() => {
-    readSettings(settings => {
-      setSettings(settings)
-      setApp(pages[settings.app.lastIdx])
-    })
-  }, [])
+    readSettings(response => {
+      setSettings(response);
+      setApp(pages[response.app.idx]);
+    });
+  }, []);
 
+  useEffect(() => {
+    const pagesRequiringSpotifyToken = ['DataQ', 'SpotifyQ'];
+    if (settings && pagesRequiringSpotifyToken.includes(pages[settings.app.idx].props.token)) {
+      getTokenStatus(status => {
+        if (!status.valid) {
+          setApp(<SpotifyErrorPage />);
+        }
+      });
+    }
+  });
+
+  const saveIdx = (idx) => {
+    settings.app.idx = idx;
+    saveSettings(settings);
+    writeSettings(settings);
+    setApp(pages[idx]);
+  };
+
+  console.log(app)
   return (
     <AppContainer>
-
+      <NotificationContainer />
+      <AppHeader>
+        {settings && (
+          <ArraySelector
+            array={pages}
+            idx={settings.app.idx}
+            title={<Title>{pages[settings.app.idx].props.title}</Title>}
+            saveIdx={saveIdx}
+          />
+        )}
+      </AppHeader>
+      {app}
     </AppContainer>
   );
-}
-
-
-class App extends React.Component {
-  constructor(props) {
-    this.state = {
-      // selectedIndex: getSettings() != null ? getSettings().lastPageIndex : 2,
-      selectedIndex: 3,
-      error: null,
-    };
-  }
-
-  componentDidMount() {
-    const _this = this;
-    axios.get('/mongodb/settings').then(res => {
-      sessionStorage.setItem('settings', JSON.stringify(res.data));
-      _this.setState({
-        selectedIndex: res.data.lastPageIndex,
-      });
-    });
-  }
-
-  renderPage() {
-    const { error, selectedIndex } = this.state;
-    return error != null ? error : this.pages[selectedIndex];
-  }
-
-  render() {
-    if (getSettings() == null) {
-      return (
-        <AppContainer>
-          <AppHeader>
-            <h2>Loading...</h2>
-          </AppHeader>
-        </AppContainer>
-      );
-    }
-    const { selectedIndex } = this.state;
-    return (
-      <AppContainer>
-        <NotificationContainer />
-        <AppHeader>
-          <ArraySelector
-            array={this.pages}
-            parent={this}
-            title={this.pages[selectedIndex].props.title}
-            settingsKey="lastPageIndex"
-          />
-        </AppHeader>
-        {this.renderPage()}
-      </AppContainer>
-    );
-  }
-}
+};
 
 ReactDOM.render(<App />, document.getElementById('root'));

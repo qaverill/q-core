@@ -46,29 +46,27 @@ const getUnsavedTransactionData = (items, mongoResults) => {
     .reverse();
 };
 
-class DataQ extends React.Component {
+const DataQ = ({ settings, setSettings }) => {
+  const [unsaved, setUnsaved] = useState(null);
+  console.log(settings)
+  const { idx } = settings.dataQ;
+
+  useEffect(() => {
+    setSettings(null);
+  }, [idx]);
+
+  return (
+    <h2>aight</h2>
+  );
+};
+
+class DataQOLD extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedIndex: getSettings().dataQSelectedIndex,
       unsaved: null,
     };
-  }
-
-  componentDidMount() {
-    if (sessionStorage.getItem('dataQUnsaved')) {
-      this.setState({ unsaved: JSON.parse(sessionStorage.getItem('dataQUnsaved')) });
-    } else {
-      this.getData();
-    }
-  }
-
-  componentDidUpdate(_prevProps, prevState) {
-    const { selectedIndex } = this.state;
-    if (prevState.selectedIndex !== selectedIndex) {
-      this.getData();
-      this.setState({ unsaved: null });
-    }
   }
 
   getData() {

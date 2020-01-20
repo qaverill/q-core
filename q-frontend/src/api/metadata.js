@@ -8,6 +8,6 @@ export const readSettings = (then) => {
     .then(res => then(res.data));
 };
 
-export const saveSettings = (settings) => {
+export const writeSettings = (settings) => {
   axios.put('/mongodb/metadata/settings', settings);
 };
