@@ -51,7 +51,7 @@ class App extends React.Component {
       <DashboardQ title={<Title>DashboardQ</Title>} />,
     ];
     this.state = {
-      selectedIndex: getSettings() != null ? getSettings().lastPageIndex : 2,
+      selectedIndex: getSettings() != null ? getSettings().lastPageIndex : 0,
       error: null,
     };
   }

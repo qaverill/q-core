@@ -9,7 +9,7 @@ q_api.makePostEndpoint(routes, '/', '/mongodb/settings', (request, response, the
   MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (connectError, db) => {
     if (connectError) throw connectError;
     const dbo = db.db('q-mongodb');
-    const settingsQuery = { _id: 'settings' };
+    const settingsQuery = { _id: 'settingsOld' };
     const updateQuery = { $set: request.body };
     dbo.collection(SETTINGS_COLLECTION).updateOne(settingsQuery, updateQuery, updateError => {
       if (updateError) throw updateError;
@@ -24,7 +24,7 @@ q_api.makeGetEndpoint(routes, '/', '/mongodb/settings', (request, response, then
   MongoClient.connect(config.mongo_uri, MongoClient.connectionParams, (connectError, db) => {
     if (connectError) throw connectError;
     const dbo = db.db('q-mongodb');
-    dbo.collection(SETTINGS_COLLECTION).findOne({}, (findError, res) => {
+    dbo.collection(SETTINGS_COLLECTION).findOne({ _id: 'settingsOld' }, (findError, res) => {
       if (findError) throw findError;
       response.status(200).json(res);
       db.close();
