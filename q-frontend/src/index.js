@@ -46,31 +46,25 @@ const App = () => {
   const [settings, setSettings] = useState(null);
   const [app, setApp] = useState(<LoadingSpinner message="Setting up app..." />);
 
-  const pages = idx => ([
-    <DataQ title="DataQ" settings={settings} setSettings={setSettings} />,
-    <SpotifyQ title="SpotifyQ" root={this} />,
-    // <BassQ title={BassQ} />,
+  const pages = [
+    <DataQ title="DataQ" settings={settings} setSettings={setSettings} needsSpotifyToken />,
+    <SpotifyQ title="SpotifyQ" root={this} needsSpotifyToken />,
+    <BassQ title="BassQ" />,
     <AccountingQ title="AccountingQ" />,
-    <DashboardQ title="DashboardQ" />,
-  ][idx]);
+    <DashboardQ title="DashboardQ" needsSpotifyToken />,
+  ];
 
   useEffect(() => {
     readSettings(response => {
       setSettings(response);
-      setApp(pages(response.app.idx));
+      const page = pages[response.app.idx];
+      if (page.props.needsSpotifyToken) {
+        getTokenStatus(status => setApp(status.valid ? page : <SpotifyErrorPage title="ERROR" />));
+      } else {
+        setApp(page);
+      }
     });
   }, []);
-
-  useEffect(() => {
-    const pagesRequiringSpotifyToken = ['DataQ', 'SpotifyQ'];
-    if (settings && pagesRequiringSpotifyToken.includes(pages(settings.app.idx).props.token)) {
-      getTokenStatus(status => {
-        if (!status.valid) {
-          setApp(<SpotifyErrorPage title="ERROR" />);
-        }
-      });
-    }
-  });
 
   const saveIdx = (idx) => {
     settings.app.idx = idx;
@@ -87,7 +81,7 @@ const App = () => {
           <ArraySelector
             array={pages}
             idx={settings.app.idx}
-            title={<Title>{pages(settings.app.idx).props.title}</Title>}
+            title={<Title>{app.props.title}</Title>}
             saveIdx={saveIdx}
           />
         )}

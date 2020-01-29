@@ -10,6 +10,15 @@ module.exports = {
       });
     });
   },
+  makePutEndpoint: (routes, path, title, action) => {
+    console.log(`  PUT ${title}`);
+    routes.put(path, (request, response) => {
+      const start = new Date().getTime();
+      action(request, response, () => {
+        q_logger.apiout(`PUT ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
+      });
+    });
+  },
   makePostEndpoint: (routes, path, title, action) => {
     console.log(`  POST ${title}`);
     routes.post(path, (request, response) => {

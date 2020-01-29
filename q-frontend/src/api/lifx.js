@@ -1,16 +1,19 @@
 import axios from 'axios';
-import { NotificationManager } from 'react-notifications';
-import React, { useState, useEffect } from 'react';
-import SpotifyAPIErrorPage from '../components/spotify-error-page';
 
 export const getLights = then => (
   axios.get('/lifx', { params: { url: 'https://api.lifx.com/v1/lights/all' } })
     .then(res => then(res.data))
 );
 
-export const toggleLightPower = (label, then) => (
+export const toggleLightPower = ({ label, then }) => (
   axios.post('/lifx', { url: `https://api.lifx.com/v1/lights/label:${label}/toggle` })
     .then(res => then(res.data.results))
 );
 
-export const ya = 1;
+export const setLightsCycle = ({ colors, lights }) => {
+  // TODO: set both lights to cycle through the colors param, each starting on different colors
+};
+
+export const setLightsDefault = () => {
+  // TODO: set all lights to that warm default color that I like
+};

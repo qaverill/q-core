@@ -17,6 +17,7 @@
     "@q/images": "file:packages/images",
     "@q/utils": "file:packages/utils",
     "axios": "^0.19.0",
+    "node-vibrant": "^3.1.5",
     "react": "^16.12.0",
     "react-autosuggest": "^9.4.3",
     "react-charts": "^2.0.0-beta.6",

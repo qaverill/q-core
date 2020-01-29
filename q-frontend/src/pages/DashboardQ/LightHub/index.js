@@ -4,9 +4,11 @@ import styled from 'styled-components';
 import { dashboardQTheme } from '@q/colors';
 import { Page } from '@q/core';
 
-import Light from './Light';
+import LightSwitch from './LightSwitch';
+import SpotifyCycle from './SpotifyCycle';
 import LoadingSpinner from '../../../components/loading-spinner';
 import { getLights } from '../../../api/lifx';
+import { getCurrentlyPlayingTrack } from '../../../api/spotify';
 
 const LightsStyled = styled(Page)`
   height: 30%;
@@ -29,16 +31,23 @@ const LightSwitches = styled.div`
 
 const LightHub = () => {
   const [lights, setLights] = useState(null);
+  const [currentlyPlayingTrack, setCurrentlyPlayingTrack] = useState(null);
 
-  useEffect(() => getLights(lifxResponse => setLights(lifxResponse)), []);
+  useEffect(() => getLights(lifxResponse => setLights(lifxResponse)));
+  useEffect(() => getCurrentlyPlayingTrack(track => {
+    setCurrentlyPlayingTrack(track);
+  }), []);
 
   return (
     <LightsStyled>
       <LightSwitches>
-        {lights === null
-          ? <LoadingSpinner message="Loading Lights" color={dashboardQTheme.primary} />
-          : lights.map(light => <Light light={light} />)}
+        {lights
+          ? lights.map(light => <LightSwitch light={light} />)
+          : <LoadingSpinner color={dashboardQTheme.tertiary} />}
       </LightSwitches>
+      {currentlyPlayingTrack
+        ? <SpotifyCycle lights={lights} albumCover={currentlyPlayingTrack.item.album.images[1].url} />
+        : <LoadingSpinner color={dashboardQTheme.tertiary} />}
     </LightsStyled>
   );
 };

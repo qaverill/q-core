@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import React, { useState } from 'react';
-import { lightOn, lightOff } from '@q/images';
 import styled from 'styled-components';
+import { lightOn, lightOff } from '@q/images';
 
 import { toggleLightPower } from '../../../api/lifx';
 
@@ -26,11 +26,11 @@ const LightButton = styled.img
   }
 `;
 
-const Light = ({ light }) => {
+const LightSwitch = ({ light }) => {
   const { label, power: initPower } = light;
   const [power, setPower] = useState(initPower);
 
-  const onClick = () => toggleLightPower(label, () => setPower(power === 'off' ? 'on' : 'off'));
+  const onClick = () => toggleLightPower({ label, then: () => setPower(power === 'off' ? 'on' : 'off') });
 
   return (
     <LightContainer>
@@ -40,4 +40,4 @@ const Light = ({ light }) => {
   );
 };
 
-export default Light;
+export default LightSwitch;

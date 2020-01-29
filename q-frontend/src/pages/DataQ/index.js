@@ -129,7 +129,7 @@ class DataQOLD extends React.Component {
       _this.setState({ unsaved: null });
       _this.getData();
       NotificationManager.success(`Synced ${collector.name}`);
-      if (collector.name === 'saves') pushTracksOntoQPlaylist({ data, root });
+      if (collector.name === 'saves') pushTracksOntoQPlaylist(data);
       sessionStorage.removeItem('dataQUnsaved');
     });
   }
