@@ -14,7 +14,7 @@ const DashboardQPage = styled(Page)`
 
 const DashboardQ = () => (
   <DashboardQPage>
-    <LightHub />
+    {/* <LightHub /> */}
   </DashboardQPage>
 );
 

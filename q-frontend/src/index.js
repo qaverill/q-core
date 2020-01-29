@@ -46,10 +46,10 @@ const App = () => {
   const [settings, setSettings] = useState(null);
   const [app, setApp] = useState(<LoadingSpinner message="Setting up app..." />);
 
-  const pages = [
+  const pages = () => [
     <DataQ title="DataQ" settings={settings} setSettings={setSettings} needsSpotifyToken />,
     <SpotifyQ title="SpotifyQ" root={this} needsSpotifyToken />,
-    <BassQ title="BassQ" />,
+    // <BassQ title="BassQ" />,
     <AccountingQ title="AccountingQ" />,
     <DashboardQ title="DashboardQ" needsSpotifyToken />,
   ];
@@ -57,7 +57,7 @@ const App = () => {
   useEffect(() => {
     readSettings(response => {
       setSettings(response);
-      const page = pages[response.app.idx];
+      const page = pages()[response.app.idx];
       if (page.props.needsSpotifyToken) {
         getTokenStatus(status => setApp(status.valid ? page : <SpotifyErrorPage title="ERROR" />));
       } else {
@@ -68,9 +68,8 @@ const App = () => {
 
   const saveIdx = (idx) => {
     settings.app.idx = idx;
-    saveSettings(settings);
     writeSettings(settings);
-    setApp(pages(idx));
+    setApp(pages()[idx]);
   };
 
   return (
@@ -79,7 +78,7 @@ const App = () => {
       <AppHeader>
         {settings && (
           <ArraySelector
-            array={pages}
+            array={pages()}
             idx={settings.app.idx}
             title={<Title>{app.props.title}</Title>}
             saveIdx={saveIdx}
