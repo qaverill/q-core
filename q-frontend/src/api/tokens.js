@@ -1,9 +1,6 @@
 import axios from 'axios';
 
-export const getTokenStatus = then => {
-  axios.get('/tokens/spotify')
-    .then(response => then(response.data));
-};
+export const getTokenStatus = async () => (await axios.get('/tokens/spotify')).data;
 
 export const getTracks = () => {
 

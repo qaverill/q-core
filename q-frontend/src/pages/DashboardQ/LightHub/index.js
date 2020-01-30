@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+
 import { dashboardQTheme } from '@q/colors';
 import { Page } from '@q/core';
 
@@ -8,11 +9,11 @@ import LightSwitch from './LightSwitch';
 import SpotifyCycle from './SpotifyCycle';
 import LoadingSpinner from '../../../components/loading-spinner';
 import { getLights } from '../../../api/lifx';
-import { getCurrentlyPlayingTrack } from '../../../api/spotify';
+import { getCPT } from '../../../api/spotify';
 
 const LightsStyled = styled(Page)`
-  height: 30%;
-  width: 20%;
+  height: 50%;
+  width: 50%;
   margin: 10px;
   border: 5px solid ${dashboardQTheme.secondary};
   display: flex;
@@ -31,12 +32,17 @@ const LightSwitches = styled.div`
 
 const LightHub = () => {
   const [lights, setLights] = useState(null);
-  const [currentlyPlayingTrack, setCurrentlyPlayingTrack] = useState(null);
+  const [cpt, setCPT] = useState(null);
 
-  useEffect(() => getLights(lifxResponse => setLights(lifxResponse)));
-  useEffect(() => getCurrentlyPlayingTrack(track => {
-    setCurrentlyPlayingTrack(track);
-  }), []);
+  useEffect(() => {
+    const processLights = async () => setLights(await getLights());
+    processLights();
+  }, []);
+
+  useEffect(() => {
+    const processCPT = async () => setCPT(await getCPT());
+    processCPT();
+  }, []);
 
   return (
     <LightsStyled>
@@ -45,8 +51,8 @@ const LightHub = () => {
           ? lights.map(light => <LightSwitch light={light} />)
           : <LoadingSpinner color={dashboardQTheme.tertiary} />}
       </LightSwitches>
-      {currentlyPlayingTrack
-        ? <SpotifyCycle lights={lights} albumCover={currentlyPlayingTrack.item.album.images[1].url} />
+      {cpt
+        ? <SpotifyCycle lights={lights} albumCover={cpt.item.album.images[1].url} />
         : <LoadingSpinner color={dashboardQTheme.tertiary} />}
     </LightsStyled>
   );

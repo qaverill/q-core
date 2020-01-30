@@ -50,20 +50,24 @@ const App = () => {
     <DataQ title="DataQ" settings={settings} setSettings={setSettings} needsSpotifyToken />,
     <SpotifyQ title="SpotifyQ" root={this} needsSpotifyToken />,
     // <BassQ title="BassQ" />,
-    <AccountingQ title="AccountingQ" />,
     <DashboardQ title="DashboardQ" needsSpotifyToken />,
+    <AccountingQ title="AccountingQ" />,
   ];
 
   useEffect(() => {
-    readSettings(response => {
+    const processSettings = async () => {
+      const response = await readSettings();
       setSettings(response);
       const page = pages()[response.app.idx];
       if (page.props.needsSpotifyToken) {
-        getTokenStatus(status => setApp(status.valid ? page : <SpotifyErrorPage title="ERROR" />));
+        const status = await getTokenStatus();
+        setApp(status.valid ? page : <SpotifyErrorPage title="ERROR" />);
       } else {
         setApp(page);
       }
-    });
+    };
+
+    processSettings();
   }, []);
 
   const saveIdx = (idx) => {

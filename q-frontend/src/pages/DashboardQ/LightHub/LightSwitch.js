@@ -30,7 +30,10 @@ const LightSwitch = ({ light }) => {
   const { label, power: initPower } = light;
   const [power, setPower] = useState(initPower);
 
-  const onClick = () => toggleLightPower({ label, then: () => setPower(power === 'off' ? 'on' : 'off') });
+  const onClick = () => {
+    toggleLightPower(label);
+    setPower(power === 'off' ? 'on' : 'off');
+  };
 
   return (
     <LightContainer>
