@@ -1,5 +1,5 @@
 const routes = require('express').Router();
-const { q_api } = require('q-lib');
+const { q_api } = require('../../q-lib');
 
 const { handleExternalGetRequest, handleExternalPostRequest, handleExternalPutRequest } = require('../../handlers/external');
 

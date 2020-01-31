@@ -1,10 +1,9 @@
 const routes = require('express').Router();
-const { q_api } = require('q-lib');
-
 const request = require('request');
-const config = require('config');
 const { MongoClient } = require('mongodb');
 
+const config = require('../../config');
+const { q_api } = require('../../q-lib');
 const { dateToTimestamp, oathRequestOptions } = require('../../utils');
 
 const { mongo_uri } = config;

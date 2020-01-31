@@ -1,4 +1,4 @@
-const { q_logger } = require('q-lib');
+const { q_logger } = require('./q-lib');
 
 module.exports = {
   logIncomingRequest: ({ req, next }) => {

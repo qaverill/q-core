@@ -1,8 +1,9 @@
 const routes = require('express').Router();
 const path = require('path');
 const fs = require('fs');
-const { q_api, q_logger } = require('q-lib');
+
 const { parseTransactionsData } = require('./functions');
+const { q_api, q_logger } = require('../../q-lib');
 
 const START_OF_SEPTEMBER = 1567310400;
 

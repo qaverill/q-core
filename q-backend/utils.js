@@ -1,4 +1,4 @@
-const config = require('config');
+const config = require('./config');
 
 module.exports = {
   dateToTimestamp: date => parseInt(new Date(date).getTime() / 1000, 10),

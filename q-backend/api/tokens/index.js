@@ -1,6 +1,7 @@
 const routes = require('express').Router();
-const config = require('config');
-const { q_api } = require('q-lib');
+
+const config = require('../../config');
+const { q_api } = require('../../q-lib');
 
 q_api.makeGetEndpoint(routes, '/spotify', '/tokens/spotify', (req, res, then) => {
   if (config.spotify.valid_until < Date.now()) {

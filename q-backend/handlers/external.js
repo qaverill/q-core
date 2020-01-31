@@ -1,6 +1,6 @@
 const request = require('request');
-const { q_logger } = require('q-lib');
 
+const { q_logger } = require('../q-lib');
 const { oathRequestOptions } = require('../utils');
 
 const acceptablePostResponseCodes = [201, 207];

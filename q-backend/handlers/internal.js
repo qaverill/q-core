@@ -1,8 +1,8 @@
-const config = require('config');
 const { MongoClient } = require('mongodb');
-const { q_logger } = require('q-lib');
 
+const config = require('../config');
 const { createQuery, validateDataForPost } = require('./helpers');
+const { q_logger } = require('../q-lib');
 
 const { mongo_uri } = config;
 const { connectionParams } = MongoClient;

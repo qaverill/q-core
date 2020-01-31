@@ -4,9 +4,9 @@ const routes = express.Router();
 const request = require('request');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
-const config = require('config');
-const { q_api, q_logger } = require('q-lib');
 
+const config = require('../../../config');
+const { q_api, q_logger } = require('../../../q-lib');
 const { generateRandomString } = require('../../../utils');
 
 const STATE_KEY = 'spotify_auth_state';

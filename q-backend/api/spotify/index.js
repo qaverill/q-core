@@ -1,6 +1,6 @@
 const routes = require('express').Router();
-const { q_api } = require('q-lib');
 
+const { q_api } = require('../../q-lib');
 const { handleExternalGetRequest, handleExternalPostRequest } = require('../../handlers/external');
 
 routes.use('/auth', require('./auth'));
