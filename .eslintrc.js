@@ -10,5 +10,6 @@ module.exports = {
 		"react/jsx-filename-extension": 0,
 		"react/prop-types": 0, // TODO
 		"no-restricted-globals": 0,
+		"object-curly-newline": 0,
 	}
 };

@@ -7,20 +7,16 @@ const {
   handleInternalDeleteRequest,
 } = require('../../../handlers/internal');
 
-q_api.makeGetEndpoint(routes, '/', '/mongodb/transactions', (req, res, then) => {
-  handleInternalGetRequest({ req, res, then }, 'transactions');
-});
+let path = '/';
+let title = '/mongodb/transactions';
+const collection = 'transactions';
 
-q_api.makePostEndpoint(routes, '/', '/mongodb/transactions', (req, res, then) => {
-  handleInternalPostRequest({ req, res, then }, 'transactions');
-});
+q_api.makeGetEndpoint({ routes, path, title, collection }, handleInternalGetRequest);
+q_api.makePostEndpoint({ routes, path, title, collection }, handleInternalPostRequest);
 
-q_api.makePutEndpoint(routes, '/:ordinal', '/mongodb/transactions/:ordinal', (req, res, then) => {
-  handleInternalPutRequest({ req, res, then }, 'transactions');
-});
-
-q_api.makeDeleteEndpoint(routes, '/:ordinal', '/mongodb/transactions/:ordinal', (req, res, then) => {
-  handleInternalDeleteRequest({ req, res, then }, 'transactions');
-});
+path += ':ordinal';
+title += ':ordinal';
+q_api.makePutEndpoint({ routes, path, title, collection }, handleInternalPutRequest);
+q_api.makeDeleteEndpoint({ routes, path, title, collection }, handleInternalDeleteRequest);
 
 module.exports = routes;

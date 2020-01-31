@@ -2,12 +2,11 @@ const routes = require('express').Router();
 const { q_api } = require('../../../q-lib');
 const { handleInternalGetRequest, handleInternalPostRequest } = require('../../../handlers/internal');
 
-q_api.makeGetEndpoint(routes, '/', '/mongodb/listens', (req, res, then) => {
-  handleInternalGetRequest({ req, res, then }, 'listens');
-});
+const path = '/';
+const title = '/mongodb/listens';
+const collection = 'listens';
 
-q_api.makePostEndpoint(routes, '/', '/mongodb/listens', (req, res, then) => {
-  handleInternalPostRequest({ req, res, then }, 'listens');
-});
+q_api.makeGetEndpoint({ routes, path, title, collection }, handleInternalGetRequest);
+q_api.makePostEndpoint({ routes, path, title, collection }, handleInternalPostRequest);
 
 module.exports = routes;
