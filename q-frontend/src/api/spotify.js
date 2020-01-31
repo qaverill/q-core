@@ -10,5 +10,6 @@ export const pushTracksOntoQPlaylist = data => {
 
 export const getCPT = async () => {
   const url = 'https://api.spotify.com/v1/me/player/currently-playing';
-  return (await axios.get('/spotify', { params: { url } })).data;
+  const cpt = await axios.get('/spotify', { params: { url } });
+  return Object.keys(cpt.data).includes('item') ? cpt.data : null;
 };

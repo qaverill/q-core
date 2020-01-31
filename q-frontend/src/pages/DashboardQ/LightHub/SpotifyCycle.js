@@ -41,11 +41,11 @@ const SpotifyCycle = ({ lights, albumCover }) => {
   };
 
   return [
-    <AlbumCover onClick={onClick} isActive={isActive}>
+    <AlbumCover onClick={onClick} isActive={isActive} key="item">
       <img src={albumCover} alt={albumCover} data-tip data-for="albumColors" height="100%" width="100%" />
     </AlbumCover>,
-    <ReactTooltip id="albumColors">
-      <HorizontalDiv>{colors.map(color => <ColorSwatch color={color} />)}</HorizontalDiv>
+    <ReactTooltip id="albumColors" key="tool-tip">
+      <HorizontalDiv>{colors.map(color => <ColorSwatch color={color} key={color} />)}</HorizontalDiv>
     </ReactTooltip>,
   ];
 };

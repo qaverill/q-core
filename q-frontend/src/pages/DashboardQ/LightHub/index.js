@@ -48,11 +48,11 @@ const LightHub = () => {
     <LightsStyled>
       <LightSwitches>
         {lights
-          ? lights.map(light => <LightSwitch light={light} />)
+          ? lights.map(light => <LightSwitch light={light} key={light.label} />)
           : <LoadingSpinner color={dashboardQTheme.tertiary} />}
       </LightSwitches>
       {cpt
-        ? <SpotifyCycle lights={lights} albumCover={cpt.item.album.images[1].url} />
+        ? <SpotifyCycle lights={lights} albumCover={cpt.item.album.images[0].url} />
         : <LoadingSpinner color={dashboardQTheme.tertiary} />}
     </LightsStyled>
   );

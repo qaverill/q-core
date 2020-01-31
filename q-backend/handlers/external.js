@@ -11,7 +11,7 @@ module.exports = {
       if (!error && (response.statusCode === 200 || response.statusCode === 201)) {
         res.send(response.body);
       } else {
-        q_logger.error(`Error while sending GET to ${url}`, response);
+        q_logger.error(`Error while sending GET to ${url}`, error);
         res.send({ error });
       }
       then();
@@ -23,7 +23,19 @@ module.exports = {
       if (!error && acceptablePostResponseCodes.includes(response.statusCode)) {
         res.send(response.body);
       } else {
-        q_logger.error(`Error while sending POST to ${url}`, response);
+        q_logger.error(`Error while sending POST to ${url}`, error);
+        res.send({ error });
+      }
+      then();
+    });
+  },
+  handleExternalPutRequest: ({ req, res, then }) => {
+    const { url, body } = req.body;
+    request.put(oathRequestOptions({ url, body }), (error, response) => {
+      if (!error && acceptablePostResponseCodes.includes(response.statusCode)) {
+        res.send(response.body);
+      } else {
+        q_logger.error(`Error while sending PUT to ${url}`, error);
         res.send({ error });
       }
       then();
