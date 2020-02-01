@@ -5,7 +5,9 @@ const { handleExternalGetRequest, handleExternalPostRequest } = require('../../h
 
 routes.use('/auth', require('./auth'));
 
-q_api.makeGetEndpoint(routes, '/', '/spotify', (req, res, then) => handleExternalGetRequest({ req, res, then }));
-q_api.makePostEndpoint(routes, '/', '/spotify', (req, res, then) => handleExternalPostRequest({ req, res, then }));
+const path = '/';
+const title = '/spotify';
+q_api.makeGetEndpoint({ routes, path, title }, handleExternalGetRequest);
+q_api.makePostEndpoint({ routes, path, title }, handleExternalPostRequest);
 
 module.exports = routes;

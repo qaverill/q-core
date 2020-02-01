@@ -1,7 +1,7 @@
 const express = require('express');
 
 const routes = express.Router();
-const request = require('request');
+const { request: requestModule } = require('request');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 
@@ -22,8 +22,7 @@ routes.use(express.static(`${__dirname}/public`)).use(cookieParser());
 
 let path = '/login';
 let title = '/spotify/auth/login';
-
-q_api.makeGetEndpoint({ routes, path, title }, async ({ response }) => {
+q_api.makeGetEndpoint({routes, path, title }, async ({ response }) => {
   const state = generateRandomString(16);
   response.cookie(STATE_KEY, state);
 
@@ -39,8 +38,7 @@ q_api.makeGetEndpoint({ routes, path, title }, async ({ response }) => {
 
 path = '/callback';
 title = '/spotify/auth/callback';
-
-q_api.makeGetEndpoint({ routes, path, title }, async ({ request, response }) => {
+q_api.makeGetEndpoint({routes, path, title }, async ({ request, response }) => {
   const state = request.query.state || null;
   const storedState = request.cookies ? request.cookies[STATE_KEY] : null;
 
@@ -54,7 +52,7 @@ q_api.makeGetEndpoint({ routes, path, title }, async ({ request, response }) => 
     const authOptions = {
       url: 'https://accounts.spotify.com/api/token',
       form: {
-        code: req.query.code || null,
+        code: request.query.code || null,
         redirect_uri,
         grant_type: 'authorization_code',
       },
@@ -64,18 +62,18 @@ q_api.makeGetEndpoint({ routes, path, title }, async ({ request, response }) => 
       json: true,
     };
 
-    request.post(authOptions, (error, response, body) => {
-      if (!error && response.statusCode === 200) {
+    requestModule.post(authOptions, (error, tokenResponse, body) => {
+      if (!error && tokenResponse.statusCode === 200) {
         config.persistTokens('spotify', body.access_token, body.refresh_token, body.expires_in * 1000 + Date.now());
 
-        res.redirect(`http://localhost:3333/#${
+        response.redirect(`http://localhost:3333/#${
           querystring.stringify({
             access_token: body.access_token,
             refresh_token: body.refresh_token,
           })}`);
       } else {
-        q_logger.error('Error posting Spotify auth', response);
-        res.redirect(`/#${
+        q_logger.error('Error posting Spotify auth', tokenResponse);
+        response.redirect(`/#${
           querystring.stringify({
             error: 'invalid_token',
           })}`);
