@@ -4,9 +4,9 @@ const routes = express.Router();
 const request = require('request');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
-const config = require('config');
-const { q_api, q_logger } = require('q-lib');
 
+const config = require('../../../config');
+const { q_api, q_logger } = require('../../../q-lib');
 const { generateRandomString } = require('../../../utils');
 
 const STATE_KEY = 'spotify_auth_state';
@@ -20,11 +20,14 @@ const {
 
 routes.use(express.static(`${__dirname}/public`)).use(cookieParser());
 
-q_api.makeGetEndpoint(routes, '/login', '/spotify/auth/login', (req, res, then) => {
-  const state = generateRandomString(16);
-  res.cookie(STATE_KEY, state);
+let path = '/login';
+let title = '/spotify/auth/login';
 
-  res.redirect(`https://accounts.spotify.com/authorize?${
+q_api.makeGetEndpoint({ routes, path, title }, async ({ response }) => {
+  const state = generateRandomString(16);
+  response.cookie(STATE_KEY, state);
+
+  response.redirect(`https://accounts.spotify.com/authorize?${
     querystring.stringify({
       response_type: 'code',
       client_id,
@@ -32,22 +35,22 @@ q_api.makeGetEndpoint(routes, '/login', '/spotify/auth/login', (req, res, then) 
       redirect_uri,
       state,
     })}`);
-
-  then();
 });
 
-q_api.makeGetEndpoint(routes, '/callback', '/spotify/auth/callback', (req, res, then) => {
-  const state = req.query.state || null;
-  const storedState = req.cookies ? req.cookies[STATE_KEY] : null;
+path = '/callback';
+title = '/spotify/auth/callback';
+
+q_api.makeGetEndpoint({ routes, path, title }, async ({ request, response }) => {
+  const state = request.query.state || null;
+  const storedState = request.cookies ? request.cookies[STATE_KEY] : null;
 
   if (state === null || state !== storedState) {
-    res.redirect(`/#${
+    response.redirect(`/#${
       querystring.stringify({
         error: 'state_mismatch',
       })}`);
-    then();
   } else {
-    res.clearCookie(STATE_KEY);
+    response.clearCookie(STATE_KEY);
     const authOptions = {
       url: 'https://accounts.spotify.com/api/token',
       form: {
@@ -77,7 +80,6 @@ q_api.makeGetEndpoint(routes, '/callback', '/spotify/auth/callback', (req, res, 
             error: 'invalid_token',
           })}`);
       }
-      then();
     });
   }
 });

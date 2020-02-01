@@ -5,7 +5,7 @@ MongoClient.connectionParams = { useUnifiedTopology: true, useNewUrlParser: true
 
 routes.use('/listens', require('./listens'));
 routes.use('/saves', require('./saves'));
-routes.use('/settings', require('./settings'));
+routes.use('/metadata', require('./metadata'));
 routes.use('/transactions', require('./transactions'));
 
 module.exports = routes;

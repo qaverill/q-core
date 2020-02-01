@@ -1,5 +1,4 @@
-const { q_logger } = require('q-lib');
-
+const { q_logger } = require('../../q-lib');
 const { dateToTimestamp } = require('../../utils');
 
 const parseRow = (row, source) => {

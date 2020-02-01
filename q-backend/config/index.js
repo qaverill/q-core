@@ -1,34 +1,29 @@
 const fs = require('fs');
-const path = require('path');
-const { q_logger } = require('q-lib');
 const config = require('./config.json');
 
-const tokensPath = path.join(__dirname, './../../config/tokens.json');
+const { q_logger } = require('../q-lib');
+const tokens = require('./tokens.json');
 
 module.exports = {
   ...config,
   spotify: {
     ...config.spotify,
-    ...require(tokensPath).spotify,
+    ...tokens.spotify,
   },
   lifx: {
     ...config.lifx,
-    ...require(tokensPath).lifx,
+    ...tokens.lifx,
   },
   persistTokens: (granter, access_token, refresh_token, valid_until) => {
-    fs.readFile(tokensPath, (readError, data) => {
-      if (readError) throw readError;
-      const tokens = JSON.parse(data);
-      tokens[granter].access_token = access_token;
-      tokens[granter].refresh_token = refresh_token;
-      tokens[granter].valid_until = valid_until;
-      module.exports[granter].access_token = access_token;
-      module.exports[granter].refresh_token = refresh_token;
-      module.exports[granter].valid_until = valid_until;
-      fs.writeFile(tokensPath, JSON.stringify(tokens, null, 2), writeError => {
-        if (writeError) throw writeError;
-        q_logger.info(`Persisted new tokens for ${granter}`);
-      });
+    tokens[granter].access_token = access_token;
+    tokens[granter].refresh_token = refresh_token;
+    tokens[granter].valid_until = valid_until;
+    module.exports[granter].access_token = access_token;
+    module.exports[granter].refresh_token = refresh_token;
+    module.exports[granter].valid_until = valid_until;
+    fs.writeFile('./tokens.json', JSON.stringify(tokens, null, 2), writeError => {
+      if (writeError) throw writeError;
+      q_logger.info(`Persisted new tokens for ${granter}`);
     });
   },
   validate: () => {

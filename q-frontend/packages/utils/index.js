@@ -19,6 +19,11 @@ export const roundToTwoDecimalPlaces = num => Math.round(num * 100) / 100;
 export const formatAsMoney = num => (num < 0 ? `-$${roundToTwoDecimalPlaces(num) * -1}` : `$${roundToTwoDecimalPlaces(num)}`);
 export const averageArray = array => array.reduce((a, b) => a + b, 0) / array.length;
 
+export const times = {
+  firstOfCurrentMonth: () => Math.round(new Date(new Date().getFullYear(), new Date().getMonth(), 1) / 1000),
+  now: () => Math.round(new Date().getTime() / 1000),
+};
+
 export const getSettings = () => {
   if (sessionStorage.getItem('settings') != null) {
     return JSON.parse(sessionStorage.getItem('settings'));
