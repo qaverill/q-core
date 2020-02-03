@@ -1,17 +1,17 @@
 const { q_logger } = require('./q-lib');
 
 module.exports = {
-  logIncomingRequest: ({ req, next }) => {
+  logIncomingRequest: ({ request, next }) => {
     const payload = {};
-    if (req.query) payload.query = req.query;
-    if (req.body) {
-      if (Array.isArray(req.body)) {
-        payload.body = { numItems: req.body.length };
+    if (request.query) payload.query = request.query;
+    if (request.body) {
+      if (Array.isArray(request.body)) {
+        payload.body = { numItems: request.body.length };
       } else {
-        payload.body = req.body;
+        payload.body = request.body;
       }
     }
-    q_logger.apiIn(`${req.method} ${req.originalUrl}`, payload);
+    q_logger.apiIn(`${request.method} ${request.originalUrl}`, payload);
     next();
   },
 };

@@ -23,7 +23,7 @@
   "nodemonConfig": {
     "verbose": false,
     "ignore": [
-      "/config/*"
+      "*.json"
     ]
   }
 }
