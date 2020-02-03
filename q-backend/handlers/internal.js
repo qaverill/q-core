@@ -4,8 +4,12 @@ const { createQuery, validateDataForPost } = require('./helpers');
 const { mongo_uri } = require('../config');
 const { q_logger } = require('../q-lib');
 
+MongoClient.connectionParams = { useUnifiedTopology: true, useNewUrlParser: true };
+
+// TODO: get the collection from the request or response obejct?
 module.exports = {
-  handleInternalGetRequest: async ({ request, response, collection }) => {
+  handleInternalGetRequest: async ({ request, response }) => {
+    const collection = request.path;
     MongoClient.connect(mongo_uri, MongoClient.connectionParams, (connectError, db) => {
       if (connectError) throw connectError;
       db.db('q-mongodb')
@@ -18,8 +22,9 @@ module.exports = {
         });
     });
   },
-  handleInternalPostRequest: async ({ request, response, collection }) => {
+  handleInternalPostRequest: async ({ request, response }) => {
     const { body } = request;
+    const collection = request.path;
     let items = Array.isArray(body) ? body : [body];
     if (!validateDataForPost(collection, items)) response.status(400).send(`Failed to validate ${collection}`);
     if (collection !== 'transactions') items = items.map(item => ({ ...item, _id: item.timestamp }));
@@ -35,7 +40,8 @@ module.exports = {
         });
     });
   },
-  handleInternalPutRequest: async ({ request, response, collection }) => {
+  handleInternalPutRequest: async ({ request, response }) => {
+    const collection = request.path;
     MongoClient.connect(mongo_uri, MongoClient.connectionParams, (connectError, db) => {
       if (connectError) throw connectError;
       db.db('q-mongodb')
@@ -47,7 +53,8 @@ module.exports = {
         });
     });
   },
-  handleInternalDeleteRequest: async ({ request, response, collection }) => {
+  handleInternalDeleteRequest: async ({ request, response }) => {
+    const collection = request.path;
     MongoClient.connect(mongo_uri, MongoClient.connectionParams, (connectError, db) => {
       if (connectError) throw connectError;
       db.db('q-mongodb')
