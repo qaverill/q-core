@@ -4,8 +4,9 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { json, urlencoded } = require('body-parser');
 const { q_logger } = require('./q-lib');
-const { validateConfig, autoRefreshTokens, port } = require('./config');
+const { validateConfig, port } = require('./config');
 const { logIncomingRequest } = require('./gates');
+const { autoRefreshTokens } = require('./jobs');
 const {
   makeGetEndpoint,
   makePostEndpoint,

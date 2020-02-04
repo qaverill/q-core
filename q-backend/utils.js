@@ -1,10 +1,13 @@
 const config = require('./config');
 
 const getAuthorization = url => {
-  if (url.includes('spotify')) {
-    return `Bearer ${config.spotify.access_token}`;
+  const { spotify, lifx } = config;
+  if (url.includes('token')) {
+    return `Basic ${Buffer.from(`${spotify.client_id}:${spotify.client_secret}`).toString('base64')}`;
+  } if (url.includes('spotify')) {
+    return `Bearer ${spotify.access_token}`;
   } if (url.includes('lifx')) {
-    return `Bearer ${config.lifx.access_token}`;
+    return `Bearer ${lifx.access_token}`;
   }
   return null;
 };
@@ -28,6 +31,11 @@ module.exports = {
     if (body) {
       requestOptions.headers['Content-Type'] = 'application/json';
       requestOptions.body = JSON.stringify(body);
+      requestOptions.json = true;
+    }
+    if (url.includes('token')) {
+      const { refresh_token } = config.spotify;
+      requestOptions.form = { grant_type: 'refresh_token', refresh_token };
     }
     return requestOptions;
   },

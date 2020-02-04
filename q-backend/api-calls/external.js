@@ -2,24 +2,10 @@ const requestModule = require('request');
 const { q_logger } = require('../q-lib');
 const { oathRequestOptions } = require('../utils');
 
-module.exports = {
-  refreshToken: ({ Authorization, refresh_token }) => {
-    const authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
-      headers: { Authorization },
-      form: { grant_type: 'refresh_token', refresh_token },
-      json: true,
-    };
+const acceptablePostResponseCodes = [200, 201, 207];
 
-    return new Promise(resolve => {
-      requestModule.post(authOptions, (error, response, body) => {
-        if (!error && response.statusCode === 200) {
-          resolve(body);
-        }
-      });
-    });
-  },
-  hitGetEndpoint: async (url) => (
+module.exports = {
+  hitGetEndpoint: (url) => (
     new Promise((resolve, reject) => {
       requestModule.get(oathRequestOptions({ url }), (error, response) => {
         const { statusCode, body } = response;
@@ -30,7 +16,27 @@ module.exports = {
           reject(error);
         }
       });
-    });
+    })
+  ),
+  hitPostEndpoint: async ({ url, body }) => (
+    new Promise((resolve, reject) => {
+      requestModule.post(oathRequestOptions({ url, body }), (error, externalResponse) => {
+        const { statusCode, body: externalBody } = externalResponse;
+        if (!error && acceptablePostResponseCodes.includes(statusCode)) {
+          resolve(JSON.parse(externalBody));
+        } else {
+          q_logger.error(`Error while sending POST to ${url}`, error);
+          reject(error);
+        }
+      });
+    })
+  ),
+  refreshToken: async () => (
+    new Promise(resolve => {
+      module.exports.hitPostEndpoint({ url: 'https://accounts.spotify.com/api/token' })
+        .then(resolve)
+        .catch(error => console.log(error));
+    })
   ),
   getRecentlyPlayed: async () => {
 
