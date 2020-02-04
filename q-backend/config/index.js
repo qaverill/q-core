@@ -5,7 +5,7 @@ const { q_logger } = require('../q-lib');
 const tokens = require('./tokens.json');
 
 const { client_id, client_secret } = config.spotify;
-const { refreshToken } = require('../api-calls/spotify');
+const { refreshToken } = require('../api-calls/external');
 
 const writeSpotifyTokens = ({ access_token, valid_until }) => {
   tokens.spotify.access_token = access_token;

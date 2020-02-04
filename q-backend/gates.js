@@ -1,7 +1,7 @@
 const { q_logger } = require('./q-lib');
 
 module.exports = {
-  logIncomingRequest: ({ request, next }) => {
+  logIncomingRequest: (request, response, next) => {
     const payload = {};
     if (request.query) payload.query = request.query;
     if (request.body) {

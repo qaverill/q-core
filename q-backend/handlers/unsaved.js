@@ -5,41 +5,57 @@ const { MongoClient } = require('mongodb');
 const config = require('../config');
 const { dateToTimestamp, oathRequestOptions } = require('../utils');
 
+const { getRecentlyPlayed, getMyTracks, getTransactions } = require('../api-calls/external');
+const { getListens, getSaves, readDataDump } = require('../api-calls/internal');
+
 const { mongo_uri } = config;
 const { connectionParams } = MongoClient;
 MongoClient.connectionParams = { useUnifiedTopology: true, useNewUrlParser: true };
 
-const handleUnsavedRequest = async ({
-  url,
-  collection,
-  timeParam,
-  response,
-}) => {
-  requestModule.get(oathRequestOptions({ url }), (spotifyError, spotifyResponse, data) => {
-    const { items } = JSON.parse(data);
-    MongoClient.connect(mongo_uri, connectionParams, (connectError, db) => {
-      db.db('q-mongodb')
-        .collection(collection)
-        .find({ timestamp: { $gte: dateToTimestamp(items[items.length - 1][timeParam]) } })
-        .toArray((findError, mongoResults) => {
-          const maxSavedTimestamp = Math.max(...mongoResults.map(result => result.timestamp));
-          const unsavedListens = items.filter(i => dateToTimestamp(i[timeParam]) > maxSavedTimestamp);
-          response.status(200).json(unsavedListens);
-          db.close();
-        });
-    });
-  });
+const getNewAvailableData = async ({ collection }) => {
+  switch (collection) {
+    case 'listens':
+      return getRecentlyPlayed();
+    case 'saves':
+      return getMyTracks();
+    case 'transactions':
+      return readDataDump();
+    default:
+      throw new Error(`Unknown collection in getNewAvailableData: ${collection}`);
+  }
+};
+
+const getExistingData = async ({ collection, start }) => {
+  switch (collection) {
+    case 'listens':
+      return getListens({ start });
+    case 'saves':
+      return getSaves({ start });
+    case 'transactions':
+      return getTransactions({ start });
+    default:
+      throw new Error(`Unknown collection in getExistingData: ${collection}`);
+  }
 };
 
 module.exports = {
+  handleUnsavedRequest: async ({ request, response }) => {
+    const { collection } = request.params;
+    getNewAvailableData({ collection }).then(newData => {
+      const youngestItem = Math.min(...newData.map(item => item.timestamp));
+      getExistingData({ collection, start: youngestItem }).then(existingData => {
+        response.status(200).json(newData.filter(newItem => !existingData.includes(newItem)));
+      });
+    });
+  },
   handleUnsavedGetRequest: async ({ request, response }) => {
     // TODO get the collection from the request or response
-    const collection = 'listens';
+    const { collection } = request.params;
     let url;
     let timeParam;
     if (collection === 'listens') {
       url = 'https://api.spotify.com/v1/me/player/recently-played?limit=50';
-      timeParam = 'played_at'
+      timeParam = 'played_at';
     } else if (collection === 'saves') {
       url = 'https://api.spotify.com/v1/me/tracks?limit=50';
       timeParam = 'added_at';

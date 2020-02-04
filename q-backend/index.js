@@ -76,6 +76,8 @@ makeDeleteEndpoint({ routes, path }, handleInternalDeleteRequest);
 
 
 // TODO: make these 3 endpoints be just /unsaved/:collection
+path = '/unsaved/:collection';
+makeGetEndpoint({ routes, path }, handleUnsavedGetRequest);
 path = '/transactions';
 makeGetEndpoint({ routes, path }, readInDataDump);
 
