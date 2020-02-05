@@ -1,44 +1,39 @@
-const { MongoClient } = require('mongodb');
-
-const { createQuery, validateDataForPost } = require('./helpers');
 const { mongo_uri } = require('../config');
 const { q_logger } = require('../q-lib');
+const { getData, postData } = require('../api-calls/internal');
 
-MongoClient.connectionParams = { useUnifiedTopology: true, useNewUrlParser: true };
+const createQuery = request => {
+  let query;
+  if (request.params) {
+    query = request.params;
+    Object.keys(query).forEach(key => { query[key] = parseInt(query[key], 10) || query[key]; });
+  } else {
+    query = request.query;
+    if (query.start) {
+      query.timeline.$gte = parseInt(query.start, 10);
+      delete query.start;
+    }
+    if (query.end) {
+      query.timeline.$lte = parseInt(query.end, 10);
+      delete query.end;
+    }
+  }
+  return query;
+};
 
-// TODO: get the collection from the request or response obejct?
 module.exports = {
   handleInternalGetRequest: async ({ request, response }) => {
     const collection = request.path;
-    MongoClient.connect(mongo_uri, MongoClient.connectionParams, (connectError, db) => {
-      if (connectError) throw connectError;
-      db.db('q-mongodb')
-        .collection(collection)
-        .find(createQuery(request))
-        .toArray((findError, result) => {
-          if (findError) throw findError;
-          response.status(200).json(result.length === 1 ? result[0] : result);
-          db.close();
-        });
-    });
+    const query = createQuery(request);
+    getData({ collection, query })
+      .then(data => response.status(200).json(data));
   },
   handleInternalPostRequest: async ({ request, response }) => {
-    const { body } = request;
+    const { body: items } = request;
     const collection = request.path;
-    let items = Array.isArray(body) ? body : [body];
-    if (!validateDataForPost(collection, items)) response.status(400).send(`Failed to validate ${collection}`);
-    if (collection !== 'transactions') items = items.map(item => ({ ...item, _id: item.timestamp }));
-    MongoClient.connect(mongo_uri, MongoClient.connectionParams, (connectError, db) => {
-      if (connectError) return q_logger.error('Cannot connect to mongo', connectError);
-      db.db('q-mongodb')
-        .collection(collection)
-        .insertMany(items, { ordered: false }, (insertError, insertResponse) => {
-          if (insertError) return q_logger.error(`Cannot insert ${collection} into mongo`, insertError.writeErrors[0].errmsg);
-          q_logger.info(`Inserted ${insertResponse.insertedCount} ${collection} into mongo`);
-          response.status(204).send();
-          db.close();
-        });
-    });
+    postData({ collection, items })
+      .then(() => response.status(204).send())
+      .catch(() => response.send(400));
   },
   handleInternalPutRequest: async ({ request, response }) => {
     const collection = request.path;

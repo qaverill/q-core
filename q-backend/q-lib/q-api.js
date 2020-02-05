@@ -2,7 +2,7 @@ const q_logger = require('./q-logger');
 
 module.exports = {
   makeGetEndpoint: ({ routes, path }, action) => {
-    console.log(`  GET  ${path}`);
+    console.log(`  GET    ${path}`);
     routes.get(path, (request, response) => {
       const start = new Date().getTime();
       action({ request, response, path }).then(() => {
@@ -11,7 +11,7 @@ module.exports = {
     });
   },
   makePutEndpoint: ({ routes, path }, action) => {
-    console.log(`  PUT ${path}`);
+    console.log(`  PUT    ${path}`);
     routes.put(path, (request, response) => {
       const start = new Date().getTime();
       action({ request, response, path }).then(() => {
@@ -20,7 +20,7 @@ module.exports = {
     });
   },
   makePostEndpoint: ({ routes, path }, action) => {
-    console.log(`  POST ${path}`);
+    console.log(`  POST   ${path}`);
     routes.post(path, (request, response) => {
       const start = new Date().getTime();
       action({ request, response, path }).then(() => {

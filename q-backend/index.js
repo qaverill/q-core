@@ -6,7 +6,12 @@ const { json, urlencoded } = require('body-parser');
 const { q_logger } = require('./q-lib');
 const { validateConfig, port } = require('./config');
 const { logIncomingRequest } = require('./gates');
-const { autoRefreshTokens } = require('./jobs');
+const {
+  autoRefreshTokens,
+  autoSaveListens,
+  autoSaveSaves,
+  checkForUnsavedTransactions,
+} = require('./jobs');
 const {
   makeGetEndpoint,
   makePostEndpoint,
@@ -24,12 +29,6 @@ const {
   handleInternalPutRequest,
   handleInternalDeleteRequest,
 } = require('./handlers/internal');
-const {
-  readInDataDump,
-} = require('./handlers/data-dump');
-const {
-  handleUnsavedGetRequest,
-} = require('./handlers/unsaved');
 
 const server = express();
 let path;
@@ -37,7 +36,11 @@ let path;
 q_logger.info('Starting server...');
 
 validateConfig();
-autoRefreshTokens();
+autoRefreshTokens().then(() => {
+  autoSaveListens();
+  autoSaveSaves();
+  checkForUnsavedTransactions();
+});
 
 server.use(cors());
 server.use(json());
@@ -46,14 +49,14 @@ server.use(logIncomingRequest);
 
 routes.use(express.static(`${__dirname}/public`)).use(cookieParser());
 
-path = '/spotify';
-makeGetEndpoint({ routes, path }, handleExternalGetRequest);
-makePostEndpoint({ routes, path }, handleExternalPostRequest);
-
 path = '/lifx';
 makeGetEndpoint({ routes, path }, handleExternalGetRequest);
 makePostEndpoint({ routes, path }, handleExternalPostRequest);
 makePutEndpoint({ routes, path }, handleExternalPutRequest);
+
+path = '/spotify';
+makeGetEndpoint({ routes, path }, handleExternalGetRequest);
+makePostEndpoint({ routes, path }, handleExternalPostRequest);
 
 path = '/mongodb/listens';
 makeGetEndpoint({ routes, path }, handleInternalGetRequest);
@@ -74,19 +77,6 @@ makePostEndpoint({ routes, path }, handleInternalPostRequest);
 path = '/mongodb/transactions/:ordinal';
 makePutEndpoint({ routes, path }, handleInternalPutRequest);
 makeDeleteEndpoint({ routes, path }, handleInternalDeleteRequest);
-
-
-// TODO: make these 3 endpoints be just /unsaved/:collection
-path = '/unsaved/:collection';
-makeGetEndpoint({ routes, path }, handleUnsavedGetRequest);
-path = '/transactions';
-makeGetEndpoint({ routes, path }, readInDataDump);
-
-path = '/unsaved/listens';
-makeGetEndpoint({ routes, path }, handleUnsavedGetRequest);
-
-path = '/unsaved/saves';
-makeGetEndpoint({ routes, path }, handleUnsavedGetRequest);
 
 server.use('/', routes);
 server.listen(port, () => q_logger.info(`Started Q on port ${port}`));
