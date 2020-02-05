@@ -8,9 +8,7 @@ const { validateConfig, port } = require('./config');
 const { logIncomingRequest } = require('./gates');
 const {
   autoRefreshTokens,
-  autoSaveListens,
-  autoSaveSaves,
-  checkForUnsavedTransactions,
+  autoMineData,
 } = require('./jobs');
 const {
   makeGetEndpoint,
@@ -34,13 +32,6 @@ const server = express();
 let path;
 
 q_logger.info('Starting server...');
-
-validateConfig();
-autoRefreshTokens().then(() => {
-  autoSaveListens();
-  autoSaveSaves();
-  checkForUnsavedTransactions();
-});
 
 server.use(cors());
 server.use(json());
@@ -79,4 +70,13 @@ makePutEndpoint({ routes, path }, handleInternalPutRequest);
 makeDeleteEndpoint({ routes, path }, handleInternalDeleteRequest);
 
 server.use('/', routes);
+
+validateConfig();
+autoRefreshTokens()
+  .then(() => {
+    autoMineData({ collection: 'listens', timeout: 3000 });
+    autoMineData({ collection: 'saves', timeout: 3000 });
+    autoMineData({ collection: 'transactions', timeout: 3000 });
+  });
+
 server.listen(port, () => q_logger.info(`Started Q on port ${port}`));

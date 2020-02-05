@@ -10,11 +10,11 @@ const createQuery = request => {
   } else {
     query = request.query;
     if (query.start) {
-      query.timeline.$gte = parseInt(query.start, 10);
+      query.timestamp.$gte = parseInt(query.start, 10);
       delete query.start;
     }
     if (query.end) {
-      query.timeline.$lte = parseInt(query.end, 10);
+      query.timestamp.$lte = parseInt(query.end, 10);
       delete query.end;
     }
   }

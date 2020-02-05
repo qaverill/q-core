@@ -18,7 +18,7 @@ module.exports = {
       });
     })
   ),
-  hitPostEndpoint: async ({ url, body }) => (
+  hitPostEndpoint: ({ url, body }) => (
     new Promise((resolve, reject) => {
       requestModule.post(oathRequestOptions({ url, body }), (error, externalResponse) => {
         const { statusCode, body: externalBody } = externalResponse;
@@ -31,15 +31,7 @@ module.exports = {
       });
     })
   ),
-  refreshToken: async () => (
-    new Promise(resolve => {
-      module.exports.hitPostEndpoint({ url: 'https://accounts.spotify.com/api/token' })
-        .then(resolve)
-        .catch(error => console.log(error));
-    })
-  ),
-  getRecentlyPlayed: async () => {
-
+  readDataDump: () => {
+    // TODO: read in all the csv files in data dump (make sure they are returned as my transactions object)
   },
-
 };
