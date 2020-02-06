@@ -1,9 +1,9 @@
 const { request: requestModule } = require('request');
 
-const { q_logger } = require('../q-lib');
+const { q_logger } = require('../q-lib/q-logger');
 const { oathRequestOptions } = require('../utils');
 
-const { hitGetEndpoint, hitPostEndpoint } = require('../api-calls/external');
+const { hitGetEndpoint, hitPostEndpoint } = require('../api-calls/methods/external');
 
 const acceptablePostResponseCodes = [201, 207];
 

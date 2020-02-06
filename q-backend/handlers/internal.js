@@ -1,6 +1,6 @@
 const { mongo_uri } = require('../config');
-const { q_logger } = require('../q-lib');
-const { getData, postData } = require('../api-calls/internal');
+const { q_logger } = require('../q-lib/q-logger');
+const { getData, postData } = require('../api-calls/methods/internal');
 
 const createQuery = request => {
   let query;
@@ -26,7 +26,8 @@ module.exports = {
     const collection = request.path;
     const query = createQuery(request);
     getData({ collection, query })
-      .then(data => response.status(200).json(data));
+      .then(data => response.status(200).json(data))
+      .catch(() => response.status(400).send());
   },
   handleInternalPostRequest: async ({ request, response }) => {
     const { body: items } = request;

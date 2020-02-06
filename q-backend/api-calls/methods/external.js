@@ -1,6 +1,6 @@
 const requestModule = require('request');
-const { q_logger } = require('../q-lib');
-const { oathRequestOptions } = require('../utils');
+const { q_logger } = require('../../q-lib/q-logger');
+const { oathRequestOptions } = require('../../utils');
 
 const acceptablePostResponseCodes = [200, 201, 207];
 
@@ -10,7 +10,7 @@ module.exports = {
       requestModule.get(oathRequestOptions({ url }), (error, response) => {
         const { statusCode, body } = response;
         if (!error && (statusCode === 200 || statusCode === 201)) {
-          resolve(body);
+          resolve(JSON.parse(body));
         } else {
           q_logger.error(`Error while sending GET to ${url}`, error);
           reject(error);
@@ -31,7 +31,7 @@ module.exports = {
       });
     })
   ),
-  readDataDump: () => {
-    // TODO: read in all the csv files in data dump (make sure they are returned as my transactions object)
-  },
+  readFile: ({ file }) => {
+    // TODO: make this read in a file
+  }
 };

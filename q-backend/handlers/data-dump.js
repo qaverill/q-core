@@ -1,7 +1,7 @@
 const { path: pathModule } = require('path');
 const fs = require('fs');
 
-const { q_logger } = require('../q-lib');
+const { q_logger } = require('../q-lib/q-logger');
 const { dateToTimestamp } = require('../utils');
 
 const parseRow = (row, source) => {

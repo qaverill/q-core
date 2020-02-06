@@ -3,50 +3,67 @@ const fs = require('fs');
 const config = require('../config');
 const tokens = require('../config/tokens.json');
 
-const { q_logger } = require('../q-lib');
+const { q_logger } = require('../q-lib/q-logger');
 
-const { hitPostEndpoint } = require('../api-calls/external');
+const { hitPostEndpoint } = require('../api-calls/methods/external');
 
-const tokenRefreshUrl = 'https://accounts.spotify.com/api/token';
-
-const writeSpotifyTokens = ({ access_token, valid_until }) => {
-  tokens.spotify.access_token = access_token;
-  tokens.spotify.valid_until = valid_until;
-  config.spotify.access_token = access_token;
-  config.spotify.valid_until = valid_until;
-  return new Promise((resolve, reject) => {
+const writeSpotifyTokens = ({ access_token, valid_until }) => (
+  new Promise((resolve, reject) => {
+    tokens.spotify.access_token = access_token;
+    tokens.spotify.valid_until = valid_until;
+    config.spotify.access_token = access_token;
+    config.spotify.valid_until = valid_until;
     fs.writeFile('./config/tokens.json', JSON.stringify(tokens, null, 2), (err) => {
-      if (err) reject(err);
-      q_logger.info(`Persisted new spotify token. Next refresh @ ${valid_until}`);
-      resolve();
-    });
-  });
-};
-
-const startSpotifyRefreshCycle = () => (
-  new Promise(resolve => {
-    hitPostEndpoint({ url: tokenRefreshUrl }).then(newToken => {
-      const { access_token, expires_in } = newToken;
-      const valid_until = expires_in * 1000 + Date.now();
-      writeSpotifyTokens({ access_token, valid_until }).then(() => {
-        setTimeout(() => startSpotifyRefreshCycle(), (expires_in * 1000) - 1000);
+      if (err) {
+        q_logger.error('Failed to write spitufy tokens to tokens.json file', err);
+        reject(err);
+      } else {
         resolve();
-      });
+      }
     });
   })
 );
 
+const refreshTokens = () => (
+  new Promise((resolve, reject) => {
+    hitPostEndpoint({ url: 'https://accounts.spotify.com/api/token' })
+      .then(newToken => {
+        const { access_token, expires_in } = newToken;
+        const valid_until = expires_in * 1000 + Date.now();
+        writeSpotifyTokens({ access_token, valid_until })
+          .then(() => resolve({ newToken, valid_until }))
+          .catch(reject);
+      })
+      .catch(reject);
+  })
+);
+
 module.exports = {
-  autoRefreshTokens: () => {
-    const timeUntilRefreshIsNeeded = config.spotify.valid_until - new Date().getTime();
-    return new Promise(resolve => {
-      if (timeUntilRefreshIsNeeded > 0) {
-        q_logger.info(`Spotify token is still good, will refresh in ${timeUntilRefreshIsNeeded}ms`);
-        setTimeout(() => startSpotifyRefreshCycle(tokens), timeUntilRefreshIsNeeded - 1000);
-        resolve();
+  autoRefreshTokens: (attempts) => (
+    new Promise((resolve, reject) => {
+      q_logger.info('Starting AUTO REFRESH');
+      if (!attempts || attempts < 3) {
+        const timeUntilRefreshIsNeeded = config.spotify.valid_until - new Date().getTime();
+        if (timeUntilRefreshIsNeeded > 0) {
+          q_logger.info(`Spotify token is still good, will refresh in ${timeUntilRefreshIsNeeded}ms`);
+          setTimeout(() => module.exports.autoRefreshTokens(), timeUntilRefreshIsNeeded + 1);
+          resolve();
+        } else {
+          refreshTokens()
+            .then((newToken) => {
+              q_logger.info(`Persisted new spotify token. Next refresh @ ${newToken.valid_until}`);
+              setTimeout(() => module.exports.autoRefreshTokens(), newToken.expires_in + 1);
+              resolve();
+            })
+            .catch(() => {
+              q_logger.warn('Failed to refresh tokens... trying again in 3 seconds');
+              setTimeout(() => module.exports.autoRefreshTokens(!attempts ? 1 : attempts + 1), 3000);
+            });
+        }
       } else {
-        startSpotifyRefreshCycle().then(resolve);
+        reject();
+        throw new Error('Failed to refreshTokens 3 times in a row... ABORT');
       }
-    });
-  },
+    })
+  ),
 };

@@ -3,19 +3,17 @@ const routes = require('express').Router();
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { json, urlencoded } = require('body-parser');
-const { q_logger } = require('./q-lib');
+const { q_logger } = require('./q-lib/q-logger');
 const { validateConfig, port } = require('./config');
 const { logIncomingRequest } = require('./gates');
-const {
-  autoRefreshTokens,
-  autoMineData,
-} = require('./jobs');
+const { autoRefreshTokens } = require('./jobs/tokenRefresh');
+const { autoMineData } = require('./jobs/dataMine');
 const {
   makeGetEndpoint,
   makePostEndpoint,
   makePutEndpoint,
   makeDeleteEndpoint,
-} = require('./q-lib').q_api;
+} = require('./q-lib/q-api');
 const {
   handleExternalGetRequest,
   handleExternalPostRequest,
@@ -39,6 +37,8 @@ server.use(urlencoded({ extended: true }));
 server.use(logIncomingRequest);
 
 routes.use(express.static(`${__dirname}/public`)).use(cookieParser());
+
+validateConfig();
 
 path = '/lifx';
 makeGetEndpoint({ routes, path }, handleExternalGetRequest);
@@ -71,12 +71,16 @@ makeDeleteEndpoint({ routes, path }, handleInternalDeleteRequest);
 
 server.use('/', routes);
 
-validateConfig();
-autoRefreshTokens()
-  .then(() => {
-    autoMineData({ collection: 'listens', timeout: 3000 });
-    autoMineData({ collection: 'saves', timeout: 3000 });
-    autoMineData({ collection: 'transactions', timeout: 3000 });
-  });
-
-server.listen(port, () => q_logger.info(`Started Q on port ${port}`));
+server.listen(port, () => {
+  q_logger.info(`Started Q on port ${port}`);
+  autoRefreshTokens()
+    .then(() => {
+      autoMineData({ collection: 'listens', timeout: 3000 });
+      autoMineData({ collection: 'saves', timeout: 3000 });
+      // autoMineData({ collection: 'transactions' });
+    })
+    .catch(() => {
+      q_logger.error('Cannot start refresh tokens job, killing server...');
+      process.exit();
+    });
+});

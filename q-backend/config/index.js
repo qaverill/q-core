@@ -1,7 +1,7 @@
 const config = require('./config.json');
 
 const tokens = require('./tokens.json'); // TODO: this doesn't seem safe
-const { q_logger } = require('../q-lib');
+const { q_logger } = require('../q-lib/q-logger');
 
 module.exports = {
   ...config,
