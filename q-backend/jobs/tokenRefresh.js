@@ -52,8 +52,8 @@ module.exports = {
           resolve();
         } else {
           refreshTokens()
-            .then((newToken) => {
-              q_logger.info(`Persisted new spotify token. Next refresh @ ${newToken.valid_until}`);
+            .then(({ newToken, valid_until }) => {
+              q_logger.info(`Persisted new spotify token. Next refresh @ ${valid_until}`);
               setTimeout(() => module.exports.autoRefreshTokens(), newToken.expires_in - 1000);
               resolve();
             })
