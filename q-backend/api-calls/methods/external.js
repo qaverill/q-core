@@ -23,7 +23,7 @@ module.exports = {
       requestModule.post(oathRequestOptions({ url, body }), (error, externalResponse) => {
         const { statusCode, body: externalBody } = externalResponse;
         if (!error && acceptablePostResponseCodes.includes(statusCode)) {
-          resolve(JSON.parse(externalBody));
+          resolve(externalBody);
         } else {
           q_logger.error(`Error while sending POST to ${url}`, error);
           reject(error);

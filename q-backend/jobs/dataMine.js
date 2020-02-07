@@ -1,5 +1,5 @@
 const { q_logger } = require('../q-lib/q-logger');
-const { dateToTimestamp } = require('../utils');
+const { dateToTimestamp, msToFullTime } = require('../utils');
 const { getData, postData } = require('../api-calls/methods/internal');
 const { readDataDump } = require('../api-calls/methods/external');
 const {
@@ -19,15 +19,15 @@ const getTimeParam = collection => {
   }
 };
 
-const mapToDocument = (collection, spotifyResponse) => (
-  spotifyResponse.items.map(spotifyTrack => ({
-    _id: dateToTimestamp(spotifyTrack[getTimeParam(collection)]),
-    timestamp: dateToTimestamp(spotifyTrack[getTimeParam(collection)]),
-    track: spotifyTrack.id,
-    album: spotifyTrack.album.id,
-    artists: spotifyTrack.artists.map(artist => artist.id),
-    popularity: spotifyTrack.popularity,
-    duration: spotifyTrack.duration_ms,
+const mapToSpotifyDocument = async (collection, spotifyResponse) => (
+  spotifyResponse.items.map((item) => ({
+    _id: dateToTimestamp(item[getTimeParam(collection)]),
+    timestamp: dateToTimestamp(item[getTimeParam(collection)]),
+    track: item.track.id,
+    album: item.track.album.id,
+    artists: item.track.artists.map(artist => artist.id),
+    popularity: item.track.popularity,
+    duration: item.track.duration_ms,
   }))
 );
 
@@ -36,12 +36,16 @@ const getNewAvailableData = ({ collection }) => (
     switch (collection) {
       case 'listens':
         getRecentlyPlayedTracks()
-          .then(recentlyPlayedTracks => resolve(mapToDocument(collection, recentlyPlayedTracks)))
+          .then(recentlyPlayedTracks => resolve(
+            mapToSpotifyDocument(collection, recentlyPlayedTracks),
+          ))
           .catch(reject);
         break;
       case 'saves':
         getMyTracks()
-          .then(myTracks => resolve(mapToDocument(collection, myTracks)))
+          .then(myTracks => resolve(
+            mapToSpotifyDocument(collection, myTracks),
+          ))
           .catch(reject);
         break;
       case 'transactions':
@@ -62,18 +66,22 @@ const mineData = ({ collection }) => (
         const query = { timestamp: { $gte: Math.min(...newData.map(item => item.timestamp)) } };
         getData({ collection, query })
           .then(data => {
-            const unsavedData = newData.filter(newItem => !data.includes(newItem));
-            postData({ collection, items: unsavedData })
-              .then(() => {
-                if (collection === 'saves') {
-                  putTracksOntoPlaylist({ tracks: unsavedData, playlist: '6d2V7fQS4CV0XvZr1iOVXJ' })
-                    .then(resolve)
-                    .catch(reject);
-                } else {
-                  resolve();
-                }
-              })
-              .catch(reject);
+            const unsavedData = newData.filter(newItem => !data.map(d => d._id).includes(newItem._id));
+            if (unsavedData.length > 0) {
+              postData({ collection, items: unsavedData })
+                .then(() => {
+                  if (collection === 'saves') {
+                    putTracksOntoPlaylist({ tracks: unsavedData, playlist: '6d2V7fQS4CV0XvZr1iOVXJ' })
+                      .then(() => resolve(unsavedData))
+                      .catch(reject);
+                  } else {
+                    resolve(unsavedData);
+                  }
+                })
+                .catch(reject);
+            } else {
+              resolve(unsavedData);
+            }
           })
           .catch(reject);
       })
@@ -86,8 +94,12 @@ module.exports = {
     q_logger.info(`Starting ${collection} AUTO MINE...`);
     if (!attempts || attempts < 3) {
       mineData({ collection })
-        .then(() => {
-          q_logger.info(`Successfully mined ${collection}, will again in ${timeout}ms`);
+        .then((newData) => {
+          if (newData.length > 0) {
+            q_logger.info(`Successfully mined ${newData.length} ${collection}, will again in ${msToFullTime(timeout)}`);
+          } else {
+            q_logger.info(`No new ${collection} to mine, will again in ${msToFullTime(timeout)}`);
+          }
           if (timeout) {
             setTimeout(() => module.exports.autoMineData({ collection, timeout }), timeout);
           }

@@ -8,11 +8,11 @@ module.exports = {
       const body = { position: 0, uris: tracks.map(({ track }) => `spotify:track:${track}`) };
       hitPostEndpoint({ url, body })
         .then(() => {
-          q_logger.info(`Added ${tracks.length} to the playlist ${playlist}`);
+          q_logger.info(`Added ${tracks.length} track(s) to spotify:playlist:${playlist}`);
           resolve();
         })
         .catch(() => {
-          q_logger.error(`Failed to add ${tracks.length} to the playlist ${playlist}`);
+          q_logger.error(`Failed to add ${tracks.length} track(s) to spotify:playlist:${playlist}`);
           reject();
         });
     })

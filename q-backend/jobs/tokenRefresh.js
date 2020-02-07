@@ -4,6 +4,7 @@ const config = require('../config');
 const tokens = require('../config/tokens.json');
 
 const { q_logger } = require('../q-lib/q-logger');
+const { msToFullTime } = require('../utils');
 
 const { hitPostEndpoint } = require('../api-calls/methods/external');
 
@@ -15,7 +16,7 @@ const writeSpotifyTokens = ({ access_token, valid_until }) => (
     config.spotify.valid_until = valid_until;
     fs.writeFile('./config/tokens.json', JSON.stringify(tokens, null, 2), (err) => {
       if (err) {
-        q_logger.error('Failed to write spitufy tokens to tokens.json file', err);
+        q_logger.error('Failed to write spotify tokens to tokens.json file', err);
         reject(err);
       } else {
         resolve();
@@ -45,7 +46,7 @@ module.exports = {
       if (!attempts || attempts < 3) {
         const timeUntilRefreshIsNeeded = config.spotify.valid_until - new Date().getTime();
         if (timeUntilRefreshIsNeeded > 0) {
-          q_logger.info(`Spotify token is still good, will refresh in ${timeUntilRefreshIsNeeded}ms`);
+          q_logger.info(`Spotify token is still good, will refresh in ${msToFullTime(timeUntilRefreshIsNeeded)}`);
           setTimeout(() => module.exports.autoRefreshTokens(), timeUntilRefreshIsNeeded + 1);
           resolve();
         } else {

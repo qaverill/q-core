@@ -14,6 +14,17 @@ const getAuthorization = url => {
 
 module.exports = {
   dateToTimestamp: date => parseInt(new Date(date).getTime() / 1000, 10),
+  msToFullTime: ms => {
+    let seconds = ms / 1000;
+    const hours = parseInt(seconds / 3600, 10);
+    seconds %= 3600;
+    const minutes = parseInt(seconds / 60, 10);
+    seconds %= 60;
+    const hourTime = hours > 0 ? `${Math.round(hours)}h` : '';
+    const minuteTime = minutes > 0 ? `${Math.round(minutes)}m` : '';
+    const secondTime = seconds > 0 ? `${Math.round(seconds)}s` : '';
+    return `${hourTime} ${minuteTime} ${secondTime}`;
+  },
   generateRandomString: length => {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -30,7 +41,7 @@ module.exports = {
     }
     if (body) {
       requestOptions.headers['Content-Type'] = 'application/json';
-      requestOptions.body = JSON.stringify(body);
+      requestOptions.body = body;
       requestOptions.json = true;
     }
     if (url.includes('token')) {
