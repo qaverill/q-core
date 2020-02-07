@@ -1,5 +1,18 @@
-const { hitGetEndpoint, hitPostEndpoint } = require('./methods/external')
+const { hitGetEndpoint, hitPostEndpoint } = require('./methods/external');
+const { dateToTimestamp } = require('../utils');
 const { q_logger } = require('../q-lib/q-logger');
+
+const mapToSpotifyDocument = async ({ response, timeParam }) => (
+  response.items.map((item) => ({
+    _id: dateToTimestamp(item[timeParam]),
+    timestamp: dateToTimestamp(item[timeParam]),
+    track: item.track.id,
+    album: item.track.album.id,
+    artists: item.track.artists.map(artist => artist.id),
+    popularity: item.track.popularity,
+    duration: item.track.duration_ms,
+  }))
+);
 
 module.exports = {
   putTracksOntoPlaylist: ({ tracks, playlist }) => (
@@ -21,7 +34,9 @@ module.exports = {
     new Promise((resolve, reject) => {
       const url = 'https://api.spotify.com/v1/me/player/recently-played?limit=50';
       hitGetEndpoint(url)
-        .then(resolve)
+        .then(response => {
+          resolve(mapToSpotifyDocument({ response, timeParam: 'played_at' }));
+        })
         .catch(() => {
           q_logger.error('Failed to get recently played tracks');
           reject();
@@ -32,7 +47,9 @@ module.exports = {
     new Promise((resolve, reject) => {
       const url = 'https://api.spotify.com/v1/me/tracks?limit=50';
       hitGetEndpoint(url)
-        .then(resolve)
+        .then(response => {
+          resolve(mapToSpotifyDocument({ response, timeParam: 'added_at' })); 
+        })
         .catch(() => {
           q_logger.error('Failed to get recently played tracks');
           reject();

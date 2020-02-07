@@ -28,7 +28,8 @@ const writeSpotifyTokens = ({ access_token, valid_until }) => (
 const refreshTokens = () => (
   new Promise((resolve, reject) => {
     hitPostEndpoint({ url: 'https://accounts.spotify.com/api/token' })
-      .then(newToken => {
+      .then(response => {
+        const newToken = JSON.parse(response);
         const { access_token, expires_in } = newToken;
         const valid_until = expires_in * 1000 + Date.now();
         writeSpotifyTokens({ access_token, valid_until })
@@ -47,13 +48,13 @@ module.exports = {
         const timeUntilRefreshIsNeeded = config.spotify.valid_until - new Date().getTime();
         if (timeUntilRefreshIsNeeded > 0) {
           q_logger.info(`Spotify token is still good, will refresh in ${msToFullTime(timeUntilRefreshIsNeeded)}`);
-          setTimeout(() => module.exports.autoRefreshTokens(), timeUntilRefreshIsNeeded + 1);
+          setTimeout(() => module.exports.autoRefreshTokens(), timeUntilRefreshIsNeeded - 1000);
           resolve();
         } else {
           refreshTokens()
             .then((newToken) => {
               q_logger.info(`Persisted new spotify token. Next refresh @ ${newToken.valid_until}`);
-              setTimeout(() => module.exports.autoRefreshTokens(), newToken.expires_in + 1);
+              setTimeout(() => module.exports.autoRefreshTokens(), newToken.expires_in - 1000);
               resolve();
             })
             .catch(() => {
@@ -63,7 +64,7 @@ module.exports = {
         }
       } else {
         reject();
-        throw new Error('Failed to refreshTokens 3 times in a row... ABORT');
+        throw new Error('Failed to refresh tokens 3 times in a row... ABORT');
       }
     })
   ),

@@ -1,55 +1,28 @@
 const { q_logger } = require('../q-lib/q-logger');
-const { dateToTimestamp, msToFullTime } = require('../utils');
+const { msToFullTime } = require('../utils');
 const { getData, postData } = require('../api-calls/methods/internal');
-const { readDataDump } = require('../api-calls/methods/external');
+const { getBankData } = require('../api-calls/banks');
 const {
   getRecentlyPlayedTracks,
   getMyTracks,
   putTracksOntoPlaylist,
 } = require('../api-calls/spotify');
 
-const getTimeParam = collection => {
-  switch (collection) {
-    case 'listens':
-      return 'played_at';
-    case 'saves':
-      return 'added_at';
-    default:
-      q_logger.error(`Unknown collection ${collection} in getTimeParam`);
-  }
-};
-
-const mapToSpotifyDocument = async (collection, spotifyResponse) => (
-  spotifyResponse.items.map((item) => ({
-    _id: dateToTimestamp(item[getTimeParam(collection)]),
-    timestamp: dateToTimestamp(item[getTimeParam(collection)]),
-    track: item.track.id,
-    album: item.track.album.id,
-    artists: item.track.artists.map(artist => artist.id),
-    popularity: item.track.popularity,
-    duration: item.track.duration_ms,
-  }))
-);
-
 const getNewAvailableData = ({ collection }) => (
   new Promise((resolve, reject) => {
     switch (collection) {
       case 'listens':
         getRecentlyPlayedTracks()
-          .then(recentlyPlayedTracks => resolve(
-            mapToSpotifyDocument(collection, recentlyPlayedTracks),
-          ))
+          .then(resolve)
           .catch(reject);
         break;
       case 'saves':
         getMyTracks()
-          .then(myTracks => resolve(
-            mapToSpotifyDocument(collection, myTracks),
-          ))
+          .then(resolve)
           .catch(reject);
         break;
       case 'transactions':
-        readDataDump()
+        getBankData()
           .then(resolve)
           .catch(reject);
         break;
@@ -90,25 +63,25 @@ const mineData = ({ collection }) => (
 );
 
 module.exports = {
-  autoMineData: ({ collection, timeout, attempts }) => {
+  autoMineData: ({ collection, interval, attempts }) => {
     q_logger.info(`Starting ${collection} AUTO MINE...`);
     if (!attempts || attempts < 3) {
       mineData({ collection })
         .then((newData) => {
           if (newData.length > 0) {
-            q_logger.info(`Successfully mined ${newData.length} ${collection}, will again in ${msToFullTime(timeout)}`);
+            q_logger.info(`Successfully mined ${newData.length} ${collection}, will again in ${msToFullTime(interval)}`);
           } else {
-            q_logger.info(`No new ${collection} to mine, will again in ${msToFullTime(timeout)}`);
+            q_logger.info(`No new ${collection} to mine, will again in ${msToFullTime(interval)}`);
           }
-          if (timeout) {
-            setTimeout(() => module.exports.autoMineData({ collection, timeout }), timeout);
+          if (interval) {
+            setTimeout(() => module.exports.autoMineData({ collection, interval }), interval);
           }
         })
         .catch(() => {
           q_logger.warn(`Failed to mine ${collection}... trying again in 3 seconds`);
           setTimeout(() => module.exports.autoMineData({
             collection,
-            timeout,
+            interval,
             attempts: !attempts ? 1 : attempts + 1,
           }), 3000);
         });
