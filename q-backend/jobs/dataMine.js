@@ -1,5 +1,4 @@
 const { q_logger } = require('../q-lib/q-logger');
-const { msToFullTime } = require('../utils');
 const { getData, postData } = require('../api-calls/methods/internal');
 const { getBankData } = require('../api-calls/banks');
 const {
@@ -39,21 +38,22 @@ const mineData = ({ collection }) => (
         const query = { timestamp: { $gte: Math.min(...newData.map(item => item.timestamp)) } };
         getData({ collection, query })
           .then(data => {
-            const unsavedData = newData.filter(newItem => !data.map(d => d._id).includes(newItem._id));
+            const unsavedData = newData
+              .filter(newItem => !data.map(d => d._id).includes(newItem._id));
             if (unsavedData.length > 0) {
               postData({ collection, items: unsavedData })
                 .then(() => {
                   if (collection === 'saves') {
                     putTracksOntoPlaylist({ tracks: unsavedData, playlist: '6d2V7fQS4CV0XvZr1iOVXJ' })
-                      .then(() => resolve(unsavedData))
+                      .then(() => resolve())
                       .catch(reject);
                   } else {
-                    resolve(unsavedData);
+                    resolve();
                   }
                 })
                 .catch(reject);
             } else {
-              resolve(unsavedData);
+              resolve();
             }
           })
           .catch(reject);
@@ -64,15 +64,9 @@ const mineData = ({ collection }) => (
 
 module.exports = {
   autoMineData: ({ collection, interval, attempts }) => {
-    q_logger.info(`Starting ${collection} AUTO MINE...`);
     if (!attempts || attempts < 3) {
       mineData({ collection })
-        .then((newData) => {
-          if (newData.length > 0) {
-            q_logger.info(`Successfully mined ${newData.length} ${collection}, will again in ${msToFullTime(interval)}`);
-          } else {
-            q_logger.info(`No new ${collection} to mine, will again in ${msToFullTime(interval)}`);
-          }
+        .then(() => {
           if (interval) {
             setTimeout(() => module.exports.autoMineData({ collection, interval }), interval);
           }

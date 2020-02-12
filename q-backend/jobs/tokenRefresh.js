@@ -33,7 +33,7 @@ const refreshTokens = () => (
         const { access_token, expires_in } = newToken;
         const valid_until = expires_in * 1000 + Date.now();
         writeSpotifyTokens({ access_token, valid_until })
-          .then(() => resolve({ newToken, valid_until }))
+          .then(() => resolve({ newToken }))
           .catch(reject);
       })
       .catch(reject);
@@ -43,23 +43,24 @@ const refreshTokens = () => (
 module.exports = {
   autoRefreshTokens: (attempts) => (
     new Promise((resolve, reject) => {
-      q_logger.info('Starting AUTO REFRESH');
       if (!attempts || attempts < 3) {
         const timeUntilRefreshIsNeeded = config.spotify.valid_until - new Date().getTime();
         if (timeUntilRefreshIsNeeded > 0) {
+          console.log(timeUntilRefreshIsNeeded);
           q_logger.info(`Spotify token is still good, will refresh in ${msToFullTime(timeUntilRefreshIsNeeded)}`);
-          setTimeout(() => module.exports.autoRefreshTokens(), timeUntilRefreshIsNeeded - 1000);
+          setTimeout(module.exports.autoRefreshTokens, timeUntilRefreshIsNeeded + 100);
           resolve();
         } else {
           refreshTokens()
-            .then(({ newToken, valid_until }) => {
-              q_logger.info(`Persisted new spotify token. Next refresh @ ${valid_until}`);
-              setTimeout(() => module.exports.autoRefreshTokens(), newToken.expires_in - 1000);
+            .then(({ newToken }) => {
+              q_logger.info(`Persisted new spotify token. Next refresh in ${newToken.expires_in}`);
+              setTimeout(module.exports.autoRefreshTokens, newToken.expires_in + 100);
               resolve();
             })
             .catch(() => {
               q_logger.warn('Failed to refresh tokens... trying again in 3 seconds');
-              setTimeout(() => module.exports.autoRefreshTokens(!attempts ? 1 : attempts + 1), 3000);
+              const newAttemps = !attempts ? 1 : attempts + 1;
+              setTimeout(() => module.exports.autoRefreshTokens(newAttemps), 3000);
             });
         }
       } else {

@@ -1,5 +1,5 @@
 const requestModule = require('request');
-const { path: pathModule } = require('path');
+const path = require('path');
 const fs = require('fs');
 
 const { q_logger } = require('../../q-lib/q-logger');
@@ -31,7 +31,7 @@ module.exports = {
     });
   }),
   readDataFile: ({ file }) => new Promise((resolve, reject) => {
-    fs.readFile(pathModule.join(__dirname, `../../data/${file}`), 'UTF-8', (error, data) => {
+    fs.readFile(path.join(__dirname, `../../data/${file}`), 'UTF-8', (error, data) => {
       if (!error) {
         resolve(data);
       } else {
@@ -41,11 +41,11 @@ module.exports = {
     });
   }),
   getDirFiles: ({ dir }) => new Promise((resolve, reject) => {
-    fs.readdir(pathModule.join(__dirname, `../../data/${dir}`), (error, files) => {
+    fs.readdir(path.join(__dirname, `../../data/${dir}`), (error, files) => {
       if (!error) {
         resolve(files);
       } else {
-        q_logger.error(`Error when reading files of ${file}`, error);
+        q_logger.error(`Error when reading files of ${dir}`, error);
         reject(error);
       }
     });
