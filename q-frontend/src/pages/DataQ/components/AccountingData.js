@@ -25,7 +25,7 @@ const autoTagTransaction = transaction => {
   }
   Object.keys(discreteTags).forEach(tagKey => {
     discreteTags[tagKey].forEach(tag => {
-      if (description.toLowerCase().indexOf(tag.toLowerCase()) > -1) {
+      if (description.toLowerCase().includes(tag.toLowerCase())) {
         tags.push(tagKey);
       }
     });

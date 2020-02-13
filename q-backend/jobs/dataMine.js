@@ -1,6 +1,6 @@
 const { q_logger } = require('../q-lib/q-logger');
 const { getDocs, postDocs } = require('../api-calls/methods/internal');
-const { getBankData } = require('../api-calls/banks');
+const { getBankFacts, autoTagBankDocs } = require('../api-calls/banks');
 const {
   getRecentlyPlayedTracks,
   getMyTracks,
@@ -20,7 +20,7 @@ const getNewAvailableData = ({ collection }) => new Promise((resolve, reject) =>
         .catch(reject);
       break;
     case 'transactions':
-      getBankData()
+      getBankFacts()
         .then(resolve)
         .catch(reject);
       break;
@@ -35,8 +35,11 @@ const mineData = ({ collection }) => new Promise((resolve, reject) => {
       const query = { timestamp: { $gte: Math.min(...newData.map(item => item.timestamp)) } };
       getDocs({ collection, query })
         .then(data => {
-          const docs = newData.filter(newItem => !data.map(d => d._id).includes(newItem._id));
+          let docs = newData.filter(newItem => !data.map(d => d._id).includes(newItem._id));
           if (docs.length > 0) {
+            if (collection === 'transactions') {
+              docs = autoTagBankDocs(docs);
+            }
             postDocs({ collection, docs })
               .then(() => {
                 if (collection === 'saves') {

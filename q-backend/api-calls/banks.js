@@ -5,6 +5,34 @@ const { dateToTimestamp } = require('../utils');
 
 const START_OF_SEPTEMBER = 1567310400;
 
+const factTags = {
+  dinner: ['DUMPLING HOUSE', 'Mouse food', '9 TASTES CAMBRIDGE', 'DUMPLING HOUSE CAMBRIDGE', 'POSTMATES', 'Pizza', '🍕', 'borgar'],
+  lunch: ['SATE GRILL Cambridge', 'SA PA Boston', 'MOYZILLA', 'REVIVAL CAFE', 'AUGUSTA SUBS', 'GOGI ON THE BL', 'CHEF LOUIE Cambridge', 'zaaki'],
+  coffee: ['Coofie', 'DUNKIN', 'PAVEMENT COFFE', 'DARWIN S LTD'],
+  dessert: ['JP LICKS', 'INSOMNIA COOKIES'],
+  'late-night-food': ['EL JEFE\'S TAQUERI', 'ALEPPO PALACE'],
+  groceries: ['H MART', 'Insta🅱️art', 'TRADER JOE', 'groceries', 'tj', 'Grocery', 'MARKET BASKET'],
+  alcohol: ['BEER & WINE', 'LIQUOR', 'Dranks', 'SCHOLAR', 'TRILLIUM BREWING', 'LIQUORS', 'BELL IN HAND TAVERN', 'DAEDALUS', 'TAVERN IN THE SQUARE', 'Night cap', 'FOUNDRY ON ELM', 'ARAMARK FENWAY', 'booze', '🍷', 'smutty', 'snurf', 'Margaritas', 'truly'],
+  travel: ['Lyft', 'BLUEBIKES', 'Snoober', 'uber', 'zoom', 'ubr', 'MBTA'],
+  utilities: ['eversource', 'wifi', 'utils', 'cell'],
+  misc: ['kodak', 'MUSEUM OF SCIENCE'],
+  clothes: ['TERRITORY AHEAD', 'GARMENT DISTRICT', 'ISLANDERS OUTF'],
+  'house-hold': ['TARGET', 'BED BATH & BEYOND'],
+  furniture: ['Center Chanel Holder'],
+  records: ['RECORDS'],
+  income: ['Dividend Deposit', 'Deposit TRINETX', 'Check Deposit'],
+  'video-games': ['blizzard', 'Microsoft'],
+  loans: ['NAVI ED', 'Withdrawal UAS'],
+  cash: ['ATM Withdrawal', 'Cash Withdrawal'],
+  gas: ['CUMBERLAND FARMS'],
+  streaming: ['HULU'],
+  subscriptions: ['Amazon Prime'],
+  events: ['BROWNPAPERTICKETS'],
+  movies: ['SOMERVILLE THEATRE'],
+  concerts: ['SOFAR SOUNDS'],
+  'music-gear': ['GUITAR CENTER'],
+};
+
 const unneededFactDescriptions = [
   'Withdrawal VENMO',
   'Online Transfer',
@@ -93,7 +121,7 @@ const parseTransactionsData = ({ data, file }) => data
   .filter(d => d != null);
 
 module.exports = {
-  getBankData: () => new Promise((resolve, reject) => {
+  getBankFacts: () => new Promise((resolve, reject) => {
     const facts = [];
     getDirFiles({ dir: 'banks' })
       .then(files => {
@@ -110,4 +138,22 @@ module.exports = {
       })
       .catch(reject);
   }),
+  autoTagBankDocs: docs => {
+    return docs.map(doc => {
+      const taggedDoc = { ...doc, tags: [] };
+      if (doc.description.includes('venmo from')) {
+        taggedDoc.tags.push('pay-back');
+      } else {
+        Object.keys(factTags).forEach(tagKey => {
+          factTags[tagKey].forEach(tag => {
+            if (doc.description.toLowerCase().includes(tag.toLowerCase())) {
+              taggedDoc.tags.push(tagKey);
+              taggedDoc.tags.push(tag);
+            }
+          });
+        });
+      }
+      return taggedDoc;
+    })
+  }
 };
