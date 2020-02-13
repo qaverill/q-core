@@ -1,5 +1,5 @@
 const { q_logger } = require('../q-lib/q-logger');
-const { getData, postData } = require('../api-calls/methods/internal');
+const { getDocs, postDocs } = require('../api-calls/methods/internal');
 const { getBankData } = require('../api-calls/banks');
 const {
   getRecentlyPlayedTracks,
@@ -7,60 +7,55 @@ const {
   putTracksOntoPlaylist,
 } = require('../api-calls/spotify');
 
-const getNewAvailableData = ({ collection }) => (
-  new Promise((resolve, reject) => {
-    switch (collection) {
-      case 'listens':
-        getRecentlyPlayedTracks()
-          .then(resolve)
-          .catch(reject);
-        break;
-      case 'saves':
-        getMyTracks()
-          .then(resolve)
-          .catch(reject);
-        break;
-      case 'transactions':
-        getBankData()
-          .then(resolve)
-          .catch(reject);
-        break;
-      default:
-        throw new Error(`Unknown collection in getNewAvailableData: ${collection}`);
-    }
-  })
-);
+const getNewAvailableData = ({ collection }) => new Promise((resolve, reject) => {
+  switch (collection) {
+    case 'listens':
+      getRecentlyPlayedTracks()
+        .then(resolve)
+        .catch(reject);
+      break;
+    case 'saves':
+      getMyTracks()
+        .then(resolve)
+        .catch(reject);
+      break;
+    case 'transactions':
+      getBankData()
+        .then(resolve)
+        .catch(reject);
+      break;
+    default:
+      throw new Error(`Unknown collection in getNewAvailableData: ${collection}`);
+  }
+});
 
-const mineData = ({ collection }) => (
-  new Promise((resolve, reject) => {
-    getNewAvailableData({ collection })
-      .then(newData => {
-        const query = { timestamp: { $gte: Math.min(...newData.map(item => item.timestamp)) } };
-        getData({ collection, query })
-          .then(data => {
-            const unsavedData = newData
-              .filter(newItem => !data.map(d => d._id).includes(newItem._id));
-            if (unsavedData.length > 0) {
-              postData({ collection, items: unsavedData })
-                .then(() => {
-                  if (collection === 'saves') {
-                    putTracksOntoPlaylist({ tracks: unsavedData, playlist: '6d2V7fQS4CV0XvZr1iOVXJ' })
-                      .then(() => resolve())
-                      .catch(reject);
-                  } else {
-                    resolve();
-                  }
-                })
-                .catch(reject);
-            } else {
-              resolve();
-            }
-          })
-          .catch(reject);
-      })
-      .catch(reject);
-  })
-);
+const mineData = ({ collection }) => new Promise((resolve, reject) => {
+  getNewAvailableData({ collection })
+    .then(newData => {
+      const query = { timestamp: { $gte: Math.min(...newData.map(item => item.timestamp)) } };
+      getDocs({ collection, query })
+        .then(data => {
+          const docs = newData.filter(newItem => !data.map(d => d._id).includes(newItem._id));
+          if (docs.length > 0) {
+            postDocs({ collection, docs })
+              .then(() => {
+                if (collection === 'saves') {
+                  putTracksOntoPlaylist({ tracks: docs, playlist: '6d2V7fQS4CV0XvZr1iOVXJ' })
+                    .then(() => resolve())
+                    .catch(reject);
+                } else {
+                  resolve();
+                }
+              })
+              .catch(reject);
+          } else {
+            resolve();
+          }
+        })
+        .catch(reject);
+    })
+    .catch(reject);
+});
 
 module.exports = {
   autoMineData: ({ collection, interval, attempts }) => {

@@ -1,6 +1,4 @@
-const { mongo_uri } = require('../config');
-const { q_logger } = require('../q-lib/q-logger');
-const { getData, postData } = require('../api-calls/methods/internal');
+const { getDocs, postDocs, putDoc, deleteDoc } = require('../api-calls/methods/internal');
 
 const createQuery = request => {
   let query;
@@ -20,45 +18,34 @@ const createQuery = request => {
   }
   return query;
 };
-
+// TODO: do we really need the `async`s here?
 module.exports = {
   handleInternalGetRequest: async ({ request, response }) => {
     const collection = request.path;
     const query = createQuery(request);
-    getData({ collection, query })
+    getDocs({ collection, query })
       .then(data => response.status(200).json(data))
       .catch(() => response.status(400).send());
   },
   handleInternalPostRequest: async ({ request, response }) => {
-    const { body: items } = request;
+    const { body: docs } = request;
     const collection = request.path;
-    postData({ collection, items })
+    postDocs({ collection, docs })
       .then(() => response.status(204).send())
-      .catch(() => response.send(400));
+      .catch(() => response.status(400).send());
   },
   handleInternalPutRequest: async ({ request, response }) => {
-    const collection = request.path;
-    MongoClient.connect(mongo_uri, MongoClient.connectionParams, (connectError, db) => {
-      if (connectError) throw connectError;
-      db.db('q-mongodb')
-        .collection(collection)
-        .replaceOne(createQuery(request), request.body, { upsert: true }, updateError => {
-          if (updateError) throw updateError;
-          response.status(204).send();
-          db.close();
-        });
-    });
+    const { path: collection, body: doc } = request;
+    const query = createQuery(request);
+    putDoc({ collection, query, doc })
+      .then(() => response.status(204).send())
+      .catch(() => response.status(400).send());
   },
   handleInternalDeleteRequest: async ({ request, response }) => {
     const collection = request.path;
-    MongoClient.connect(mongo_uri, MongoClient.connectionParams, (connectError, db) => {
-      if (connectError) throw connectError;
-      db.db('q-mongodb')
-        .collection(collection)
-        .deleteOne(createQuery(request), (removeError, result) => {
-          if (removeError) throw removeError;
-          response.status(result.deletedCount === 1 ? 200 : 404).send();
-        });
-    });
+    const query = createQuery(request);
+    deleteDoc({ collection, query })
+      .then((deletedCount) => response.status(deletedCount === 1 ? 200 : 404).send())
+      .catch(() => response.status(400).send());
   },
 };

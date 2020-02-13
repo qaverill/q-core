@@ -30,6 +30,17 @@ module.exports = {
       }
     });
   }),
+  hitPutEndpoint: ({ url, body }) => new Promise((resolve, reject) => {
+    requestModule.put(oathRequestOptions({ url, body }), (error, externalResponse) => {
+      const { statusCode, body: externalBody } = externalResponse;
+      if (!error && acceptablePostResponseCodes.includes(statusCode)) {
+        resolve(externalBody);
+      } else {
+        q_logger.error(`Error while sending PUT to ${url}`, error);
+        reject(error);
+      }
+    });
+  }),
   readDataFile: ({ file }) => new Promise((resolve, reject) => {
     fs.readFile(path.join(__dirname, `../../data/${file}`), 'UTF-8', (error, data) => {
       if (!error) {

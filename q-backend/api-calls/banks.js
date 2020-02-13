@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 const { getDirFiles, readDataFile } = require('../api-calls/methods/external');
 const { dateToTimestamp } = require('../utils');
 
@@ -34,35 +36,49 @@ const cleanCSVRow = row => {
   return editableRow;
 };
 
+const generateFactId = ({ account, timestamp, amount, description }) => (
+  crypto
+    .createHash('md5')
+    .update(account + timestamp + amount + description)
+    .digest('hex')
+);
+
 const parseRow = ({ line, file }) => {
   const row = cleanCSVRow(line).split(',');
+  let fact;
   switch (file) {
     case 'mvcu.csv':
-      return {
+      fact = {
         account: row[0].indexOf('S0020') > -1 ? 'mvcu-checkings' : 'mvcu-savings',
         timestamp: dateToTimestamp(row[1]),
         amount: row[2].indexOf('(') > -1 ? parseFloat(row[2].replace(/[)$(]/g, '')) * -1 : parseFloat(row[2].replace('$', '')),
         description: row[5],
         tags: [],
       };
+      fact._id = generateFactId(fact);
+      return fact;
     case 'citi.csv':
-      return {
+      fact = {
         account: 'citi-credit',
         timestamp: dateToTimestamp(row[1]),
         amount: row[3] !== '' ? parseFloat(row[3]) * -1 : parseFloat(row[4]) * -1,
         description: row[2].replace(/"/g, ''),
         tags: [],
       };
+      fact._id = generateFactId(fact);
+      return fact;
     case 'venmo.csv':
       if (typeof parseInt(row[1], 10) === 'number' && row[3] !== 'Standard Transfer' && row[8] != null) {
         const type = row[8].indexOf('+') > -1 ? 'from' : 'to';
-        return {
+        fact = {
           account: 'venmo',
           timestamp: dateToTimestamp(row[2]),
           amount: parseFloat(row[8].replace(/[ $+]/g, '')),
           description: `Venmo ${type} ${row[6] === 'Quinn Averill' ? row[7] : row[6]}: ${row[5]}`,
           tags: [],
         };
+        fact._id = generateFactId(fact);
+        return fact;
       }
       return null;
     default:
