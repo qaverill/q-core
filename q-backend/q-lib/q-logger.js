@@ -5,13 +5,13 @@ const log = (status, message, payload) => {
         if (payload.body != null) {
           return JSON.stringify(payload.body, null, 2);
         }
-        return JSON.stringify(payload, null, 2);
+        return payload;
       }
       return payload;
     }
     return '';
   };
-  console.log(`${status} \x1b[0m [${new Date().toISOString()}]  ${message} ${formattedPayload()}`);
+  console.log(`${status} \x1b[0m [${new Date().toISOString()}]  ${message}`, formattedPayload());
 };
 
 module.exports = {

@@ -3,6 +3,8 @@ const routes = require('express').Router();
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { json, urlencoded } = require('body-parser');
+
+const testedAlgorithms = require('./tests');
 const { q_logger } = require('./q-lib/q-logger');
 const { validateConfig, port } = require('./config');
 const { logIncomingRequest } = require('./gates');
@@ -28,6 +30,11 @@ const {
 
 const server = express();
 let path;
+
+q_logger.info('Unit tests starting:');
+if (!testedAlgorithms.every(algorithm => algorithm())) {
+  // process.exit();
+}
 
 q_logger.info('Starting server...');
 
