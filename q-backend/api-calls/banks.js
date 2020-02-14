@@ -5,18 +5,46 @@ const { dateToTimestamp } = require('../utils');
 
 const START_OF_SEPTEMBER = 1567310400;
 
+// TODO: this should really be saved in a file and read into memory only when needed
 const factTags = {
-  dinner: ['DUMPLING HOUSE', 'Mouse food', '9 TASTES CAMBRIDGE', 'DUMPLING HOUSE CAMBRIDGE', 'POSTMATES', 'Pizza', '🍕', 'borgar'],
-  lunch: ['SATE GRILL Cambridge', 'SA PA Boston', 'MOYZILLA', 'REVIVAL CAFE', 'AUGUSTA SUBS', 'GOGI ON THE BL', 'CHEF LOUIE Cambridge', 'zaaki'],
-  coffee: ['Coofie', 'DUNKIN', 'PAVEMENT COFFE', 'DARWIN S LTD'],
-  dessert: ['JP LICKS', 'INSOMNIA COOKIES'],
-  'late-night-food': ['EL JEFE\'S TAQUERI', 'ALEPPO PALACE'],
-  groceries: ['H MART', 'Insta🅱️art', 'TRADER JOE', 'groceries', 'tj', 'Grocery', 'MARKET BASKET'],
-  alcohol: ['BEER & WINE', 'LIQUOR', 'Dranks', 'SCHOLAR', 'TRILLIUM BREWING', 'LIQUORS', 'BELL IN HAND TAVERN', 'DAEDALUS', 'TAVERN IN THE SQUARE', 'Night cap', 'FOUNDRY ON ELM', 'ARAMARK FENWAY', 'booze', '🍷', 'smutty', 'snurf', 'Margaritas', 'truly'],
-  travel: ['Lyft', 'BLUEBIKES', 'Snoober', 'uber', 'zoom', 'ubr', 'MBTA'],
-  utilities: ['eversource', 'wifi', 'utils', 'cell'],
-  misc: ['kodak', 'MUSEUM OF SCIENCE'],
-  clothes: ['TERRITORY AHEAD', 'GARMENT DISTRICT', 'ISLANDERS OUTF'],
+  food: {
+    dinner: ['DUMPLING HOUSE', 'Mouse food', '9 TASTES CAMBRIDGE', 'DUMPLING HOUSE CAMBRIDGE', 'POSTMATES', 'Pizza', '🍕', 'borgar'],
+    lunch: ['SATE GRILL Cambridge', 'SA PA Boston', 'MOYZILLA', 'REVIVAL CAFE', 'AUGUSTA SUBS', 'GOGI ON THE BL', 'CHEF LOUIE Cambridge', 'zaaki'],
+    dessert: ['JP LICKS', 'INSOMNIA COOKIES'],
+    groceries: ['H MART', 'Insta🅱️art', 'TRADER JOE', 'groceries', 'tj', 'Grocery', 'MARKET BASKET'],
+    lateNightFood: ['EL JEFE\'S TAQUERI', 'ALEPPO PALACE'],
+  },
+  drinks: {
+    coffee: ['Coofie', 'DUNKIN', 'PAVEMENT COFFE', 'DARWIN S LTD'],
+    alcohol: {
+      brewery: ['TRILLIUM BREWING'],
+      liquorStore: [],
+      bars: ['Dranks', 'SCHOLAR', 'BELL IN HAND TAVERN', 'DAEDALUS', 'TAVERN IN THE SQUARE', 'Night cap', 'FOUNDRY ON ELM', 'ARAMARK FENWAY'],
+    },
+  },
+  travel: {
+    bikes: ['BLUEBIKES'],
+    commuterRail: ['MBTA'],
+    subway: [],
+    ride: {
+      uber: ['Snoober', 'uber'],
+      lyft: ['Lyft'],
+    },
+  },
+  living: {
+    wifi: ['wifi'],
+    cellphone: ['cell'],
+    utilities: ['eversource', 'utils'],
+  },
+  fun: {
+    pictures: ['kodak', ],
+    events: ['MUSEUM OF SCIENCE'],
+  },
+  clothing: {
+    online: ['TERRITORY AHEAD', ],
+    inStore: [],
+  },
+  clothes: ['GARMENT DISTRICT', 'ISLANDERS OUTF'],
   'house-hold': ['TARGET', 'BED BATH & BEYOND'],
   furniture: ['Center Chanel Holder'],
   records: ['RECORDS'],
@@ -31,6 +59,26 @@ const factTags = {
   movies: ['SOMERVILLE THEATRE'],
   concerts: ['SOFAR SOUNDS'],
   'music-gear': ['GUITAR CENTER'],
+};
+
+const autoTagDoc = (doc, tags, label) => {
+  if (Array.isArray(tags)) {
+    if (tags.filter(tag => doc.description.toLowerCase().includes(tag.toLowerCase())).length > 0) {
+      return label;
+    }
+    return null;
+  }
+  const confirmedTags = [];
+  Object.keys(tags).forEach(l => {
+    const possibleTag = autoTagDoc(doc, tags[l], l);
+    if (possibleTag) {
+      if (!confirmedTags.includes(label)) {
+        confirmedTags.push(label);
+      }
+      confirmedTags.concat(possibleTag);
+    }
+  });
+  return confirmedTags;
 };
 
 const unneededFactDescriptions = [
@@ -138,22 +186,14 @@ module.exports = {
       })
       .catch(reject);
   }),
-  autoTagBankDocs: docs => {
-    return docs.map(doc => {
-      const taggedDoc = { ...doc, tags: [] };
-      if (doc.description.includes('venmo from')) {
-        taggedDoc.tags.push('pay-back');
-      } else {
-        Object.keys(factTags).forEach(tagKey => {
-          factTags[tagKey].forEach(tag => {
-            if (doc.description.toLowerCase().includes(tag.toLowerCase())) {
-              taggedDoc.tags.push(tagKey);
-              taggedDoc.tags.push(tag);
-            }
-          });
-        });
-      }
-      return taggedDoc;
-    })
-  }
+  autoTagBankDocs: docs => docs.map(doc => {
+    const taggedDoc = { ...doc, tags: { auto: [], custom: [] } };
+    if (doc.description.includes('venmo from')) {
+      taggedDoc.tags.push('payBack');
+    } else {
+      taggedDoc.tags.auto = autoTagDoc(doc, factTags, null);
+    }
+    return taggedDoc;
+  }),
+  testAutoTagDoc: (doc, tags, label) => autoTagDoc(doc, tags, label),
 };

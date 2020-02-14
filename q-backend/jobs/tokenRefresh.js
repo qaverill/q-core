@@ -41,7 +41,6 @@ module.exports = {
     if (!attempts || attempts < 3) {
       const timeUntilRefreshIsNeeded = config.spotify.valid_until - new Date().getTime();
       if (timeUntilRefreshIsNeeded > 0) {
-        console.log(timeUntilRefreshIsNeeded);
         q_logger.info(`Spotify token is still good, will refresh in ${msToFullTime(timeUntilRefreshIsNeeded)}`);
         setTimeout(module.exports.autoRefreshTokens, timeUntilRefreshIsNeeded + 100);
         resolve();
