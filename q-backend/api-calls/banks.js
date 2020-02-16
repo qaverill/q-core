@@ -61,24 +61,23 @@ const factTags = {
   'music-gear': ['GUITAR CENTER'],
 };
 
-const autoTagDoc = (doc, tags, label) => {
+const autoTagDoc = (doc, tags, parentTag) => {
   if (Array.isArray(tags)) {
-    if (tags.filter(tag => doc.description.toLowerCase().includes(tag.toLowerCase())).length > 0) {
-      return label;
+    return [...new Set(
+      tags.map(keyWord => (
+        doc.description.toLowerCase().includes(keyWord.toLowerCase())
+          ? parentTag
+          : null
+      )).filter(tag => tag != null),
+    )];
+  }
+  return [...new Set(Object.keys(tags).flatMap(subTag => {
+    const possibleTag = autoTagDoc(doc, tags[subTag], subTag);
+    if (possibleTag.length > 0) {
+      return [parentTag, ...possibleTag];
     }
     return null;
-  }
-  const confirmedTags = [];
-  Object.keys(tags).forEach(l => {
-    const possibleTag = autoTagDoc(doc, tags[l], l);
-    if (possibleTag) {
-      if (!confirmedTags.includes(label)) {
-        confirmedTags.push(label);
-      }
-      confirmedTags.concat(possibleTag);
-    }
-  });
-  return confirmedTags;
+  }).filter(tag => tag != null))];
 };
 
 const unneededFactDescriptions = [

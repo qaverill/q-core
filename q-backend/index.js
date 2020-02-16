@@ -33,7 +33,8 @@ let path;
 
 q_logger.info('Unit tests starting:');
 if (!testedAlgorithms.every(algorithm => algorithm())) {
-  // process.exit();
+  // TODO: uncomment this when confident
+  process.exit();
 }
 
 q_logger.info('Starting server...');
