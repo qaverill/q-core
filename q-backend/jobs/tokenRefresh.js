@@ -41,14 +41,14 @@ module.exports = {
     if (!attempts || attempts < 3) {
       const timeUntilRefreshIsNeeded = config.spotify.valid_until - new Date().getTime();
       if (timeUntilRefreshIsNeeded > 0) {
-        q_logger.info(`Spotify token is still good, will refresh in ${msToFullTime(timeUntilRefreshIsNeeded)}`);
         setTimeout(module.exports.autoRefreshTokens, timeUntilRefreshIsNeeded + 100);
         resolve();
       } else {
         refreshTokens()
           .then(({ newToken }) => {
-            q_logger.info(`Persisted new spotify token. Next refresh in ${newToken.expires_in}`);
-            setTimeout(module.exports.autoRefreshTokens, newToken.expires_in + 100);
+            const timeUntilRefresh = newToken.expires_in * 1000;
+            q_logger.info(`Persisted new spotify token. Next refresh in ${msToFullTime(timeUntilRefresh)}`);
+            setTimeout(module.exports.autoRefreshTokens, timeUntilRefresh + 100);
             resolve();
           })
           .catch(() => {
