@@ -1,15 +1,14 @@
 import axios from 'axios';
-import { NotificationManager } from 'react-notifications';
+import NotificationManager from 'react-notifications';
 
-export const pushTracksOntoQPlaylist = data => {
-  const url = 'https://api.spotify.com/v1/playlists/6d2V7fQS4CV0XvZr1iOVXJ/tracks';
-  const body = { position: 0, uris: data.map(d => `spotify:track:${d.track}`) };
-  axios.post('/spotify', { url, body })
-    .then(() => NotificationManager.success('Wrote saves to Q playlist'));
-};
+export const getCPT = () => new Promise((resolve, reject) => {
+  axios.get('/spotify', { params: { url: 'https://api.spotify.com/v1/me/player/currently-playing' } })
+    .then(response => resolve(Object.keys(response.data).includes('item') ? response.data : null))
+    .catch(error => {
+      NotificationManager.error('Failed to get currently playing tracks from spotify');
+      console.error(error);
+      reject(error);
+    });
+});
 
-export const getCPT = async () => {
-  const url = 'https://api.spotify.com/v1/me/player/currently-playing';
-  const cpt = await axios.get('/spotify', { params: { url } });
-  return Object.keys(cpt.data).includes('item') ? cpt.data : null;
-};
+export const a = () => 1;

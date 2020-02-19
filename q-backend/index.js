@@ -73,7 +73,7 @@ path = '/mongodb/transactions';
 makeGetEndpoint({ routes, path }, handleInternalGetRequest);
 makePostEndpoint({ routes, path }, handleInternalPostRequest);
 
-path = '/mongodb/transactions/:ordinal';
+path = '/mongodb/transactions/:_id';
 makePutEndpoint({ routes, path }, handleInternalPutRequest);
 makeDeleteEndpoint({ routes, path }, handleInternalDeleteRequest);
 

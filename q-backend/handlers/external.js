@@ -1,4 +1,4 @@
-const { hitGetEndpoint, hitPostEndpoint, hitPutEndpoint } = require('../api-calls/methods/external');
+const { hitGetEndpoint, hitPostEndpoint, hitPutEndpoint } = require('../resources/methods/external');
 
 module.exports = {
   handleExternalGetRequest: ({ request, response }) => {

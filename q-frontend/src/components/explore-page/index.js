@@ -1,79 +1,70 @@
 /* eslint-disable no-undef */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
-import { Page } from '@q/core';
+import { BoldText, TextInput } from '@q/core';
 import { epochToString } from '@q/utils';
-import ArraySelector from '../array-selector';
-import TimeFrame from '../time-frame';
-import LoadingSpinner from '../loading-spinner';
+import DateAdjuster from './DateAdjuster';
+import SearchBar from '../search-bar';
 
-const ExplorerPageContainer = styled(Page)`
-  border: 5px solid ${props => props.color};
-`;
-
-const Results = styled.div`
-  height: calc(100% - 105px);
-  display: flex;
+const Controls = styled.div`
   margin: 7.5px;
+  padding: 2.5px 5px;
+  height: 35px;
+  border-radius: 15px;
+  background-color: ${props => props.colorTheme.primary};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
-class ExplorePage extends React.PureComponent {
-  componentDidMount() {
-    const { start, end } = this.props;
+const DateInput = styled(TextInput)`
+  width: 105px;
+`;
+
+const Start = styled.div`
+  overflow: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+`;
+
+const End = styled.div`
+  overflow: auto;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+`;
+
+const ChronologicalSearchBar = ({
+  start,
+  end,
+  filter,
+  setStart,
+  setEnd,
+  setFilter,
+  dateControls,
+  colorTheme,
+}) => {
+  useEffect(() => {
     document.getElementById('start').value = epochToString(start);
     document.getElementById('end').value = epochToString(end);
-    this.explore();
-  }
+  }, [null]);
 
-  componentDidUpdate() {
-    const { data } = this.props;
-    if (data == null) {
-      this.explore();
-    }
-  }
+  return (
+    <Controls colorTheme={colorTheme}>
+      <Start>
+        <BoldText>Start</BoldText>
+        <DateInput id="start" onBlur={() => this.setTimeframeSide('start')} />
+        {dateControls.map(control => <DateAdjuster side="start" amount={control} color={colorTheme.tertiary} parent={this} />)}
+      </Start>
+      <SearchBar parent={parent} />
+      <End>
+        {dateControls.map(control => <DateAdjuster side="end" amount={control} color={colorTheme.tertiary} parent={this} />).reverse()}
+        <DateInput id="end" onBlur={() => this.setTimeframeSide('end')} />
+        <BoldText>End</BoldText>
+      </End>
+    </Controls>
+  );
+};
 
-  explore() {
-    const {
-      start,
-      end,
-      parent,
-      source,
-    } = this.props;
-    axios.get(`/mongodb/${source}?start=${start}&end=${end}`).then(res => {
-      parent.setState({
-        data: res.data,
-      });
-    });
-  }
-
-  render() {
-    const {
-      colorTheme,
-      results,
-      parent,
-      displays,
-      data,
-      source,
-      settingsKey,
-      dateControls,
-    } = this.props;
-    const resultsTitle = displays[parent.state.selectedIndex];
-    return (
-      <ExplorerPageContainer color={colorTheme.primary}>
-        <TimeFrame parent={parent} colorTheme={colorTheme} dateControls={dateControls} />
-        <ArraySelector
-          array={displays}
-          parent={parent}
-          title={<h2>{resultsTitle}</h2>}
-          settingsKey={settingsKey}
-        />
-        <Results>
-          {data ? results : <LoadingSpinner message={`Exploring ${source}`} color={colorTheme.primary} />}
-        </Results>
-      </ExplorerPageContainer>
-    );
-  }
-}
-
-export default ExplorePage;
+export default ChronologicalSearchBar;

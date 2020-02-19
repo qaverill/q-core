@@ -1,6 +1,6 @@
-const { testAutoTagDoc } = require('../api-calls/banks');
+const { testAutoTagDoc } = require('../resources/banks');
 
-const path = './api-calls/banks/autoTagDoc';
+const path = './resources/banks/autoTagDoc';
 
 const tags = {
   number: {

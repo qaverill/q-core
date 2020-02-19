@@ -8,60 +8,36 @@ import Analyzer from './Analyzer';
 import Viewer from './Viewer';
 import ExplorePage from '../../components/explore-page';
 
-const AccountingQ = () => {
+const AccountingQ = ({ settings, setSettings }) => {
+  console.log(settings);
   const [start, setStart] = useState(times.firstOfCurrentMonth());
   const [end, setEnd] = useState(times.now());
   const [data, setData] = useState(null);
-  const [selectedIndex, setSelectedIndex] = useState()
-}
+  const [selectedIndex, setSelectedIndex] = useState(settings.accountingQSelectedIndex);
+  const [filter, setFilter] = useState(null);
+  const displays = [
+    'Analytics',
+    'Data',
+  ];
 
-class SpotifyQ extends React.Component {
-  constructor(props) {
-    super(props);
-    this.displays = [
-      'Analyzer',
-      'Viewer',
-    ];
-    this.state = {
-      selectedIndex: getSettings().accountingQSelectedIndex,
-      filter: null,
-    };
-  }
+  const results = () => [
+    <Analyzer data={data} start={start} end={end} />,
+    <Viewer data={data} filter={filter} parent={this} />,
+  ][selectedIndex];
 
-  displayResults() {
-    const {
-      selectedIndex,
-      data,
-      start,
-      end,
-      filter,
-    } = this.state;
-    switch (this.displays[selectedIndex]) {
-      case 'Analyzer':
-        return <Analyzer data={data} start={start} end={end} />;
-      case 'Viewer':
-        return <Viewer data={data} filter={filter} parent={this} />;
-      default: return null;
-    }
-  }
-
-  render() {
-    const { start, end, data } = this.state;
-    return (
-      <ExplorePage
-        source="transactions"
-        parent={this}
-        colorTheme={accountingQTheme}
-        results={this.displayResults()}
-        displays={this.displays}
-        start={start}
-        end={end}
-        data={data}
-        dateControls={['W', 'M']}
-        settingsKey="accountingQSelectedIndex"
-      />
-    );
-  }
-}
+  return (
+    <ExplorePage
+      source="transactions"
+      colorTheme={accountingQTheme}
+      results={results()}
+      displays={displays}
+      start={start}
+      end={end}
+      data={data}
+      dateControls={['W', 'M']}
+      settingsKey="accountingQSelectedIndex"
+    />
+  );
+};
 
 export default AccountingQ;

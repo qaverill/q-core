@@ -5,14 +5,9 @@ import styled from 'styled-components';
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 
-import SpotifyErrorPage from './components/spotify-error-page';
+import { fetchDocuments, writeDocument } from './api/mongodb';
 
-import { readSettings, writeSettings } from './api/metadata';
-import { getTokenStatus } from './api/tokens';
-
-import DataQ from './pages/DataQ';
 import SpotifyQ from './pages/SpotifyQ';
-import BassQ from './pages/BassQ';
 import AccountingQ from './pages/AccountingQ';
 import DashboardQ from './pages/DashboardQ';
 import ArraySelector from './components/array-selector';
@@ -46,34 +41,26 @@ const App = () => {
   const [settings, setSettings] = useState(null);
   const [app, setApp] = useState(<LoadingSpinner message="Setting up app..." />);
 
-  const pages = () => [
-    <DataQ title="DataQ" settings={settings} setSettings={setSettings} needsSpotifyToken />,
-    <SpotifyQ title="SpotifyQ" root={this} needsSpotifyToken />,
-    // <BassQ title="BassQ" />,
-    <DashboardQ title="DashboardQ" needsSpotifyToken />,
-    <AccountingQ title="AccountingQ" />,
-  ];
+  const pages = (idx) => [
+    <SpotifyQ title="SpotifyQ" root={this} settings={settings} />,
+    <DashboardQ title="DashboardQ" />,
+    <AccountingQ title="AccountingQ" settings={settings} />,
+  ][idx];
 
   useEffect(() => {
-    const processSettings = async () => {
-      const response = await readSettings();
+    const fetchSettings = async () => {
+      const response = await fetchDocuments({ collection: 'metadata', _id: 'settings' });
       setSettings(response);
-      const page = pages()[response.app.idx];
-      if (page.props.needsSpotifyToken) {
-        const status = await getTokenStatus();
-        setApp(status.valid ? page : <SpotifyErrorPage title="ERROR" />);
-      } else {
-        setApp(page);
-      }
+      setApp(pages(response.app.idx));
     };
 
-    processSettings();
+    fetchSettings();
   }, []);
 
   const saveIdx = (idx) => {
     settings.app.idx = idx;
-    writeSettings(settings);
-    setApp(pages()[idx]);
+    writeDocument({ collection: 'metadata', _id: 'settings', document: settings });
+    setApp(pages(idx));
   };
 
   return (

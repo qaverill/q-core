@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { NotificationManager } from 'react-notifications';
 
-import { BoldText, TextInput } from '@q/core';
 import {
   stringToEpoch,
   epochToString,
@@ -11,37 +10,9 @@ import {
   dateToEpoch,
 } from '@q/utils';
 
-import DateAdjuster from './components/DateAdjuster';
+import DateAdjuster from '../explore-page/DateAdjuster';
 import SearchBar from '../search-bar';
 
-const Controls = styled.div`
-  margin: 7.5px;
-  padding: 2.5px 5px;
-  height: 35px;
-  border-radius: 15px;
-  background-color: ${props => props.colorTheme.primary};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const DateInput = styled(TextInput)`
-  width: 105px;
-`;
-
-const Start = styled.div`
-  overflow: auto;
-  margin-right: auto;
-  display: flex;
-  align-items: center;
-`;
-
-const End = styled.div`
-  overflow: auto;
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-`;
 
 class TimeFrame extends React.Component {
   setTimeframeSide(side, value) {
@@ -94,19 +65,7 @@ class TimeFrame extends React.Component {
   render() {
     const { colorTheme, dateControls, parent } = this.props;
     return (
-      <Controls colorTheme={colorTheme}>
-        <Start>
-          <BoldText>Start</BoldText>
-          <DateInput id="start" onBlur={() => this.setTimeframeSide('start')} />
-          {dateControls.map(control => <DateAdjuster side="start" amount={control} color={colorTheme.tertiary} parent={this} />)}
-        </Start>
-        <SearchBar parent={parent} />
-        <End>
-          {dateControls.map(control => <DateAdjuster side="end" amount={control} color={colorTheme.tertiary} parent={this} />).reverse()}
-          <DateInput id="end" onBlur={() => this.setTimeframeSide('end')} />
-          <BoldText>End</BoldText>
-        </End>
-      </Controls>
+      
     );
   }
 }

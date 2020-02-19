@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-const { getDirFiles, readDataFile } = require('../api-calls/methods/external');
+const { getDirFiles, readDataFile } = require('./methods/external');
 const { dateToTimestamp } = require('../utils');
 
 const START_OF_SEPTEMBER = 1567310400;

@@ -7,6 +7,7 @@ import { spotifyQTheme } from '@q/colors';
 import Overview from './components/Overview';
 import Detail from './components/Detail';
 import ExplorePage from '../../components/explore-page';
+import { fetchDocuments } from '../../api/mongodb';
 
 const filterData = (data, filter) => {
   const dataOfArtist = data.filter(listen => listen.artists.includes(filter));
@@ -20,22 +21,40 @@ const filterData = (data, filter) => {
   return data.filter(listen => listen.track === filter);
 };
 
-class SpotifyQ extends React.Component {
-  constructor(props) {
-    super(props);
-    this.displays = [
-      'Overview',
-      'Detail',
-    ];
-    this.state = {
-      start: Math.round(new Date().getTime() / 1000) - 3 * ONE_EPOCH_DAY,
-      end: Math.round(new Date().getTime() / 1000),
-      filter: null,
-      data: null,
-      selectedIndex: 0,
-    };
-  }
+const SpotifyQ = ({ settings }) => {
+  const [start, setStart] = useState(Math.round(new Date().getTime() / 1000) - 3 * ONE_EPOCH_DAY);
+  const [end, setEnd] = useState(Math.round(new Date().getTime() / 1000));
+  const [filter, setFilter] = useState(null);
+  const [data, setData] = useState(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const query = { start, end, filter };
+      const listens = await fetchDocuments({ collection: 'listens', query });
+      const saves = await fetchDocuments({ collection: 'saves', query });
+      const combinedData = listens.concat(saves).sort((a, b) => (a.timestamp > b.timestamp) ? 1 : -1);
+      setData(combinedData);
+    }
+
+    fetchData();
+  }, [start, end, filter])
+
+  return (
+    <ExplorePage
+      dateControls={['D', 'W', 'M', 'Y']}
+      source="listens"
+      colorTheme={spotifyQTheme}
+
+      results={this.displayResults()}
+      displays={this.displays}
+      start={start}
+      end={end}
+      data={data}
+    />
+  )
+}
+
+class SpotifyQ extends React.Component {
   displayResults() {
     const { root } = this.props;
     const {
@@ -58,17 +77,7 @@ class SpotifyQ extends React.Component {
   render() {
     const { start, end, data } = this.state;
     return (
-      <ExplorePage
-        source="listens"
-        parent={this}
-        colorTheme={spotifyQTheme}
-        results={this.displayResults()}
-        displays={this.displays}
-        start={start}
-        end={end}
-        data={data}
-        dateControls={['D', 'W', 'M', 'Y']}
-      />
+      
     );
   }
 }

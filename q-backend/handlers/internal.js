@@ -1,4 +1,4 @@
-const { getDocs, postDocs, putDoc, deleteDoc } = require('../api-calls/methods/internal');
+const { getDocs, postDocs, putDoc, deleteDoc } = require('../resources/methods/internal');
 
 const createQuery = request => {
   let query;

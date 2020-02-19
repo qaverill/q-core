@@ -6,7 +6,7 @@ const tokens = require('../config/tokens.json');
 const { q_logger } = require('../q-lib/q-logger');
 const { msToFullTime } = require('../utils');
 
-const { hitPostEndpoint } = require('../api-calls/methods/external');
+const { hitPostEndpoint } = require('../resources/methods/external');
 
 const writeSpotifyTokens = ({ access_token, valid_until }) => new Promise((resolve, reject) => {
   tokens.spotify.access_token = access_token;

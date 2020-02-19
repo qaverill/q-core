@@ -5,7 +5,6 @@ import { red, green, yellow } from '@q/colors';
 import { epochToString } from '@q/utils';
 import { Button, StyledPopup } from '@q/core';
 import ManualTagger from './ManualTagger';
-import { removeTransaction } from '../../../../api/transactions';
 
 const Transaction = styled.div`
   width: 100%;
@@ -63,17 +62,6 @@ const craftTagButton = transaction => {
 };
 
 class TransactionFact extends React.PureComponent {
-  removeTransactionFact() {
-    const { transaction, parent } = this.props;
-    // eslint-disable-next-line no-undef
-    if (window.confirm('Are you sure?')) {
-      removeTransaction(transaction, () => {
-        parent.setState({
-          data: null,
-        });
-      });
-    }
-  }
 
   render() {
     const {

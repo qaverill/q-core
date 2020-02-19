@@ -1,4 +1,4 @@
-const q_logger = require('./q-logger');
+const { q_logger } = require('./q-logger');
 
 module.exports = {
   makeGetEndpoint: ({ routes, path }, action) => {
@@ -6,7 +6,7 @@ module.exports = {
     routes.get(path, (request, response) => {
       const start = new Date().getTime();
       action({ request, response, path }).then(() => {
-        q_logger.apiout(`GET ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
+        q_logger.apiOut(`GET ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
       });
     });
   },
@@ -15,7 +15,7 @@ module.exports = {
     routes.put(path, (request, response) => {
       const start = new Date().getTime();
       action({ request, response, path }).then(() => {
-        q_logger.apiout(`PUT ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
+        q_logger.apiOut(`PUT ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
       });
     });
   },
@@ -24,7 +24,7 @@ module.exports = {
     routes.post(path, (request, response) => {
       const start = new Date().getTime();
       action({ request, response, path }).then(() => {
-        q_logger.apiout(`POST ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
+        q_logger.apiOut(`POST ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
       });
     });
   },
@@ -33,7 +33,7 @@ module.exports = {
     routes.delete(path, (request, response) => {
       const start = new Date().getTime();
       action({ request, response, path }).then(() => {
-        q_logger.apiout(`DELETE ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
+        q_logger.apiOut(`DELETE ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
       });
     });
   },

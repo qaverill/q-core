@@ -1,11 +1,11 @@
 const { q_logger } = require('../q-lib/q-logger');
-const { getDocs, postDocs } = require('../api-calls/methods/internal');
-const { getBankFacts } = require('../api-calls/banks');
+const { getDocs, postDocs } = require('../resources/methods/internal');
+const { getBankFacts } = require('../resources/banks');
 const {
   getRecentlyPlayedTracks,
   getMyTracks,
   putTracksOntoPlaylist,
-} = require('../api-calls/spotify');
+} = require('../resources/spotify');
 
 const getNewAvailableData = ({ collection }) => new Promise((resolve, reject) => {
   switch (collection) {
