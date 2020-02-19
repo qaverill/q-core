@@ -85,7 +85,7 @@ server.listen(port, () => {
     .then(() => {
       autoMineData({ collection: 'listens', interval: 1800000 });
       autoMineData({ collection: 'saves', interval: 2600000 });
-      // autoMineData({ collection: 'transactions' });
+      autoMineData({ collection: 'transactions' });
     })
     .catch(() => {
       q_logger.error('Cannot start refresh tokens job, killing server...');

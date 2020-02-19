@@ -28,7 +28,7 @@ const validateDocsForPost = (collection, docs) => {
         && typeof transaction.timestamp === 'number'
         && typeof transaction.amount === 'number'
         && typeof transaction.description === 'string'
-        && Array.isArray(transaction.tags) && transaction.tags.length > 0
+        && Array.isArray(transaction.tags)
       )).length === docs.length;
     default:
       return false;

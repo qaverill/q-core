@@ -32,9 +32,11 @@ const tests = [
     description: '123456789-1-2-3-4-5-6-7-8-9bingolingo dingo a aa aaaa bb bbb bbbb',
     expected: ['number', 'even', 'odd', 'negative', 'bingo', 'letters', 'a', 'ax1', 'ax2', 'ax4', 'b', 'bx2', 'bx3'],
   },
+  { description: 'nothing', expected: [] },
+  { description: 'venmo from other user', expected: ['payBack'] },
 ];
 
-const algorithm = (i) => testAutoTagDoc(tests[i], tags, null);
+const algorithm = (i) => testAutoTagDoc(tests[i].description, tags, null);
 
 module.exports = {
   path,

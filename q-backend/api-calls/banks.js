@@ -37,11 +37,11 @@ const factTags = {
     utilities: ['eversource', 'utils'],
   },
   fun: {
-    pictures: ['kodak', ],
+    pictures: ['kodak'],
     events: ['MUSEUM OF SCIENCE'],
   },
   clothing: {
-    online: ['TERRITORY AHEAD', ],
+    online: ['TERRITORY AHEAD'],
     inStore: [],
   },
   clothes: ['GARMENT DISTRICT', 'ISLANDERS OUTF'],
@@ -61,22 +61,22 @@ const factTags = {
   'music-gear': ['GUITAR CENTER'],
 };
 
-const autoTagDoc = (doc, tags, parentTag) => {
+const autoTagDoc = (description, tags, parentTag) => {
+  if (description.includes('venmo from')) {
+    return ['payBack'];
+  }
   if (Array.isArray(tags)) {
     return [...new Set(
       tags.map(keyWord => (
-        doc.description.toLowerCase().includes(keyWord.toLowerCase())
+        description.toLowerCase().includes(keyWord.toLowerCase())
           ? parentTag
           : null
       )).filter(tag => tag != null),
     )];
   }
   return [...new Set(Object.keys(tags).flatMap(subTag => {
-    const possibleTag = autoTagDoc(doc, tags[subTag], subTag);
-    if (possibleTag.length > 0) {
-      return [parentTag, ...possibleTag];
-    }
-    return null;
+    const possibleTag = autoTagDoc(description, tags[subTag], subTag);
+    return possibleTag.length > 0 ? [parentTag, ...possibleTag] : null;
   }).filter(tag => tag != null))];
 };
 
@@ -128,7 +128,7 @@ const parseRow = ({ line, file }) => {
         timestamp: dateToTimestamp(row[1]),
         amount: row[2].indexOf('(') > -1 ? parseFloat(row[2].replace(/[)$(]/g, '')) * -1 : parseFloat(row[2].replace('$', '')),
         description: row[5],
-        tags: [],
+        tags: autoTagDoc(row[5], factTags, null),
       };
       fact._id = generateFactId(fact);
       return fact;
@@ -138,19 +138,20 @@ const parseRow = ({ line, file }) => {
         timestamp: dateToTimestamp(row[1]),
         amount: row[3] !== '' ? parseFloat(row[3]) * -1 : parseFloat(row[4]) * -1,
         description: row[2].replace(/"/g, ''),
-        tags: [],
+        tags: autoTagDoc(row[2].replace(/"/g, ''), factTags, null),
       };
       fact._id = generateFactId(fact);
       return fact;
     case 'venmo.csv':
       if (typeof parseInt(row[1], 10) === 'number' && row[3] !== 'Standard Transfer' && row[8] != null) {
         const type = row[8].indexOf('+') > -1 ? 'from' : 'to';
+        const description = `Venmo ${type} ${row[6] === 'Quinn Averill' ? row[7] : row[6]}: ${row[5]}`;
         fact = {
           account: 'venmo',
           timestamp: dateToTimestamp(row[2]),
           amount: parseFloat(row[8].replace(/[ $+]/g, '')),
-          description: `Venmo ${type} ${row[6] === 'Quinn Averill' ? row[7] : row[6]}: ${row[5]}`,
-          tags: [],
+          description,
+          tags: autoTagDoc(description, factTags, null),
         };
         fact._id = generateFactId(fact);
         return fact;
@@ -184,15 +185,6 @@ module.exports = {
         });
       })
       .catch(reject);
-  }),
-  autoTagBankDocs: docs => docs.map(doc => {
-    const taggedDoc = { ...doc, tags: { auto: [], custom: [] } };
-    if (doc.description.includes('venmo from')) {
-      taggedDoc.tags.push('payBack');
-    } else {
-      taggedDoc.tags.auto = autoTagDoc(doc, factTags, null);
-    }
-    return taggedDoc;
   }),
   testAutoTagDoc: (doc, tags, label) => autoTagDoc(doc, tags, label),
 };
