@@ -7,7 +7,7 @@ import { Page } from '@q/core';
 
 import LightSwitch from './LightSwitch';
 import SpotifyCycle from './SpotifyCycle';
-import LoadingSpinner from '../../../components/loading-spinner';
+import LoadingSpinner from '../../../components/LoadingSpinner';
 import { getLights } from '../../../api/lifx';
 import { getCPT } from '../../../api/spotify';
 

@@ -51,6 +51,7 @@ module.exports = {
               q_logger.error('Failed to query mongo in getDocs', queryError);
               reject(queryError);
             } else {
+              result.map(r => ({ ...r, collection }));
               resolve(result.length === 1 ? result[0] : result);
             }
           });

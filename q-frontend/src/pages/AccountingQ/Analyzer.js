@@ -9,7 +9,7 @@ import {
   green,
 } from '@q/colors';
 
-import LoadingSpinner from '../../components/loading-spinner';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const AnalyzerContainer = styled.div`
   display: flex;

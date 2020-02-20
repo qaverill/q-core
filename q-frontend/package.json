@@ -12,10 +12,6 @@
     "start": "PORT=3333 react-scripts start"
   },
   "dependencies": {
-    "@q/colors": "file:packages/colors",
-    "@q/core": "file:packages/core",
-    "@q/images": "file:packages/images",
-    "@q/utils": "file:packages/utils",
     "axios": "^0.19.0",
     "node-vibrant": "^3.1.5",
     "query-string": "^6.11.0",

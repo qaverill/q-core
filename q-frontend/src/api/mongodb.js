@@ -21,3 +21,11 @@ export const writeDocument = ({ collection, _id, document }) => new Promise((res
       reject(error);
     });
 });
+
+export const saveSettings = settings => {
+  const collection = 'metadata';
+  const _id = 'settings';
+  writeDocument({ collection, _id, document: settings });
+};
+
+export const a = () => 1;

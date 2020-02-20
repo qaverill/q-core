@@ -10,8 +10,8 @@ import { fetchDocuments, writeDocument } from './api/mongodb';
 import SpotifyQ from './pages/SpotifyQ';
 import AccountingQ from './pages/AccountingQ';
 import DashboardQ from './pages/DashboardQ';
-import ArraySelector from './components/array-selector';
-import LoadingSpinner from './components/loading-spinner';
+import ArraySelector from './components/ArraySelector';
+import LoadingSpinner from './components/LoadingSpinner';
 
 const AppContainer = styled.div`
   height: 100%;
@@ -39,19 +39,19 @@ const Title = styled.h2`
 
 const App = () => {
   const [settings, setSettings] = useState(null);
-  const [app, setApp] = useState(<LoadingSpinner message="Setting up app..." />);
+  const [app, setApp] = useState(<LoadingSpinner title="Loading..." message="Setting up app..." />);
 
-  const pages = (idx) => [
+  const pages = () => [
     <SpotifyQ title="SpotifyQ" root={this} settings={settings} />,
     <DashboardQ title="DashboardQ" />,
     <AccountingQ title="AccountingQ" settings={settings} />,
-  ][idx];
+  ];
 
   useEffect(() => {
     const fetchSettings = async () => {
       const response = await fetchDocuments({ collection: 'metadata', _id: 'settings' });
       setSettings(response);
-      setApp(pages(response.app.idx));
+      setApp(pages()[response.app.idx]);
     };
 
     fetchSettings();
@@ -59,8 +59,8 @@ const App = () => {
 
   const saveIdx = (idx) => {
     settings.app.idx = idx;
-    writeDocument({ collection: 'metadata', _id: 'settings', document: settings });
-    setApp(pages(idx));
+    saveSettings(settings);
+    setApp(pages()[idx]);
   };
 
   return (

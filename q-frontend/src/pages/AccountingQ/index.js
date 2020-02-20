@@ -6,7 +6,7 @@ import { getSettings, times } from '@q/utils';
 
 import Analyzer from './Analyzer';
 import Viewer from './Viewer';
-import ExplorePage from '../../components/explore-page';
+import ExplorePage from '../../components/ChronologicalSearchBar';
 
 const AccountingQ = ({ settings, setSettings }) => {
   console.log(settings);
