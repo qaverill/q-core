@@ -2,6 +2,11 @@ const { getDocs, postDocs, putDoc, deleteDoc } = require('../resources/methods/i
 
 const createQuery = request => {
   let query;
+  const { path } = request;
+  const _id = path.split('/')[3];
+  if (_id) {
+    return { _id };
+  }
   if (request.params) {
     query = request.params;
     Object.keys(query).forEach(key => { query[key] = parseInt(query[key], 10) || query[key]; });
@@ -21,7 +26,7 @@ const createQuery = request => {
 // TODO: do we really need the `async`s here?
 module.exports = {
   handleInternalGetRequest: async ({ request, response }) => {
-    const collection = request.path;
+    const collection = request.path.split('/')[2];
     const query = createQuery(request);
     getDocs({ collection, query })
       .then(data => response.status(200).json(data))

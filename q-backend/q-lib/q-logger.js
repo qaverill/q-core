@@ -16,7 +16,7 @@ const log = (status, message, payload) => {
 
 module.exports = {
   q_logger: {
-    apiIn: (message, payload) => log('\x1b[36mIN   ', message, payload), // cyan
+    apiIn: (message, payload) => log('\x1b[36mIN   ', message), // cyan
     apiOut: (message, payload) => log('\x1b[35mOUT  ', message, payload), // magenta
     info: (message, payload) => log('\x1b[32mINFO ', message, payload), // green
     warn: (message, payload) => log('\x1b[33mWARN ', message, payload), // yellow

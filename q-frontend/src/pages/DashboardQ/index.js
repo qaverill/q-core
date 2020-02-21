@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 import React from 'react';
 import styled from 'styled-components';
-import { dashboardQTheme } from '@q/colors';
-import { Page } from '@q/core';
+import { dashboardQTheme } from '../../packages/colors';
+import { Page } from '../../packages/core';
 
 import LightHub from './LightHub';
 

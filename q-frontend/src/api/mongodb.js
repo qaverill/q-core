@@ -3,7 +3,7 @@ import NotificationManager from 'react-notifications';
 import queryString from 'query-string';
 
 export const fetchDocuments = ({ collection, _id, query }) => new Promise((resolve, reject) => {
-  axios.get(`/mongodb/${collection}${_id ? `/${_id}` : ''}${queryString.stringify(query)}`)
+  axios.get(`/mongodb/${collection}${_id ? `/${_id}` : ''}?${queryString.stringify(query)}`)
     .then(results => resolve(results.data))
     .catch(error => {
       NotificationManager.error(`Failed to fetch documents in ${collection}`, `${_id ? `_id: ${_id}` : ''}`);

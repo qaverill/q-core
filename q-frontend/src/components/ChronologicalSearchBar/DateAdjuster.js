@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React, { useState, useEffect } from 'react';
-import { Button, Text } from '@q/core';
+import { Button, Text } from '../../packages/core';
 
 const SmallButton = styled(Button)`
   height: 20px;

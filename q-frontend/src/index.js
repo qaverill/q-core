@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 
-import { fetchDocuments, writeDocument } from './api/mongodb';
+import { fetchDocuments, saveSettings } from './api/mongodb';
 
 import SpotifyQ from './pages/SpotifyQ';
 import AccountingQ from './pages/AccountingQ';
@@ -41,17 +41,19 @@ const App = () => {
   const [settings, setSettings] = useState(null);
   const [app, setApp] = useState(<LoadingSpinner title="Loading..." message="Setting up app..." />);
 
-  const pages = () => [
-    <SpotifyQ title="SpotifyQ" root={this} settings={settings} />,
+  const pages = (newSettings) => [
+    <SpotifyQ title="SpotifyQ" settings={newSettings} setSettings={setSettings} />,
     <DashboardQ title="DashboardQ" />,
-    <AccountingQ title="AccountingQ" settings={settings} />,
+    <AccountingQ title="AccountingQ" settings={newSettings} />,
   ];
+
+  const getPage = (newSettings) => pages(newSettings)[newSettings.app.idx];
 
   useEffect(() => {
     const fetchSettings = async () => {
-      const response = await fetchDocuments({ collection: 'metadata', _id: 'settings' });
-      setSettings(response);
-      setApp(pages()[response.app.idx]);
+      const newSettings = await fetchDocuments({ collection: 'metadata', _id: 'settings' });
+      setSettings(newSettings);
+      setApp(getPage(newSettings));
     };
 
     fetchSettings();
@@ -60,7 +62,8 @@ const App = () => {
   const saveIdx = (idx) => {
     settings.app.idx = idx;
     saveSettings(settings);
-    setApp(pages()[idx]);
+    setSettings(settings);
+    setApp(getPage(settings));
   };
 
   return (

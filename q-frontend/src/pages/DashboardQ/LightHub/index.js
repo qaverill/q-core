@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { dashboardQTheme } from '@q/colors';
-import { Page } from '@q/core';
+import { dashboardQTheme } from '../../../packages/colors';
+import { Page } from '../../../packages/core';
 
 import LightSwitch from './LightSwitch';
 import SpotifyCycle from './SpotifyCycle';

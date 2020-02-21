@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { LeftArrow, RightArrow } from '@q/core';
+import { LeftArrow, RightArrow } from '../../packages/core';
 
 const ArraySelectorContainer = styled.div`
   display: flex;
@@ -18,14 +18,13 @@ const ArraySelector = ({
 }) => {
   const clickLeft = () => saveIdx(idx + 1 > array.length - 1 ? 0 : idx + 1);
   const clickRight = () => saveIdx(idx - 1 < 0 ? array.length - 1 : idx - 1);
-
-  return (
+  return title.props.children ? (
     <ArraySelectorContainer key={title}>
       <LeftArrow onClick={clickLeft} />
       {title || 'FFF'}
       <RightArrow onClick={clickRight} />
     </ArraySelectorContainer>
-  );
+  ) : null;
 };
 
 export default ArraySelector;

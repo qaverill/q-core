@@ -2,14 +2,14 @@
 import styled from 'styled-components';
 import Popup from 'reactjs-popup';
 import Select from 'react-select';
-import { arrow, settingsGear } from '@q/images';
+import { arrow, settingsGear } from '../packages/images';
 import {
   dark,
   medium,
   white,
   yellow,
   light,
-} from '@q/colors';
+} from '../packages/colors';
 
 export const Button = styled.button`
   color: ${props => (props.color === yellow ? dark : white)};  

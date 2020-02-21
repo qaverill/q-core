@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { msToString } from '@q/utils';
-import { Text } from '@q/core';
 import { Chart } from 'react-charts';
+import styled from 'styled-components';
+import { msToString } from '../../../packages/utils';
+import { Text } from '../../../packages/core';
 
 
 const DetailContainer = styled.div`

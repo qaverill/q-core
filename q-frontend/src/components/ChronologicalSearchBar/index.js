@@ -103,12 +103,13 @@ const ChronologicalSearchBar = ({
       <Start>
         <BoldText>Start</BoldText>
         <DateInput id="start" onBlur={inputStart} />
-        {dateControls.map(control => (
+        {dateControls.flatMap(control => (
           <DateAdjuster
             date="start"
             amount={control}
             color={colorTheme.tertiary}
             adjustDate={adjustStart}
+            key={`${control}-start`}
           />
         ))}
       </Start>
@@ -120,6 +121,7 @@ const ChronologicalSearchBar = ({
             amount={control}
             color={colorTheme.tertiary}
             adjustDate={adjustEnd}
+            key={`${control}-end`}
           />
         )).reverse()}
         <DateInput id="end" onBlur={inputEnd} />

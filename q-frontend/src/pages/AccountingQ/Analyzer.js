@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { formatAsMoney, averageArray } from '@q/utils';
+import { formatAsMoney, averageArray } from '../../packages/utils';
 import {
   accountingQTheme,
   red,
   yellow,
   green,
-} from '@q/colors';
+} from '../../packages/colors';
 
 import LoadingSpinner from '../../components/LoadingSpinner';
 

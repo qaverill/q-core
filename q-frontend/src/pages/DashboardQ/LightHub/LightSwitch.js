@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { lightOn, lightOff } from '@q/images';
+import { lightOn, lightOff } from '../../../packages/images';
 
 import { toggleLightPower } from '../../../api/lifx';
 

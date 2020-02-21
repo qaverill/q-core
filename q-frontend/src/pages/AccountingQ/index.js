@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 import React, {useState, useEffect} from 'react';
 
-import { accountingQTheme } from '@q/colors';
-import { getSettings, times } from '@q/utils';
+import { accountingQTheme } from '../../packages/colors';
+import { getSettings, times } from '../../packages/utils';
 
 import Analyzer from './Analyzer';
 import Viewer from './Viewer';

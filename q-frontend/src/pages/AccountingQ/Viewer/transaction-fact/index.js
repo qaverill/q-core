@@ -1,9 +1,9 @@
 /* eslint-disable no-alert */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { red, green, yellow } from '@q/colors';
-import { epochToString } from '@q/utils';
-import { Button, StyledPopup } from '@q/core';
+import { red, green, yellow } from '../../../../packages/colors';
+import { epochToString } from '../../../../packages/utils';
+import { Button, StyledPopup } from '../../../../packages/core';
 import ManualTagger from './ManualTagger';
 
 const Transaction = styled.div`

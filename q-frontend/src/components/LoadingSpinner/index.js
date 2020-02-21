@@ -1,6 +1,6 @@
 import React from 'react';
 import { ClipLoader } from 'react-spinners';
-import { FullDiv } from '@q/core';
+import { FullDiv } from '../../packages/core';
 
 const LoadingSpinner = ({ color, message }) => (
   <FullDiv>
