@@ -10,8 +10,8 @@ import { fetchDocuments, saveSettings } from './api/mongodb';
 import SpotifyQ from './pages/SpotifyQ';
 import AccountingQ from './pages/AccountingQ';
 import DashboardQ from './pages/DashboardQ';
-import ArraySelector from './components/ArraySelector';
-import LoadingSpinner from './components/LoadingSpinner';
+import ArraySelector from './sharedComponents/ArraySelector';
+import LoadingSpinner from './sharedComponents/LoadingSpinner';
 
 const AppContainer = styled.div`
   height: 100%;

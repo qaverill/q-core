@@ -6,10 +6,9 @@ import { getSettings, times } from '../../packages/utils';
 
 import Analyzer from './Analyzer';
 import Viewer from './Viewer';
-import ExplorePage from '../../components/ChronologicalSearchBar';
+import ExplorePage from '../../sharedComponents/ChronologicalSearchBar';
 
 const AccountingQ = ({ settings, setSettings }) => {
-  console.log(settings);
   const [start, setStart] = useState(times.firstOfCurrentMonth());
   const [end, setEnd] = useState(times.now());
   const [data, setData] = useState(null);

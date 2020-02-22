@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { BoldText, TextInput } from '../../packages/core';
-import { epochToString } from '../../packages/utils';
+import { epochToString, epochToDate } from '../../packages/utils';
 import DateAdjuster from './DateAdjuster';
 import SearchBar from './SearchBar';
 
@@ -49,7 +49,7 @@ const ChronologicalSearchBar = ({
   useEffect(() => {
     document.getElementById('start').value = epochToString(start);
     document.getElementById('end').value = epochToString(end);
-  }, [null]);
+  }, [start, end]);
 
   const validateInputDate = date => {
     if (date != null && isNaN(date)) {
@@ -82,10 +82,10 @@ const ChronologicalSearchBar = ({
 
   const adjustDate = (date, adjustment) => {
     const amount = adjustment.includes('-') ? -1 : 1;
-    if (adjustment.includes('D')) return date.setDate(date.getDate() + amount);
-    if (adjustment.includes('W')) return date.setDate(date.getDate() + 7 * amount);
-    if (adjustment.includes('M')) return date.setDate(date.getMonth() + amount);
-    if (adjustment.includes('Y')) return date.setDate(date.getFullYear() + amount);
+    if (adjustment.includes('D')) return date.setDate(date.getDate() + amount) / 1000;
+    if (adjustment.includes('W')) return date.setDate(date.getDate() + 7 * amount) / 1000;
+    if (adjustment.includes('M')) return date.setMonth(date.getMonth() + amount) / 1000;
+    if (adjustment.includes('Y')) return date.setFullYear(date.getFullYear() + amount) / 1000;
   };
 
   const adjustStart = (adjustment) => {

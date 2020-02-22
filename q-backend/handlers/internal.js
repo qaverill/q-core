@@ -1,32 +1,40 @@
 const { getDocs, postDocs, putDoc, deleteDoc } = require('../resources/methods/internal');
 
-const createQuery = request => {
-  let query;
-  const { path } = request;
+const createQuery = ({ path, params, query }) => {
   const _id = path.split('/')[3];
   if (_id) {
     return { _id };
   }
-  if (request.params) {
-    query = request.params;
-    Object.keys(query).forEach(key => { query[key] = parseInt(query[key], 10) || query[key]; });
-  } else {
-    query = request.query;
-    if (query.start) {
-      query.timestamp.$gte = parseInt(query.start, 10);
-      delete query.start;
-    }
-    if (query.end) {
-      query.timestamp.$lte = parseInt(query.end, 10);
-      delete query.end;
-    }
+  const newQuery = {};
+  if (params && Object.keys(params).length > 0) {
+    Object.keys(params).forEach(key => {
+      newQuery[key] = parseInt(params[key], 10) || params[key];
+    });
+    return newQuery;
   }
-  return query;
+  const { start, end, filter } = query;
+  newQuery.timestamp = {};
+  if (start) {
+    newQuery.timestamp.$gte = parseInt(start, 10);
+  }
+  if (end) {
+    newQuery.timestamp.$lte = parseInt(end, 10);
+  }
+  if (filter && filter !== '') {
+    const [type, id] = filter.split('=');
+    newQuery[type] = id;
+  }
+  if (Object.keys(newQuery.timestamp).length === 0) {
+    delete newQuery.timestamp;
+  }
+  return newQuery;
 };
-// TODO: do we really need the `async`s here?
+
+const createCollection = request => request.path.split('/')[2];
+
 module.exports = {
   handleInternalGetRequest: async ({ request, response }) => {
-    const collection = request.path.split('/')[2];
+    const collection = createCollection(request);
     const query = createQuery(request);
     getDocs({ collection, query })
       .then(data => response.status(200).json(data))
@@ -34,20 +42,21 @@ module.exports = {
   },
   handleInternalPostRequest: async ({ request, response }) => {
     const { body: docs } = request;
-    const collection = request.path;
+    const collection = createCollection(request);
     postDocs({ collection, docs })
       .then(() => response.status(204).send())
       .catch(() => response.status(400).send());
   },
   handleInternalPutRequest: async ({ request, response }) => {
-    const { path: collection, body: doc } = request;
+    const { body: doc } = request;
+    const collection = createCollection(request);
     const query = createQuery(request);
     putDoc({ collection, query, doc })
       .then(() => response.status(204).send())
       .catch(() => response.status(400).send());
   },
   handleInternalDeleteRequest: async ({ request, response }) => {
-    const collection = request.path;
+    const collection = createCollection(request);
     const query = createQuery(request);
     deleteDoc({ collection, query })
       .then((deletedCount) => response.status(deletedCount === 1 ? 200 : 404).send())

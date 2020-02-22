@@ -33,7 +33,6 @@ let path;
 
 q_logger.info('Unit tests starting:');
 if (!testedAlgorithms.every(algorithm => algorithm())) {
-  // TODO: uncomment this when confident
   process.exit();
 }
 
@@ -42,7 +41,7 @@ q_logger.info('Starting server...');
 server.use(cors());
 server.use(json());
 server.use(urlencoded({ extended: true }));
-server.use(logIncomingRequest);
+// server.use(logIncomingRequest);
 
 routes.use(express.static(`${__dirname}/public`)).use(cookieParser());
 
