@@ -1,41 +1,72 @@
 /* eslint-disable no-undef */
-import React, {useState, useEffect} from 'react';
-
-import { accountingQTheme } from '../../packages/colors';
-import { getSettings, times } from '../../packages/utils';
+import React, { useState, useEffect } from 'react';
 
 import Analyzer from './Analyzer';
 import Viewer from './Viewer';
-import ExplorePage from '../../sharedComponents/ChronologicalSearchBar';
+import ArraySelector from '../../sharedComponents/ArraySelector';
+import ChronologicalSearchBar from '../../sharedComponents/ChronologicalSearchBar';
+import LoadingSpinner from '../../sharedComponents/LoadingSpinner';
+
+import { fetchDocuments, saveSettings, deleteDocument } from '../../api/mongodb';
+import { accountingQTheme } from '../../packages/colors';
+import { Page, Title } from '../../packages/core';
+import { times } from '../../packages/utils';
 
 const AccountingQ = ({ settings, setSettings }) => {
   const [start, setStart] = useState(times.firstOfCurrentMonth());
   const [end, setEnd] = useState(times.now());
-  const [data, setData] = useState(null);
-  const [selectedIndex, setSelectedIndex] = useState(settings.accountingQSelectedIndex);
   const [filter, setFilter] = useState(null);
-  const displays = [
-    'Analytics',
-    'Data',
+  const [data, setData] = useState(null);
+  const [feature, setFeature] = useState(<LoadingSpinner message="Loading AccountingQ..." />);
+
+  const features = (newData) => [
+    <Analyzer title="Analytics" data={newData} />,
+    <Viewer title="Data" data={newData} getData={getData} />,
   ];
 
-  const results = () => [
-    <Analyzer data={data} start={start} end={end} />,
-    <Viewer data={data} filter={filter} parent={this} />,
-  ][selectedIndex];
+  const getData = () => {
+    const fetchData = async () => {
+      const query = { start, end, filter };
+      const transactions = await fetchDocuments({ collection: 'transactions', query });
+      setData(transactions);
+      setFeature(features(transactions)[settings.accountingQ.idx]);
+    };
+
+    setFeature(<LoadingSpinner message="Loading AccountingQ..." />);
+    fetchData();
+  };
+
+  useEffect(getData, [start, end, filter]);
+
+  const saveIdx = (idx) => {
+    const newSettings = settings;
+    newSettings.accountingQ.idx = idx;
+    saveSettings(newSettings);
+    setSettings(newSettings);
+    setFeature(getFeatures(data));
+  };
+
+  const dateControls = ['M', 'W'];
 
   return (
-    <ExplorePage
-      source="transactions"
-      colorTheme={accountingQTheme}
-      results={results()}
-      displays={displays}
-      start={start}
-      end={end}
-      data={data}
-      dateControls={['W', 'M']}
-      settingsKey="accountingQSelectedIndex"
-    />
+    <Page rimColor={accountingQTheme.primary}>
+      <ChronologicalSearchBar
+        start={start}
+        end={end}
+        setStart={setStart}
+        setEnd={setEnd}
+        setFilter={setFilter} // TODO: hook this set filter up yo
+        dateControls={dateControls}
+        colorTheme={accountingQTheme}
+      />
+      <ArraySelector
+        array={features()}
+        idx={settings.spotifyQ.idx}
+        title={<Title>{feature.props.title}</Title>}
+        saveIdx={saveIdx}
+      />
+      {feature}
+    </Page>
   );
 };
 

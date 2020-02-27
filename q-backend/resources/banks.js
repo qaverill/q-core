@@ -42,9 +42,8 @@ const factTags = {
   },
   clothing: {
     online: ['TERRITORY AHEAD'],
-    inStore: [],
+    inStore: ['GARMENT DISTRICT', 'ISLANDERS OUTF'],
   },
-  clothes: ['GARMENT DISTRICT', 'ISLANDERS OUTF'],
   'house-hold': ['TARGET', 'BED BATH & BEYOND'],
   furniture: ['Center Chanel Holder'],
   records: ['RECORDS'],

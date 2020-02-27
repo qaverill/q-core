@@ -1,5 +1,5 @@
 import axios from 'axios';
-import NotificationManager from 'react-notifications';
+import { NotificationManager } from 'react-notifications';
 import stringSimilarity from 'string-similarity';
 
 

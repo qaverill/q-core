@@ -69,6 +69,7 @@ export const TextInput = styled.input`
 
 export const Page = styled.div`
   background-color: ${dark};
+  border: 5px solid ${props => props.rimColor};
   border-radius: 15px;
   padding: 7.5px;
   height: calc(100% - 100px);
@@ -133,4 +134,8 @@ export const FullDiv = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+`;
+
+export const Title = styled.h2`
+  margin: 0 10px;
 `;

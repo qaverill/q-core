@@ -1,23 +1,16 @@
 /* eslint-disable no-undef */
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+
+import Analytics from './Analytics';
+import Albums from './Albums';
+import ArraySelector from '../../sharedComponents/ArraySelector';
 import ChronologicalSearchBar from '../../sharedComponents/ChronologicalSearchBar';
+import LoadingSpinner from '../../sharedComponents/LoadingSpinner';
+
 import { fetchDocuments, saveSettings } from '../../api/mongodb';
 import { spotifyQTheme } from '../../packages/colors';
+import { Page, Title } from '../../packages/core';
 import { ONE_EPOCH_DAY } from '../../packages/utils';
-import { Page } from '../../packages/core';
-import Analytics from './Analytics';
-import ArraySelector from '../../sharedComponents/ArraySelector';
-import LoadingSpinner from '../../sharedComponents/LoadingSpinner';
-import Albums from './Albums';
-
-const SpotifyQPage = styled(Page)`
-  border: 5px solid ${spotifyQTheme.primary};
-`;
-
-const Title = styled.h2`
-  margin: 0 10px;
-`;
 
 const SpotifyQ = ({ settings, setSettings }) => {
   const [start, setStart] = useState(Math.round(new Date().getTime() / 1000) - 3 * ONE_EPOCH_DAY);
@@ -58,7 +51,7 @@ const SpotifyQ = ({ settings, setSettings }) => {
   const dateControls = ['Y', 'M', 'W', 'D'];
 
   return (
-    <SpotifyQPage>
+    <Page rimColor={spotifyQTheme.primary}>
       <ChronologicalSearchBar
         start={start}
         end={end}
@@ -75,7 +68,7 @@ const SpotifyQ = ({ settings, setSettings }) => {
         saveIdx={saveIdx}
       />
       {feature}
-    </SpotifyQPage>
+    </Page>
   );
 };
 

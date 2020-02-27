@@ -22,6 +22,16 @@ export const writeDocument = ({ collection, _id, document }) => new Promise((res
     });
 });
 
+export const deleteDocument = ({ collection, _id }) => new Promise((resolve, reject) => {
+  axios.delete(`/mongodb/${collection}/${_id}`)
+    .then(resolve)
+    .catch(error => {
+      NotificationManager.error(`Failed to delete document from ${collection}`, `_id: ${_id}`);
+      console.error(error);
+      reject(error);
+    });
+});
+
 export const saveSettings = settings => {
   const collection = 'metadata';
   const _id = 'settings';

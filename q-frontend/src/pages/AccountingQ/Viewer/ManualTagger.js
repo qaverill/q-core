@@ -5,9 +5,9 @@ import React, { useState, useEffect } from 'react';
 import { NotificationManager } from 'react-notifications';
 import styled from 'styled-components';
 import axios from 'axios';
-import { red } from '../../../../packages/colors';
-import { PopupContainer, TextInput, Button } from '../../../../packages/core';
-import { roundToTwoDecimalPlaces } from '../../../../packages/utils';
+import { red } from '../../../packages/colors';
+import { PopupContainer, TextInput, Button } from '../../../packages/core';
+import { roundToTwoDecimalPlaces } from '../../../packages/utils';
 
 const Tag = styled.div`
   display: flex;

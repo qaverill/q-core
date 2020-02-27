@@ -28,7 +28,6 @@ const AlbumImg = styled.img`
 
 const Albums = ({ data }) => {
   const Album = ({ item }) => {
-    console.log(item)
     const { timestamp, track } = item;
     const { url } = track.album.images[0];
     return (
@@ -38,13 +37,16 @@ const Albums = ({ data }) => {
     );
   };
 
+  // TODO: remove this bullshit and get the images by calling the spotify api.
+  //       then save the images by album in a cache
   return (
     <AlbumsContainer>
-      {data.map(item => (
+      <h2>{`Number of listens: ${data.length}`}</h2>
+      {/* {data.map(item => (
         <Popup trigger={<Album item={item} />} position="right center" key={item.timestamp}>
           <div>T/A/A</div>
         </Popup>
-      ))}
+      ))} */}
     </AlbumsContainer>
   );
 };
