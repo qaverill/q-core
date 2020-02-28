@@ -3,44 +3,9 @@ import styled from 'styled-components';
 import { NotificationManager } from 'react-notifications';
 
 import ManualTagger from './ManualTagger';
-import { deleteDocument } from '../../../api/mongodb';
 import { red, green, yellow, accountingQTheme } from '../../../packages/colors';
-import { epochToString, copyStringToClipboard } from '../../../packages/utils';
+import { epochToString, copyStringToClipboard, numberToPrice } from '../../../packages/utils';
 import { Button, StyledPopup } from '../../../packages/core';
-
-const Transaction = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-`;
-
-const DateColumn = styled.div`
-  display: flex;
-  width: 110px;
-  flex-shrink: 0;
-`;
-
-const AmountColumn = styled.div`
-  display: flex;
-  flex-direction: row-reverse;
-  width: 90px;
-  flex-shrink: 0;
-`;
-
-const DescriptionColumn = styled.div`
-  display: flex;
-  flex-grow: 1;
-  justify-content: center;
-`;
-
-const TagsColumn = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: row-reverse;
-  flex-shrink: 0;
-  width: 260px;
-  white-space: nowrap;
-`;
 
 const Viewer = styled.div`
   width: 100%;
@@ -48,16 +13,47 @@ const Viewer = styled.div`
   overflow: auto;
 `;
 
-const TransactionFact = ({ fact, getData }) => {
-  const { _id, timestamp, amount, description, tags } = fact;
+const Transaction = styled.div`
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  background-color: ${props => props.amount < 0 ? `rgba(255, 0, 0, ${props.opacity})` : `rgba(0, 255, 0, ${props.opacity})`};
+  border-radius: 15px;
+  margin: 5px;
+`;
 
-  const removeTransactionFact = () => {
-    deleteDocument({ collection: 'transactions', _id })
-      .then(() => {
-        getData();
-        NotificationManager.success('Successfully deleted transaction fact', `_id: ${_id}`);
-      });
-  };
+const DateColumn = styled.div`
+  display: flex;
+  flex-shrink: 0;
+`;
+
+const AmountColumn = styled.div`
+  display: flex;
+  width: 100px;
+  flex-direction: row-reverse;
+  flex-shrink: 0;
+`;
+
+const DescriptionColumn = styled.div`
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  white-space: pre;
+`;
+
+const TagsColumn = styled.div`
+  display: flex;
+  width: 255px;
+  align-items: center;
+  flex-direction: row-reverse;
+  flex-shrink: 1;
+  white-space: nowrap;
+`;
+
+const TransactionFact = ({ fact }) => {
+  const { _id, timestamp, amount, description, tags } = fact;
 
   const craftTagButton = () => {
     let color = tags.length === 0 ? red : green;
@@ -78,11 +74,13 @@ const TransactionFact = ({ fact, getData }) => {
     NotificationManager.success('Copied transaction to clipboard', _id);
   };
 
+  const opacity = 0.1;
+
   return (
-    <Transaction>
+    <Transaction amount={amount} opacity={opacity}>
       <Button color={accountingQTheme.tertiary} onClick={copyIdToClipboard}>_id</Button>
       <DateColumn><h2>{epochToString(timestamp)}</h2></DateColumn>
-      <AmountColumn><h2>{amount}</h2></AmountColumn>
+      <AmountColumn><h2>{numberToPrice(amount)}</h2></AmountColumn>
       <DescriptionColumn><h2>{description}</h2></DescriptionColumn>
       <TagsColumn>
         <h2>{tags.length}</h2>
@@ -90,18 +88,8 @@ const TransactionFact = ({ fact, getData }) => {
           {close => <ManualTagger fact={fact} closeModal={close} />}
         </StyledPopup>
       </TagsColumn>
-      <Button color={red} onClick={removeTransactionFact}>X</Button>
     </Transaction>
   );
 };
 
-export default ({ data, getData }) => (
-  <Viewer>
-    {data.map(fact => (
-      <TransactionFact
-        fact={fact}
-        getData={getData}
-      />
-    ))}
-  </Viewer>
-);
+export default ({ data }) => <Viewer>{data.map(fact => <TransactionFact fact={fact} />)}</Viewer>;

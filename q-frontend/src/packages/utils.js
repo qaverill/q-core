@@ -55,3 +55,10 @@ export const copyStringToClipboard = (string) => {
   document.execCommand('copy');
   document.body.removeChild(el);
 };
+
+export const numberToPrice = (number) => {
+  const polarity = number < 0 ? '-' : '';
+  const amount = number < 0 ? number * -1 : number;
+  const tail = number % 1 === 0 ? '.00' : '';
+  return `${polarity}$${amount}${tail}`;
+};

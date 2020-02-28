@@ -40,4 +40,4 @@ export const dashboardQTheme = {
   secondary: green,
   tertiary: aqua,
   quaternary: purple,
-}
+};

@@ -74,7 +74,6 @@ export const Page = styled.div`
   padding: 7.5px;
   height: calc(100% - 100px);
   margin 0 25px;
-  overflow: auto;
 `;
 
 export const RightArrow = styled.img

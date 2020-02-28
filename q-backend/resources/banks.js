@@ -8,7 +8,7 @@ const START_OF_SEPTEMBER = 1567310400;
 // TODO: this should really be saved in a file and read into memory only when needed
 const factTags = {
   food: {
-    dinner: ['DUMPLING HOUSE', 'Mouse food', '9 TASTES CAMBRIDGE', 'DUMPLING HOUSE CAMBRIDGE', 'POSTMATES', 'Pizza', '🍕', 'borgar'],
+    dinner: ['Binocchios bizza', 'DUMPLING HOUSE', 'Mouse food', '9 TASTES CAMBRIDGE', 'DUMPLING HOUSE CAMBRIDGE', 'POSTMATES', 'Pizza', '🍕', 'borgar'],
     lunch: ['SATE GRILL Cambridge', 'SA PA Boston', 'MOYZILLA', 'REVIVAL CAFE', 'AUGUSTA SUBS', 'GOGI ON THE BL', 'CHEF LOUIE Cambridge', 'zaaki'],
     dessert: ['JP LICKS', 'INSOMNIA COOKIES'],
     groceries: ['H MART', 'Insta🅱️art', 'TRADER JOE', 'groceries', 'tj', 'Grocery', 'MARKET BASKET'],
@@ -44,6 +44,9 @@ const factTags = {
     online: ['TERRITORY AHEAD'],
     inStore: ['GARMENT DISTRICT', 'ISLANDERS OUTF'],
   },
+  houseHold: {
+    
+  }
   'house-hold': ['TARGET', 'BED BATH & BEYOND'],
   furniture: ['Center Chanel Holder'],
   records: ['RECORDS'],

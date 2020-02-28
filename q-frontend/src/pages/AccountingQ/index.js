@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 
 import Analyzer from './Analyzer';
 import Viewer from './Viewer';
@@ -7,10 +8,15 @@ import ArraySelector from '../../sharedComponents/ArraySelector';
 import ChronologicalSearchBar from '../../sharedComponents/ChronologicalSearchBar';
 import LoadingSpinner from '../../sharedComponents/LoadingSpinner';
 
-import { fetchDocuments, saveSettings, deleteDocument } from '../../api/mongodb';
+import { fetchDocuments, saveSettings } from '../../api/mongodb';
 import { accountingQTheme } from '../../packages/colors';
 import { Page, Title } from '../../packages/core';
 import { times } from '../../packages/utils';
+
+const Feature = styled.div`
+  width: 100%;
+  height: calc(100% - 90px);
+`;
 
 const AccountingQ = ({ settings, setSettings }) => {
   const [start, setStart] = useState(times.firstOfCurrentMonth());
@@ -21,13 +27,14 @@ const AccountingQ = ({ settings, setSettings }) => {
 
   const features = (newData) => [
     <Analyzer title="Analytics" data={newData} />,
-    <Viewer title="Data" data={newData} getData={getData} />,
+    <Viewer title="Data" data={newData} />,
   ];
 
   const getData = () => {
     const fetchData = async () => {
       const query = { start, end, filter };
       const transactions = await fetchDocuments({ collection: 'transactions', query });
+      transactions.sort((a, b) => (a.timestamp > b.timestamp ? -1 : 1));
       setData(transactions);
       setFeature(features(transactions)[settings.accountingQ.idx]);
     };
@@ -65,7 +72,7 @@ const AccountingQ = ({ settings, setSettings }) => {
         title={<Title>{feature.props.title}</Title>}
         saveIdx={saveIdx}
       />
-      {feature}
+      <Feature>{feature}</Feature>
     </Page>
   );
 };
