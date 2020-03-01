@@ -41,7 +41,7 @@ const Albums = ({ data }) => {
   //       then save the images by album in a cache
   return (
     <AlbumsContainer>
-      <h2>{`Number of listens: ${data.length}`}</h2>
+      <h2>{`Number of listens: ${5}`}</h2>
       {/* {data.map(item => (
         <Popup trigger={<Album item={item} />} position="right center" key={item.timestamp}>
           <div>T/A/A</div>

@@ -52,8 +52,8 @@ const TagsColumn = styled.div`
   white-space: nowrap;
 `;
 
-const TransactionFact = ({ fact }) => {
-  const { _id, timestamp, amount, description, tags } = fact;
+const TransactionFact = ({ transaction, idx, updateTransaction }) => {
+  const { _id, timestamp, amount, description, tags } = transaction;
 
   const craftTagButton = () => {
     let color = tags.length === 0 ? red : green;
@@ -84,12 +84,32 @@ const TransactionFact = ({ fact }) => {
       <DescriptionColumn><h2>{description}</h2></DescriptionColumn>
       <TagsColumn>
         <h2>{tags.length}</h2>
-        <StyledPopup modal trigger={craftTagButton(fact)}>
-          {close => <ManualTagger fact={fact} closeModal={close} />}
+        <StyledPopup modal trigger={craftTagButton(transaction)}>
+          {closeModal => (
+            <ManualTagger
+              idx={idx}
+              transaction={transaction}
+              closeModal={closeModal}
+              updateTransaction={updateTransaction}
+            />
+          )}
         </StyledPopup>
       </TagsColumn>
     </Transaction>
   );
 };
 
-export default ({ data }) => <Viewer>{data.map(fact => <TransactionFact fact={fact} />)}</Viewer>;
+export default ({ data, updateTransaction }) => {
+  console.log(data)
+  return (
+    <Viewer>
+      {data.map((transaction, idx) => (
+        <TransactionFact
+          transaction={transaction}
+          idx={idx}
+          updateTransaction={updateTransaction}
+        />
+      ))}
+    </Viewer>
+  );
+};

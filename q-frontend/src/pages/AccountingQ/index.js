@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { NotificationManager } from 'react-notifications';
 
 import Analyzer from './Analyzer';
 import Viewer from './Viewer';
@@ -8,10 +9,12 @@ import ArraySelector from '../../sharedComponents/ArraySelector';
 import ChronologicalSearchBar from '../../sharedComponents/ChronologicalSearchBar';
 import LoadingSpinner from '../../sharedComponents/LoadingSpinner';
 
-import { fetchDocuments, saveSettings } from '../../api/mongodb';
+import { fetchDocuments, saveSettings, writeDocument } from '../../api/mongodb';
 import { accountingQTheme } from '../../packages/colors';
-import { Page, Title } from '../../packages/core';
+import { Page } from '../../packages/core';
 import { times } from '../../packages/utils';
+
+const collection = 'transactions';
 
 const Feature = styled.div`
   width: 100%;
@@ -23,34 +26,42 @@ const AccountingQ = ({ settings, setSettings }) => {
   const [end, setEnd] = useState(times.now());
   const [filter, setFilter] = useState(null);
   const [data, setData] = useState(null);
-  const [feature, setFeature] = useState(<LoadingSpinner message="Loading AccountingQ..." />);
 
-  const features = (newData) => [
-    <Analyzer title="Analytics" data={newData} />,
-    <Viewer title="Data" data={newData} />,
-  ];
+  const updateTransaction = (newTransaction, idx) => new Promise(resolve => {
+    const { _id } = newTransaction;
+    writeDocument({ collection, _id, document: newTransaction })
+      .then(result => {
+        if (result.status === 204) {
+          const newData = data;
+          delete newData[idx];
+          newData[idx] = newTransaction;
+          setData(newData);
+          resolve();
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+        NotificationManager.error('Failed to update transaction fact', `_id: ${_id}`);
+      });
+  });
 
-  const getData = () => {
+  useEffect(() => {
     const fetchData = async () => {
       const query = { start, end, filter };
-      const transactions = await fetchDocuments({ collection: 'transactions', query });
+      const transactions = await fetchDocuments({ collection, query });
       transactions.sort((a, b) => (a.timestamp > b.timestamp ? -1 : 1));
       setData(transactions);
-      setFeature(features(transactions)[settings.accountingQ.idx]);
     };
 
-    setFeature(<LoadingSpinner message="Loading AccountingQ..." />);
+    setData(null);
     fetchData();
-  };
-
-  useEffect(getData, [start, end, filter]);
+  }, [start, end, filter]);
 
   const saveIdx = (idx) => {
     const newSettings = settings;
     newSettings.accountingQ.idx = idx;
     saveSettings(newSettings);
     setSettings(newSettings);
-    setFeature(getFeatures(data));
   };
 
   const dateControls = ['M', 'W'];
@@ -67,12 +78,19 @@ const AccountingQ = ({ settings, setSettings }) => {
         colorTheme={accountingQTheme}
       />
       <ArraySelector
-        array={features()}
-        idx={settings.spotifyQ.idx}
-        title={<Title>{feature.props.title}</Title>}
+        array={['Analytics', 'Data']}
+        idx={settings.accountingQ.idx}
         saveIdx={saveIdx}
       />
-      <Feature>{feature}</Feature>
+      {data == null ? <LoadingSpinner message="Loading AccountingQ..." />
+        : (
+          <Feature>
+            {[
+              <Analyzer data={data} />,
+              <Viewer data={data} updateTransaction={updateTransaction} />,
+            ][settings.accountingQ.idx]}
+          </Feature>
+        )}
     </Page>
   );
 };

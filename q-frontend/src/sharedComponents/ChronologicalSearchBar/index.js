@@ -1,10 +1,12 @@
 /* eslint-disable no-undef */
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { BoldText, TextInput } from '../../packages/core';
-import { epochToString, epochToDate } from '../../packages/utils';
+import { NotificationManager } from 'react-notifications';
+
 import DateAdjuster from './DateAdjuster';
 import SearchBar from './SearchBar';
+import { BoldText, TextInput } from '../../packages/core';
+import { epochToString, epochToDate } from '../../packages/utils';
 
 import { searchSpotify } from '../../api/spotify';
 

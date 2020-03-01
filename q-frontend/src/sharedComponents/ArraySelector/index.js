@@ -10,21 +10,24 @@ const ArraySelectorContainer = styled.div`
   height: 35px;
 `;
 
+const Title = styled.h2`
+  margin: 0 10px;
+`;
+
 const ArraySelector = ({
-  title,
   saveIdx,
   idx,
   array,
 }) => {
   const clickLeft = () => saveIdx(idx + 1 > array.length - 1 ? 0 : idx + 1);
   const clickRight = () => saveIdx(idx - 1 < 0 ? array.length - 1 : idx - 1);
-  return title.props.children ? (
-    <ArraySelectorContainer key={title}>
+  return (
+    <ArraySelectorContainer key={array[idx]}>
       <LeftArrow onClick={clickLeft} />
-      {title || 'FFF'}
+      <Title>{array[idx]}</Title>
       <RightArrow onClick={clickRight} />
     </ArraySelectorContainer>
-  ) : null;
+  );
 };
 
 export default ArraySelector;

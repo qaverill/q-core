@@ -33,27 +33,13 @@ const AppHeader = styled.div`
   z-index: 100;
 `;
 
-const Title = styled.h2`
-  margin: 0 10px;
-`;
-
 const App = () => {
   const [settings, setSettings] = useState(null);
-  const [app, setApp] = useState(<LoadingSpinner title="Loading..." message="Setting up app..." />);
-
-  const pages = (newSettings) => [
-    <SpotifyQ title="SpotifyQ" settings={newSettings} setSettings={setSettings} />,
-    <DashboardQ title="DashboardQ" />,
-    <AccountingQ title="AccountingQ" settings={newSettings} />,
-  ];
-
-  const getPage = (newSettings) => pages(newSettings)[newSettings.app.idx];
 
   useEffect(() => {
     const fetchSettings = async () => {
       const newSettings = await fetchDocuments({ collection: 'metadata', _id: 'settings' });
       setSettings(newSettings);
-      setApp(getPage(newSettings));
     };
 
     fetchSettings();
@@ -63,7 +49,6 @@ const App = () => {
     settings.app.idx = idx;
     saveSettings(settings);
     setSettings(settings);
-    setApp(getPage(settings));
   };
 
   return (
@@ -72,14 +57,19 @@ const App = () => {
       <AppHeader>
         {settings && (
           <ArraySelector
-            array={pages()}
+            array={['SpotifyQ', 'DashboardQ', 'AccountingQ']}
             idx={settings.app.idx}
-            title={<Title>{app.props.title}</Title>}
             saveIdx={saveIdx}
           />
         )}
       </AppHeader>
-      {app}
+      {settings != null
+        ? [
+          <SpotifyQ settings={settings} setSettings={setSettings} />,
+          <DashboardQ />,
+          <AccountingQ settings={settings} setSettings={setSettings} />,
+        ][settings.app.idx]
+        : <LoadingSpinner title="Loading..." message="Setting up app..." />}
     </AppContainer>
   );
 };

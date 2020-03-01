@@ -20,7 +20,7 @@ export const formatAsMoney = num => (num < 0 ? `-$${roundToTwoDecimalPlaces(num)
 export const averageArray = array => array.reduce((a, b) => a + b, 0) / array.length;
 
 export const times = {
-  firstOfCurrentMonth: () => Math.round(new Date(new Date().getFullYear(), new Date().getMonth(), 1) / 1000),
+  firstOfCurrentMonth: () => Math.round(new Date(new Date().getFullYear(), new Date().getMonth() - 7, 1) / 1000),
   now: () => Math.round(new Date().getTime() / 1000),
 };
 

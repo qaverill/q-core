@@ -34,9 +34,10 @@ const tests = [
   },
   { description: 'nothing', expected: [] },
   { description: 'venmo from other user', expected: ['payBack'] },
+  { description: 'Check Withdrawal: #113', amount: '-1150', expected: ['rent'] },
 ];
 
-const algorithm = (i) => testAutoTagDoc(tests[i].description, tags, null);
+const algorithm = (i) => testAutoTagDoc(tests[i], tags, null);
 
 module.exports = {
   path,

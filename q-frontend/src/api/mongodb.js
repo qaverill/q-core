@@ -1,5 +1,5 @@
 import axios from 'axios';
-import NotificationManager from 'react-notifications';
+import { NotificationManager } from 'react-notifications';
 import queryString from 'query-string';
 
 export const fetchDocuments = ({ collection, _id, query }) => new Promise((resolve, reject) => {

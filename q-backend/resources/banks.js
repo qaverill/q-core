@@ -8,17 +8,18 @@ const START_OF_SEPTEMBER = 1567310400;
 // TODO: this should really be saved in a file and read into memory only when needed
 const factTags = {
   food: {
-    dinner: ['Binocchios bizza', 'DUMPLING HOUSE', 'Mouse food', '9 TASTES CAMBRIDGE', 'DUMPLING HOUSE CAMBRIDGE', 'POSTMATES', 'Pizza', '🍕', 'borgar'],
-    lunch: ['SATE GRILL Cambridge', 'SA PA Boston', 'MOYZILLA', 'REVIVAL CAFE', 'AUGUSTA SUBS', 'GOGI ON THE BL', 'CHEF LOUIE Cambridge', 'zaaki'],
+    dinner: ['Orfanos', 'Binocchios bizza', 'DUMPLING HOUSE', 'Mouse food', '9 TASTES CAMBRIDGE', 'DUMPLING HOUSE CAMBRIDGE', 'POSTMATES', 'Pizza', '🍕', 'borgar'],
+    lunch: ['Lunch', 'SATE GRILL Cambridge', 'SA PA Boston', 'MOYZILLA', 'REVIVAL CAFE', 'AUGUSTA SUBS', 'GOGI ON THE BL', 'CHEF LOUIE Cambridge', 'zaaki'],
+    brunch: ['Brunch'],
     dessert: ['JP LICKS', 'INSOMNIA COOKIES'],
-    groceries: ['H MART', 'Insta🅱️art', 'TRADER JOE', 'groceries', 'tj', 'Grocery', 'MARKET BASKET'],
+    groceries: ['Trader Howies', 'supplies from the bucket', 'Food stuff', 'H MART', 'Insta🅱️art', 'TRADER JOE', 'groceries', 'tj', 'Grocery', 'MARKET BASKET'],
     lateNightFood: ['EL JEFE\'S TAQUERI', 'ALEPPO PALACE'],
   },
   drinks: {
     coffee: ['Coofie', 'DUNKIN', 'PAVEMENT COFFE', 'DARWIN S LTD'],
     alcohol: {
       brewery: ['TRILLIUM BREWING'],
-      liquorStore: [],
+      liquorStore: ['Merlot'],
       bars: ['Dranks', 'SCHOLAR', 'BELL IN HAND TAVERN', 'DAEDALUS', 'TAVERN IN THE SQUARE', 'Night cap', 'FOUNDRY ON ELM', 'ARAMARK FENWAY'],
     },
   },
@@ -44,28 +45,40 @@ const factTags = {
     online: ['TERRITORY AHEAD'],
     inStore: ['GARMENT DISTRICT', 'ISLANDERS OUTF'],
   },
-  houseHold: {
-    
-  }
-  'house-hold': ['TARGET', 'BED BATH & BEYOND'],
+  houseHold: ['TARGET', 'BED BATH & BEYOND'],
   furniture: ['Center Chanel Holder'],
   records: ['RECORDS'],
-  income: ['Dividend Deposit', 'Deposit TRINETX', 'Check Deposit'],
-  'video-games': ['blizzard', 'Microsoft'],
+  income: {
+    savingsInterest: ['Dividend Deposit'],
+    paycheck: ['Deposit TRINETX'],
+    check: ['Check Deposit'],
+  },
+  videoGames: ['blizzard', 'Microsoft'],
   loans: ['NAVI ED', 'Withdrawal UAS'],
   cash: ['ATM Withdrawal', 'Cash Withdrawal'],
+  laundry: ['Qworters', 'Quarters'],
   gas: ['CUMBERLAND FARMS'],
-  streaming: ['HULU'],
-  subscriptions: ['Amazon Prime'],
-  events: ['BROWNPAPERTICKETS'],
-  movies: ['SOMERVILLE THEATRE'],
-  concerts: ['SOFAR SOUNDS'],
-  'music-gear': ['GUITAR CENTER'],
+  subscriptions: {
+    memberships: ['Amazon Prime'],
+    streaming: ['HULU'],
+  },
+  events: {
+    festivals: ['BROWNPAPERTICKETS'],
+    movies: ['SOMERVILLE THEATRE', 'Parasites', 'Movie tickets'],
+    shows: ['SOFAR SOUNDS'],
+    blackMountain: ['F shack', 'Db supplies and breakfast'],
+  },
+  musicGear: ['GUITAR CENTER'],
+  rent: ['Roont'],
 };
 
-const autoTagDoc = (description, tags, parentTag) => {
+const autoTagFact = (fact, tags, parentTag) => {
+  const { description, amount } = fact;
   if (description.includes('venmo from')) {
     return ['payBack'];
+  }
+  if (description.includes('Check Withdrawal') && amount === '-1150') {
+    return ['rent'];
   }
   if (Array.isArray(tags)) {
     return [...new Set(
@@ -77,7 +90,7 @@ const autoTagDoc = (description, tags, parentTag) => {
     )];
   }
   return [...new Set(Object.keys(tags).flatMap(subTag => {
-    const possibleTag = autoTagDoc(description, tags[subTag], subTag);
+    const possibleTag = autoTagFact(fact, tags[subTag], subTag);
     return possibleTag.length > 0 ? [parentTag, ...possibleTag] : null;
   }).filter(tag => tag != null))];
 };
@@ -130,8 +143,8 @@ const parseRow = ({ line, file }) => {
         timestamp: dateToTimestamp(row[1]),
         amount: row[2].indexOf('(') > -1 ? parseFloat(row[2].replace(/[)$(]/g, '')) * -1 : parseFloat(row[2].replace('$', '')),
         description: row[5],
-        tags: autoTagDoc(row[5], factTags, null),
       };
+      fact.tags = autoTagFact(fact, factTags, null);
       fact._id = generateFactId(fact);
       return fact;
     case 'citi.csv':
@@ -140,8 +153,8 @@ const parseRow = ({ line, file }) => {
         timestamp: dateToTimestamp(row[1]),
         amount: row[3] !== '' ? parseFloat(row[3]) * -1 : parseFloat(row[4]) * -1,
         description: row[2].replace(/"/g, ''),
-        tags: autoTagDoc(row[2].replace(/"/g, ''), factTags, null),
       };
+      fact.tags = autoTagFact(fact, factTags, null);
       fact._id = generateFactId(fact);
       return fact;
     case 'venmo.csv':
@@ -153,8 +166,8 @@ const parseRow = ({ line, file }) => {
           timestamp: dateToTimestamp(row[2]),
           amount: parseFloat(row[8].replace(/[ $+]/g, '')),
           description,
-          tags: autoTagDoc(description, factTags, null),
         };
+        fact.tags = autoTagFact(fact, factTags, null);
         fact._id = generateFactId(fact);
         return fact;
       }
@@ -188,5 +201,5 @@ module.exports = {
       })
       .catch(reject);
   }),
-  testAutoTagDoc: (doc, tags, label) => autoTagDoc(doc, tags, label),
+  testAutoTagDoc: (fact, tags, label) => autoTagFact(fact, tags, label),
 };
