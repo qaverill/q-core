@@ -19,9 +19,9 @@ const ManualTagger = ({ idx, transaction, closeModal, updateTransaction }) => {
     }
   };
 
-  const removeTag = ({ tagIdx }) => {
+  const removeTag = (tagIdx) => {
     const newTransaction = transaction;
-    delete newTransaction.tags[tagIdx];
+    newTransaction.tags[tagIdx] = null;
     newTransaction.tags = newTransaction.tags.filter(tag => tag != null);
     updateTransaction(newTransaction, idx);
   };

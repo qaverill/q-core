@@ -6,6 +6,7 @@ import ManualTagger from './ManualTagger';
 import { red, green, yellow, accountingQTheme } from '../../../packages/colors';
 import { epochToString, copyStringToClipboard, numberToPrice } from '../../../packages/utils';
 import { Button, StyledPopup } from '../../../packages/core';
+import { refreshIcon } from '../../../packages/images';
 
 const Viewer = styled.div`
   width: 100%;
@@ -52,6 +53,18 @@ const TagsColumn = styled.div`
   white-space: nowrap;
 `;
 
+const RefreshTagsButton = styled.img
+  .attrs({
+    src: refreshIcon,
+  })`
+  height: 25px;
+  width: 25px;
+  :hover {
+    filter: brightness(1.25);
+  };
+  margin-right: 5px;
+`;
+
 const TransactionFact = ({ transaction, idx, updateTransaction }) => {
   const { _id, timestamp, amount, description, tags } = transaction;
 
@@ -95,12 +108,12 @@ const TransactionFact = ({ transaction, idx, updateTransaction }) => {
           )}
         </StyledPopup>
       </TagsColumn>
+      <RefreshTagsButton />
     </Transaction>
   );
 };
 
 export default ({ data, updateTransaction }) => {
-  console.log(data)
   return (
     <Viewer>
       {data.map((transaction, idx) => (

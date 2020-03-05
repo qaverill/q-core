@@ -29,6 +29,7 @@ const AccountingQ = ({ settings, setSettings }) => {
 
   const updateTransaction = (newTransaction, idx) => new Promise(resolve => {
     const { _id } = newTransaction;
+    setData(null);
     writeDocument({ collection, _id, document: newTransaction })
       .then(result => {
         if (result.status === 204) {
@@ -40,7 +41,7 @@ const AccountingQ = ({ settings, setSettings }) => {
         }
       })
       .catch((e) => {
-        console.log(e)
+        console.log(e);
         NotificationManager.error('Failed to update transaction fact', `_id: ${_id}`);
       });
   });

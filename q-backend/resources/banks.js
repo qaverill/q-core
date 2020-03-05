@@ -95,6 +95,10 @@ const autoTagFact = (fact, tags, parentTag) => {
   }).filter(tag => tag != null))];
 };
 
+const completeManualTag = () => {
+
+};
+
 const unneededFactDescriptions = [
   'Withdrawal VENMO',
   'Online Transfer',
