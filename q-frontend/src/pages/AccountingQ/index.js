@@ -5,9 +5,9 @@ import { NotificationManager } from 'react-notifications';
 
 import Analyzer from './Analyzer';
 import Viewer from './Viewer';
-import ArraySelector from '../../sharedComponents/ArraySelector';
-import ChronologicalSearchBar from '../../sharedComponents/ChronologicalSearchBar';
-import LoadingSpinner from '../../sharedComponents/LoadingSpinner';
+import ArraySelector from '../../components/PageSelector';
+import ChronologicalSearchBar from '../../components/ChronologicalSearchBar';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 import { fetchDocuments, saveSettings, writeDocument } from '../../api/mongodb';
 import { accountingQTheme } from '../../packages/colors';

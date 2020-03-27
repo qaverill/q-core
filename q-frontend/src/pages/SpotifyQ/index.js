@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 
 import Analytics from './Analytics';
 import Albums from './Albums';
-import ArraySelector from '../../sharedComponents/ArraySelector';
-import ChronologicalSearchBar from '../../sharedComponents/ChronologicalSearchBar';
-import LoadingSpinner from '../../sharedComponents/LoadingSpinner';
+import ArraySelector from '../../components/PageSelector';
+import ChronologicalSearchBar from '../../components/ChronologicalSearchBar';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 import { fetchDocuments, saveSettings } from '../../api/mongodb';
 import { spotifyQTheme } from '../../packages/colors';
