@@ -1,9 +1,10 @@
 /* eslint-disable no-undef */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import { NotificationContainer } from 'react-notifications';
+import { StoreContext, reducer, initialState, actions } from './store';
 import 'react-notifications/lib/notifications.css';
 
 import { fetchDocuments } from './api/mongodb';
@@ -17,12 +18,12 @@ const AppRouter = styled(Router)`
 `;
 
 const App = () => {
-  const [settings, setSettings] = useState(null);
-
+  const [state, dispatch] = useReducer(reducer, { ...initialState });
+  const { settings } = state;
   useEffect(() => {
     const fetchSettings = async () => {
       const newSettings = await fetchDocuments({ collection: 'metadata', _id: 'settings' });
-      setSettings(newSettings);
+      dispatch(actions.setSettings(newSettings));
     };
 
     fetchSettings();
@@ -31,9 +32,11 @@ const App = () => {
   return (
     <AppRouter>
       <NotificationContainer />
-      {settings != null
-        ? <Pages settings={settings} setSettings={setSettings} />
-        : <LoadingSpinner title="Loading..." message="Setting up app..." />}
+      <StoreContext.Provider value={{ state, dispatch }}>
+        {settings
+          ? <Pages />
+          : <LoadingSpinner title="Loading..." message="Setting up app..." />}
+      </StoreContext.Provider>
     </AppRouter>
   );
 };

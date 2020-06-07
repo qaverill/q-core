@@ -2,10 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { NotificationManager } from 'react-notifications';
+import { actions, useStore } from '../../store';
 
 import Analyzer from './Analyzer';
 import Viewer from './Viewer';
-import ArraySelector from '../../components/PageSelector';
+import PageSelector from '../../components/PageSelector';
 import ChronologicalSearchBar from '../../components/ChronologicalSearchBar';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
@@ -21,7 +22,9 @@ const Feature = styled.div`
   height: calc(100% - 90px);
 `;
 
-const AccountingQ = ({ settings, setSettings }) => {
+const AccountingQ = () => {
+  const { state, dispatch } = useStore();
+  const { settings } = state;
   const [start, setStart] = useState(times.firstOfCurrentMonth());
   const [end, setEnd] = useState(times.now());
   const [filter, setFilter] = useState(null);
@@ -59,10 +62,9 @@ const AccountingQ = ({ settings, setSettings }) => {
   }, [start, end, filter]);
 
   const saveIdx = (idx) => {
-    const newSettings = settings;
-    newSettings.accountingQ.idx = idx;
-    saveSettings(newSettings);
-    setSettings(newSettings);
+    settings.accountingQ.idx = idx;
+    saveSettings(settings);
+    dispatch(actions.setSettings(settings));
   };
 
   const dateControls = ['M', 'W'];
@@ -78,12 +80,13 @@ const AccountingQ = ({ settings, setSettings }) => {
         dateControls={dateControls}
         colorTheme={accountingQTheme}
       />
-      <ArraySelector
-        array={['Analytics', 'Data']}
+      <PageSelector
+        pages={['Analytics', 'Data']}
         idx={settings.accountingQ.idx}
-        saveIdx={saveIdx}
+        onChange={saveIdx}
       />
-      {data == null ? <LoadingSpinner message="Loading AccountingQ..." />
+      {data == null
+        ? <LoadingSpinner message="Loading AccountingQ..." />
         : (
           <Feature>
             {[

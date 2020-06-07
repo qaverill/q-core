@@ -3,28 +3,23 @@ import React, { useState, useEffect } from 'react';
 
 import Analytics from './Analytics';
 import Albums from './Albums';
-import ArraySelector from '../../components/PageSelector';
+import PageSelector from '../../components/PageSelector';
 import ChronologicalSearchBar from '../../components/ChronologicalSearchBar';
 import LoadingSpinner from '../../components/LoadingSpinner';
-
+import { actions, useStore } from '../../store';
 import { fetchDocuments, saveSettings } from '../../api/mongodb';
 import { spotifyQTheme } from '../../packages/colors';
-import { Page, Title } from '../../packages/core';
+import { Page } from '../../packages/core';
 import { ONE_EPOCH_DAY } from '../../packages/utils';
 
-const SpotifyQ = ({ settings, setSettings }) => {
+const SpotifyQ = () => {
+  const { state, dispatch } = useStore();
+  const { settings } = state;
   const [start, setStart] = useState(Math.round(new Date().getTime() / 1000) - 3 * ONE_EPOCH_DAY);
   const [end, setEnd] = useState(Math.round(new Date().getTime() / 1000));
   const [filter, setFilter] = useState(null);
   const [data, setData] = useState(null);
-  const [feature, setFeature] = useState(<LoadingSpinner message="Loading SpotifyQ..." />);
-
-  const features = (newData) => [
-    <Analytics title="Analytics" data={newData} />,
-    <Albums title="Data" data={newData} />,
-  ];
-
-  const getFeatures = (newData) => features(newData)[settings.spotifyQ.idx];
+  const pages = ['Analytics', 'Albums'];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,19 +28,15 @@ const SpotifyQ = ({ settings, setSettings }) => {
       const saves = await fetchDocuments({ collection: 'saves', query });
       const combinedData = listens.concat(saves).sort((a, b) => a.timestamp - b.timestamp);
       setData(combinedData);
-      setFeature(getFeatures(combinedData));
     };
 
-    setFeature(<LoadingSpinner message="Loading SpotifyQ..." />);
     fetchData();
   }, [start, end, filter]);
 
   const saveIdx = (idx) => {
-    const newSettings = settings;
-    newSettings.spotifyQ.idx = idx;
-    saveSettings(newSettings);
-    setSettings(newSettings);
-    setFeature(getFeatures(data));
+    settings.spotifyQ.idx = idx;
+    saveSettings(settings);
+    dispatch(actions.setSettings(settings));
   };
 
   const dateControls = ['Y', 'M', 'W', 'D'];
@@ -61,13 +52,17 @@ const SpotifyQ = ({ settings, setSettings }) => {
         dateControls={dateControls}
         colorTheme={spotifyQTheme}
       />
-      <ArraySelector
-        array={features()}
+      <PageSelector
+        pages={pages}
         idx={settings.spotifyQ.idx}
-        title={<Title>{feature.props.title}</Title>}
-        saveIdx={saveIdx}
+        onChange={saveIdx}
       />
-      {feature}
+      {data
+        ? [
+          <Analytics data={data} />,
+          <Albums data={data} />,
+        ][settings.spotifyQ.idx]
+        : <LoadingSpinner message="Loading SpotifyQ..." />}
     </Page>
   );
 };

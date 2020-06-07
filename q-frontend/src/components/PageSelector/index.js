@@ -27,16 +27,21 @@ const PageSelector = ({
   pages,
   onChange,
 }) => {
-  const match = useRouteMatch();
+  const { url } = useRouteMatch();
   const leftIdx = idx + 1 > pages.length - 1 ? 0 : idx + 1;
   const rightIdx = idx - 1 < 0 ? pages.length - 1 : idx - 1;
+
+  function nextLink(nextIdx) {
+    const existingUrl = url[url.length - 1] === '/' ? `${url}` : `${url}/`;
+    return `${existingUrl}${pages[nextIdx]}`;
+  }
   return (
     <ArraySelectorContainer key={pages[idx]}>
-      <Link to={`${match.url}${pages[leftIdx]}`}>
+      <Link to={nextLink(leftIdx)}>
         <LeftArrow onClick={() => onChange(leftIdx)} />
       </Link>
       <Title>{pages[idx]}</Title>
-      <Link to={`${match.url}${pages[rightIdx]}`}>
+      <Link to={nextLink(rightIdx)}>
         <RightArrow onClick={() => onChange(rightIdx)} />
       </Link>
     </ArraySelectorContainer>

@@ -1,5 +1,4 @@
-/* eslint-disable no-undef */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   Switch,
   Route,
@@ -7,10 +6,9 @@ import {
 } from 'react-router-dom';
 import styled from 'styled-components';
 import { NotificationContainer } from 'react-notifications';
+import { actions, useStore } from '../store';
 import 'react-notifications/lib/notifications.css';
-
 import { saveSettings } from '../api/mongodb';
-
 import SpotifyQ from './SpotifyQ';
 import AccountingQ from './AccountingQ';
 import DashboardQ from './DashboardQ';
@@ -35,17 +33,18 @@ const AppHeader = styled.div`
   z-index: 100;
 `;
 
-const Pages = ({ settings, setSettings }) => {
+const Pages = () => {
+  const { state, dispatch } = useStore();
+  const { settings } = state;
   const history = useHistory();
   const pages = ['SpotifyQ', 'DashboardQ', 'AccountingQ'];
-  useEffect(() => history.push(pages[1]), []);
+  useEffect(() => history.push(pages[settings.app.idx]), []);
 
-  const saveIdx = (idx) => {
-    const newSettings = settings;
-    newSettings.app.idx = idx;
-    saveSettings(newSettings);
-    setSettings(newSettings);
-  };
+  function saveIdx(idx) {
+    settings.app.idx = idx;
+    saveSettings(settings);
+    dispatch(actions.setSettings(settings));
+  }
 
   return (
     <AppContainer>
@@ -55,13 +54,13 @@ const Pages = ({ settings, setSettings }) => {
       </AppHeader>
       <Switch>
         <Route path="/SpotifyQ">
-          <SpotifyQ settings={settings} setSettings={setSettings} />
+          <SpotifyQ />
         </Route>
         <Route path="/DashboardQ">
           <DashboardQ />
         </Route>
         <Route path="/AccountingQ">
-          <AccountingQ settings={settings} setSettings={setSettings} />
+          <AccountingQ />
         </Route>
       </Switch>
     </AppContainer>

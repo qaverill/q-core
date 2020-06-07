@@ -37,11 +37,9 @@ const Albums = ({ data }) => {
     );
   };
 
-  // TODO: remove this bullshit and get the images by calling the spotify api.
-  //       then save the images by album in a cache
   return (
     <AlbumsContainer>
-      <h2>{`Number of listens: ${5}`}</h2>
+      <h2>Num of datas = {data.length}</h2>
       {/* {data.map(item => (
         <Popup trigger={<Album item={item} />} position="right center" key={item.timestamp}>
           <div>T/A/A</div>
