@@ -1,24 +1,23 @@
 import React, { useEffect } from 'react';
-import {
-  Switch,
-  Route,
-  useHistory,
-} from 'react-router-dom';
+import { Switch, Route, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { NotificationContainer } from 'react-notifications';
-import { actions, useStore } from '../store';
-import 'react-notifications/lib/notifications.css';
-import { saveSettings } from '../api/mongodb';
+import PageSelector from '../components/PageSelector';
+import { useStore, actions } from '../store';
+import { selectSettings } from '../store/selectors';
 import SpotifyQ from './SpotifyQ';
 import AccountingQ from './AccountingQ';
 import DashboardQ from './DashboardQ';
-import PageSelector from '../components/PageSelector';
-
+// ----------------------------------
+// HELPERS
+// ----------------------------------
+const PAGES = ['SpotifyQ', 'DashboardQ', 'AccountingQ'];
+// ----------------------------------
+// STYLES
+// ----------------------------------
 const AppContainer = styled.div`
   height: 100%;
   width: 100%;
 `;
-
 const AppHeader = styled.div`
   background-color: black;
   font-size: 20px;
@@ -32,25 +31,24 @@ const AppHeader = styled.div`
   flex-wrap: nowrap;
   z-index: 100;
 `;
-
-const Pages = () => {
+// ----------------------------------
+// COMPONENTS
+// ----------------------------------
+const App = () => {
   const { state, dispatch } = useStore();
-  const { settings } = state;
   const history = useHistory();
-  const pages = ['SpotifyQ', 'DashboardQ', 'AccountingQ'];
-  useEffect(() => history.push(pages[settings.app.idx]), []);
+  const { appIdx } = selectSettings(state);
+  useEffect(() => history.push(PAGES[appIdx]), [appIdx]);
 
-  function saveIdx(idx) {
-    settings.app.idx = idx;
-    saveSettings(settings);
-    dispatch(actions.setSettings(settings));
+  function setPage(pageIdx) {
+    const { settings } = state;
+    dispatch(actions.setSettings({ ...settings, appIdx: pageIdx }));
   }
 
   return (
     <AppContainer>
-      <NotificationContainer />
       <AppHeader>
-        <PageSelector pages={pages} idx={settings.app.idx} onChange={saveIdx} />
+        <PageSelector pages={PAGES} idx={appIdx} onChange={setPage} />
       </AppHeader>
       <Switch>
         <Route path="/SpotifyQ">
@@ -67,4 +65,4 @@ const Pages = () => {
   );
 };
 
-export default Pages;
+export default App;

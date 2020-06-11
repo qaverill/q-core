@@ -1,44 +1,42 @@
-/* eslint-disable no-undef */
 import React, { useEffect, useReducer } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import { NotificationContainer } from 'react-notifications';
-import { StoreContext, reducer, initialState, actions } from './store';
-import 'react-notifications/lib/notifications.css';
-
-import { fetchDocuments } from './api/mongodb';
-
+import { StoreContext, reducer, initialState } from './store';
+import { selectSettings } from './store/selectors';
+import { fetchSettings } from './store/fetchers';
 import LoadingSpinner from './components/LoadingSpinner';
-import Pages from './Pages';
-
+import App from './app';
+import 'react-notifications/lib/notifications.css';
+// ----------------------------------
+// HELPERS
+// ----------------------------------
+// ----------------------------------
+// STYLES
+// ----------------------------------
 const AppRouter = styled(Router)`
   height: 100%;
   width: 100%;
 `;
-
-const App = () => {
+// ----------------------------------
+// COMPONENTS
+// ----------------------------------
+const Root = () => {
   const [state, dispatch] = useReducer(reducer, { ...initialState });
-  const { settings } = state;
-  useEffect(() => {
-    const fetchSettings = async () => {
-      const newSettings = await fetchDocuments({ collection: 'metadata', _id: 'settings' });
-      dispatch(actions.setSettings(newSettings));
-    };
-
-    fetchSettings();
-  }, []);
+  const settings = selectSettings(state);
+  useEffect(() => fetchSettings(dispatch), []);
 
   return (
     <AppRouter>
       <NotificationContainer />
       <StoreContext.Provider value={{ state, dispatch }}>
-        {settings
-          ? <Pages />
-          : <LoadingSpinner title="Loading..." message="Setting up app..." />}
+        {!settings
+          ? <LoadingSpinner title="Loading..." message="Setting up app..." />
+          : <App /> }
       </StoreContext.Provider>
     </AppRouter>
   );
 };
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<Root />, document.getElementById('root'));

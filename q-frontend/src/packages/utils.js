@@ -1,8 +1,6 @@
 /* eslint-disable no-undef */
 import axios from 'axios';
 
-export const createAction = type => payload => ({ type, payload });
-
 export const ONE_EPOCH_DAY = 86400;
 
 export const capitolFirstLetter = (s) => s.charAt(0).toUpperCase() + s.slice(1);
