@@ -8,8 +8,8 @@ import ChronologicalSearchBar from '../../components/ChronologicalSearchBar';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { actions, useStore } from '../../store';
 import { selectSpotifyQStore, selectSettings } from '../../store/selectors';
-import { fetchSpotifyQData } from '../../store/fetchers';
 import { spotifyQTheme } from '../../packages/colors';
+import { fetchDocuments } from '../../api/mongodb';
 import { Page } from '../../packages/core';
 // ----------------------------------
 // HELPERS
@@ -30,7 +30,16 @@ const SpotifyQ = () => {
   const { state, dispatch } = useStore();
   const { spotifyQIdx } = selectSettings(state);
   const { data, start, end, filter } = selectSpotifyQStore(state);
-  useEffect(() => fetchSpotifyQData(dispatch, { start, end, filter }), [start, end, filter]);
+  useEffect(() => {
+    async function fetchSpotifyQData() {
+      const query = { start, end, filter };
+      const listens = await fetchDocuments({ collection: 'listens', query });
+      const saves = await fetchDocuments({ collection: 'saves', query });
+      const combinedData = listens.concat(saves).sort((a, b) => a.timestamp - b.timestamp);
+      dispatch(actions.setSpotifyQData(combinedData));
+    }
+    fetchSpotifyQData();
+  }, [start, end, filter]);
 
   function setFeature(featureIdx) {
     settings.spotifyQIdx = featureIdx;

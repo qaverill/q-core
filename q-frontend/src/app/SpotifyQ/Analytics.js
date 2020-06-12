@@ -1,70 +1,38 @@
 import React, { useState, useEffect } from 'react';
+import * as R from 'ramda';
 import styled from 'styled-components';
-import axios from 'axios';
 import ReactTooltip from 'react-tooltip';
 import { Header } from '../../packages/core';
-import { capitolFirstLetter } from '../../packages/utils';
 import { useStore } from '../../store';
 import { selectSpotifyQStore } from '../../store/selectors';
+import { getSpotifyDataByType } from '../../api/spotify';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const getItemImage = (item, type) => {
-  switch (type) {
-    case 'tracks':
-      return item.album.images[0];
-    case 'artists':
-      return item.images[0];
-    case 'albums':
-      return item.images[0];
-    default:
-      return null;
-  }
+const N = 5;
+const spliceTopN = counts => {
+  const topN = {};
+  Object.keys(counts)
+    .sort((a, b) => counts[b] - counts[a])
+    .splice(0, N)
+    .forEach(key => { topN[key] = counts[key]; });
+  return topN;
 };
-const sortByCount = (a, b) => {
-  if (a.count < b.count) {
-    return 1;
-  } if (a.count > b.count) {
-    return -1;
-  } return 0;
-};
-const playsToSortedList = plays => (
-  Object.keys(plays)
-    .map(key => ({ id: key, count: plays[key] }))
-    .sort(sortByCount)
-);
-const getSpotifyData = (list, type) => {
-  const chunk = list.splice(0, 5);
-  axios.get('/spotify', { params: { url: `https://api.spotify.com/v1/${type}?ids=${chunk.map(i => i.id).join()}` } })
-    .then(res => {
-      const topItems = res.data[type].map(item => (
-        <Item key={item.id} data-tip={`${item.name} ::: ${chunk.find(e => e.id === item.id).count}`} image={getItemImage(item, type)} />
-      ));
-      _this.setState({ [`top${capitolFirstLetter(type)}`]: topItems });
-      ReactTooltip.rebuild();
-    });
-};
-const analyzeResults = (data, setCharts) => {
-  if (data.length > 0) {
-    const trackPlays = {};
-    const artistPlays = {};
-    const albumPlays = {};
-    data.forEach(({ track, artists, album }) => {
-      trackPlays[track] = 1 + (trackPlays[track] || 0);
-      artists.forEach(artist => { artistPlays[artist] = 1 + (artistPlays[artist] || 0); });
-      albumPlays[album] = 1 + (albumPlays[album] || 0);
-    });
-    setCharts({
-      tracks: ,
-      artists: ,
-      albums: ,
-    })
-    this.getSpotifyData(playsToSortedList(trackPlays), 'tracks');
-    this.getSpotifyData(playsToSortedList(artistPlays), 'artists');
-    this.getSpotifyData(playsToSortedList(albumPlays), 'albums');
-  } else {
-    setCharts(null);
-  }
+const topNResults = data => {
+  const tracks = {};
+  const artists = {};
+  const albums = {};
+  const currentAmount = amount => (R.isNil(amount) ? 0 : amount);
+  data.forEach(({ track, artists: as, album }) => {
+    tracks[track] = 1 + currentAmount(tracks[track]);
+    as.forEach(artist => { artists[artist] = 1 + currentAmount(artists[artist]); });
+    albums[album] = 1 + currentAmount(albums[album]);
+  });
+  return {
+    tracks: spliceTopN(tracks),
+    artists: spliceTopN(artists),
+    albums: spliceTopN(albums),
+  };
 };
 // ----------------------------------
 // STYLES
@@ -112,12 +80,34 @@ const ToolTip = styled.div`
 // ----------------------------------
 // COMPONENTS
 // ----------------------------------
+const TopN = ({ id, name, album, images, count, type }) => (
+  <Item
+    key={id}
+    data-tip={`${name} ::: ${count}`}
+    image={type === 'tracks' ? album.images[0] : images[0]}
+  />
+);
 const Analytics = () => {
   const { state } = useStore();
   const { data } = selectSpotifyQStore(state);
   const [charts, setCharts] = useState([]);
+  useEffect(() => {
+    async function fetchAndSetChartData() {
+      const { tracks, artists, albums } = topNResults(data);
+      const trackData = await getSpotifyDataByType('tracks', Object.keys(tracks));
+      const artistData = await getSpotifyDataByType('artists', Object.keys(artists));
+      const albumData = await getSpotifyDataByType('albums', Object.keys(albums));
+      setCharts({
+        tracks: trackData.map(td => TopN({ ...td, count: tracks[td.id], type: 'tracks' })),
+        artists: artistData.map(ad => TopN({ ...ad, count: artists[ad.id], type: 'artists' })),
+        albums: albumData.map(ad => TopN({ ...ad, count: albums[ad.id], type: 'albums' })),
+      });
+    }
+    if (data.length > 0) {
+      fetchAndSetChartData();
+    }
+  }, [data]);
   const { tracks, artists, albums } = charts;
-  useEffect(() => analyzeResults(data, setCharts), [data]);
 
   function getToolTopContent(dataTip) {
     return (
