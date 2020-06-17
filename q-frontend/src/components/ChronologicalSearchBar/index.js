@@ -6,39 +6,61 @@ import { NotificationManager } from 'react-notifications';
 import DateAdjuster from './DateAdjuster';
 import SearchBar from './SearchBar';
 import { BoldText, TextInput } from '../../packages/core';
-import { epochToString, epochToDate } from '../../packages/utils';
+import { epochToString, epochToDate, stringToEpoch } from '../../packages/utils';
 
 import { searchSpotify } from '../../api/spotify';
-
+// ----------------------------------
+// HELPERS
+// ----------------------------------
+const START = 'start';
+const END = 'end';
+const validateInputDate = (date, side) => {
+  if (date != null && isNaN(date)) {
+    NotificationManager.error('Must be mm/dd/yyyy', 'Bad Date Format');
+    return false;
+  } if (side === START && date != null && date > end) {
+    NotificationManager.error('Must be before the End', 'Impossible Range');
+    return false;
+  } if (side === END && date != null && date < start) {
+    NotificationManager.error('Must be after the Start', 'Impossible Range');
+    return false;
+  } if (side === END && date != null && date > new Date().getTime() / 1000) {
+    NotificationManager.error('Must not be in the future', 'Impossible Range');
+    return false;
+  }
+  return true;
+};
+// ----------------------------------
+// STYLES
+// ----------------------------------
 const Controls = styled.div`
-  margin: 7.5px;
-  padding: 2.5px 5px;
-  height: 35px;
-  border-radius: 15px;
-  background-color: ${props => props.colorTheme.primary};
-  display: flex;
-  align-items: center;
-  justify-content: center;
+margin: 7.5px;
+padding: 2.5px 5px;
+height: 35px;
+border-radius: 15px;
+background-color: ${props => props.colorTheme.primary};
+display: flex;
+align-items: center;
+justify-content: center;
 `;
-
 const DateInput = styled(TextInput)`
-  width: 105px;
+width: 105px;
 `;
-
 const Start = styled.div`
-  overflow: auto;
-  margin-right: auto;
-  display: flex;
-  align-items: center;
+overflow: auto;
+margin-right: auto;
+display: flex;
+align-items: center;
 `;
-
 const End = styled.div`
-  overflow: auto;
-  margin-left: auto;
-  display: flex;
-  align-items: center;
+overflow: auto;
+margin-left: auto;
+display: flex;
+align-items: center;
 `;
-
+// ----------------------------------
+// COMPONENTS
+// ----------------------------------
 const ChronologicalSearchBar = ({
   start,
   end,
@@ -49,38 +71,9 @@ const ChronologicalSearchBar = ({
   colorTheme,
 }) => {
   useEffect(() => {
-    document.getElementById('start').value = epochToString(start);
-    document.getElementById('end').value = epochToString(end);
+    document.getElementById(START).value = epochToString(start);
+    document.getElementById(END).value = epochToString(end);
   }, [start, end]);
-
-  const validateInputDate = date => {
-    if (date != null && isNaN(date)) {
-      NotificationManager.error('Must be mm/dd/yyyy', 'Bad Date Format');
-      return false;
-    } if (side === 'start' && date != null && date > end) {
-      NotificationManager.error('Must be before the End', 'Impossible Range');
-      return false;
-    } if (side === 'end' && date != null && date < start) {
-      NotificationManager.error('Must be after the Start', 'Impossible Range');
-      return false;
-    } if (side === 'end' && date != null && date > new Date().getTime() / 1000) {
-      NotificationManager.error('Must not be in the future', 'Impossible Range');
-      return false;
-    }
-    return true;
-  };
-
-  const inputStart = () => {
-    const input = document.getElementById('start');
-    const date = input.length === 0 ? null : stringToEpoch(input);
-    if (validateInputDate(date) && date !== start) setStart(date);
-  };
-
-  const inputEnd = () => {
-    const input = document.getElementById('end');
-    const date = input.length === 0 ? null : stringToEpoch(input);
-    if (validateInputDate(date)) setEnd(date);
-  };
 
   const adjustDate = (date, adjustment) => {
     const amount = adjustment.includes('-') ? -1 : 1;
@@ -100,11 +93,20 @@ const ChronologicalSearchBar = ({
     setEnd(adjustDate(originalEnd, adjustment));
   };
 
+  function handleOnBlur(side) {
+    return () => {
+      const input = document.getElementById(side).value;
+      const date = input.length === 0 ? null : stringToEpoch(input);
+      if (!validateInputDate(date, side)) return;
+      if (side === START) setStart(date); else setEnd(date);
+    };
+  }
+
   return (
     <Controls colorTheme={colorTheme}>
       <Start>
         <BoldText>Start</BoldText>
-        <DateInput id="start" onBlur={inputStart} />
+        <DateInput id="start" onBlur={handleOnBlur(START)} />
         {dateControls.flatMap(control => (
           <DateAdjuster
             date="start"
@@ -126,7 +128,7 @@ const ChronologicalSearchBar = ({
             key={`${control}-end`}
           />
         )).reverse()}
-        <DateInput id="end" onBlur={inputEnd} />
+        <DateInput id="end" onBlur={handleOnBlur(END)} />
         <BoldText>End</BoldText>
       </End>
     </Controls>

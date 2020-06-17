@@ -16,7 +16,6 @@ const PAGES = ['SpotifyQ', 'DashboardQ', 'AccountingQ'];
 // ----------------------------------
 const AppContainer = styled.div`
   height: 100%;
-  width: 100%;
 `;
 const AppHeader = styled.div`
   background-color: black;

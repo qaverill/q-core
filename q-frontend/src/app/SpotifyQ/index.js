@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import React, { useEffect } from 'react';
-
+import styled from 'styled-components';
 import Analytics from './Analytics';
 import Albums from './Albums';
 import PageSelector from '../../components/PageSelector';
@@ -19,6 +19,9 @@ const DATE_CONTROLS = ['Y', 'M', 'W', 'D'];
 // ----------------------------------
 // STYLES
 // ----------------------------------
+const Content = styled.div`
+  height: calc(100% - 90px);
+`;
 // ----------------------------------
 // COMPONENTS
 // ----------------------------------
@@ -38,6 +41,7 @@ const SpotifyQ = () => {
       const combinedData = listens.concat(saves).sort((a, b) => a.timestamp - b.timestamp);
       dispatch(actions.setSpotifyQData(combinedData));
     }
+    dispatch(actions.setSpotifyQData(null));
     fetchSpotifyQData();
   }, [start, end, filter]);
 
@@ -51,7 +55,7 @@ const SpotifyQ = () => {
       <ChronologicalSearchBar
         start={start}
         end={end}
-        setStart={s => dispatch(actions.setSpotifyQStart(s))} // TODO: can remove the arrow fuinction here?
+        setStart={s => dispatch(actions.setSpotifyQStart(s))}
         setEnd={e => dispatch(actions.setSpotifyQEnd(e))}
         setFilter={f => dispatch(actions.setSpotifyQFilter(f))}
         dateControls={DATE_CONTROLS}
@@ -62,9 +66,11 @@ const SpotifyQ = () => {
         idx={spotifyQIdx}
         onChange={setFeature}
       />
-      {!data
-        ? <LoadingSpinner message="Loading SpotifyQ..." />
-        : <Feature featureIdx={spotifyQIdx} />}
+      <Content>
+        {!data
+          ? <LoadingSpinner message="Loading SpotifyQ..." />
+          : <Feature featureIdx={spotifyQIdx} />}
+      </Content>
     </Page>
   );
 };

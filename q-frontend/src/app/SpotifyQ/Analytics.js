@@ -40,6 +40,7 @@ const topNResults = data => {
 const TopChartsContainer = styled.div`
   display: flex;
   width: 100%;
+  height: 100%;
 `;
 const TopChart = styled.div`
   display: flex;
@@ -107,9 +108,8 @@ const Analytics = () => {
       fetchAndSetChartData();
     }
   }, [data]);
-  const { tracks, artists, albums } = charts;
 
-  function getToolTopContent(dataTip) {
+  function getToolTipContent(dataTip) {
     return (
       <ToolTip>
         <h2>{dataTip != null ? dataTip.split(':::')[0] : null}</h2>
@@ -121,9 +121,11 @@ const Analytics = () => {
   if (charts == null) {
     return <Header>No results, check the filter</Header>;
   }
+
+  const { tracks, artists, albums } = charts;
   return (
     <TopChartsContainer>
-      <ReactTooltip getContent={getToolTopContent} />
+      <ReactTooltip getContent={getToolTipContent} />
       <TopChart>
         <Header>Top Tracks:</Header>
         {tracks}
@@ -138,6 +140,6 @@ const Analytics = () => {
       </TopChart>
     </TopChartsContainer>
   );
-}
+};
 
 export default Analytics;
