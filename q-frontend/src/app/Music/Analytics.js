@@ -52,12 +52,13 @@ const TopChart = styled.div`
     flex-grow: 3;
   }
 `;
-const ChartHeader = styled.div`
+const ChartTitle = styled(Title)`
   height: 40px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+  width: 100%;
   background-color: ${musicTheme.tertiary};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const ChartContent = styled(SlateContent)`
   display: flex;
@@ -94,7 +95,7 @@ const ToolTip = styled.div`
 const TopN = ({ id, name, album, images, count, type }) => (
   <Item
     key={id}
-    data-tip={`${name} ::: ${count}`}
+    data-tip={[name, count]}
     image={type === 'tracks' ? album.images[0] : images[0]}
   />
 );
@@ -118,14 +119,17 @@ const Analytics = () => {
       fetchAndSetChartData();
     }
   }, [data]);
+  useEffect(() => ReactTooltip.rebuild());
 
   function getToolTipContent(dataTip) {
-    return (
-      <ToolTip>
-        <h2>{dataTip != null ? dataTip.split(':::')[0] : null}</h2>
-        <h3>{dataTip != null ? dataTip.split(':::')[1] : null}</h3>
-      </ToolTip>
-    );
+    if (dataTip) {
+      return (
+        <ToolTip>
+          <h2>{dataTip.split(',')[0]}</h2>
+          <h3>{dataTip.split(',')[1]}</h3>
+        </ToolTip>
+      );
+    }
   }
 
   if (charts == null) {
@@ -136,19 +140,17 @@ const Analytics = () => {
   return (
     <TopChartsSlate rimColor={musicTheme.tertiary}>
       <ReactTooltip getContent={getToolTipContent} />
-      <ChartHeader>
-        <Title>TRACKS</Title>
-        <Title>ARTISTS</Title>
-        <Title>ALBUMS</Title>
-      </ChartHeader>
       <ChartContent>
         <TopChart>
+          <ChartTitle>TRACKS</ChartTitle>
           {tracks}
         </TopChart>
         <TopChart>
+          <ChartTitle>ARTISTS</ChartTitle>
           {artists}
         </TopChart>
         <TopChart>
+          <ChartTitle>ALBUMS</ChartTitle>
           {albums}
         </TopChart>
       </ChartContent>
