@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { formatAsMoney, averageArray } from '../../packages/utils';
 import {
-  accountingQTheme,
+  moneyTheme,
   red,
   yellow,
   green,
@@ -156,7 +156,7 @@ class Analyzer extends React.Component {
   render() {
     const { tagAnalysis, overview } = this.state;
     if (tagAnalysis == null) {
-      return <LoadingSpinner message="Calculating Analyzer..." color={accountingQTheme.tertiary} />;
+      return <LoadingSpinner message="Calculating Analyzer..." color={moneyTheme.tertiary} />;
     }
     const { income, expense } = overview;
     return (

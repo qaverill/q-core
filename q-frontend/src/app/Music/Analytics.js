@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
-import { Header } from '../../packages/core';
+import { Slate, SlateContent, Title } from '../../packages/core';
 import { useStore } from '../../store';
-import { selectSpotifyQStore } from '../../store/selectors';
+import { selectMusicStore } from '../../store/selectors';
 import { getSpotifyDataByType } from '../../api/spotify';
+import { musicTheme } from '../../packages/colors';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -37,10 +38,9 @@ const topNResults = data => {
 // ----------------------------------
 // STYLES
 // ----------------------------------
-const TopChartsContainer = styled.div`
+const TopChartsSlate = styled(Slate)`
   display: flex;
-  width: 100%;
-  height: 100%;
+  flex-direction: column;
 `;
 const TopChart = styled.div`
   display: flex;
@@ -51,6 +51,16 @@ const TopChart = styled.div`
   :hover {
     flex-grow: 3;
   }
+`;
+const ChartHeader = styled.div`
+  height: 40px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: ${musicTheme.tertiary};
+`;
+const ChartContent = styled(SlateContent)`
+  display: flex;
 `;
 const Item = styled.div`
   display: flex;
@@ -90,7 +100,7 @@ const TopN = ({ id, name, album, images, count, type }) => (
 );
 const Analytics = () => {
   const { state } = useStore();
-  const { data } = selectSpotifyQStore(state);
+  const { data } = selectMusicStore(state);
   const [charts, setCharts] = useState([]);
   useEffect(() => {
     async function fetchAndSetChartData() {
@@ -119,26 +129,30 @@ const Analytics = () => {
   }
 
   if (charts == null) {
-    return <Header>No results, check the filter</Header>;
+    return <Title>No results, check the filter</Title>;
   }
 
   const { tracks, artists, albums } = charts;
   return (
-    <TopChartsContainer>
+    <TopChartsSlate rimColor={musicTheme.tertiary}>
       <ReactTooltip getContent={getToolTipContent} />
-      <TopChart>
-        <Header>Top Tracks:</Header>
-        {tracks}
-      </TopChart>
-      <TopChart>
-        <Header>Top Artists:</Header>
-        {artists}
-      </TopChart>
-      <TopChart>
-        <Header>Top Albums:</Header>
-        {albums}
-      </TopChart>
-    </TopChartsContainer>
+      <ChartHeader>
+        <Title>TRACKS</Title>
+        <Title>ARTISTS</Title>
+        <Title>ALBUMS</Title>
+      </ChartHeader>
+      <ChartContent>
+        <TopChart>
+          {tracks}
+        </TopChart>
+        <TopChart>
+          {artists}
+        </TopChart>
+        <TopChart>
+          {albums}
+        </TopChart>
+      </ChartContent>
+    </TopChartsSlate>
   );
 };
 

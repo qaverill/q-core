@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { NotificationManager } from 'react-notifications';
 
 import ManualTagger from './ManualTagger';
-import { red, green, yellow, accountingQTheme } from '../../../packages/colors';
+import { red, green, yellow, moneyTheme } from '../../../packages/colors';
 import { epochToString, copyStringToClipboard, numberToPrice } from '../../../packages/utils';
 import { Button, StyledPopup } from '../../../packages/core';
 import { refreshIcon } from '../../../packages/images';
@@ -91,7 +91,7 @@ const TransactionFact = ({ transaction, idx, updateTransaction }) => {
 
   return (
     <Transaction amount={amount} opacity={opacity}>
-      <Button color={accountingQTheme.tertiary} onClick={copyIdToClipboard}>_id</Button>
+      <Button color={moneyTheme.tertiary} onClick={copyIdToClipboard}>_id</Button>
       <DateColumn><h2>{epochToString(timestamp)}</h2></DateColumn>
       <AmountColumn><h2>{numberToPrice(amount)}</h2></AmountColumn>
       <DescriptionColumn><h2>{description}</h2></DescriptionColumn>

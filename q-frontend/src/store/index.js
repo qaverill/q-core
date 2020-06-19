@@ -4,8 +4,8 @@ import { ONE_EPOCH_DAY } from '../packages/utils';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const SPOTIFYQ_START = Math.round(new Date().getTime() / 1000) - 3 * ONE_EPOCH_DAY;
-const SPOTIFYQ_END = Math.round(new Date().getTime() / 1000);
+const MUSIC_START = Math.round(new Date().getTime() / 1000) - 3 * ONE_EPOCH_DAY;
+const MUSIC_END = Math.round(new Date().getTime() / 1000);
 const createAction = type => payload => ({ type, payload });
 const persistSettingsAction = type => payload => {
   saveSettings(payload);
@@ -17,18 +17,18 @@ const persistSettingsAction = type => payload => {
 export const actionTypes = {
   STORE_SETTINGS: 'STORE_SETTINGS',
   SET_SETTINGS: 'SET_SETTINGS',
-  SET_SPOTIFYQ_START: 'SET_SPOTIFYQ_START',
-  SET_SPOTIFYQ_END: 'SET_SPOTIFYQ_END',
-  SET_SPOTIFYQ_FILTER: 'SET_SPOTIFYQ_FILTER',
-  SET_SPOTIFYQ_DATA: 'SET_SPOTIFYQ_DATA',
+  SET_MUSIC_START: 'SET_MUSIC_START',
+  SET_MUSIC_END: 'SET_MUSIC_END',
+  SET_MUSIC_FILTER: 'SET_MUSIC_FILTER',
+  SET_MUSIC_DATA: 'SET_MUSIC_DATA',
 };
 export const actions = {
   storeSettings: createAction(actionTypes.STORE_SETTINGS),
   setSettings: persistSettingsAction(actionTypes.SET_SETTINGS),
-  setSpotifyQStart: createAction(actionTypes.SET_SPOTIFYQ_START),
-  setSpotifyQEnd: createAction(actionTypes.SET_SPOTIFYQ_END),
-  setSpotifyQFilter: createAction(actionTypes.SET_SPOTIFYQ_FILTER),
-  setSpotifyQData: createAction(actionTypes.SET_SPOTIFYQ_DATA),
+  setMusicStart: createAction(actionTypes.SET_MUSIC_START),
+  setMusicEnd: createAction(actionTypes.SET_MUSIC_END),
+  setMusicFilter: createAction(actionTypes.SET_MUSIC_FILTER),
+  setMusicData: createAction(actionTypes.SET_MUSIC_DATA),
 };
 export function reducer(state, action) {
   const { type, payload } = action;
@@ -36,14 +36,14 @@ export function reducer(state, action) {
     case actionTypes.STORE_SETTINGS:
     case actionTypes.SET_SETTINGS:
       return { ...state, settings: payload };
-    case actionTypes.SET_SPOTIFYQ_START:
-      return { ...state, spotifyQStart: payload };
-    case actionTypes.SET_SPOTIFYQ_END:
-      return { ...state, spotifyQEnd: payload };
-    case actionTypes.SET_SPOTIFYQ_FILTER:
-      return { ...state, spotifyQFilter: payload };
-    case actionTypes.SET_SPOTIFYQ_DATA:
-      return { ...state, spotifyQData: payload };
+    case actionTypes.SET_MUSIC_START:
+      return { ...state, musicStart: payload };
+    case actionTypes.SET_MUSIC_END:
+      return { ...state, musicEnd: payload };
+    case actionTypes.SET_MUSIC_FILTER:
+      return { ...state, musicFilter: payload };
+    case actionTypes.SET_MUSIC_DATA:
+      return { ...state, musicData: payload };
     default:
       return state;
   }
@@ -52,8 +52,9 @@ export function reducer(state, action) {
 // STORE
 // ----------------------------------
 export const initialState = {
-  spotifyQStart: SPOTIFYQ_START,
-  spotifyQEnd: SPOTIFYQ_END,
+  musicData: [],
+  musicStart: MUSIC_START,
+  musicEnd: MUSIC_END,
 };
 export const StoreContext = createContext({
   state: {},

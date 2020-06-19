@@ -17,7 +17,7 @@ export const dataQTheme = {
   quaternary: aqua,
 };
 
-export const spotifyQTheme = {
+export const musicTheme = {
   primary: green,
   secondary: orange,
   tertiary: purple,
@@ -29,13 +29,13 @@ export const bassQTheme = {
   tertiary: green,
 };
 
-export const accountingQTheme = {
+export const moneyTheme = {
   primary: aqua,
   secondary: green,
   tertiary: purple,
 };
 
-export const dashboardQTheme = {
+export const dashboardTheme = {
   primary: yellow,
   secondary: green,
   tertiary: aqua,

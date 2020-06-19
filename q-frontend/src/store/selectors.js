@@ -6,7 +6,7 @@ export const selectSettings = state => {
   return state.settings;
 };
 
-export const selectSpotifyQStore = state => {
-  const { spotifyQStart, spotifyQEnd, spotifyQFilter, spotifyQData } = state;
-  return { start: spotifyQStart, end: spotifyQEnd, filter: spotifyQFilter, data: spotifyQData };
+export const selectMusicStore = state => {
+  const { musicStart, musicEnd, musicFilter, musicData } = state;
+  return { start: musicStart, end: musicEnd, filter: musicFilter, data: musicData };
 };

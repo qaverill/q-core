@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Popup from 'reactjs-popup';
+import { useStore } from '../../store';
+import { selectMusicStore } from '../../store/selectors';
 
 const AlbumsContainer = styled.div`
   width: 100%;
@@ -26,7 +28,9 @@ const AlbumImg = styled.img`
   width: 100%;
 `;
 
-const Albums = ({ data }) => {
+const Albums = () => {
+  const { state } = useStore();
+  const { data } = selectMusicStore(state);
   const Album = ({ item }) => {
     const { timestamp, track } = item;
     const { url } = track.album.images[0];

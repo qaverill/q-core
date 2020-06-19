@@ -34,29 +34,28 @@ const validateInputDate = (date, side) => {
 // STYLES
 // ----------------------------------
 const Controls = styled.div`
-margin: 7.5px;
-padding: 2.5px 5px;
-height: 35px;
-border-radius: 15px;
-background-color: ${props => props.colorTheme.primary};
-display: flex;
-align-items: center;
-justify-content: center;
+  padding: 2.5px 5px;
+  height: 35px;
+  background-color: ${props => props.colorTheme.primary};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 5px;
 `;
 const DateInput = styled(TextInput)`
-width: 105px;
+  width: 105px;
 `;
 const Start = styled.div`
-overflow: auto;
-margin-right: auto;
-display: flex;
-align-items: center;
+  overflow: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
 `;
 const End = styled.div`
-overflow: auto;
-margin-left: auto;
-display: flex;
-align-items: center;
+  overflow: auto;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
 `;
 // ----------------------------------
 // COMPONENTS

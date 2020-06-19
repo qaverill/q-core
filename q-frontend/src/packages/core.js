@@ -67,13 +67,16 @@ export const TextInput = styled.input`
   }
 `;
 
-export const Page = styled.div`
+export const Slate = styled.div`
   background-color: ${dark};
   border: 5px solid ${props => props.rimColor};
-  border-radius: 15px;
-  padding: 7.5px;
+  border-radius: 15px 15px 0px 0px;
   height: calc(100% - 100px);
-  margin 0 25px;
+  margin: 0px 10px 10px 10px;
+`;
+
+export const SlateContent = styled.div`
+  height: 100%;
 `;
 
 export const RightArrow = styled.img

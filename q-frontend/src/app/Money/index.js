@@ -6,14 +6,15 @@ import { actions, useStore } from '../../store';
 
 import Analyzer from './Analyzer';
 import Viewer from './Viewer';
-import PageSelector from '../../components/PageSelector';
+import PageSelector from '../../components/SlateSelector';
 import ChronologicalSearchBar from '../../components/ChronologicalSearchBar';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 import { fetchDocuments, saveSettings, writeDocument } from '../../api/mongodb';
-import { accountingQTheme } from '../../packages/colors';
-import { Page } from '../../packages/core';
+import { moneyTheme } from '../../packages/colors';
+import { Slate } from '../../packages/core';
 import { times } from '../../packages/utils';
+import { selectSettings } from '../../store/selectors';
 
 const collection = 'transactions';
 
@@ -22,9 +23,9 @@ const Feature = styled.div`
   height: calc(100% - 90px);
 `;
 
-const AccountingQ = () => {
+const Money = () => {
   const { state, dispatch } = useStore();
-  const { settings } = state;
+  const { moneyIdx } = selectSettings(state);
   const [start, setStart] = useState(times.firstOfCurrentMonth());
   const [end, setEnd] = useState(times.now());
   const [filter, setFilter] = useState(null);
@@ -62,7 +63,7 @@ const AccountingQ = () => {
   }, [start, end, filter]);
 
   const saveIdx = (idx) => {
-    settings.accountingQ.idx = idx;
+    moneyIdx = idx;
     saveSettings(settings);
     dispatch(actions.setSettings(settings));
   };
@@ -70,7 +71,7 @@ const AccountingQ = () => {
   const dateControls = ['M', 'W'];
 
   return (
-    <Page rimColor={accountingQTheme.primary}>
+    <Slate rimColor={moneyTheme.primary}>
       <ChronologicalSearchBar
         start={start}
         end={end}
@@ -78,25 +79,25 @@ const AccountingQ = () => {
         setEnd={setEnd}
         setFilter={setFilter} // TODO: hook this set filter up yo
         dateControls={dateControls}
-        colorTheme={accountingQTheme}
+        colorTheme={moneyTheme}
       />
       <PageSelector
         pages={['Analytics', 'Data']}
-        idx={settings.accountingQ.idx}
+        idx={moneyIdx}
         onChange={saveIdx}
       />
       {data == null
-        ? <LoadingSpinner message="Loading AccountingQ..." />
+        ? <LoadingSpinner message="Loading Money..." />
         : (
           <Feature>
             {[
               <Analyzer data={data} />,
               <Viewer data={data} updateTransaction={updateTransaction} />,
-            ][settings.accountingQ.idx]}
+            ][moneyIdx]}
           </Feature>
         )}
-    </Page>
+    </Slate>
   );
 };
 
-export default AccountingQ;
+export default Money;
