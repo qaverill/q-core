@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Popup from 'reactjs-popup';
 import { useStore } from '../../store';
 import { selectMusicStore } from '../../store/selectors';
+import { H2 } from '../../packages/core';
 
 const AlbumsContainer = styled.div`
   width: 100%;
@@ -43,7 +44,7 @@ const Albums = () => {
 
   return (
     <AlbumsContainer>
-      <h2>Num of datas = {data.length}</h2>
+      <H2>Num of datas = {data.length}</H2>
       {/* {data.map(item => (
         <Popup trigger={<Album item={item} />} position="right center" key={item.timestamp}>
           <div>T/A/A</div>

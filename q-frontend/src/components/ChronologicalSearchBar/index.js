@@ -5,7 +5,7 @@ import { NotificationManager } from 'react-notifications';
 
 import DateAdjuster from './DateAdjuster';
 import SearchBar from './SearchBar';
-import { BoldText, TextInput } from '../../packages/core';
+import { BoldText, TextInput, DROP_SIZE, GAP_SIZE } from '../../packages/core';
 import { epochToString, epochToDate, stringToEpoch } from '../../packages/utils';
 
 import { searchSpotify } from '../../api/spotify';
@@ -34,13 +34,12 @@ const validateInputDate = (date, side) => {
 // STYLES
 // ----------------------------------
 const Controls = styled.div`
-  padding: 2.5px 5px;
-  height: 35px;
+  height: ${DROP_SIZE - (2 * GAP_SIZE)}px;
+  padding-bottom: ${GAP_SIZE}px;
   background-color: ${props => props.colorTheme.primary};
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: 5px;
 `;
 const DateInput = styled(TextInput)`
   width: 105px;

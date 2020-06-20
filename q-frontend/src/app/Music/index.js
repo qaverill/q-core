@@ -20,10 +20,6 @@ const DATE_CONTROLS = ['Y', 'M', 'W', 'D'];
 // ----------------------------------
 // STYLES
 // ----------------------------------
-const Content = styled.div`
-  height: calc(100% - 100px);
-  width: calc(100% - 10px);
-`;
 // ----------------------------------
 // COMPONENTS
 // ----------------------------------
@@ -32,6 +28,7 @@ const Music = () => {
   const { settings } = state;
   const { musicIdx } = selectSettings(state);
   const { data, start, end, filter } = selectMusicStore(state);
+  const isLoading = data.length === 0;
   React.useEffect(() => {
     async function fetchMusicData() {
       const query = { start, end, filter };
@@ -49,7 +46,7 @@ const Music = () => {
   }
 
   return (
-    <Slate rimColor={musicTheme.primary}>
+    <Slate rimColor={musicTheme.primary} isFirst>
       <ChronologicalSearchBar
         start={start}
         end={end}
@@ -59,18 +56,20 @@ const Music = () => {
         dateControls={DATE_CONTROLS}
         colorTheme={musicTheme}
       />
-      <SlateSelector pages={SLATE_FEATURES} idx={musicIdx} onChange={setFeatureSlate} />
-      {!data && <LoadingSpinner message="Loading Music..." />}
-      <SlateContent>
-        <Switch>
-          <Route exact path="/music" render={() => <Redirect exact to={`/music/${SLATE_FEATURES[musicIdx]}`} />} />
-          <Route exact path="/music/analytics">
-            <Analytics />
-          </Route>
-          <Route exact path="/music/albums">
-            <Albums />
-          </Route>
-        </Switch>
+      <SlateContent drops={1}>
+        <SlateSelector pages={SLATE_FEATURES} idx={musicIdx} onChange={setFeatureSlate} />
+        {isLoading && <LoadingSpinner message="Loading Music..." />}
+        {!isLoading && (
+          <Switch>
+            <Route exact path="/music" render={() => <Redirect exact to={`/music/${SLATE_FEATURES[musicIdx]}`} />} />
+            <Route exact path="/music/analytics">
+              <Analytics />
+            </Route>
+            <Route exact path="/music/albums">
+              <Albums />
+            </Route>
+          </Switch>
+        )}
       </SlateContent>
     </Slate>
   );

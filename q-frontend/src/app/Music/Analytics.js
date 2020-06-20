@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as R from 'ramda';
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
-import { Slate, SlateContent, Title } from '../../packages/core';
+import { Slate, SlateContent, Title, H2, H3, DROP_SIZE, GAP_SIZE } from '../../packages/core';
 import { useStore } from '../../store';
 import { selectMusicStore } from '../../store/selectors';
 import { getSpotifyDataByType } from '../../api/spotify';
@@ -53,7 +53,7 @@ const TopChart = styled.div`
   }
 `;
 const ChartTitle = styled(Title)`
-  height: 40px;
+  height: ${DROP_SIZE - GAP_SIZE}px;
   width: 100%;
   background-color: ${musicTheme.tertiary};
   display: flex;
@@ -125,8 +125,8 @@ const Analytics = () => {
     if (dataTip) {
       return (
         <ToolTip>
-          <h2>{dataTip.split(',')[0]}</h2>
-          <h3>{dataTip.split(',')[1]}</h3>
+          <H2>{dataTip.split(',')[0]}</H2>
+          <H3>{dataTip.split(',')[1]}</H3>
         </ToolTip>
       );
     }
@@ -140,7 +140,7 @@ const Analytics = () => {
   return (
     <TopChartsSlate rimColor={musicTheme.tertiary}>
       <ReactTooltip getContent={getToolTipContent} />
-      <ChartContent>
+      <ChartContent drops={0}>
         <TopChart>
           <ChartTitle>TRACKS</ChartTitle>
           {tracks}

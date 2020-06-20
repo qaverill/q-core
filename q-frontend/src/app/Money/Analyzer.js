@@ -8,6 +8,7 @@ import {
   yellow,
   green,
 } from '../../packages/colors';
+import { H2 } from '../../packages/core';
 
 import LoadingSpinner from '../../components/LoadingSpinner';
 
@@ -43,15 +44,15 @@ const Tag = styled.div`
   align-items: center;
 `;
 
-const TagTitle = styled.h2`
+const TagTitle = styled(H2)`
   width: 150px;
 `;
 
-const TagTotal = styled.h2`
+const TagTotal = styled(H2)`
   color: ${props => props.color};
 `;
 
-const TagAverage = styled.h2`
+const TagAverage = styled(H2)`
   align-items: flex-end;
 `;
 
@@ -163,11 +164,11 @@ class Analyzer extends React.Component {
       <AnalyzerContainer>
         <AnalyzerBody>
           <Overview>
-            <h2>{`In: ${formatAsMoney(income)}`}</h2>
-            <h2>{`Out: ${formatAsMoney(expense)}`}</h2>
-            <h2>{`Total: ${formatAsMoney(income + expense)}`}</h2>
-            <h2>--------------------</h2>
-            <h2>{`Total amount needed to live for a month: ${formatAsMoney(calculateAmountNeededToLiveForAMonth(tagAnalysis))}`}</h2>
+            <H2>{`In: ${formatAsMoney(income)}`}</H2>
+            <H2>{`Out: ${formatAsMoney(expense)}`}</H2>
+            <H2>{`Total: ${formatAsMoney(income + expense)}`}</H2>
+            <H2>--------------------</H2>
+            <H2>{`Total amount needed to live for a month: ${formatAsMoney(calculateAmountNeededToLiveForAMonth(tagAnalysis))}`}</H2>
           </Overview>
           <TagAnalysis>
             {Object.keys(tagAnalysis).filter(key => tagAnalysis[key].total !== 0).map(key => {

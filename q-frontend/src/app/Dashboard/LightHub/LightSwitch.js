@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { lightOn, lightOff } from '../../../packages/images';
+import { H2 } from '../../../packages/core';
 
 import { toggleLightPower } from '../../../api/lifx';
 
@@ -38,7 +39,7 @@ const LightSwitch = ({ light }) => {
   return (
     <LightContainer>
       <LightButton onClick={onClick} power={power} />
-      <h2>{label}</h2>
+      <H2>{label}</H2>
     </LightContainer>
   );
 };

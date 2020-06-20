@@ -7,6 +7,7 @@ import Music from './Music';
 import Money from './Money';
 import Dashboard from './Dashboard';
 import SlateSelector from '../components/SlateSelector';
+import styled from 'styled-components';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -27,7 +28,7 @@ const App = () => {
   }
 
   return (
-    <SlateContent>
+    <SlateContent drops={0}>
       <SlateSelector pages={SLATES} idx={appIdx} onChange={setSubSlate} />
       <Switch>
         <Route exact path="/" render={() => <Redirect to={`/${SLATES[appIdx]}`} />} />

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
-import { LeftArrow, RightArrow } from '../packages/core';
+import { LeftArrow, RightArrow, H2, GAP_SIZE } from '../packages/core';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -13,11 +13,7 @@ const ArraySelectorContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding-top: 5px;
-  margin-bottom: 5px;
-`;
-const Title = styled.h2`
-  margin: 0 10px;
+padding: ${GAP_SIZE}px 0px;
 `;
 // ----------------------------------
 // COMPONENTS
@@ -34,7 +30,7 @@ const SlateSelector = ({ idx, pages, onChange }) => {
       <Link to={leftSlateLink}>
         <LeftArrow onClick={() => onChange(leftIdx)} />
       </Link>
-      <Title>{pages[idx].toUpperCase()}</Title>
+      <H2>{pages[idx].toUpperCase()}</H2>
       <Link to={rightSlateLink}>
         <RightArrow onClick={() => onChange(rightIdx)} />
       </Link>

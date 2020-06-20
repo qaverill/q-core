@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import ReactTooltip from 'react-tooltip';
 
-import { Header } from '@q/core';
+import { Header, H2, H3 } from '../../../packages/core';
 import { capitolFirstLetter } from '@q/utils';
 
 import SpotifyErrorPage from '../../../components/spotify-error-page';
@@ -151,8 +151,8 @@ class Overview extends React.Component {
         <ReactTooltip
           getContent={dataTip => (
             <ToolTip>
-              <h2>{dataTip != null ? dataTip.split(':::')[0] : null}</h2>
-              <h3>{dataTip != null ? dataTip.split(':::')[1] : null}</h3>
+              <H2>{dataTip != null ? dataTip.split(':::')[0] : null}</H2>
+              <H3>{dataTip != null ? dataTip.split(':::')[1] : null}</H3>
             </ToolTip>
           )}
         />

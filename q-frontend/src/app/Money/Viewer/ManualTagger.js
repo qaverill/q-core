@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { red } from '../../../packages/colors';
-import { PopupContainer, TextInput, Button } from '../../../packages/core';
+import { PopupContainer, TextInput, Button, H2 } from '../../../packages/core';
 
 const Tag = styled.div`
   display: flex;
@@ -30,7 +30,7 @@ const ManualTagger = ({ idx, transaction, closeModal, updateTransaction }) => {
     <PopupContainer>
       {transaction.tags.map((tag, tagIdx) => (
         <Tag>
-          <h2>{tag}</h2>
+          <H2>{tag}</H2>
           <Button color={red} onClick={() => removeTag(tagIdx)}>X</Button>
         </Tag>
       ))}

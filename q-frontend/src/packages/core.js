@@ -2,14 +2,33 @@
 import styled from 'styled-components';
 import Popup from 'reactjs-popup';
 import Select from 'react-select';
-import { arrow, settingsGear } from '../packages/images';
+import { arrow, settingsGear } from './images';
 import {
   dark,
   medium,
   white,
   yellow,
   light,
-} from '../packages/colors';
+} from './colors';
+
+export const DROP_SIZE = 40;
+export const GAP_SIZE = 5;
+export const MARGIN = GAP_SIZE * 2;
+
+export const H1 = styled.h1`
+  color: white;
+  margin: ${GAP_SIZE}px;
+`;
+
+export const H2 = styled.h2`
+  color: white;
+  margin: ${GAP_SIZE}px;
+`;
+
+export const H3 = styled.h3`
+  color: white;
+  margin: ${GAP_SIZE}px;
+`;
 
 export const Button = styled.button`
   color: ${props => (props.color === yellow ? dark : white)};  
@@ -43,7 +62,7 @@ export const BoldText = styled(Text)`
   font-weight: bold;
 `;
 
-export const Header = styled.h1`
+export const Header = styled(H1)`
   color: white;
   padding: 2.5px;
   height: 25px;
@@ -69,14 +88,14 @@ export const TextInput = styled.input`
 
 export const Slate = styled.div`
   background-color: ${dark};
-  border: 5px solid ${props => props.rimColor};
+  border: ${GAP_SIZE}px solid ${props => props.rimColor};
   border-radius: 15px 15px 0px 0px;
-  height: calc(100% - 100px);
-  margin: 0px 10px 10px 10px;
+  height: calc(100% - ${props => DROP_SIZE + (GAP_SIZE * (props.isFirst ? 2 : 1)) + MARGIN}px);
+  margin: 0px ${MARGIN}px ${MARGIN}px ${MARGIN}px;
 `;
 
 export const SlateContent = styled.div`
-  height: 100%;
+  height: calc(100% - ${props => props.drops * DROP_SIZE}px);
 `;
 
 export const RightArrow = styled.img
@@ -84,8 +103,8 @@ export const RightArrow = styled.img
     src: arrow,
   })`
   cursor: pointer;
-  height: ${props => (props.size == null ? '28px' : props.size)};
-  width: ${props => (props.size == null ? '28px' : props.size)};
+  height: ${props => (props.size == null ? '20px' : props.size)};
+  width: ${props => (props.size == null ? '20px' : props.size)};
   margin: 2.5px;
   :hover {
     filter: brightness(1.25);
@@ -138,6 +157,6 @@ export const FullDiv = styled.div`
   justify-content: center;
 `;
 
-export const Title = styled.h2`
+export const Title = styled(H2)`
   margin: 0 10px;
 `;

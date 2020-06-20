@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import React, { useState, useEffect } from 'react';
-import { Button, Text } from '../../packages/core';
+import React from 'react';
+import { Button, Text, H2 } from '../../packages/core';
 
 const SmallButton = styled(Button)`
   height: 20px;
@@ -8,7 +8,7 @@ const SmallButton = styled(Button)`
   padding: 0px;
 `;
 
-const CenterText = styled.h2`
+const CenterText = styled(H2)`
   margin: -2.5px;
   padding: 0;
   font-size: 16px;
