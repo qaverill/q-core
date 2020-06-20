@@ -33,6 +33,7 @@ const createQuery = ({ path, params, query }) => {
 const createCollection = request => request.path.split('/')[2];
 
 module.exports = {
+  createQuery,
   handleInternalGetRequest: async ({ request, response }) => {
     const collection = createCollection(request);
     const query = createQuery(request);

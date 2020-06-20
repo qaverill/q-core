@@ -7,7 +7,6 @@ import Music from './Music';
 import Money from './Money';
 import Dashboard from './Dashboard';
 import SlateSelector from '../components/SlateSelector';
-import styled from 'styled-components';
 // ----------------------------------
 // HELPERS
 // ----------------------------------

@@ -27,6 +27,7 @@ const {
   handleInternalPutRequest,
   handleInternalDeleteRequest,
 } = require('./handlers/internal');
+const { handleMusicChartsRequest } = require('./handlers/music');
 
 const server = express();
 let path;
@@ -41,7 +42,7 @@ q_logger.info('Starting server...');
 server.use(cors());
 server.use(json());
 server.use(urlencoded({ extended: true }));
-// server.use(logIncomingRequest);
+server.use(logIncomingRequest);
 
 routes.use(express.static(`${__dirname}/public`)).use(cookieParser());
 
@@ -75,6 +76,9 @@ makePostEndpoint({ routes, path }, handleInternalPostRequest);
 path = '/mongodb/transactions/:_id';
 makePutEndpoint({ routes, path }, handleInternalPutRequest);
 makeDeleteEndpoint({ routes, path }, handleInternalDeleteRequest);
+
+path = '/music/charts';
+makeGetEndpoint({ routes, path }, handleMusicChartsRequest);
 
 server.use('/', routes);
 

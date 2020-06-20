@@ -37,13 +37,3 @@ export const searchSpotify = (searchString) => new Promise((resolve, reject) => 
       reject(error);
     });
 });
-
-export const getSpotifyDataByType = (type, ids) => new Promise((resolve, reject) => {
-  axios.get('/spotify', { params: { url: `https://api.spotify.com/v1/${type}?ids=${ids.join()}` } })
-    .then(results => resolve(results.data[type]))
-    .catch(error => {
-      NotificationManager.error(`Failed to get ${type} data from spotify`);
-      console.error(error);
-      reject(error);
-    });
-});

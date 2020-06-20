@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { NotificationManager } from 'react-notifications';
 import queryString from 'query-string';
+import { NotificationManager } from 'react-notifications';
 
 export const fetchDocuments = ({ collection, _id, query }) => new Promise((resolve, reject) => {
   axios.get(`/mongodb/${collection}${_id ? `/${_id}` : ''}?${queryString.stringify(query)}`)

@@ -1,40 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import * as R from 'ramda';
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
 import { Slate, SlateContent, Title, H2, H3, DROP_SIZE, GAP_SIZE } from '../../packages/core';
 import { useStore } from '../../store';
 import { selectMusicStore } from '../../store/selectors';
-import { getSpotifyDataByType } from '../../api/spotify';
 import { musicTheme } from '../../packages/colors';
+import { getChartData } from '../../api/music';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const N = 5;
-const spliceTopN = counts => {
-  const topN = {};
-  Object.keys(counts)
-    .sort((a, b) => counts[b] - counts[a])
-    .splice(0, N)
-    .forEach(key => { topN[key] = counts[key]; });
-  return topN;
-};
-const topNResults = data => {
-  const tracks = {};
-  const artists = {};
-  const albums = {};
-  const currentAmount = amount => (R.isNil(amount) ? 0 : amount);
-  data.forEach(({ track, artists: as, album }) => {
-    tracks[track] = 1 + currentAmount(tracks[track]);
-    as.forEach(artist => { artists[artist] = 1 + currentAmount(artists[artist]); });
-    albums[album] = 1 + currentAmount(albums[album]);
-  });
-  return {
-    tracks: spliceTopN(tracks),
-    artists: spliceTopN(artists),
-    albums: spliceTopN(albums),
-  };
-};
 // ----------------------------------
 // STYLES
 // ----------------------------------
@@ -99,26 +73,21 @@ const TopN = ({ id, name, album, images, count, type }) => (
     image={type === 'tracks' ? album.images[0] : images[0]}
   />
 );
-const Graphs = () => {
+const Charts = () => {
   const { state } = useStore();
-  const { data } = selectMusicStore(state);
+  const { start, end, filter } = selectMusicStore(state);
   const [charts, setCharts] = useState([]);
   useEffect(() => {
-    async function fetchAndSetChartData() {
-      const { tracks, artists, albums } = topNResults(data);
-      const trackData = await getSpotifyDataByType('tracks', Object.keys(tracks));
-      const artistData = await getSpotifyDataByType('artists', Object.keys(artists));
-      const albumData = await getSpotifyDataByType('albums', Object.keys(albums));
+    async function fetchChartData() {
+      const { tracks, artists, albums } = await getChartData({ start, end, filter });
       setCharts({
-        tracks: trackData.map(td => TopN({ ...td, count: tracks[td.id], type: 'tracks' })),
-        artists: artistData.map(ad => TopN({ ...ad, count: artists[ad.id], type: 'artists' })),
-        albums: albumData.map(ad => TopN({ ...ad, count: albums[ad.id], type: 'albums' })),
+        tracks: tracks.map(track => TopN(track)),
+        artists: artists.map(artist => TopN(artist)),
+        albums: albums.map(album => TopN(album)),
       });
     }
-    if (data.length > 0) {
-      fetchAndSetChartData();
-    }
-  }, [data]);
+    fetchChartData();
+  }, [start, end, filter]);
   useEffect(() => ReactTooltip.rebuild());
 
   function getToolTipContent(dataTip) {
@@ -158,4 +127,4 @@ const Graphs = () => {
   );
 };
 
-export default Graphs;
+export default Charts;
