@@ -99,7 +99,7 @@ const TopN = ({ id, name, album, images, count, type }) => (
     image={type === 'tracks' ? album.images[0] : images[0]}
   />
 );
-const Analytics = () => {
+const Charts = () => {
   const { state } = useStore();
   const { data } = selectMusicStore(state);
   const [charts, setCharts] = useState([]);
@@ -158,4 +158,4 @@ const Analytics = () => {
   );
 };
 
-export default Analytics;
+export default Charts;

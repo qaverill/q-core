@@ -13,7 +13,7 @@ import {
 
 export const DROP_SIZE = 40;
 export const GAP_SIZE = 5;
-export const MARGIN = GAP_SIZE * 2;
+export const MARGIN = GAP_SIZE * 4;
 
 export const H1 = styled.h1`
   color: white;

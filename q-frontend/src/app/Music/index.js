@@ -2,7 +2,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Switch, Redirect, Route } from 'react-router-dom';
-import Analytics from './Analytics';
+import Charts from './Charts';
+import Graphs from './Graphs';
 import Albums from './Albums';
 import ChronologicalSearchBar from '../../components/ChronologicalSearchBar';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -15,7 +16,7 @@ import SlateSelector from '../../components/SlateSelector';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const SLATE_FEATURES = ['analytics', 'albums'];
+const SLATE_FEATURES = ['charts', 'graphs', 'albums'];
 const DATE_CONTROLS = ['Y', 'M', 'W', 'D'];
 // ----------------------------------
 // STYLES
@@ -62,8 +63,11 @@ const Music = () => {
         {!isLoading && (
           <Switch>
             <Route exact path="/music" render={() => <Redirect exact to={`/music/${SLATE_FEATURES[musicIdx]}`} />} />
-            <Route exact path="/music/analytics">
-              <Analytics />
+            <Route exact path="/music/charts">
+              <Charts />
+            </Route>
+            <Route exact path="/music/graphs">
+              <Graphs />
             </Route>
             <Route exact path="/music/albums">
               <Albums />
