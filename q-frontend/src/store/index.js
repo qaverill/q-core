@@ -4,7 +4,9 @@ import { ONE_EPOCH_DAY } from '../packages/utils';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const MUSIC_START = Math.round(new Date().getTime() / 1000) - 3 * ONE_EPOCH_DAY;
+const startOfDay = new Date();
+startOfDay.setHours(0, 0, 0, 0);
+const MUSIC_START = Math.round(startOfDay.getTime() / 1000) - 3 * ONE_EPOCH_DAY;
 const MUSIC_END = Math.round(new Date().getTime() / 1000);
 const createAction = type => payload => ({ type, payload });
 const persistSettingsAction = type => payload => {

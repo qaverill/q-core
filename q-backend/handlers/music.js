@@ -1,6 +1,7 @@
+const R = require('ramda');
 const { createQuery } = require('./internal');
 const { getDocs } = require('../resources/methods/internal');
-const { makeChartData } = require('../resources/music');
+const { makeTopPlaysData, makeDailyPlayTimeData } = require('../resources/music');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -18,7 +19,7 @@ const setCache = (query, data) => {
 // HANDLERS
 // ----------------------------------
 module.exports = {
-  handleMusicChartsRequest: async ({ request, response }) => {
+  handleMusicTopPlaysRequest: async ({ request, response }) => {
     const query = createQuery(request);
     if (cachedQuery === query) {
       response.status(200).json(cachedData);
@@ -26,10 +27,29 @@ module.exports = {
       getDocs({ collection, query })
         .then(async data => {
           setCache(query, data);
-          const chartData = await makeChartData(data);
+          const chartData = await makeTopPlaysData(data);
           response.status(200).json(chartData);
         })
         .catch(() => response.status(400).send());
+    }
+  },
+  handleDailyPlayTimeRequest: async ({ request, response }) => {
+    const query = createQuery(request);
+    const start = R.path(['query', 'start'], request);
+    if (cachedQuery === query) {
+      console.log('cached!');
+      response.status(200).json(cachedData);
+    } else {
+      getDocs({ collection, query })
+        .then(async data => {
+          setCache(query, data);
+          const dailyPlayTimeData = await makeDailyPlayTimeData(start, data);
+          response.status(200).json(dailyPlayTimeData);
+        })
+        .catch((e) => {
+          console.error(e);
+          response.status(400).send();
+        });
     }
   },
 };

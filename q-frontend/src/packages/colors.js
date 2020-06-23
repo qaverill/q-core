@@ -41,4 +41,3 @@ export const dashboardTheme = {
   tertiary: aqua,
   quaternary: purple,
 };
-

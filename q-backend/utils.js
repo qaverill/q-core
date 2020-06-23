@@ -12,6 +12,7 @@ const getAuthorization = url => {
   return null;
 };
 
+
 module.exports = {
   dateToTimestamp: date => parseInt(new Date(date).getTime() / 1000, 10),
   msToFullTime: ms => {

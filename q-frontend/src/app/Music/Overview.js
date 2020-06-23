@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
 import { Slate, SlateContent, Title, H2, H3, DROP_SIZE, GAP_SIZE } from '../../packages/core';
 import { useStore } from '../../store';
+import LoadingSpinner from '../../components/LoadingSpinner';
 import { selectMusicStore } from '../../store/selectors';
 import { musicTheme } from '../../packages/colors';
-import { getChartData } from '../../api/music';
+import { getTopPlays } from '../../api/music';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
 // ----------------------------------
 // STYLES
 // ----------------------------------
-const TopChartsSlate = styled(Slate)`
+const TopPlaysSlate = styled(Slate)`
   display: flex;
   flex-direction: column;
 `;
-const TopChart = styled.div`
+const TopPlays = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,7 +27,7 @@ const TopChart = styled.div`
     flex-grow: 3;
   }
 `;
-const ChartTitle = styled(Title)`
+const ListTitle = styled(Title)`
   height: ${DROP_SIZE - GAP_SIZE}px;
   width: 100%;
   background-color: ${musicTheme.tertiary};
@@ -34,7 +35,7 @@ const ChartTitle = styled(Title)`
   align-items: center;
   justify-content: center;
 `;
-const ChartContent = styled(SlateContent)`
+const TopPlaysContent = styled(SlateContent)`
   display: flex;
 `;
 const Item = styled.div`
@@ -73,22 +74,25 @@ const TopN = ({ id, name, album, images, count, type }) => (
     image={type === 'tracks' ? album.images[0] : images[0]}
   />
 );
-const Charts = () => {
+const Overview = () => {
   const { state } = useStore();
   const { start, end, filter } = selectMusicStore(state);
-  const [charts, setCharts] = useState([]);
-  useEffect(() => {
-    async function fetchChartData() {
-      const { tracks, artists, albums } = await getChartData({ start, end, filter });
-      setCharts({
+  const [topPlays, setTopPlays] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
+  React.useEffect(() => {
+    async function fetchTopPlays() {
+      const { tracks, artists, albums } = await getTopPlays({ start, end, filter });
+      setTopPlays({
         tracks: tracks.map(track => TopN(track)),
         artists: artists.map(artist => TopN(artist)),
         albums: albums.map(album => TopN(album)),
       });
+      setIsLoading(false);
     }
-    fetchChartData();
+    setIsLoading(true);
+    fetchTopPlays();
   }, [start, end, filter]);
-  useEffect(() => ReactTooltip.rebuild());
+  React.useEffect(() => ReactTooltip.rebuild());
 
   function getToolTipContent(dataTip) {
     if (dataTip) {
@@ -101,30 +105,33 @@ const Charts = () => {
     }
   }
 
-  if (charts == null) {
+  if (topPlays == null) {
     return <Title>No results, check the filter</Title>;
   }
 
-  const { tracks, artists, albums } = charts;
+  const { tracks, artists, albums } = topPlays;
   return (
-    <TopChartsSlate rimColor={musicTheme.tertiary}>
+    <TopPlaysSlate rimColor={musicTheme.tertiary}>
       <ReactTooltip getContent={getToolTipContent} />
-      <ChartContent drops={0}>
-        <TopChart>
-          <ChartTitle>TRACKS</ChartTitle>
-          {tracks}
-        </TopChart>
-        <TopChart>
-          <ChartTitle>ARTISTS</ChartTitle>
-          {artists}
-        </TopChart>
-        <TopChart>
-          <ChartTitle>ALBUMS</ChartTitle>
-          {albums}
-        </TopChart>
-      </ChartContent>
-    </TopChartsSlate>
+      {isLoading && <LoadingSpinner message="Loading Music..." />}
+      {!isLoading && (
+        <TopPlaysContent drops={0}>
+          <TopPlays>
+            <ListTitle>TRACKS</ListTitle>
+            {tracks}
+          </TopPlays>
+          <TopPlays>
+            <ListTitle>ARTISTS</ListTitle>
+            {artists}
+          </TopPlays>
+          <TopPlays>
+            <ListTitle>ALBUMS</ListTitle>
+            {albums}
+          </TopPlays>
+        </TopPlaysContent>
+      )}
+    </TopPlaysSlate>
   );
 };
 
-export default Charts;
+export default Overview;

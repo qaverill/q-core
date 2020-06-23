@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Switch, Redirect, Route } from 'react-router-dom';
 import Charts from './Charts';
-import Graphs from './Graphs';
+import Overview from './Overview';
 import Albums from './Albums';
 import ChronologicalSearchBar from '../../components/ChronologicalSearchBar';
 import { actions, useStore } from '../../store';
@@ -13,7 +13,7 @@ import SlateSelector from '../../components/SlateSelector';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const SLATE_FEATURES = ['charts', 'graphs', 'albums'];
+const SLATE_FEATURES = ['overview', 'charts', 'albums'];
 const DATE_CONTROLS = ['Y', 'M', 'W', 'D'];
 // ----------------------------------
 // STYLES
@@ -44,11 +44,11 @@ const Music = () => {
         <SlateSelector pages={SLATE_FEATURES} idx={musicIdx} onChange={setFeatureSlate} />
         <Switch>
           <Route exact path="/music" render={() => <Redirect exact to={`/music/${SLATE_FEATURES[musicIdx]}`} />} />
+          <Route exact path="/music/overview">
+            <Overview />
+          </Route>
           <Route exact path="/music/charts">
             <Charts />
-          </Route>
-          <Route exact path="/music/graphs">
-            <Graphs />
           </Route>
           <Route exact path="/music/albums">
             <Albums />

@@ -27,7 +27,7 @@ const {
   handleInternalPutRequest,
   handleInternalDeleteRequest,
 } = require('./handlers/internal');
-const { handleMusicChartsRequest } = require('./handlers/music');
+const { handleMusicTopPlaysRequest, handleDailyPlayTimeRequest } = require('./handlers/music');
 
 const server = express();
 let path;
@@ -77,8 +77,11 @@ path = '/mongodb/transactions/:_id';
 makePutEndpoint({ routes, path }, handleInternalPutRequest);
 makeDeleteEndpoint({ routes, path }, handleInternalDeleteRequest);
 
-path = '/music/charts';
-makeGetEndpoint({ routes, path }, handleMusicChartsRequest);
+path = '/music/topPlays';
+makeGetEndpoint({ routes, path }, handleMusicTopPlaysRequest);
+
+path = '/music/dailyPlayTime';
+makeGetEndpoint({ routes, path }, handleDailyPlayTimeRequest);
 
 server.use('/', routes);
 
