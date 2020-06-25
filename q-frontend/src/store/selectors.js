@@ -7,6 +7,7 @@ export const selectSettings = state => {
 };
 
 export const selectMusicStore = state => {
-  const { musicStart, musicEnd, musicFilter, musicData } = state;
-  return { start: musicStart, end: musicEnd, filter: musicFilter, data: musicData };
+  const { musicFilters, musicData } = state;
+  const { start, end, filter } = musicFilters;
+  return { start, end, filter, data: musicData };
 };

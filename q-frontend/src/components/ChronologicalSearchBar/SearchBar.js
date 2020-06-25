@@ -12,11 +12,11 @@ const SearchBar = ({ setFilter, search }) => {
 
   const onBlur = () => { if (suggestions.length === 0 && value === '') setFilter(null); };
 
-  const onSuggestionSelected = (event, { suggestion }) => setFilter(suggestion.filter);
+  const onSuggestionSelected = (event, { suggestion }) => setFilter(suggestion.filter, suggestion.type);
 
   const onSuggestionsFetchRequested = ({ value: searchString }) => {
     if (searchString === '') setSuggestions([]);
-    search(searchString);
+    search(searchString).then(setSuggestions);
   };
 
   const onSuggestionsClearRequested = () => setSuggestions([]);

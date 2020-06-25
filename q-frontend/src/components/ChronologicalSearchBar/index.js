@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import React, { useEffect } from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 import { NotificationManager } from 'react-notifications';
 
@@ -29,6 +29,17 @@ const validateInputDate = (date, side) => {
     return false;
   }
   return true;
+};
+const adjustDate = (timestamp, adjustment) => {
+  const date = epochToDate(timestamp);
+  const amount = adjustment.includes('-') ? -1 : 1;
+  if (adjustment.includes('D')) return date.setDate(date.getDate() + amount) / 1000;
+  if (adjustment.includes('W')) return date.setDate(date.getDate() + 7 * amount) / 1000;
+  if (adjustment.includes('M')) return date.setMonth(date.getMonth() + amount) / 1000;
+  if (adjustment.includes('Y')) return date.setFullYear(date.getFullYear() + amount) / 1000;
+};
+const setDateInput = (sideId, timestamp) => {
+  document.getElementById(sideId).value = epochToString(timestamp);
 };
 // ----------------------------------
 // STYLES
@@ -62,41 +73,39 @@ const End = styled.div`
 const ChronologicalSearchBar = ({
   start,
   end,
-  setStart,
-  setEnd,
-  setFilter,
+  setFilters,
   dateControls,
   colorTheme,
 }) => {
-  useEffect(() => {
-    document.getElementById(START).value = epochToString(start);
-    document.getElementById(END).value = epochToString(end);
+  const filters = { start, end, filter: null };
+  React.useEffect(() => {
+    setDateInput(START, start);
+    setDateInput(END, end);
   }, [start, end]);
 
-  const adjustDate = (date, adjustment) => {
-    const amount = adjustment.includes('-') ? -1 : 1;
-    if (adjustment.includes('D')) return date.setDate(date.getDate() + amount) / 1000;
-    if (adjustment.includes('W')) return date.setDate(date.getDate() + 7 * amount) / 1000;
-    if (adjustment.includes('M')) return date.setMonth(date.getMonth() + amount) / 1000;
-    if (adjustment.includes('Y')) return date.setFullYear(date.getFullYear() + amount) / 1000;
-  };
+  function adjustStart(adjustment) {
+    filters.start = adjustDate(start, adjustment);
+    setFilters(filters);
+  }
 
-  const adjustStart = (adjustment) => {
-    const originalStart = epochToDate(start);
-    setStart(adjustDate(originalStart, adjustment));
-  };
+  function adjustEnd(adjustment) {
+    filters.end = adjustDate(end, adjustment);
+    setFilters(filters);
+  }
 
-  const adjustEnd = (adjustment) => {
-    const originalEnd = epochToDate(end);
-    setEnd(adjustDate(originalEnd, adjustment));
-  };
+  function setFilter(filter, type) {
+    filters.filter = filter && `${type}=${filter}`;
+    setFilters(filters);
+  }
 
   function handleOnBlur(side) {
     return () => {
       const input = document.getElementById(side).value;
       const date = input.length === 0 ? null : stringToEpoch(input);
+      console.log(date);
       if (!validateInputDate(date, side)) return;
-      if (side === START) setStart(date); else setEnd(date);
+      filters[side] = date;
+      setFilters(filters);
     };
   }
 

@@ -4,7 +4,7 @@ import axios from 'axios';
 export const ONE_EPOCH_DAY = 86400;
 
 export const capitolFirstLetter = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-export const stringToEpoch = (s) => Math.round(new Date(`${s.split('/')[2]}-${s.split('/')[0]}-${s.split('/')[1]}T00:00:00Z`).getTime() / 1000);
+export const stringToEpoch = (s) => Math.round(new Date(`${s.split('/')[2]}-${s.split('/')[0]}-${parseInt(s.split('/')[1], 10) + 1}T00:00:00Z`).getTime() / 1000);
 export const dateToString = (d) => `${d.getMonth() + 1 < 10 ? `0${d.getMonth() + 1}` : d.getMonth() + 1}/${d.getDate() < 10 ? `0${d.getDate()}` : d.getDate()}/${d.getFullYear()}`;
 export const epochToString = (epoch) => epoch != null && dateToString(new Date(epoch * 1000));
 export const epochToDate = (epoch) => new Date(epoch * 1000);

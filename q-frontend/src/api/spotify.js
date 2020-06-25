@@ -17,8 +17,8 @@ export const searchSpotify = (searchString) => new Promise((resolve, reject) => 
   const types = ['track', 'artist', 'album'];
   axios.get('/spotify', { params: { url: `https://api.spotify.com/v1/search?q=${searchString}&type=track,artist,album&limit=3` } })
     .then(res => {
-      resolve({
-        suggestions: types
+      resolve(
+        types
           .map(type => (
             res.data[`${type}s`].items.map(item => ({
               name: item.name,
@@ -30,7 +30,7 @@ export const searchSpotify = (searchString) => new Promise((resolve, reject) => 
           .flat()
           .filter(item => item.confidence > 0.5)
           .sort((a, b) => b.confidence - a.confidence),
-      });
+      );
     }).catch(error => {
       NotificationManager.error('Failed to search spotify');
       console.error(error);

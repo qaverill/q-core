@@ -19,17 +19,13 @@ const persistSettingsAction = type => payload => {
 export const actionTypes = {
   STORE_SETTINGS: 'STORE_SETTINGS',
   SET_SETTINGS: 'SET_SETTINGS',
-  SET_MUSIC_START: 'SET_MUSIC_START',
-  SET_MUSIC_END: 'SET_MUSIC_END',
-  SET_MUSIC_FILTER: 'SET_MUSIC_FILTER',
+  SET_MUSIC_FILTERS: 'SET_MUSIC_FILTERS',
   SET_MUSIC_DATA: 'SET_MUSIC_DATA',
 };
 export const actions = {
   storeSettings: createAction(actionTypes.STORE_SETTINGS),
   setSettings: persistSettingsAction(actionTypes.SET_SETTINGS),
-  setMusicStart: createAction(actionTypes.SET_MUSIC_START),
-  setMusicEnd: createAction(actionTypes.SET_MUSIC_END),
-  setMusicFilter: createAction(actionTypes.SET_MUSIC_FILTER),
+  setMusicFilters: createAction(actionTypes.SET_MUSIC_FILTERS),
   setMusicData: createAction(actionTypes.SET_MUSIC_DATA),
 };
 export function reducer(state, action) {
@@ -38,12 +34,8 @@ export function reducer(state, action) {
     case actionTypes.STORE_SETTINGS:
     case actionTypes.SET_SETTINGS:
       return { ...state, settings: payload };
-    case actionTypes.SET_MUSIC_START:
-      return { ...state, musicStart: payload };
-    case actionTypes.SET_MUSIC_END:
-      return { ...state, musicEnd: payload };
-    case actionTypes.SET_MUSIC_FILTER:
-      return { ...state, musicFilter: payload };
+    case actionTypes.SET_MUSIC_FILTERS:
+      return { ...state, musicFilters: payload };
     case actionTypes.SET_MUSIC_DATA:
       return { ...state, musicData: payload };
     default:
@@ -54,9 +46,12 @@ export function reducer(state, action) {
 // STORE
 // ----------------------------------
 export const initialState = {
+  musicFilters: {
+    start: MUSIC_START,
+    end: MUSIC_END,
+    filter: null,
+  },
   musicData: [],
-  musicStart: MUSIC_START,
-  musicEnd: MUSIC_END,
 };
 export const StoreContext = createContext({
   state: {},

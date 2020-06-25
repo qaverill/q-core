@@ -34,9 +34,7 @@ const Music = () => {
       <ChronologicalSearchBar
         start={start}
         end={end}
-        setStart={s => dispatch(actions.setMusicStart(s))}
-        setEnd={e => dispatch(actions.setMusicEnd(e))}
-        setFilter={f => dispatch(actions.setMusicFilter(f))}
+        setFilters={filters => dispatch(actions.setMusicFilters(filters))}
         dateControls={DATE_CONTROLS}
         colorTheme={musicTheme}
       />

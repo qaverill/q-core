@@ -22,7 +22,11 @@ const createQuery = ({ path, params, query }) => {
   }
   if (filter && filter !== '') {
     const [type, id] = filter.split('=');
-    newQuery[type] = id;
+    if (type === 'artist') {
+      newQuery.artists = { $in: [id] };
+    } else {
+      newQuery[type] = id;
+    }
   }
   if (Object.keys(newQuery.timestamp).length === 0) {
     delete newQuery.timestamp;
