@@ -25,7 +25,6 @@ module.exports = {
     let tracks = {};
     let artists = {};
     let albums = {};
-    console.log(data);
     function countListen({ track, artists: as, album }) {
       const currentAmount = amount => (amount == null ? 0 : amount);
       tracks[track] = 1 + currentAmount(tracks[track]);

@@ -27,7 +27,6 @@ module.exports = {
       getDocs({ collection, query })
         .then(async data => {
           setCache(query, data);
-          console.log(query)
           const chartData = await makeTopPlaysData(data);
           response.status(200).json(chartData);
         })

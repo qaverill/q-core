@@ -82,6 +82,7 @@ const Overview = () => {
   React.useEffect(() => {
     async function fetchTopPlays() {
       const { tracks, artists, albums } = await getTopPlays({ start, end, filter });
+      setIsLoading(true);
       setTopPlays({
         tracks: tracks.map(track => TopN(track)),
         artists: artists.map(artist => TopN(artist)),
@@ -89,7 +90,6 @@ const Overview = () => {
       });
       setIsLoading(false);
     }
-    setIsLoading(true);
     fetchTopPlays();
   }, [start, end, filter]);
   React.useEffect(() => ReactTooltip.rebuild());

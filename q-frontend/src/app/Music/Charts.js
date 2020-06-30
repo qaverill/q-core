@@ -32,11 +32,10 @@ const Charts = () => {
     async function fetchChartData() {
       const query = { start, end, filter };
       const listens = await getDailyPlayTime(query);
-      console.log(listens);
+      setIsLoading(true);
       setChartData(listens.map(listenToChartPoint));
       setIsLoading(false);
     }
-    setIsLoading(true);
     fetchChartData();
   }, [start, end, filter]);
   return (

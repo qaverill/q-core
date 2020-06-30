@@ -89,7 +89,7 @@ const calculateAmountNeededToLiveForAMonth = tagAnalysis => {
   return total;
 };
 
-class Analyzer extends React.Component {
+class Analyze extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -188,4 +188,4 @@ class Analyzer extends React.Component {
   }
 }
 
-export default Analyzer;
+export default Analyze;

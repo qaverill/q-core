@@ -1,9 +1,9 @@
 import axios from 'axios';
-import queryString from 'query-string';
+import { stringify } from 'query-string';
 import { NotificationManager } from 'react-notifications';
 
 export const getTopPlays = (query) => new Promise((resolve, reject) => {
-  axios.get(`/music/topPlays?${queryString.stringify(query)}`)
+  axios.get(`/music/topPlays?${stringify(query)}`)
     .then(results => resolve(results.data))
     .catch(error => {
       NotificationManager.error('Failed to get Overview data');
@@ -13,7 +13,7 @@ export const getTopPlays = (query) => new Promise((resolve, reject) => {
 });
 
 export const getDailyPlayTime = (query) => new Promise((resolve, reject) => {
-  axios.get(`/music/dailyPlayTime?${queryString.stringify(query)}`)
+  axios.get(`/music/dailyPlayTime?${stringify(query)}`)
     .then(results => resolve(results.data))
     .catch(error => {
       NotificationManager.error('Failed to get Daily Play Time data');
