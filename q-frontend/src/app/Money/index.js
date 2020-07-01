@@ -29,7 +29,7 @@ const Money = () => {
     dispatch(actions.setSettings({ ...settings, moneyIdx: slateIdx }));
   }
   return (
-    <Slate rimColor={moneyTheme.primary}>
+    <Slate rimColor={moneyTheme.primary} isFirst>
       <ChronologicalSearchBar
         start={start}
         end={end}
@@ -40,11 +40,11 @@ const Money = () => {
       <SlateContent drops={1}>
         <SlateSelector pages={SLATE_FEATURES} idx={moneyIdx} onChange={setFeatureSlate} />
         <Switch>
-          <Route exact path="/money" render={() => <Redirect exact to={`/music/${SLATE_FEATURES[moneyIdx]}`} />} />
-          <Route exact path="/music/analytics">
+          <Route exact path="/money" render={() => <Redirect exact to={`/money/${SLATE_FEATURES[moneyIdx]}`} />} />
+          <Route exact path="/money/analytics">
             <Analyze />
           </Route>
-          <Route exact path="/music/audi">
+          <Route exact path="/money/audit">
             <Audit />
           </Route>
         </Switch>

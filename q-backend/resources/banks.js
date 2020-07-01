@@ -72,7 +72,7 @@ const factTags = {
   rent: ['Roont'],
 };
 
-const autoTagFact = (fact, tags, parentTag) => {
+const autoTagTransaction = (fact, tags, parentTag) => {
   const { description, amount } = fact;
   if (description.includes('venmo from')) {
     return ['payBack'];
@@ -90,7 +90,7 @@ const autoTagFact = (fact, tags, parentTag) => {
     )];
   }
   return [...new Set(Object.keys(tags).flatMap(subTag => {
-    const possibleTag = autoTagFact(fact, tags[subTag], subTag);
+    const possibleTag = autoTagTransaction(fact, tags[subTag], subTag);
     return possibleTag.length > 0 ? [parentTag, ...possibleTag] : null;
   }).filter(tag => tag != null))];
 };
@@ -148,7 +148,7 @@ const parseRow = ({ line, file }) => {
         amount: row[2].indexOf('(') > -1 ? parseFloat(row[2].replace(/[)$(]/g, '')) * -1 : parseFloat(row[2].replace('$', '')),
         description: row[5],
       };
-      fact.tags = autoTagFact(fact, factTags, null);
+      fact.tags = autoTagTransaction(fact, factTags, null);
       fact._id = generateFactId(fact);
       return fact;
     case 'citi.csv':
@@ -158,7 +158,7 @@ const parseRow = ({ line, file }) => {
         amount: row[3] !== '' ? parseFloat(row[3]) * -1 : parseFloat(row[4]) * -1,
         description: row[2].replace(/"/g, ''),
       };
-      fact.tags = autoTagFact(fact, factTags, null);
+      fact.tags = autoTagTransaction(fact, factTags, null);
       fact._id = generateFactId(fact);
       return fact;
     case 'venmo.csv':
@@ -171,7 +171,7 @@ const parseRow = ({ line, file }) => {
           amount: parseFloat(row[8].replace(/[ $+]/g, '')),
           description,
         };
-        fact.tags = autoTagFact(fact, factTags, null);
+        fact.tags = autoTagTransaction(fact, factTags, null);
         fact._id = generateFactId(fact);
         return fact;
       }
@@ -205,5 +205,6 @@ module.exports = {
       })
       .catch(reject);
   }),
-  testAutoTagDoc: (fact, tags, label) => autoTagFact(fact, tags, label),
+  autoTagTransaction: (fact) => autoTagTransaction(fact, factTags, null),
+  testAutoTagDoc: (fact, tags, label) => autoTagTransaction(fact, tags, label),
 };

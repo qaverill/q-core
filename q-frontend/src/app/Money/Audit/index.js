@@ -1,14 +1,15 @@
 import * as React from 'react';
+import * as R from 'ramda';
 import styled from 'styled-components';
 import { NotificationManager } from 'react-notifications';
-import { getTransactions } from '../../../api/money';
+import { getTransactions, runAutoTagOnTransactions } from '../../../api/money';
 import { useStore } from '../../../store';
 import { selectMoneyStore } from '../../../store/selectors';
 
 import ManualTagger from './ManualTagger';
 import { red, green, yellow, moneyTheme } from '../../../packages/colors';
 import { epochToString, copyStringToClipboard, numberToPrice } from '../../../packages/utils';
-import { Button, StyledPopup, H2 } from '../../../packages/core';
+import { Button, StyledPopup, H2, Slate, DROP_SIZE, GAP_SIZE } from '../../../packages/core';
 import { refreshIcon } from '../../../packages/images';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 // ----------------------------------
@@ -22,10 +23,16 @@ const copyIdToClipboard = _id => {
 // ----------------------------------
 // STYLES
 // ----------------------------------
-const Viewer = styled.div`
-  width: 100%;
-  height: 100%;
+const AuditSlate = styled(Slate)`
   overflow: auto;
+`;
+const AuditHeader = styled.div`
+  height: ${DROP_SIZE - GAP_SIZE}px;
+  width: 100%;
+  background-color: ${moneyTheme.secondary};
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 `;
 const TransactionFact = styled.div`
   height: 36px;
@@ -33,7 +40,7 @@ const TransactionFact = styled.div`
   align-items: center;
   justify-content: center;
   overflow: auto;
-  background-color: ${props => (props.amount < 0 ? `rgba(255, 0, 0, 0.1)` : `rgba(0, 255, 0, 0.1)`)};
+  background-color: ${props => (props.amount < 0 ? 'rgba(255, 0, 0, 0.1)' : 'rgba(0, 255, 0, 0.1)')};
   border-radius: 15px;
   margin: 5px;
 `;
@@ -52,6 +59,8 @@ const DescriptionColumn = styled.div`
   flex-grow: 1;
   justify-content: center;
   white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 const TagsColumn = styled.div`
   display: flex;
@@ -118,18 +127,33 @@ const Audit = () => {
   React.useEffect(() => {
     async function fetchTransactions() {
       setIsLoading(true);
-      setTransactions(await getTransactions({ start, end, filter }));
+      setTransactions(
+        R.reverse(
+          R.sortBy(
+            R.prop('timestamp'),
+            await getTransactions({ start, end, filter }),
+          ),
+        ),
+      );
       setIsLoading(false);
     }
     fetchTransactions();
   }, [start, end, filter]);
+  async function runAutoTagOnAllTransactions() {
+    const updatedTransactions = await runAutoTagOnTransactions(transactions);
+    console.log(updatedTransactions);
+    setTransactions(updatedTransactions);
+  }
   return (
-    <Viewer>
+    <AuditSlate rimColor={moneyTheme.secondary}>
       {isLoading && <LoadingSpinner message={LOADING_MESSAGE} />}
+      <AuditHeader>
+        <Button onClick={runAutoTagOnAllTransactions}>Run Auto Tag on All</Button>
+      </AuditHeader>
       {transactions.map((transaction, idx) => (
         <Transaction transaction={transaction} idx={idx} />
       ))}
-    </Viewer>
+    </AuditSlate>
   );
 };
 

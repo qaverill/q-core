@@ -31,7 +31,6 @@ const AlbumImg = styled.img`
 
 const Albums = () => {
   const { state } = useStore();
-  const { data } = selectMusicStore(state);
   const Album = ({ item }) => {
     const { timestamp, track } = item;
     const { url } = track.album.images[0];
@@ -44,7 +43,7 @@ const Albums = () => {
 
   return (
     <AlbumsContainer>
-      <H2>Num of datas = {data.length}</H2>
+      <H2>Num of datas = </H2>
       {/* {data.map(item => (
         <Popup trigger={<Album item={item} />} position="right center" key={item.timestamp}>
           <div>T/A/A</div>

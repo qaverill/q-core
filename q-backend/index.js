@@ -27,7 +27,7 @@ const {
   handleInternalPutRequest,
   handleInternalDeleteRequest,
 } = require('./handlers/internal');
-const { handleGetTransactionsRequest } = require('./handlers/money');
+const { handleGetTransactionsRequest, handleAutoTagTransactionsRequest } = require('./handlers/money');
 const { handleMusicTopPlaysRequest, handleDailyPlayTimeRequest } = require('./handlers/music');
 
 const server = express();
@@ -58,9 +58,9 @@ path = '/spotify';
 makeGetEndpoint({ routes, path }, handleExternalGetRequest);
 makePostEndpoint({ routes, path }, handleExternalPostRequest);
 
-path = '/mongodb/listens';
-makeGetEndpoint({ routes, path }, handleInternalGetRequest);
-makePostEndpoint({ routes, path }, handleInternalPostRequest);
+// path = '/mongodb/listens';
+// makeGetEndpoint({ routes, path }, handleInternalGetRequest);
+// makePostEndpoint({ routes, path }, handleInternalPostRequest);
 
 path = '/mongodb/metadata/:_id';
 makeGetEndpoint({ routes, path }, handleInternalGetRequest);
@@ -80,6 +80,7 @@ makeDeleteEndpoint({ routes, path }, handleInternalDeleteRequest);
 
 path = '/money/transactions';
 makeGetEndpoint({ routes, path }, handleGetTransactionsRequest);
+makePutEndpoint({ routes, path }, handleAutoTagTransactionsRequest);
 
 path = '/music/topPlays';
 makeGetEndpoint({ routes, path }, handleMusicTopPlaysRequest);

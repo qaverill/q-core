@@ -34,7 +34,6 @@ export const Button = styled.button`
   color: ${props => (props.color === yellow ? dark : white)};  
   height: 30px;
   padding: 2.5px 7.5px;
-  margin: 2.5px;
   text-align: center;
   text-decoration: none;
   font-size: 16px;

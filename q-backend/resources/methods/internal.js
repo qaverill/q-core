@@ -85,22 +85,17 @@ module.exports = {
   }),
   putDoc: ({ collection, query, doc }) => new Promise((resolve, reject) => {
     MongoClient.connect(mongo_uri, MongoClient.connectionParams, (connectError, db) => {
-      if (connectError) {
-        q_logger.error('Failed to connect to mongo in putDocs', connectError);
-        reject(connectError);
-      } else {
-        db.db(database)
-          .collection(collection)
-          .replaceOne(query, doc, { upsert: true }, (updateError, updateResponse) => {
-            db.close();
-            if (updateError) {
-              q_logger(`Failed to put ${collection} into mongo`, updateError);
-              reject(updateError);
-            } else {
-              resolve(updateResponse);
-            }
-          });
-      }
+      db.db(database)
+        .collection(collection)
+        .replaceOne(query, doc, { upsert: true }, (updateError, updateResponse) => {
+          db.close();
+          if (updateError) {
+            q_logger(`Failed to put ${collection} into mongo`, updateError);
+            reject(updateError);
+          } else {
+            resolve(updateResponse);
+          }
+        });
     });
   }),
   deleteDoc: ({ collection, query }) => new Promise((resolve, reject) => {
