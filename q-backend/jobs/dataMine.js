@@ -1,6 +1,6 @@
 const { q_logger } = require('../q-lib/q-logger');
 const { getDocs, postDocs } = require('../resources/methods/internal');
-const { getBankFacts } = require('../resources/banks');
+const { getBankFacts } = require('../resources/money');
 const {
   getRecentlyPlayedTracks,
   getMyTracks,

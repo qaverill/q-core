@@ -1,8 +1,11 @@
+/* eslint-disable no-unused-vars */
 import axios from 'axios';
 import queryString from 'query-string';
 import { NotificationManager } from 'react-notifications';
-
-export const fetchDocuments = ({ collection, _id, query }) => new Promise((resolve, reject) => {
+// ----------------------------------
+// HELPERS
+// ----------------------------------
+const readDocuments = ({ collection, _id, query }) => new Promise((resolve, reject) => {
   axios.get(`/mongodb/${collection}${_id ? `/${_id}` : ''}?${queryString.stringify(query)}`)
     .then(results => resolve(results.data))
     .catch(error => {
@@ -11,8 +14,7 @@ export const fetchDocuments = ({ collection, _id, query }) => new Promise((resol
       reject(error);
     });
 });
-
-export const writeDocument = ({ collection, _id, document }) => new Promise((resolve, reject) => {
+const writeDocument = ({ collection, _id, document }) => new Promise((resolve, reject) => {
   axios.put(`/mongodb/${collection}/${_id}`, document)
     .then(resolve)
     .catch(error => {
@@ -21,8 +23,7 @@ export const writeDocument = ({ collection, _id, document }) => new Promise((res
       reject(error);
     });
 });
-
-export const deleteDocument = ({ collection, _id }) => new Promise((resolve, reject) => {
+const deleteDocument = ({ collection, _id }) => new Promise((resolve, reject) => {
   axios.delete(`/mongodb/${collection}/${_id}`)
     .then(resolve)
     .catch(error => {
@@ -31,11 +32,10 @@ export const deleteDocument = ({ collection, _id }) => new Promise((resolve, rej
       reject(error);
     });
 });
-
-export const saveSettings = settings => {
-  const collection = 'metadata';
-  const _id = 'settings';
-  writeDocument({ collection, _id, document: settings });
-};
-
-export const a = () => 1;
+// ----------------------------------
+// API CALLS
+// ----------------------------------
+const collection = 'metadata';
+const _id = 'settings';
+export const readSettings = () => readDocuments({ collection, _id });
+export const writeSettings = settings => writeDocument({ collection, _id, document: settings });

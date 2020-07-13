@@ -1,7 +1,7 @@
 const R = require('ramda');
 const { createQuery } = require('./internal');
 const { getDocs, putDoc } = require('../resources/methods/internal');
-const { autoTagTransaction } = require('../resources/banks');
+const { tagTransaction } = require('../resources/money');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -18,20 +18,21 @@ module.exports = {
       })
       .catch(() => response.status(400).send());
   },
-  handleAutoTagTransactionsRequest: async ({ request, response }) => {
-    const { body: transactions } = request;
-    transactions.map(transaction => {
-      const newTags = autoTagTransaction(transaction);
-      if (newTags !== transaction.tags) {
-        transaction.tags = newTags;
-        putDoc({ collection, query, doc })
-          .then(() => response.status(204).send())
-          .catch(() => response.status(400).send());
-        // TODO: fuck need to separate auto tags from custom tags
-      } else {
-        return transaction;
-      }
-    });
-    response.status(200).json(transactions);
+  handleTagTransactionsRequest: async ({ response }) => {
+    getDocs({ collection })
+      .then(transactions => {
+        transactions.map(async transaction => {
+          const taggedTransaction = { ...transaction, tags: tagTransaction(transaction) };
+          if (!R.equals(taggedTransaction.tags, transaction.tags)) {
+            console.log(transaction.tags, '=>', taggedTransaction.tags);
+            const query = { _id: transaction._id };
+            await putDoc({ collection, query, doc: taggedTransaction });
+            return taggedTransaction;
+          }
+          return transaction;
+        });
+        response.status(200).json(transactions);
+      })
+      .catch(() => response.status(400).send());
   },
 };

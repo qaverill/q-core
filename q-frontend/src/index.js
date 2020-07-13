@@ -4,15 +4,13 @@ import ReactDOM from 'react-dom';
 import { NotificationContainer } from 'react-notifications';
 import { StoreContext, reducer, initialState, actions } from './store';
 import { selectSettings } from './store/selectors';
-import { fetchDocuments } from './api/mongodb';
-import LoadingSpinner from './components/LoadingSpinner';
+import WaitSpinner from './components/WaitSpinner';
+import { readSettings } from './api/mongodb';
 import App from './app';
 import 'react-notifications/lib/notifications.css';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const collection = 'metadata';
-const _id = 'settings';
 // ----------------------------------
 // STYLES
 // ----------------------------------
@@ -24,7 +22,7 @@ const Root = () => {
   const settings = selectSettings(state);
   useEffect(() => {
     async function fetchSettings() {
-      dispatch(actions.storeSettings(await fetchDocuments({ collection, _id })));
+      dispatch(actions.storeSettings(await readSettings()));
     }
     fetchSettings();
   }, []);
@@ -33,9 +31,8 @@ const Root = () => {
     <Router>
       <NotificationContainer />
       <StoreContext.Provider value={{ state, dispatch }}>
-        {!settings
-          ? <LoadingSpinner title="Loading..." message="Setting up app..." />
-          : <App /> }
+        {!settings && <WaitSpinner />}
+        {settings && <App />}
       </StoreContext.Provider>
     </Router>
   );

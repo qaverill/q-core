@@ -21,7 +21,6 @@ const App = () => {
   const { state, dispatch } = useStore();
   const { settings } = state;
   const { appIdx } = selectSettings(state);
-
   function setSubSlate(slateIdx) {
     dispatch(actions.setSettings({ ...settings, appIdx: slateIdx }));
   }

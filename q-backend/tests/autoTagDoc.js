@@ -1,4 +1,4 @@
-const { testAutoTagDoc } = require('../resources/banks');
+const { testTagTransaction } = require('../resources/money/taggingTransactions');
 
 const path = './resources/banks/autoTagDoc';
 
@@ -33,11 +33,9 @@ const tests = [
     expected: ['number', 'even', 'odd', 'negative', 'bingo', 'letters', 'a', 'ax1', 'ax2', 'ax4', 'b', 'bx2', 'bx3'],
   },
   { description: 'nothing', expected: [] },
-  { description: 'venmo from other user', expected: ['payBack'] },
-  { description: 'Check Withdrawal: #113', amount: '-1150', expected: ['rent'] },
 ];
 
-const algorithm = (i) => testAutoTagDoc(tests[i], tags, null);
+const algorithm = (i) => testTagTransaction(tests[i], tags, null);
 
 module.exports = {
   path,

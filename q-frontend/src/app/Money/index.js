@@ -28,6 +28,7 @@ const Money = () => {
   function setFeatureSlate(slateIdx) {
     dispatch(actions.setSettings({ ...settings, moneyIdx: slateIdx }));
   }
+
   return (
     <Slate rimColor={moneyTheme.primary} isFirst>
       <ChronologicalSearchBar

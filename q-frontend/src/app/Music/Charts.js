@@ -4,14 +4,12 @@ import { BarChart, Bar, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { Slate } from '../../packages/core';
 import { musicTheme } from '../../packages/colors';
 import { useStore } from '../../store';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import WaitSpinner from '../../components/LoadingSpinner';
 import { selectMusicStore } from '../../store/selectors';
 import { getDailyPlayTime } from '../../api/music';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const collection = 'listens';
-const testData = [{ name: 'Page A', uv: 400, pv: 2400, amt: 2400 }, { name: 'Page B', uv: 800, pv: 4800, amt: 4800 }];
 const listenToChartPoint = ({ date, playTime }) => ({ name: date, uv: playTime });
 // ----------------------------------
 // STYLES
@@ -40,7 +38,7 @@ const Charts = () => {
   }, [start, end, filter]);
   return (
     <TopChartsSlate rimColor={musicTheme.secondary}>
-      {isLoading && <LoadingSpinner message="Loading Music..." />}
+      {isLoading && <WaitSpinner message="Loading Music..." />}
       {!isLoading && (
         <BarChart height={1000} width={1900} data={chartData}>
           <Bar dataKey="uv" fill={musicTheme.tertiary} />

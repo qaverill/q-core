@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { saveSettings } from '../api/mongodb';
+import { writeSettings } from '../api/mongodb';
 import { ONE_EPOCH_DAY, times } from '../packages/utils';
 // ----------------------------------
 // HELPERS
@@ -12,7 +12,7 @@ const MONEY_START = times.firstOfCurrentMonth();
 const MONEY_END = times.now();
 const createAction = type => payload => ({ type, payload });
 const persistSettingsAction = type => payload => {
-  saveSettings(payload);
+  writeSettings(payload);
   return ({ type, payload });
 };
 // ----------------------------------

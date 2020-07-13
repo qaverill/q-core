@@ -42,7 +42,7 @@ module.exports = {
     });
   }),
   readDataFile: ({ file }) => new Promise((resolve, reject) => {
-    fs.readFile(path.join(__dirname, `../../data/${file}`), 'UTF-8', (error, data) => {
+    fs.readFile(path.join(__dirname, `../money/data/${file}`), 'UTF-8', (error, data) => {
       if (!error) {
         resolve(data);
       } else {
@@ -51,12 +51,12 @@ module.exports = {
       }
     });
   }),
-  getDirFiles: ({ dir }) => new Promise((resolve, reject) => {
-    fs.readdir(path.join(__dirname, `../../data/${dir}`), (error, files) => {
+  getDirFiles: () => new Promise((resolve, reject) => {
+    fs.readdir(path.join(__dirname, '../money/data'), (error, files) => {
       if (!error) {
         resolve(files);
       } else {
-        q_logger.error(`Error when reading files of ${dir}`, error);
+        q_logger.error('Error when reading money data', error);
         reject(error);
       }
     });

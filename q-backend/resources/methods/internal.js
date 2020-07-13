@@ -90,7 +90,7 @@ module.exports = {
         .replaceOne(query, doc, { upsert: true }, (updateError, updateResponse) => {
           db.close();
           if (updateError) {
-            q_logger(`Failed to put ${collection} into mongo`, updateError);
+            q_logger.error(`Failed to put ${collection} into mongo`, updateError);
             reject(updateError);
           } else {
             resolve(updateResponse);

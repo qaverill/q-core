@@ -13,8 +13,8 @@ export const getTransactions = query => new Promise((resolve, reject) => {
     });
 });
 
-export const runAutoTagOnTransactions = transactions => new Promise((resolve, reject) => {
-  axios.put('/money/transactions', transactions)
+export const runTransactionTagger = () => new Promise((resolve, reject) => {
+  axios.get('/money/tagTransactions')
     .then(R.pipe(R.prop('data'), resolve))
     .catch(error => {
       NotificationManager.error('Failed to run auto tag on all transactions');

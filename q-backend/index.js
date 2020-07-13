@@ -27,7 +27,7 @@ const {
   handleInternalPutRequest,
   handleInternalDeleteRequest,
 } = require('./handlers/internal');
-const { handleGetTransactionsRequest, handleAutoTagTransactionsRequest } = require('./handlers/money');
+const { handleGetTransactionsRequest, handleTagTransactionsRequest } = require('./handlers/money');
 const { handleMusicTopPlaysRequest, handleDailyPlayTimeRequest } = require('./handlers/music');
 
 const server = express();
@@ -80,7 +80,9 @@ makeDeleteEndpoint({ routes, path }, handleInternalDeleteRequest);
 
 path = '/money/transactions';
 makeGetEndpoint({ routes, path }, handleGetTransactionsRequest);
-makePutEndpoint({ routes, path }, handleAutoTagTransactionsRequest);
+
+path = '/money/tagTransactions';
+makeGetEndpoint({ routes, path }, handleTagTransactionsRequest);
 
 path = '/music/topPlays';
 makeGetEndpoint({ routes, path }, handleMusicTopPlaysRequest);
