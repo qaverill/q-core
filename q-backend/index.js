@@ -96,8 +96,8 @@ server.listen(port, () => {
   q_logger.info(`Started Q on port ${port}`);
   autoRefreshTokens()
     .then(() => {
-      autoMineData({ collection: 'listens', interval: 1800000 });
-      autoMineData({ collection: 'saves', interval: 2600000 });
+      // autoMineData({ collection: 'listens', interval: 1800000 });
+      // autoMineData({ collection: 'saves', interval: 2600000 });
       autoMineData({ collection: 'transactions' });
     })
     .catch(() => {

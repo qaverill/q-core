@@ -1,6 +1,6 @@
 const { q_logger } = require('../q-lib/q-logger');
 const { getDocs, postDocs } = require('../resources/methods/internal');
-const { getBankFacts } = require('../resources/money');
+const { importTransactionData } = require('../resources/money');
 const {
   getRecentlyPlayedTracks,
   getMyTracks,
@@ -20,7 +20,7 @@ const getNewAvailableData = ({ collection }) => new Promise((resolve, reject) =>
         .catch(reject);
       break;
     case 'transactions':
-      getBankFacts()
+      importTransactionData()
         .then(resolve)
         .catch(reject);
       break;

@@ -1,18 +1,7 @@
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const START_OF_SEPTEMBER = 1567310400;
 const RENT_AMOUNT = '-1150';
-const unneededFactDescriptions = [
-  'Withdrawal VENMO',
-  'Online Transfer',
-  'Transfer Withdrawal',
-  'ACH Deposit VENMO',
-  'ONLINE PAYMENT THANK YOU',
-  'PAYMENT THANK YOU',
-  'Withdrawal CITI CARD ONLINE',
-  'Transfer Deposit From Share',
-];
 // TODO: this should really be saved in a file and read into memory only when needed
 const factTags = {
   food: {
@@ -80,16 +69,8 @@ const factTags = {
   rent: ['Roont'],
 };
 // ----------------------------------
-// ALGORITHMS
+// LOGIC
 // ----------------------------------
-const isFactNeeded = fact => (
-  fact.timestamp >= START_OF_SEPTEMBER
-  && fact.amount !== 0
-  && !new RegExp(unneededFactDescriptions
-    .map(d => d.toLowerCase())
-    .join('|'))
-    .test(fact.description.toLowerCase())
-);
 const tagTransaction = (fact, tags, parentTag) => {
   const lowercaseDescription = fact.description.toLowerCase();
   if (Array.isArray(tags)) {
@@ -110,7 +91,6 @@ const tagTransaction = (fact, tags, parentTag) => {
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  isFactNeeded,
   tagTransaction: fact => {
     const { description, amount } = fact;
     if (description.includes('venmo from')) {

@@ -28,7 +28,8 @@ const validateDocsForPost = (collection, docs) => {
         && typeof transaction.timestamp === 'number'
         && typeof transaction.amount === 'number'
         && typeof transaction.description === 'string'
-        && Array.isArray(transaction.tags)
+        && Array.isArray(transaction.automaticTags)
+        && Array.isArray(transaction.customTags)
       )).length === docs.length;
     default:
       return false;
@@ -73,7 +74,7 @@ module.exports = {
           .insertMany(docs, { ordered: false }, (insertError, insertResponse) => {
             db.close();
             if (insertError) {
-              q_logger.error(`Failed to insert ${collection} into mongo`, insertError.writeErrors[0].errmsg);
+              q_logger.error(`Failed to insert ${collection} into mongo`, insertError);
               reject(insertResponse);
             } else {
               q_logger.info(`Inserted ${insertResponse.insertedCount} ${collection} into mongo`);
