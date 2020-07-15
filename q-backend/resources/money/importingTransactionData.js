@@ -35,13 +35,11 @@ const generateFactId = ({ account, timestamp, amount, description }) => (
 // ----------------------------------
 // LOGIC
 // ----------------------------------
-const isFactNeeded = fact => (
-  fact.timestamp >= START_OF_SEPTEMBER
-  && fact.amount !== 0
-  && !new RegExp(unneededFactDescriptions
-    .map(d => d.toLowerCase())
-    .join('|'))
-    .test(fact.description.toLowerCase())
+const isFactNeeded = ({ timestamp, amount, description }) => (
+  timestamp >= START_OF_SEPTEMBER
+  && amount !== 0
+  && !new RegExp(R.join('|', R.map(R.toLower, unneededFactDescriptions)))
+    .test(R.toLower(description))
 );
 const parseRow = (line, file) => {
   const row = cleanCSVRow(line).split(',');

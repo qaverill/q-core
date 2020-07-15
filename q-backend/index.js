@@ -27,7 +27,7 @@ const {
   handleInternalPutRequest,
   handleInternalDeleteRequest,
 } = require('./handlers/internal');
-const { handleGetTransactionsRequest, handleTagTransactionsRequest } = require('./handlers/money');
+const { handleGetTransactionsRequest, handleTagAllTransactionsRequest } = require('./handlers/money');
 const { handleMusicTopPlaysRequest, handleDailyPlayTimeRequest } = require('./handlers/music');
 
 const server = express();
@@ -81,8 +81,8 @@ makeDeleteEndpoint({ routes, path }, handleInternalDeleteRequest);
 path = '/money/transactions';
 makeGetEndpoint({ routes, path }, handleGetTransactionsRequest);
 
-path = '/money/tagTransactions';
-makeGetEndpoint({ routes, path }, handleTagTransactionsRequest);
+path = '/money/tagAllTransactions';
+makeGetEndpoint({ routes, path }, handleTagAllTransactionsRequest);
 
 path = '/music/topPlays';
 makeGetEndpoint({ routes, path }, handleMusicTopPlaysRequest);
@@ -96,8 +96,8 @@ server.listen(port, () => {
   q_logger.info(`Started Q on port ${port}`);
   autoRefreshTokens()
     .then(() => {
-      // autoMineData({ collection: 'listens', interval: 1800000 });
-      // autoMineData({ collection: 'saves', interval: 2600000 });
+      autoMineData({ collection: 'listens', interval: 1800000 });
+      autoMineData({ collection: 'saves', interval: 2600000 });
       autoMineData({ collection: 'transactions' });
     })
     .catch(() => {

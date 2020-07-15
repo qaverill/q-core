@@ -2,6 +2,7 @@ const R = require('ramda');
 const { createQuery } = require('./internal');
 const { getDocs, putDoc } = require('../resources/methods/internal');
 const { tagTransaction } = require('../resources/money');
+const { q_logger } = require('../q-lib/q-logger');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -18,20 +19,23 @@ module.exports = {
       })
       .catch(() => response.status(400).send());
   },
-  handleTagTransactionsRequest: async ({ response }) => {
+  handleTagAllTransactionsRequest: async ({ response }) => {
     getDocs({ collection })
       .then(transactions => {
-        transactions.map(async transaction => {
-          const taggedTransaction = { ...transaction, tags: tagTransaction(transaction) };
-          if (!R.equals(taggedTransaction.tags, transaction.tags)) {
-            console.log(transaction.tags, '=>', taggedTransaction.tags);
-            const query = { _id: transaction._id };
-            await putDoc({ collection, query, doc: taggedTransaction });
-            return taggedTransaction;
+        const updatedTransactions = [];
+        transactions.forEach(async transaction => {
+          const taggedTransaction = { ...transaction, automaticTags: tagTransaction(transaction) };
+          if (!R.equals(taggedTransaction.automaticTags, transaction.automaticTags)) {
+            updatedTransactions.push(taggedTransaction);
+            await putDoc({
+              collection,
+              query: { _id: transaction._id },
+              doc: taggedTransaction,
+            });
           }
-          return transaction;
         });
-        response.status(200).json(transactions);
+        if (updatedTransactions.length > 0) q_logger.info(`Tagged ${updatedTransactions.length} transactions`);
+        response.status(200).json(updatedTransactions);
       })
       .catch(() => response.status(400).send());
   },

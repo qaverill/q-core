@@ -13,7 +13,7 @@ import { selectSettings, selectMoneyStore } from '../../store/selectors';
 // HELPERS
 // ----------------------------------
 const DATE_CONTROLS = ['M', 'W'];
-const SLATE_FEATURES = ['Analyze', 'Audit'];
+const SLATE_FEATURES = ['analyze', 'audit'];
 // ----------------------------------
 // STYLES
 // ----------------------------------
