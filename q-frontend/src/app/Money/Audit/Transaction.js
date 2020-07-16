@@ -17,7 +17,7 @@ const copyIdToClipboard = _id => {
 };
 const determineColorOfTransaction = ({ tags }) => {
   if (tags.includes(PAYBACK_TAG)) {
-    return 'rgba(255, 255, 0, 0.2)';
+    return 'rgba(255, 255, 0, 0.5)';
   }
   return tags.length === 0 ? 'rgba(255, 0, 0, 0.2)' : `rgba(0, 255, 0, ${0.1 * tags.length})`
 }
