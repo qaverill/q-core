@@ -38,7 +38,12 @@ const Audit = () => {
     setTransactions(null);
     setTransactions(await getTransactions({ start, end, filter }));
   }
-  React.useEffect(fetchTransactions, [start, end, filter]);
+  React.useEffect(() => {
+    async function callFetchTransactions() {
+      fetchTransactions();
+    }
+    callFetchTransactions();
+  }, [start, end, filter]);
   async function tagTransactions() {
     setIsTaggingTransactions(true);
     const updatedTransactions = await runTransactionTagger(transactions);

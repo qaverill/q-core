@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
 import { Slate, SlateContent, Title, H2, H3, DROP_SIZE, GAP_SIZE } from '../../packages/core';
 import { useStore } from '../../store';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import WaitSpinner from '../../components/WaitSpinner';
 import { selectMusicStore } from '../../store/selectors';
 import { musicTheme } from '../../packages/colors';
 import { getTopPlays } from '../../api/music';
@@ -113,7 +113,7 @@ const Overview = () => {
   return (
     <TopPlaysSlate rimColor={musicTheme.tertiary}>
       <ReactTooltip getContent={getToolTipContent} />
-      {isLoading && <LoadingSpinner message="Loading Music..." />}
+      {isLoading && <WaitSpinner message="Loading Music..." />}
       {!isLoading && (
         <TopPlaysContent drops={0}>
           <TopPlays>

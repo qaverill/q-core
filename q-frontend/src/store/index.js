@@ -54,7 +54,7 @@ export const initialState = {
     filter: null,
   },
   moneyFilters: {
-    start: MONEY_START,
+    start: 1558061295,
     end: MONEY_END,
     filter: null,
   },
