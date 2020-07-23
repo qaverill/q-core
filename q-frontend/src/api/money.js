@@ -22,3 +22,13 @@ export const runTransactionTagger = () => new Promise((resolve, reject) => {
       reject(error);
     });
 });
+
+export const markPaybackTransaction = (params) => new Promise((resolve, reject) => {
+  axios.post(`/money/paybackTransaction?${stringify(params)}`)
+    .then(resolve)
+    .catch(error => {
+      NotificationManager.error('Failed to payback');
+      console.error(error);
+      reject(error);
+    });
+});

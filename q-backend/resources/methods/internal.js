@@ -2,40 +2,51 @@ const { MongoClient } = require('mongodb');
 
 const { q_logger } = require('../../q-lib/q-logger');
 const { mongo_uri } = require('../../config');
-
+// ----------------------------------
+// HELPERS
+// ----------------------------------
 const database = 'q-mongodb';
-
 MongoClient.connectionParams = { useUnifiedTopology: true, useNewUrlParser: true };
-
+const isNumber = potentialNumber => typeof potentialNumber === 'number';
+const isString = potentialString => typeof potentialString === 'string';
+const isListOfStrings = list => (
+  Array.isArray(list) && list.filter(item => typeof item === 'string').length === list.length
+);
+// ----------------------------------
+// Logic
+// ----------------------------------
 const validateDocsForPost = (collection, docs) => {
-  const isListOfStrings = list => (
-    Array.isArray(list) && list.filter(item => typeof item === 'string').length === list.length
-  );
   switch (collection) {
     case 'listens':
     case 'saves':
       return docs.length > 0 && docs.filter(save => (
-        typeof save.timestamp === 'number'
-        && typeof save.track === 'string'
-        && typeof save.album === 'string'
+        isNumber(save.timestamp)
+        && isString(save.track)
+        && isString(save.album)
         && isListOfStrings(save.artists)
-        && typeof save.popularity === 'number'
-        && typeof save.duration === 'number'
+        && isNumber(save.popularity)
+        && isNumber(save.duration)
       )).length === docs.length;
     case 'transactions':
       return docs.length > 0 && docs.filter(transaction => (
-        typeof transaction.account === 'string'
-        && typeof transaction.timestamp === 'number'
-        && typeof transaction.amount === 'number'
-        && typeof transaction.description === 'string'
+        isString(transaction.account)
+        && isNumber(transaction.timestamp)
+        && isNumber(transaction.amount)
+        && isString(transaction.description)
         && Array.isArray(transaction.automaticTags)
         && Array.isArray(transaction.customTags)
       )).length === docs.length;
+    case 'paybacks':
+      return docs.length > 0 && docs.filter(payback => (
+        isString(payback.from) && isString(payback.to) && isNumber(payback.amount)
+      ));
     default:
       return false;
   }
 };
-
+// ----------------------------------
+// EXPORTS
+// ----------------------------------
 module.exports = {
   getDocs: ({ collection, query }) => new Promise((resolve, reject) => {
     MongoClient.connect(mongo_uri, MongoClient.connectionParams, (connectError, db) => {

@@ -1,5 +1,11 @@
 const { getDocs, postDocs, putDoc, deleteDoc } = require('../resources/methods/internal');
-
+// ----------------------------------
+// HELPERS
+// ----------------------------------
+const createCollection = request => request.path.split('/')[2];
+// ----------------------------------
+// Logic
+// ----------------------------------
 const createQuery = ({ path, params, query }) => {
   const _id = path.split('/')[3];
   if (_id) {
@@ -33,9 +39,9 @@ const createQuery = ({ path, params, query }) => {
   }
   return newQuery;
 };
-
-const createCollection = request => request.path.split('/')[2];
-
+// ----------------------------------
+// EXPORTS
+// ----------------------------------
 module.exports = {
   createQuery,
   handleInternalGetRequest: async ({ request, response }) => {

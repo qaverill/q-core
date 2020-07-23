@@ -34,6 +34,7 @@ const Audit = () => {
   const { start, end, filter } = selectMoneyStore(state);
   const [transactions, setTransactions] = React.useState(null);
   const [isTaggingTransactions, setIsTaggingTransactions] = React.useState(false);
+  const [paybackTransaction, setPaybackTransaction] = React.useState(null);
   async function fetchTransactions() {
     setTransactions(null);
     setTransactions(await getTransactions({ start, end, filter }));
@@ -58,12 +59,18 @@ const Audit = () => {
   return (
     <AuditSlate rimColor={moneyTheme.secondary}>
       <AuditHeader>
-        {transactions && !isTaggingTransactions && <Button onClick={tagTransactions}>Run Auto Tag on All</Button>}
+        {transactions && !isTaggingTransactions && <Button onClick={tagTransactions}>|</Button>}
         {transactions && isTaggingTransactions && <WaitSpinner color={moneyTheme.tertiary} />}
       </AuditHeader>
       {!transactions && <WaitSpinner />}
       {transactions && transactions.map((transaction, idx) => (
-        <Transaction transaction={transaction} idx={idx} />
+        <Transaction
+          transaction={transaction}
+          idx={idx}
+          paybackTransaction={paybackTransaction}
+          setPaybackTransaction={setPaybackTransaction}
+          fetchTransactions={fetchTransactions}
+        />
       ))}
     </AuditSlate>
   );

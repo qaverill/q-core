@@ -4,17 +4,13 @@ import styled from 'styled-components';
 import { NotificationManager } from 'react-notifications';
 import ManualTagger from './ManualTagger';
 import { red, green, yellow } from '../../../packages/colors';
-import { epochToString, copyStringToClipboard, numberToPrice } from '../../../packages/utils';
+import { epochToString, numberToPrice } from '../../../packages/utils';
 import { Button, StyledPopup, H2 } from '../../../packages/core';
-import { refreshIcon } from '../../../packages/images';
+import { markPaybackTransaction } from '../../../api/money';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
 const PAYBACK_TAG = 'payBack';
-const copyIdToClipboard = _id => {
-  copyStringToClipboard(_id);
-  NotificationManager.success('Copied transaction to clipboard', _id);
-};
 const determineColorOfTransaction = ({ tags }) => {
   if (tags.includes(PAYBACK_TAG)) {
     return 'rgba(255, 255, 0, 0.5)';
@@ -38,17 +34,24 @@ const DateColumn = styled.div`
   display: flex;
   flex-shrink: 0;
 `;
+const PaybackMarker = styled.div`
+  display: flex;
+  width: 40px;
+  flex-shrink: 0;
+  flex-direction: row-reverse;
+`;
 const AmountColumn = styled.div`
   display: flex;
-  width: 100px;
+  width: 101px;
   flex-direction: row-reverse;
   flex-shrink: 0;
 `;
-const DescriptionColumn = styled.div`
+const DescriptionColumn = styled(H2)`
   display: flex;
   flex-grow: 1;
   justify-content: center;
   overflow: auto;
+  overflow-y: hidden;
   white-space: nowrap;
 `;
 const TagsColumn = styled.div`
@@ -58,17 +61,6 @@ const TagsColumn = styled.div`
   flex-direction: row-reverse;
   flex-shrink: 1;
   white-space: nowrap;
-`;
-const RefreshTagsButton = styled.img
-  .attrs({
-    src: refreshIcon,
-  })`
-  height: 25px;
-  width: 25px;
-  :hover {
-    filter: brightness(1.25);
-  };
-  margin-right: 5px;
 `;
 // ----------------------------------
 // COMPONENTS
@@ -85,18 +77,47 @@ const TagButton = ({ tags }) => {
   );
 };
 
-const Transaction = ({ transaction, idx }) => {
+const Transaction = ({
+  transaction,
+  idx,
+  paybackTransaction,
+  setPaybackTransaction,
+  fetchTransactions,
+}) => {
   const { _id, timestamp, amount, description, automaticTags, customTags } = transaction;
   const tags = R.concat(automaticTags, customTags);
+  const canBeMarkedAsPaybackTo = R.isNil(paybackTransaction) && amount > 1;
+  const canBeMarkedAsPaybackFrom = paybackTransaction && amount < 1;
+  const isMarkedAsPayback = paybackTransaction === transaction;
+  function handleTransactionPayback() {
+    if (isMarkedAsPayback) {
+      setPaybackTransaction(null);
+    } else if (canBeMarkedAsPaybackTo) {
+      setPaybackTransaction(transaction);
+    } else if (canBeMarkedAsPaybackFrom) {
+      const { _id: paybackId, amount: paybackAmount } = paybackTransaction;
+      markPaybackTransaction({ from: paybackId, to: _id, amount: paybackAmount })
+        .then(() => {
+          NotificationManager.info(`Subtracted ${paybackAmount} from ${amount} (${amount + paybackAmount})`, description);
+          setPaybackTransaction(null);
+          fetchTransactions();
+        });
+    }
+  }
   return (
     <TransactionFact tags={tags}>
       <DateColumn><H2>{epochToString(timestamp)}</H2></DateColumn>
+      <PaybackMarker>{isMarkedAsPayback ? '💸' : ''}</PaybackMarker>
       <AmountColumn>
-        <Button color={amount > 1 ? green : red} onClick={() => copyIdToClipboard(_id)}>
+        <Button
+          color={amount > 1 ? green : red}
+          onClick={handleTransactionPayback}
+          clickable={canBeMarkedAsPaybackTo || canBeMarkedAsPaybackFrom || isMarkedAsPayback}
+        >
           {numberToPrice(amount)}
         </Button>
       </AmountColumn>
-      <DescriptionColumn><H2>{description}</H2></DescriptionColumn>
+      <DescriptionColumn>{description}</DescriptionColumn>
       <TagsColumn>
         <H2>{tags.length}</H2>
         <StyledPopup modal trigger={<TagButton tags={tags} />}>
@@ -109,7 +130,6 @@ const Transaction = ({ transaction, idx }) => {
           )}
         </StyledPopup>
       </TagsColumn>
-      <RefreshTagsButton />
     </TransactionFact>
   );
 };

@@ -2,6 +2,7 @@
 import styled from 'styled-components';
 import Popup from 'reactjs-popup';
 import Select from 'react-select';
+import * as R from 'ramda';
 import { arrow, settingsGear } from './images';
 import {
   dark,
@@ -39,14 +40,13 @@ export const Button = styled.button`
   font-size: 16px;
   border: 2px solid black;
   border-radius: 15px;
-  cursor: pointer;
   :focus {
     outline: none;
   }
   background-color: ${props => (props.color == null ? medium : props.color)};
-  :hover {
-    filter: brightness(1.25);
-  }
+  ${props => (R.isNil(props.clickable) || props.clickable) && (
+    'cursor: pointer; :hover { filter: brightness(1.25); };'
+  )}
 `;
 
 export const Text = styled.p`

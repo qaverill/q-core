@@ -126,7 +126,7 @@ const factTags = {
       musicGear: ['GUITAR CENTER'],
       videoGames: ['blizzard', 'Microsoft', 'MOJANG STOCKHOLM SWE'],
       records: ['RECORDS'],
-      computerParts: ['WWW.RAZER.COM SAN FRANCISCO', 'MICRO CENTER', 'Venmo to Skinner: Windforce', 'Skinner: Oops this too prob'],
+      computerParts: ['WWW.RAZER.COM SAN FRANCISCO', 'MICRO CENTER', 'nner: Windforce', 'Skinner: Oops this too prob'],
       art: ['FISK GALLERY', 'GOODWILL CAMBRIDGE 506'],
       housePlants: ['Zz top', 'PILL HARDWARE CAMBRIDGE', 'DICKSON BROS TRUE VALU CAMBRIDGE MA', 'me SQ *SQ *THE HAPPY CACT'],
       movies: ['VIMEO.COM 646-470-8422'],
