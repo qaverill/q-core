@@ -36,11 +36,11 @@ const factTags = {
       marketBasket: ['Double bucket', 'Insta never again', 'Market bucket 🍖 run', 'supplies from the bucket', 'Insta🅱️art', 'MARKET BASKET'],
       hMart: ['BibimBAP', 'Hmart', 'H MART'],
       unknownGroceryStore: ['Grocery', 'Fujdddddddd', 'Once a fan always a fan', 'Food stuff', 'Skinner: Groceries'],
-      surreySt: ['SURREY ST. MARKET'],
       stopAndShop: ['Stop and shop'],
       costco: ['Costco', '👏🏻 sponges 👏🏻 and 👏🏻 stock 👏🏻'],
       convenienceSores: ['UNIVERSITY MARKET CAMBRIDGE'],
       shaws: ['STAR MARKET', 'SHAWS'],
+      surrey: ['ice cream SURREY', 'milk SURREY'],
     },
     drunkFood: ['TST* EL JEFE', 'ALEPPO PALACE', 'DOG HOUSE BOSTON'],
     snacks: ['Mercier: Chocolate bar', 'CVS/PHARMACY #00240', 'PARIS BAGUETTE E15', 'TATTE BAKERY'],
@@ -50,7 +50,13 @@ const factTags = {
     tea: ['STASH TEA'],
     alcohol: {
       brewery: ['Leap beer', 'LAMPLIGHTER BREWIN', 'AUSTIN STREET BREWERY', 'DEFINITIVE BREWING', 'ALLAGASH BREWING', 'TRILLIUM BREWING'],
-      liquorStore: ['yea: 🍷 & 🥖', 'rson: 🍷', 'Schoppe: Snurfs', 'Skinner: Smutty', 'Truly shipment', 'Lanctot: Truly', 'DANA HILL LIQUORS', 'The goodies', 'Sweet treat', 'THE CITY TOBACCO & BEV', 'Keith stone and juicy boys', 'A few cooking wines and a trip to the doctor', 'Skinner: Treehouse','TOTAL WINE AND MORE', 'Maple syrup and mimosas', 'LIQUOR STORE', 'BEER & WINE', 'WALGREENS #10378 EAST HAMPSTEA', 'SUPREME LIQUORS CAMBRIDGE', 'HANNAFORD #8190 HAMPSTEAD NH', 'Boat brews and ice', 'Liquor haul', 'Merlot'],
+      liquorStore: ['rson: 🍷', 'Schoppe: Snurfs', 'DANA HILL LIQUORS', 'Sweet treat', 'A few cooking wines and a trip to the doctor', 'Skinner: Treehouse', 'TOTAL WINE AND MORE', 'Maple syrup and mimosas', 'LIQUOR STORE', 'BEER & WINE', 'SUPREME LIQUORS CAMBRIDGE', 'Boat brews and ice', 'Liquor haul'],
+      store: {
+        surrey: ['beer SURREY', 'Keith stone and juicy boys', ],
+        theCity: ['THE CITY TOBACCO & BEV', ],
+        unknownConvenienceStore: ['WALGREENS #10378 EAST HAMPSTEA', ],
+        groceryStore: ['Merlot', 'HANNAFORD #8190 HAMPSTEAD NH', 'Skinner: Smutty', 'yea: 🍷 & 🥖', 'Truly shipment', 'Lanctot: Truly', 'The goodies', ],
+      },
       bars: ['LOLITA COCINA', 'WHISKEY STEAKHOUSE', 'Margaritas ay caramba', 'Alden and Harlow', 'RUSSELL HOUSE TAVERN', 'JAMISONS HAMPSTEAD', 'GREEN STREET CAMBRIDGE', 'PASTA LOFT E HAMPSTEAD', 'Hennessy\'s Boston', 'TST* GOURMET INDIA', 'BROADSIDE BOSTON', 'Skinner: Greeny', 'SQ *SQ *SOWA BOSTO', 'MIDDLE EAST RESTAURANT', 'The Harp Boston', 'SQU*SQ *THE PEOPLE', 'Dranks', 'SCHOLAR', 'BELL IN HAND TAVERN', 'DAEDALUS', 'TAVERN IN THE SQUARE', 'Night cap', 'FOUNDRY ON ELM', 'ARAMARK FENWAY'],
     },
   },
@@ -98,7 +104,7 @@ const factTags = {
     cashBack: ['ACH Deposit CITICARDS CASH'],
     paycheck: ['Deposit TRINETX'],
     check: ['Check Deposit'],
-    random: ['CITIBANK CONDITIONAL CREDIT FOR DISPUTE', 'Premera Blue Cross Customer Data Security Breach'],
+    random: ['CITIBANK CONDITIONAL CREDIT FOR DISPUTE', 'Customer Data Security Breach'],
     taxes: ['ACH Deposit COMM. OF MASS.', 'ACH Deposit IRS TREAS 310 taxes'],
     stimulusCheck: ['ACH Deposit IRS TREAS 310 stimulus'],
   },
@@ -123,6 +129,7 @@ const factTags = {
     weed: ['And for driving all the way out', 'Flanagan: Thanks'],
     paraphenilia: ['NU7HD7BX3', 'pax part', 'pipe AMZN'],
     condoms: ['condoms'],
+    nicotine: ['nicotine SURREY'],
   },
   fun: {
     events: {
@@ -159,10 +166,17 @@ const factTags = {
   },
   unknown: ['DAVIS SQUARE'],
 };
+function excludeVenmoFrom(description) {
+  const venmoFromExcludes = [
+    'Customer Data Security Breach',
+    'THIS WILL NEVER HAPPEN< DELETE ME IF MORE IS ADDED TO THIS LIST',
+  ];
+  return !venmoFromExcludes.every(str => !description.toLowerCase().includes(str.toLowerCase()));
+}
 // ----------------------------------
 // LOGIC
 // ----------------------------------
-const tagTransaction = (fact, tags, parentTag) => {
+const generateTags = (fact, tags, parentTag) => {
   const lowercaseDescription = fact.description.toLowerCase();
   if (Array.isArray(tags)) {
     return [...new Set(
@@ -174,7 +188,7 @@ const tagTransaction = (fact, tags, parentTag) => {
     )];
   }
   return [...new Set(Object.keys(tags).flatMap(subTag => {
-    const possibleTag = tagTransaction(fact, tags[subTag], subTag);
+    const possibleTag = generateTags(fact, tags[subTag], subTag);
     return possibleTag.length > 0 ? [parentTag, ...possibleTag] : null;
   }).filter(tag => tag != null))];
 };
@@ -184,13 +198,13 @@ const tagTransaction = (fact, tags, parentTag) => {
 module.exports = {
   tagTransaction: fact => {
     const { description, amount } = fact;
-    if (description.toLowerCase().includes('venmo from')) {
+    if (description.toLowerCase().includes('venmo from') && !excludeVenmoFrom(description)) {
       return ['payBack'];
     }
     if (description.includes('Check Withdrawal') && amount === RENT_AMOUNT) {
-      return ['rent'];
+      return ['living', 'rent'];
     }
-    return tagTransaction(fact, factTags, null);
+    return generateTags(fact, factTags, null);
   },
-  testTagTransaction: (fact, tags, label) => tagTransaction(fact, tags, label),
+  testTagTransaction: (fact, tags, label) => generateTags(fact, tags, label),
 };

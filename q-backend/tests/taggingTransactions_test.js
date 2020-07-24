@@ -1,7 +1,7 @@
 const { testTagTransaction } = require('../resources/money/taggingTransactions');
-
-const path = './resources/banks/autoTagDoc';
-
+// ----------------------------------
+// MOCK DATA
+// ----------------------------------
 const tags = {
   number: {
     even: ['2', '4', '6', '8'],
@@ -21,7 +21,9 @@ const tags = {
     },
   },
 };
-
+// ----------------------------------
+// TESTS
+// ----------------------------------
 const tests = [
   { description: 'dingo21', expected: ['number', 'even', 'odd', 'bingo'] },
   { description: 'aabbb-', expected: ['letters', 'a', 'ax1', 'ax2', 'b', 'bx2', 'bx3'] },
@@ -33,12 +35,13 @@ const tests = [
     expected: ['number', 'even', 'odd', 'negative', 'bingo', 'letters', 'a', 'ax1', 'ax2', 'ax4', 'b', 'bx2', 'bx3'],
   },
   { description: 'nothing', expected: [] },
+  { description: 'nothing', expected: [] },
 ];
-
-const algorithm = (i) => testTagTransaction(tests[i], tags, null);
-
+// ----------------------------------
+// EXPORTS
+// ----------------------------------
 module.exports = {
-  path,
+  path: './resources/banks/autoTagDoc',
+  algorithm: (i) => testTagTransaction(tests[i], tags, null),
   tests,
-  algorithm,
 };

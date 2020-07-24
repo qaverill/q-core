@@ -1,6 +1,7 @@
 const R = require('ramda');
 const { createQuery } = require('./internal');
 const { getDocs, postDocs, putDoc } = require('../resources/methods/internal');
+const { ingestTransactions } = require('../resources/money/ingestingTransactions');
 const { tagTransaction } = require('../resources/money');
 const { q_logger } = require('../q-lib/q-logger');
 // ----------------------------------
@@ -15,8 +16,12 @@ module.exports = {
   handleGetTransactionsRequest: async ({ request, response }) => {
     const query = createQuery(request);
     getDocs({ collection: transactionCollection, query })
-      .then(data => {
-        response.status(200).json(R.reverse(R.sortBy(R.prop('timestamp'), data)));
+      .then(transactions => {
+        getDocs({ collection: paybackCollection })
+          .then(paybacks => {
+            response.status(200).json(ingestTransactions(transactions, paybacks));
+          })
+          .catch(() => response.status(400).send());
       })
       .catch(() => response.status(400).send());
   },
@@ -41,7 +46,7 @@ module.exports = {
       .catch(() => response.status(400).send());
   },
   handlePaybackTransactionRequest: async ({ request, response }) => {
-    postDocs({ collection: paybackCollection, docs: [request.query] })
+    postDocs({ collection: paybackCollection, docs: [request.body] })
       .then(() => response.status(204).send())
       .catch(() => response.status(400).send());
   },

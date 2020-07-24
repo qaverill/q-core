@@ -1,6 +1,9 @@
 const { q_logger } = require('../q-lib/q-logger');
-const autoTagDoc = require('./autoTagDoc');
-
+const tagTransaction = require('./taggingTransactions_test');
+const ingestTransaction = require('./ingestingTransactions_test');
+// ----------------------------------
+// HELPERS
+// ----------------------------------
 const runTestsFor = ({ tests, algorithm, path }) => {
   const failedTests = tests
     .map((test, idx) => ({ ...test, actual: algorithm(idx) }))
@@ -13,9 +16,10 @@ const runTestsFor = ({ tests, algorithm, path }) => {
   q_logger.info(`✅ ${path} passed ${tests.length} tests `);
   return true;
 };
-
-const testedAlgorithms = [
-  () => runTestsFor(autoTagDoc),
+// ----------------------------------
+// EXPORTS
+// ----------------------------------
+module.exports = [
+  () => runTestsFor(tagTransaction),
+  () => runTestsFor(ingestTransaction),
 ];
-
-module.exports = testedAlgorithms;

@@ -24,7 +24,7 @@ export const runTransactionTagger = () => new Promise((resolve, reject) => {
 });
 
 export const markPaybackTransaction = (params) => new Promise((resolve, reject) => {
-  axios.post(`/money/paybackTransaction?${stringify(params)}`)
+  axios.post('/money/paybackTransaction', params)
     .then(resolve)
     .catch(error => {
       NotificationManager.error('Failed to payback');

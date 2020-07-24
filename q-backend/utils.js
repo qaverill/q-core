@@ -51,4 +51,5 @@ module.exports = {
     }
     return requestOptions;
   },
+  roundNumber2Decimals: num => +((num).toFixed(2)),
 };

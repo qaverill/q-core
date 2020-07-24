@@ -3,7 +3,7 @@ import * as R from 'ramda';
 import styled from 'styled-components';
 import { NotificationManager } from 'react-notifications';
 import ManualTagger from './ManualTagger';
-import { red, green, yellow } from '../../../packages/colors';
+import { red, green, yellow, moneyTheme } from '../../../packages/colors';
 import { epochToString, numberToPrice } from '../../../packages/utils';
 import { Button, StyledPopup, H2 } from '../../../packages/core';
 import { markPaybackTransaction } from '../../../api/money';
@@ -15,8 +15,8 @@ const determineColorOfTransaction = ({ tags }) => {
   if (tags.includes(PAYBACK_TAG)) {
     return 'rgba(255, 255, 0, 0.5)';
   }
-  return tags.length === 0 ? 'rgba(255, 0, 0, 0.2)' : `rgba(0, 255, 0, ${0.1 * tags.length})`
-}
+  return tags.length === 0 ? 'rgba(255, 0, 0, 0.2)' : `rgba(0, 255, 0, ${0.1 * tags.length})`;
+};
 // ----------------------------------
 // STYLES
 // ----------------------------------
@@ -71,7 +71,7 @@ const TagButton = ({ tags }) => {
     return <Button color={yellow} data-tip={tagString}>{PAYBACK_TAG}</Button>;
   }
   return (
-    <Button color={tags.length === 0 ? red : green} data-tip={tagString}>
+    <Button color={tags.length === 0 ? red : moneyTheme.tertiary} data-tip={tagString}>
       {tags.length === 0 ? 'TAG ME' : tagString}
     </Button>
   );

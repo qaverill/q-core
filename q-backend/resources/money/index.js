@@ -1,4 +1,4 @@
-const { importTransactionData } = require('./importingTransactionData');
+const { importTransactionData } = require('./importingTransactions');
 const { tagTransaction } = require('./taggingTransactions');
 // ----------------------------------
 // EXPORTS

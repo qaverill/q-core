@@ -18,7 +18,7 @@ const spliceTopN = counts => {
   return topN;
 };
 // ----------------------------------
-// RESOURCES
+// EXPORTS
 // ----------------------------------
 module.exports = {
   makeTopPlaysData: async data => {
