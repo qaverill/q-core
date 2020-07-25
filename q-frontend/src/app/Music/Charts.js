@@ -4,7 +4,7 @@ import { BarChart, Bar, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { Slate } from '../../packages/core';
 import { musicTheme } from '../../packages/colors';
 import { useStore } from '../../store';
-import WaitSpinner from '../../components/LoadingSpinner';
+import WaitSpinner from '../../components/WaitSpinner';
 import { selectMusicStore } from '../../store/selectors';
 import { getDailyPlayTime } from '../../api/music';
 // ----------------------------------

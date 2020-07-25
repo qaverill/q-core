@@ -102,7 +102,6 @@ const ChronologicalSearchBar = ({
     return () => {
       const input = document.getElementById(side).value;
       const date = input.length === 0 ? null : stringToEpoch(input);
-      console.log(date);
       if (!validateInputDate(date, side)) return;
       filters[side] = date;
       setFilters(filters);

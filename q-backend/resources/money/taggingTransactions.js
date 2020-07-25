@@ -105,6 +105,7 @@ const factTags = {
     paycheck: ['Deposit TRINETX'],
     check: ['Check Deposit'],
     random: ['CITIBANK CONDITIONAL CREDIT FOR DISPUTE', 'Customer Data Security Breach'],
+    accident: ['this must have been an accident'],
     taxes: ['ACH Deposit COMM. OF MASS.', 'ACH Deposit IRS TREAS 310 taxes'],
     stimulusCheck: ['ACH Deposit IRS TREAS 310 stimulus'],
   },
@@ -127,7 +128,7 @@ const factTags = {
   },
   vices: {
     weed: ['And for driving all the way out', 'Flanagan: Thanks'],
-    paraphenilia: ['NU7HD7BX3', 'pax part', 'pipe AMZN'],
+    paraphernalia: ['NU7HD7BX3', 'pax part', 'pipe AMZN'],
     condoms: ['condoms'],
     nicotine: ['nicotine SURREY'],
   },
@@ -169,7 +170,7 @@ const factTags = {
 function excludeVenmoFrom(description) {
   const venmoFromExcludes = [
     'Customer Data Security Breach',
-    'THIS WILL NEVER HAPPEN< DELETE ME IF MORE IS ADDED TO THIS LIST',
+    'this must have been an accident',
   ];
   return !venmoFromExcludes.every(str => !description.toLowerCase().includes(str.toLowerCase()));
 }

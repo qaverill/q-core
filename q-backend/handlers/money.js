@@ -18,7 +18,8 @@ module.exports = {
     getDocs({ collection: transactionCollection, query })
       .then(transactions => {
         getDocs({ collection: paybackCollection })
-          .then(paybacks => {
+          .then(data => {
+            const paybacks = Array.isArray(data) ? data : [data];
             response.status(200).json(ingestTransactions(transactions, paybacks));
           })
           .catch(() => response.status(400).send());

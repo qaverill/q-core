@@ -36,11 +36,11 @@ const Audit = () => {
   const [isTaggingTransactions, setIsTaggingTransactions] = React.useState(false);
   const [paybackTransaction, setPaybackTransaction] = React.useState(null);
   async function fetchTransactions() {
-    setTransactions(null);
     setTransactions(await getTransactions({ start, end, filter }));
   }
   React.useEffect(() => {
     async function callFetchTransactions() {
+      setTransactions(null);
       fetchTransactions();
     }
     callFetchTransactions();
@@ -49,6 +49,7 @@ const Audit = () => {
     setIsTaggingTransactions(true);
     const updatedTransactions = await runTransactionTagger(transactions);
     if (updatedTransactions.length > 0) {
+      setTransactions(null);
       fetchTransactions();
       NotificationManager.success(`Updated the tags of ${updatedTransactions.length} transactions`, '👍');
     } else {
