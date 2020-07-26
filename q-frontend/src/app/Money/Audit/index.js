@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as R from 'ramda';
 import styled from 'styled-components';
 import { NotificationManager } from 'react-notifications';
 import { getTransactions, runTransactionTagger } from '../../../api/money';
@@ -41,7 +40,7 @@ const Audit = () => {
   React.useEffect(() => {
     async function callFetchTransactions() {
       setTransactions(null);
-      fetchTransactions();
+      setTransactions(await getTransactions({ start, end, filter }));
     }
     callFetchTransactions();
   }, [start, end, filter]);
@@ -64,10 +63,10 @@ const Audit = () => {
         {transactions && isTaggingTransactions && <WaitSpinner color={moneyTheme.tertiary} />}
       </AuditHeader>
       {!transactions && <WaitSpinner />}
-      {transactions && transactions.map((transaction, idx) => (
+      {transactions && transactions.map(transaction => (
         <Transaction
+          key={transaction._id}
           transaction={transaction}
-          idx={idx}
           paybackTransaction={paybackTransaction}
           setPaybackTransaction={setPaybackTransaction}
           fetchTransactions={fetchTransactions}

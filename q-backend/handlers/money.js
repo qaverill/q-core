@@ -51,4 +51,7 @@ module.exports = {
       .then(() => response.status(204).send())
       .catch(() => response.status(400).send());
   },
+  handleGetNetAmountRequest: async ({ request, response }) => {
+
+  },
 };

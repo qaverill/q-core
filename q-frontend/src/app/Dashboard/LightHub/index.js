@@ -7,7 +7,7 @@ import { Slate } from '../../../packages/core';
 
 import LightSwitch from './LightSwitch';
 import SpotifyCycle from './SpotifyCycle';
-import LoadingSpinner from '../../../components/LoadingSpinner';
+import WaitSpinner from '../../../components/WaitSpinner';
 import { getLights } from '../../../api/lifx';
 import { getCPT } from '../../../api/spotify';
 
@@ -49,11 +49,11 @@ const LightHub = () => {
       <LightSwitches>
         {lights
           ? lights.map(light => <LightSwitch light={light} key={light.label} />)
-          : <LoadingSpinner color={dashboardTheme.tertiary} />}
+          : <WaitSpinner color={dashboardTheme.tertiary} />}
       </LightSwitches>
       {cpt
         ? <SpotifyCycle lights={lights} albumCover={cpt.item.album.images[0].url} />
-        : <LoadingSpinner color={dashboardTheme.tertiary} />}
+        : <WaitSpinner color={dashboardTheme.tertiary} />}
     </LightsStyled>
   );
 };

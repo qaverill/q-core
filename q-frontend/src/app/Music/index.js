@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Switch, Redirect, Route } from 'react-router-dom';
 import Charts from './Charts';
 import Overview from './Overview';
-import Albums from './Albums';
 import ChronologicalSearchBar from '../../components/ChronologicalSearchBar';
 import { actions, useStore } from '../../store';
 import { selectMusicStore, selectSettings } from '../../store/selectors';
@@ -47,9 +46,6 @@ const Music = () => {
           </Route>
           <Route exact path="/music/charts">
             <Charts />
-          </Route>
-          <Route exact path="/music/albums">
-            <Albums />
           </Route>
         </Switch>
       </SlateContent>

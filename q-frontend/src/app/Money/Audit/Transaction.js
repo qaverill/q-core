@@ -2,10 +2,9 @@ import * as React from 'react';
 import * as R from 'ramda';
 import styled from 'styled-components';
 import { NotificationManager } from 'react-notifications';
-import ManualTagger from './ManualTagger';
 import { red, green, yellow, moneyTheme } from '../../../packages/colors';
 import { epochToString, numberToPrice } from '../../../packages/utils';
-import { Button, StyledPopup, H2 } from '../../../packages/core';
+import { Button, H2 } from '../../../packages/core';
 import { markPaybackTransaction } from '../../../api/money';
 // ----------------------------------
 // HELPERS
@@ -79,7 +78,6 @@ const TagButton = ({ tags }) => {
 
 const Transaction = ({
   transaction,
-  idx,
   paybackTransaction,
   setPaybackTransaction,
   fetchTransactions,
@@ -120,15 +118,7 @@ const Transaction = ({
       <DescriptionColumn>{description}</DescriptionColumn>
       <TagsColumn>
         <H2>{tags.length}</H2>
-        <StyledPopup modal trigger={<TagButton tags={tags} />}>
-          {closeModal => (
-            <ManualTagger
-              idx={idx}
-              transaction={transaction}
-              closeModal={closeModal}
-            />
-          )}
-        </StyledPopup>
+        <TagButton tags={tags} />
       </TagsColumn>
     </TransactionFact>
   );
