@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const R = require('ramda');
 const { readContentsOfFile } = require('../methods/external');
-const { dateToTimestamp } = require('../../utils');
+const { dateStringToTimestamp } = require('../../utils/time');
 const { tagTransaction } = require('./taggingTransactions');
 // ----------------------------------
 // HELPERS
@@ -48,23 +48,21 @@ const parseRow = (line, file) => {
     case 'mvcu.csv':
       fact = {
         account: row[0].indexOf('S0020') > -1 ? 'mvcu-checkings' : 'mvcu-savings',
-        timestamp: dateToTimestamp(row[1]),
+        timestamp: dateStringToTimestamp(row[1]),
         amount: row[2].indexOf('(') > -1 ? parseFloat(row[2].replace(/[)$(]/g, '')) * -1 : parseFloat(row[2].replace('$', '')),
         description: row[5],
       };
-      fact.automaticTags = tagTransaction(fact);
-      fact.customTags = [];
+      fact.tags = tagTransaction(fact);
       fact._id = generateFactId(fact);
       return fact;
     case 'citi.csv':
       fact = {
         account: 'citi-credit',
-        timestamp: dateToTimestamp(row[1]),
+        timestamp: dateStringToTimestamp(row[1]),
         amount: row[3] !== '' ? parseFloat(row[3]) * -1 : parseFloat(row[4]) * -1,
         description: row[2].replace(/"/g, ''),
       };
-      fact.automaticTags = tagTransaction(fact);
-      fact.customTags = [];
+      fact.tags = tagTransaction(fact);
       fact._id = generateFactId(fact);
       return fact;
     case 'venmo.csv':
@@ -73,12 +71,11 @@ const parseRow = (line, file) => {
         const description = `Venmo ${type} ${row[6] === 'Quinn Averill' ? row[7] : row[6]}: ${row[5]}`;
         fact = {
           account: 'venmo',
-          timestamp: dateToTimestamp(row[2]),
+          timestamp: dateStringToTimestamp(row[2]),
           amount: parseFloat(row[8].replace(/[ $+]/g, '')),
           description,
         };
-        fact.automaticTags = tagTransaction(fact);
-        fact.customTags = [];
+        fact.tags = tagTransaction(fact);
         fact._id = generateFactId(fact);
         return fact;
       }

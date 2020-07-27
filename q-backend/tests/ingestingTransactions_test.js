@@ -1,4 +1,4 @@
-const { ingestTransactions } = require('../resources/money/ingestingTransactions');
+const { ingestTransactions } = require('../resources/money');
 // ----------------------------------
 // MOCKERS
 // ----------------------------------

@@ -19,9 +19,16 @@ export const roundToTwoDecimalPlaces = num => Math.round(num * 100) / 100;
 export const formatAsMoney = num => (num < 0 ? `-$${roundToTwoDecimalPlaces(num) * -1}` : `$${roundToTwoDecimalPlaces(num)}`);
 export const averageArray = array => array.reduce((a, b) => a + b, 0) / array.length;
 
+const timestampToDate = timestamp => new Date(timestamp * 1000);
 export const times = {
   firstOfCurrentMonth: () => Math.round(new Date(new Date().getFullYear(), new Date().getMonth() - 7, 1) / 1000),
   now: () => Math.round(new Date().getTime() / 1000),
+  timestampToDate,
+  getNameOfMonth: timestamp => {
+    const date = timestampToDate(timestamp);
+    const month = date.toLocaleString('default', { month: 'long' });
+    return month;
+  },
 };
 
 export const getSettings = () => {

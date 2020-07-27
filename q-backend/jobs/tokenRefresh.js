@@ -1,13 +1,12 @@
 const fs = require('fs');
-
 const config = require('../config');
 const tokens = require('../config/tokens.json');
-
 const { q_logger } = require('../q-lib/q-logger');
-const { msToFullTime } = require('../utils');
-
+const { msToFullTime } = require('../utils/time');
 const { hitPostEndpoint } = require('../resources/methods/external');
-
+// ----------------------------------
+// HELPERS
+// ----------------------------------
 const writeSpotifyTokens = ({ access_token, valid_until }) => new Promise((resolve, reject) => {
   tokens.spotify.access_token = access_token;
   tokens.spotify.valid_until = valid_until;
@@ -22,7 +21,6 @@ const writeSpotifyTokens = ({ access_token, valid_until }) => new Promise((resol
     }
   });
 });
-
 const refreshTokens = () => new Promise((resolve, reject) => {
   hitPostEndpoint({ url: 'https://accounts.spotify.com/api/token' })
     .then(response => {
@@ -35,7 +33,9 @@ const refreshTokens = () => new Promise((resolve, reject) => {
     })
     .catch(reject);
 });
-
+// ----------------------------------
+// EXPROTS
+// ----------------------------------
 module.exports = {
   autoRefreshTokens: (attempts) => new Promise((resolve, reject) => {
     if (!attempts || attempts < 3) {

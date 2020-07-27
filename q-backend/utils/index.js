@@ -1,5 +1,7 @@
-const config = require('./config');
-
+const config = require('../config');
+// ----------------------------------
+// HELPERS
+// ----------------------------------
 const getAuthorization = url => {
   const { spotify, lifx } = config;
   if (url.includes('token')) {
@@ -11,21 +13,10 @@ const getAuthorization = url => {
   }
   return null;
 };
-
-
+// ----------------------------------
+// EXPROTS
+// ----------------------------------
 module.exports = {
-  dateToTimestamp: date => parseInt(new Date(date).getTime() / 1000, 10),
-  msToFullTime: ms => {
-    let seconds = ms / 1000;
-    const hours = parseInt(seconds / 3600, 10);
-    seconds %= 3600;
-    const minutes = parseInt(seconds / 60, 10);
-    seconds %= 60;
-    const hourTime = hours > 0 ? `${Math.round(hours)}h` : '';
-    const minuteTime = minutes > 0 ? `${Math.round(minutes)}m` : '';
-    const secondTime = seconds > 0 ? `${Math.round(seconds)}s` : '';
-    return `${hourTime} ${minuteTime} ${secondTime}`;
-  },
   generateRandomString: length => {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

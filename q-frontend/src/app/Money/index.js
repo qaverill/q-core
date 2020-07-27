@@ -42,7 +42,7 @@ const Money = () => {
         <SlateSelector pages={SLATE_FEATURES} idx={moneyIdx} onChange={setFeatureSlate} />
         <Switch>
           <Route exact path="/money" render={() => <Redirect exact to={`/money/${SLATE_FEATURES[moneyIdx]}`} />} />
-          <Route exact path="/money/analytics">
+          <Route exact path="/money/analyze">
             <Analyze />
           </Route>
           <Route exact path="/money/audit">

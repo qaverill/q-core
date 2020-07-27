@@ -82,8 +82,7 @@ const Transaction = ({
   setPaybackTransaction,
   fetchTransactions,
 }) => {
-  const { _id, timestamp, amount, description, automaticTags, customTags } = transaction;
-  const tags = R.concat(automaticTags, customTags);
+  const { _id, timestamp, amount, description, tags } = transaction;
   const canBeMarkedAsPaybackTo = R.isNil(paybackTransaction) && amount > 1;
   const canBeMarkedAsPaybackFrom = paybackTransaction && amount < 1;
   const isMarkedAsPayback = paybackTransaction === transaction;

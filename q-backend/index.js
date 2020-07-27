@@ -20,10 +20,14 @@ const {
   handleExternalPutRequest,
 } = require('./handlers/external');
 const {
+  handleInternalGetRequest,
+  handleInternalPutRequest,
+} = require('./handlers/internal');
+const {
   handleGetTransactionsRequest,
   handleTagAllTransactionsRequest,
   handlePaybackTransactionRequest,
-  handleGetNetAmountRequest
+  handleGetBiMonthlyAnalysisRequest
 } = require('./handlers/money');
 const {
   handleMusicTopPlaysRequest,
@@ -61,6 +65,10 @@ path = '/spotify';
 makeGetEndpoint({ routes, path }, handleExternalGetRequest);
 makePostEndpoint({ routes, path }, handleExternalPostRequest);
 
+path = '/mongodb/metadata/:_id';
+makeGetEndpoint({ routes, path }, handleInternalGetRequest);
+makePutEndpoint({ routes, path }, handleInternalPutRequest);
+
 path = '/money/transactions';
 makeGetEndpoint({ routes, path }, handleGetTransactionsRequest);
 
@@ -70,8 +78,8 @@ makeGetEndpoint({ routes, path }, handleTagAllTransactionsRequest);
 path = '/money/paybackTransaction';
 makePostEndpoint({ routes, path }, handlePaybackTransactionRequest);
 
-path = '/money/netAmount';
-makeGetEndpoint({ routes, path }, handleGetNetAmountRequest);
+path = '/money/biMonthlyAnalysis';
+makeGetEndpoint({ routes, path }, handleGetBiMonthlyAnalysisRequest);
 
 path = '/music/topPlays';
 makeGetEndpoint({ routes, path }, handleMusicTopPlaysRequest);

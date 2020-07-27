@@ -33,8 +33,7 @@ const validateDocsForPost = (collection, docs) => {
         && isNumber(transaction.timestamp)
         && isNumber(transaction.amount)
         && isString(transaction.description)
-        && Array.isArray(transaction.automaticTags)
-        && Array.isArray(transaction.customTags)
+        && Array.isArray(transaction.tags)
       )).length === docs.length;
     case 'paybacks':
       return docs.length > 0 && docs.filter(payback => (

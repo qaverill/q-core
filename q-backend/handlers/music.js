@@ -35,7 +35,7 @@ module.exports = {
   },
   handleDailyPlayTimeRequest: async ({ request, response }) => {
     const query = createQuery(request);
-    const start = R.path(['query', 'start'], request);
+    const { start } = request.query;
     if (cachedQuery === query) {
       console.log('cached!');
       response.status(200).json(cachedData);

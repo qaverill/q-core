@@ -5,9 +5,6 @@ import { NotificationManager } from 'react-notifications';
 // ----------------------------------
 // CONSTANTS
 // ----------------------------------
-export const BIN_SIZES = {
-  BI_MONTHLY: 'BI_MONTHLY',
-};
 // ----------------------------------
 // API CALLS
 // ----------------------------------
@@ -40,9 +37,9 @@ export const markPaybackTransaction = params => new Promise((resolve, reject) =>
       reject(error);
     });
 });
-export const getBinnedNetAmounts = query => new Promise((resolve, reject) => {
-  // query = { start, end, filter, binSize }
-  axios.get(`/money/netAmount?${stringify(query)}`)
+export const getBiMonthlyAnalysis = query => new Promise((resolve, reject) => {
+  // query = { start, end, filter }
+  axios.get(`/money/biMonthlyAnalysis?${stringify(query)}`)
     .then(R.pipe(R.prop('data'), resolve))
     .catch(error => {
       NotificationManager.error('Failed to get netAmount');

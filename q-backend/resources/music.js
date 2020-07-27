@@ -1,12 +1,12 @@
 const R = require('ramda');
 const { hitGetEndpoint } = require('../resources/methods/external');
+const { ONE_DAY } = require('../utils/time');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
 const TRACK_TYPE = 'tracks';
 const ARTIST_TYPE = 'artists';
 const ALBUM_TYPE = 'albums';
-const ONE_DAY = 86400;
 const spotifyDataEndpoint = (type, items) => `https://api.spotify.com/v1/${type}?ids=${Object.keys(items).join()}`;
 const spliceTopN = counts => {
   const N = 5;

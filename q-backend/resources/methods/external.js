@@ -1,12 +1,15 @@
 const requestModule = require('request');
 const path = require('path');
 const fs = require('fs');
-
 const { q_logger } = require('../../q-lib/q-logger');
 const { oathRequestOptions } = require('../../utils');
-
+// ----------------------------------
+// HELPERS
+// ----------------------------------
 const acceptablePostResponseCodes = [200, 201, 207];
-
+// ----------------------------------
+// EXPORTS
+// ----------------------------------
 module.exports = {
   hitGetEndpoint: (url) => new Promise((resolve, reject) => {
     requestModule.get(oathRequestOptions({ url }), (error, response) => {

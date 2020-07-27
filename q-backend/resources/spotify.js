@@ -1,11 +1,11 @@
 const { hitGetEndpoint, hitPostEndpoint } = require('./methods/external');
-const { dateToTimestamp } = require('../utils');
+const { dateStringToTimestamp } = require('../utils/time');
 const { q_logger } = require('../q-lib/q-logger');
 
 const mapToSpotifyDocument = async ({ response, timeParam }) => (
   response.items.map((item) => ({
-    _id: dateToTimestamp(item[timeParam]),
-    timestamp: dateToTimestamp(item[timeParam]),
+    _id: dateStringToTimestamp(item[timeParam]),
+    timestamp: dateStringToTimestamp(item[timeParam]),
     track: item.track.id,
     album: item.track.album.id,
     artists: item.track.artists.map(artist => artist.id),

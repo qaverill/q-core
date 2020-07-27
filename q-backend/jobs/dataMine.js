@@ -6,7 +6,9 @@ const {
   getMyTracks,
   putTracksOntoPlaylist,
 } = require('../resources/spotify');
-
+// ----------------------------------
+// HELPERS
+// ----------------------------------
 const getNewAvailableData = ({ collection }) => new Promise((resolve, reject) => {
   switch (collection) {
     case 'listens':
@@ -28,7 +30,6 @@ const getNewAvailableData = ({ collection }) => new Promise((resolve, reject) =>
       throw new Error(`Unknown collection in getNewAvailableData: ${collection}`);
   }
 });
-
 const mineData = ({ collection }) => new Promise((resolve, reject) => {
   getNewAvailableData({ collection })
     .then(newData => {
@@ -56,7 +57,9 @@ const mineData = ({ collection }) => new Promise((resolve, reject) => {
     })
     .catch(reject);
 });
-
+// ----------------------------------
+// EXPORTS
+// ----------------------------------
 module.exports = {
   autoMineData: ({ collection, interval, attempts }) => {
     if (!attempts || attempts < 3) {
@@ -66,7 +69,8 @@ module.exports = {
             setTimeout(() => module.exports.autoMineData({ collection, interval }), interval);
           }
         })
-        .catch(() => {
+        .catch((e) => {
+          q_logger.error(e);
           q_logger.warn(`Failed to mine ${collection}... trying again in 3 seconds`);
           setTimeout(() => module.exports.autoMineData({
             collection,
