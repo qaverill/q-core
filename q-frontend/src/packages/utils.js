@@ -3,9 +3,11 @@ import axios from 'axios';
 
 export const ONE_EPOCH_DAY = 86400;
 
+const getMonth = date => (date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1);
+const getDate = date => (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate());
 export const capitolFirstLetter = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 export const stringToEpoch = (s) => Math.round(new Date(`${s.split('/')[2]}-${s.split('/')[0]}-${s.split('/')[1]}T00:00:00Z`).getTime() / 1000);
-export const dateToString = (d) => `${d.getMonth() + 1 < 10 ? `0${d.getMonth() + 1}` : d.getMonth() + 1}/${d.getDate() < 10 ? `0${d.getDate()}` : d.getDate()}/${d.getFullYear()}`;
+export const dateToString = (date) => `${getMonth(date)}/${getDate(date)}/${date.getFullYear()}`;
 export const epochToString = (epoch) => epoch != null && dateToString(new Date(epoch * 1000));
 export const epochToDate = (epoch) => new Date(epoch * 1000);
 export const dateToEpoch = (date) => parseInt(new Date(date).getTime() / 1000, 10);
@@ -28,6 +30,10 @@ export const times = {
     const date = timestampToDate(timestamp);
     const month = date.toLocaleString('default', { month: 'long' });
     return month;
+  },
+  getMonthAndYear: timestamp => {
+    const date = timestampToDate(timestamp);
+    return `${getMonth(date)}/${date.getFullYear().toString().slice(2)}`;
   },
 };
 

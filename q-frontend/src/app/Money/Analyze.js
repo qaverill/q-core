@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as R from 'ramda';
 import styled from 'styled-components';
-import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
+import { ResponsiveContainer, ReferenceLine, ComposedChart, Bar, Area, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { Slate } from '../../packages/core';
-import { moneyTheme } from '../../packages/colors';
+import { moneyTheme, green, red, yellow } from '../../packages/colors';
 import { times } from '../../packages/utils';
 import { useStore } from '../../store';
 import WaitSpinner from '../../components/WaitSpinner';
@@ -13,14 +13,22 @@ import { getBiMonthlyAnalysis } from '../../api/money';
 // HELPERS
 // ----------------------------------
 function formatGraphData(analyses) {
-  const seconds = analyses.filter((_, idx) => idx % 2 === 1);
-  const firsts = analyses.filter((_, idx) => idx % 2 === 0).splice(0, seconds.length);
-  return firsts.map(({ date, netAmount }, idx) => ({
-    name: times.getNameOfMonth(date),
-    first: netAmount,
-    second: seconds[idx].netAmount,
+  return analyses.map(({ timestamp, delta, income, expense }, idx) => ({
+    name: `${times.getMonthAndYear(timestamp)} ${idx % 2 === 0 ? 'A' : 'B'}`,
+    delta,
+    income,
+    expense,
   }));
 }
+function gradientOffset(graphData) {
+  const dataMax = Math.max(...graphData.map(i => i.delta));
+  const dataMin = Math.min(...graphData.map(i => i.delta));
+  if (dataMax <= 0) return 0;
+  if (dataMin >= 0) return 1;
+  return dataMax / (dataMax - dataMin);
+}
+const roundDomainMin = dataMin => Math.floor(dataMin / 100) * 100;
+const roundDomainMax = dataMax => Math.ceil(dataMax / 100) * 100;
 // ----------------------------------
 // STYLES
 // ----------------------------------
@@ -48,14 +56,24 @@ const Analyze = () => {
     <TopChartsSlate rimColor={moneyTheme.secondary}>
       {R.isEmpty(graphData) && <WaitSpinner message="Loading Money..." />}
       {!R.isEmpty(graphData) && (
-        <BarChart height={1000} width={1900} data={graphData}>
-          <Bar dataKey="first" fill={moneyTheme.primary} />
-          <Bar dataKey="second" fill={moneyTheme.tertiary} />
-          <CartesianGrid stroke="#ccc" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-        </BarChart>
+        <ResponsiveContainer>
+          <ComposedChart data={graphData} stackOffset="sign">
+            <CartesianGrid stroke="#ccc" />
+            <defs>
+              <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
+                <stop offset={gradientOffset(graphData)} stopColor="green" stopOpacity={1} />
+                <stop offset={gradientOffset(graphData)} stopColor="red" stopOpacity={1} />
+              </linearGradient>
+            </defs>
+            <XAxis dataKey="name" />
+            <YAxis type="number" domain={[roundDomainMin, roundDomainMax]} />
+            <Tooltip />
+            <ReferenceLine y={0} stroke="#000" />
+            <Bar dataKey="income" stackId="Q" fill={green} />
+            <Bar dataKey="expense" stackId="Q" fill={red} />
+            <Area type="monotone" dataKey="delta" stroke={yellow} fill="url(#splitColor)" />
+          </ComposedChart>
+        </ResponsiveContainer>
       )}
     </TopChartsSlate>
   );

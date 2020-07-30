@@ -15,22 +15,37 @@ function getStartOfNextDay(timestamp) {
 // ----------------------------------
 module.exports = {
   getBiMonthlyAnalysis: (start, transactions) => {
-    let netAmount = 0;
+    let delta = 0;
+    let income = 0;
+    let expense = 0;
     let binStart = parseInt(start, 10);
     let binEnd = null;
     const biMonthlyAnalysis = [];
+    function analyzeTransaction(amount) {
+      delta += amount;
+      if (amount > 0) income += amount;
+      if (amount < 0) expense += amount;
+    }
+    function pushAnalysis() {
+      biMonthlyAnalysis.push({
+        timestamp: binStart,
+        delta: roundNumber2Decimals(delta),
+        income: roundNumber2Decimals(income),
+        expense: roundNumber2Decimals(expense)
+      });
+      delta = 0;
+      income = 0;
+      expense = 0;
+      binStart = binEnd;
+      binEnd = null;
+    }
     function binTransactionAnalysis({ timestamp, tags, amount }) {
       if (binEnd != null && timestamp >= binEnd) {
-        biMonthlyAnalysis.push({ date: binStart, netAmount: roundNumber2Decimals(netAmount) });
-        netAmount = amount;
-        binStart = binEnd;
-        binEnd = null;
-      } else {
-        netAmount += amount;
-        if (tags[1] === 'paycheck') {
-          binEnd = getStartOfNextDay(timestamp);
-        }
+        pushAnalysis();
+      } else if (tags[1] === 'paycheck') {
+        binEnd = getStartOfNextDay(timestamp);
       }
+      analyzeTransaction(amount);
     }
     R.forEach(
       binTransactionAnalysis,
