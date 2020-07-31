@@ -59,7 +59,7 @@ module.exports = {
           .then(data => {
             const paybacks = Array.isArray(data) ? data : [data];
             response.status(200).json(
-              getBiMonthlyAnalysis(start, ingestTransactions(transactions, paybacks))
+              getBiMonthlyAnalysis(ingestTransactions(transactions, paybacks))
             );
           })
           .catch((e) => {

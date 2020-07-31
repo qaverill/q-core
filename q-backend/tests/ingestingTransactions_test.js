@@ -3,7 +3,7 @@ const { ingestTransactions } = require('../resources/money');
 // MOCKERS
 // ----------------------------------
 function mockTransaction(_id, amount) {
-  return ({ _id, amount, timestamp: parseInt(new Date().getTime() / 1000, 10) });
+  return ({ _id, amount, timestamp: 1596167370 - _id });
 }
 function mockPayback(from, to, amount) {
   return ({ from, to, amount });

@@ -11,7 +11,7 @@ import { NotificationManager } from 'react-notifications';
 export const getTransactions = query => new Promise((resolve, reject) => {
   // query = { start, end, filter }
   axios.get(`/money/transactions?${stringify(query)}`)
-    .then(R.pipe(R.prop('data'), resolve))
+    .then(({ data }) => resolve(R.reverse(data)))
     .catch(error => {
       NotificationManager.error('Failed to get transactions');
       console.error(error);

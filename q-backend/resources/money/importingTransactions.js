@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const R = require('ramda');
 const { readContentsOfFile } = require('../methods/external');
 const { dateStringToTimestamp } = require('../../utils/time');
+const { roundNumber2Decimals } = require('../../utils');
 const { tagTransaction } = require('./taggingTransactions');
 // ----------------------------------
 // HELPERS
@@ -49,7 +50,7 @@ const parseRow = (line, file) => {
       fact = {
         account: row[0].indexOf('S0020') > -1 ? 'mvcu-checkings' : 'mvcu-savings',
         timestamp: dateStringToTimestamp(row[1]),
-        amount: row[2].indexOf('(') > -1 ? parseFloat(row[2].replace(/[)$(]/g, '')) * -1 : parseFloat(row[2].replace('$', '')),
+        amount: roundNumber2Decimals(row[2].indexOf('(') > -1 ? parseFloat(row[2].replace(/[)$(]/g, '')) * -1 : parseFloat(row[2].replace('$', ''))),
         description: row[5],
       };
       fact.tags = tagTransaction(fact);
@@ -59,7 +60,7 @@ const parseRow = (line, file) => {
       fact = {
         account: 'citi-credit',
         timestamp: dateStringToTimestamp(row[1]),
-        amount: row[3] !== '' ? parseFloat(row[3]) * -1 : parseFloat(row[4]) * -1,
+        amount: roundNumber2Decimals(row[3] !== '' ? parseFloat(row[3]) * -1 : parseFloat(row[4]) * -1),
         description: row[2].replace(/"/g, ''),
       };
       fact.tags = tagTransaction(fact);
@@ -72,7 +73,7 @@ const parseRow = (line, file) => {
         fact = {
           account: 'venmo',
           timestamp: dateStringToTimestamp(row[2]),
-          amount: parseFloat(row[8].replace(/[ $+]/g, '')),
+          amount: roundNumber2Decimals(parseFloat(row[8].replace(/[ $+]/g, ''))),
           description,
         };
         fact.tags = tagTransaction(fact);

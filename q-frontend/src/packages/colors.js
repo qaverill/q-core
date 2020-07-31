@@ -41,3 +41,5 @@ export const dashboardTheme = {
   tertiary: aqua,
   quaternary: purple,
 };
+
+export const random = () => `#${Math.floor(Math.random() * 16777215).toString(16)}`;

@@ -6,51 +6,52 @@ const { dateToTimestamp, timestampToDate } = require('../../utils/time');
 // ----------------------------------
 function getStartOfNextDay(timestamp) {
   const date = timestampToDate(timestamp);
-  date.setHours(0, 0, 0);
   date.setDate(date.getDate() + 1);
+  date.setHours(0, 0, 0);
   return dateToTimestamp(date);
 };
+// ----------------------------------
+// LOGIC
+// ----------------------------------
+let delta, incomes, expenses, binStart, binEnd, biMonthlyAnalysis;
+function flushBiMonthlyAnalysis() {
+  delta = 0;
+  incomes = {};
+  expenses = {};
+  binStart = null;
+  binEnd = null;
+}
+function analyzeTransaction({ amount, tags }) {
+  delta += amount;
+  if (amount > 0) {
+    const key = tags[1];
+    if (R.isNil(incomes[key])) incomes[key] = 0;
+    incomes[key] = roundNumber2Decimals(incomes[key] + amount);
+  };
+  if (amount < 0) {
+    const key = tags[0];
+    if (R.isNil(expenses[key])) expenses[key] = 1;
+    expenses[key] = roundNumber2Decimals(expenses[key] + amount);
+  };
+}
+function pushAnalysis() {
+  biMonthlyAnalysis.push({ timestamp: binStart, delta, incomes, expenses });
+  flushBiMonthlyAnalysis();
+  binStart = binEnd;
+}
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  getBiMonthlyAnalysis: (start, transactions) => {
-    let delta = 0;
-    let income = 0;
-    let expense = 0;
-    let binStart = parseInt(start, 10);
-    let binEnd = null;
-    const biMonthlyAnalysis = [];
-    function analyzeTransaction(amount) {
-      delta += amount;
-      if (amount > 0) income += amount;
-      if (amount < 0) expense += amount;
-    }
-    function pushAnalysis() {
-      biMonthlyAnalysis.push({
-        timestamp: binStart,
-        delta: roundNumber2Decimals(delta),
-        income: roundNumber2Decimals(income),
-        expense: roundNumber2Decimals(expense)
-      });
-      delta = 0;
-      income = 0;
-      expense = 0;
-      binStart = binEnd;
-      binEnd = null;
-    }
-    function binTransactionAnalysis({ timestamp, tags, amount }) {
-      if (binEnd != null && timestamp >= binEnd) {
-        pushAnalysis();
-      } else if (tags[1] === 'paycheck') {
-        binEnd = getStartOfNextDay(timestamp);
-      }
-      analyzeTransaction(amount);
-    }
-    R.forEach(
-      binTransactionAnalysis,
-      R.sortBy(R.prop('timestamp'), transactions)
-    );
+  getBiMonthlyAnalysis: transactions => {
+    flushBiMonthlyAnalysis();
+    biMonthlyAnalysis = [];
+    R.forEach(({ timestamp, tags, amount }) => {
+      if (binStart === null) binStart = parseInt(timestamp, 10);
+      if (binEnd != null && timestamp >= getStartOfNextDay(binEnd)) pushAnalysis();
+      if (tags[1] === 'paycheck') binEnd = timestamp;
+      if (tags[0] !== 'payBack') analyzeTransaction({ amount, tags });
+    }, transactions);
     return biMonthlyAnalysis;
   },
 };
