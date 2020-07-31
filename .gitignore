@@ -10,7 +10,7 @@ node_modules/
 
 **/.env
 
-**/data-dump
+**/data
 
 **/build/*
 !**/build/.gitkeep
