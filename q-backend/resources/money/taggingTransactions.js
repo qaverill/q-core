@@ -74,14 +74,14 @@ const factTags = {
     cellphone: ['cell'],
     utilities: ['Utilitays', 'Rigs and the oven', 'eversource', 'utils', 'Import Java.util.*'],
     houseHold: ['TARGET', 'BED BATH & BEYOND', 'me MAGPIE'],
-    airFilter: ['GI8IM8UE3'],
+    airFilter: ['air filters AMZN', 'GI8IM8UE3'],
     cleaningSupplies: ['mouth guard cleaner', 'Drain juice'],
     pharmacy: ['RITE AID STORE'],
     furniture: ['MO75G5MB0', 'W78VQ4M33', 'HE6EP2P83', '7V6RQ99T3', 'WS8OK6P73', 'Q85IO03M3', 'X399867X3', '8Q9QG9SJ3', 'Center Chanel Holder'],
     gas: ['EXXONMOBIL', 'CUMBERLAND FARMS'],
     laundry: ['Qworters', 'Quarters', 'Kwarters'],
     rent: ['nner: Ivy Realty', 'Schoppe: Beans', 'Skinner: Blowjob', 'Roont', 'ACH Withdrawal BOSTON LUXURY'],
-    healthCare: ['shaver AMAZON', 'patchouli AMZN', 'WN0GX5B13', 'L66H83GF3', '5Q96J9DR3', 'OT1LO79C3', 'ARMOR GUARD LLC 8884755215', 'JULIAN LENZI HOSPI', 'TUFTS MC PO BOSTON'],
+    healthCare: ['MJ58B6ZO0 sunscreen', 'jojoba oil AMZN', 'shaver AMAZON', 'patchouli AMZN', 'WN0GX5B13', 'L66H83GF3', '5Q96J9DR3', 'OT1LO79C3', 'ARMOR GUARD LLC 8884755215', 'JULIAN LENZI HOSPI', 'TUFTS MC PO BOSTON'],
     hairCut: ['SUPERCUTS 2 PLAISTOW'],
     kitchenWare: {
       drinking: ['scotch glasses me', 'CD85Q4WS3'],
@@ -158,15 +158,21 @@ const factTags = {
     },
   },
   karma: {
-    sam: ['scotch glasses sam', 'HOMEBREW EMPORIUM CAMBRIDGE', '6F5F15NJ3'],
-    friends: ['Lord Hobo Cambridge karma'],
-    rosalie: ['rosalie DAIRY QUEEN #42327', 'rosalie STARBUCKS STORE', 'DK7PS4A73', 'For Rosalie 🌹', 'STAPLES 00109074 PLAISTOW', 'STATELINE PET SUPPLY PLAISTOW', 'NINTENDO *AMERICAUS', 'rosalie SQ *SQ *THE HAPPY CACT', 'rosalie MAGPIE'],
-    tyler: ['scotch glasses tyler', 'SUR LA TABLE #123', 'Skinner: fork'],
-    madre: ['MAHONEYS GARDEN CENTER', 'SQUARE *SQ *ABODE'],
-    annie: ['annie DAIRY QUEEN #42327', 'annie STARBUCKS STORE', 'TRILLIUM annie BREWING', 'SQU*SQ *CURIO SPICE', 'TREEHOUSEBREW.COM 4139491891', 'SP * LAMPLIGHTER BREWI 2076503325'],
-    friendGroup: ['Lord Hobo Cambridge MA karma', 'karma CAPO'],
-    daddy: ['daddy DAIRY QUEEN #42327', '7532M4NX3', 'CL73N0133'],
-    cousins: ['PAPAGINOS'],
+    friends: {
+      sam: ['scotch glasses sam', 'HOMEBREW EMPORIUM CAMBRIDGE', '6F5F15NJ3'],
+      tyler: ['scotch glasses tyler', 'SUR LA TABLE #123', 'Skinner: fork'],
+      multipleFriends: ['Lord Hobo Cambridge MA karma', 'karma CAPO'],
+    },
+    immediateFamily: {
+      madre: ['MAHONEYS GARDEN CENTER', 'SQUARE *SQ *ABODE'],
+      annie: ['annie DAIRY QUEEN #42327', 'annie STARBUCKS STORE', 'TRILLIUM annie BREWING', 'SQU*SQ *CURIO SPICE', 'TREEHOUSEBREW.COM 4139491891', 'SP * LAMPLIGHTER BREWI 2076503325'],
+      rosalie: ['rosalie DAIRY QUEEN #42327', 'rosalie STARBUCKS STORE', 'DK7PS4A73', 'For Rosalie 🌹', 'STAPLES 00109074 PLAISTOW', 'STATELINE PET SUPPLY PLAISTOW', 'NINTENDO *AMERICAUS', 'rosalie SQ *SQ *THE HAPPY CACT', 'rosalie MAGPIE'],
+      daddy: ['daddy DAIRY QUEEN #42327', '7532M4NX3', 'CL73N0133'],
+    },
+    extendedFamily: {
+      cousins: ['PAPAGINOS'],
+      luke: ['MJ1XT0191'],
+    }
   },
   unknown: ['DAVIS SQUARE'],
 };
