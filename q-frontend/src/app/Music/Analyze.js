@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { BarChart, Bar, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { BarChart, Bar, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 import { Slate } from '../../packages/core';
 import { musicTheme } from '../../packages/colors';
 import { useStore } from '../../store';
@@ -25,27 +25,27 @@ const Charts = () => {
   const { state } = useStore();
   const { start, end, filter } = selectMusicStore(state);
   const [chartData, setChartData] = React.useState(null);
-  const [isLoading, setIsLoading] = React.useState(true);
   React.useEffect(() => {
     async function fetchChartData() {
       const query = { start, end, filter };
       const listens = await getDailyPlayTime(query);
-      setIsLoading(true);
       setChartData(listens.map(listenToChartPoint));
-      setIsLoading(false);
     }
+    setChartData(null);
     fetchChartData();
   }, [start, end, filter]);
   return (
     <TopChartsSlate rimColor={musicTheme.secondary}>
-      {isLoading && <WaitSpinner message="Loading Music..." />}
-      {!isLoading && (
-        <BarChart height={1000} width={1900} data={chartData}>
-          <Bar dataKey="uv" fill={musicTheme.tertiary} />
-          <CartesianGrid stroke="#ccc" />
-          <XAxis dataKey="name" />
-          <YAxis />
-        </BarChart>
+      {!chartData && <WaitSpinner color={musicTheme.tertiary} />}
+      {chartData && (
+        <ResponsiveContainer>
+          <BarChart height={1000} width={1900} data={chartData}>
+            <Bar dataKey="uv" fill={musicTheme.tertiary} />
+            <CartesianGrid stroke="#ccc" />
+            <XAxis dataKey="name" />
+            <YAxis />
+          </BarChart>
+        </ResponsiveContainer>
       )}
     </TopChartsSlate>
   );

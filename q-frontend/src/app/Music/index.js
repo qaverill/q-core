@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import * as React from 'react';
 import { Switch, Redirect, Route } from 'react-router-dom';
-import Charts from './Charts';
+import Analyze from './Analyze';
 import Overview from './Overview';
 import ChronologicalSearchBar from '../../components/ChronologicalSearchBar';
 import { actions, useStore } from '../../store';
@@ -12,7 +12,7 @@ import SlateSelector from '../../components/SlateSelector';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const SLATE_FEATURES = ['overview', 'charts', 'albums'];
+const SLATE_FEATURES = ['overview', 'analyze'];
 const DATE_CONTROLS = ['Y', 'M', 'W', 'D'];
 // ----------------------------------
 // STYLES
@@ -44,8 +44,8 @@ const Music = () => {
           <Route exact path="/music/overview">
             <Overview />
           </Route>
-          <Route exact path="/music/charts">
-            <Charts />
+          <Route exact path="/music/analyze">
+            <Analyze />
           </Route>
         </Switch>
       </SlateContent>
