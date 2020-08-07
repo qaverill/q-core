@@ -9,6 +9,7 @@ import { selectMusicStore, selectSettings } from '../../store/selectors';
 import { musicTheme } from '../../packages/colors';
 import { Slate, SlateContent } from '../../packages/core';
 import SlateSelector from '../../components/SlateSelector';
+import { searchSpotify } from '../../api/spotify';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -36,6 +37,7 @@ const Music = () => {
         setFilters={filters => dispatch(actions.setMusicFilters(filters))}
         dateControls={DATE_CONTROLS}
         colorTheme={musicTheme}
+        fetchData={searchSpotify}
       />
       <SlateContent drops={1}>
         <SlateSelector pages={SLATE_FEATURES} idx={musicIdx} onChange={setFeatureSlate} />

@@ -7,8 +7,6 @@ import DateAdjuster from './DateAdjuster';
 import SearchBar from './SearchBar';
 import { BoldText, TextInput, DROP_SIZE, GAP_SIZE } from '../../packages/core';
 import { epochToString, epochToDate, stringToEpoch } from '../../packages/utils';
-
-import { searchSpotify } from '../../api/spotify';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -76,6 +74,7 @@ const ChronologicalSearchBar = ({
   setFilters,
   dateControls,
   colorTheme,
+  fetchData,
 }) => {
   const filters = { start, end, filter: null };
   React.useEffect(() => {
@@ -123,7 +122,7 @@ const ChronologicalSearchBar = ({
           />
         ))}
       </Start>
-      <SearchBar setFilter={setFilter} search={searchSpotify} />
+      <SearchBar setFilter={setFilter} fetchData={fetchData} />
       <End>
         {dateControls.map(control => (
           <DateAdjuster
