@@ -20,6 +20,8 @@ const factTags = {
       burgers: ['F26674 WINDHAM', 'BBC CAMBRIDGE CAMBRIDGE', 'TASTY BURGER', 'Burger co', 'borgar', 'MOATMOUNTAINSMOKEHOUSE'],
       mexican: ['CHIPOTLE ONLINE', 'FELIPES TAQUERIA CAMBRIDGE', 'BORDER CAFE CAMBRIDGE', 'Las Olas', 'MI TIERRA RESTAURANT'],
       fancyDinner: ['Sams bornt day', 'The day of my birth'],
+      healthy: ['SWEETGREEN'],
+      fastFood: ['MCDONALD'],
     },
     lunch: {
       cpd200: ['SQ *200 CAMBRIDGE PARK'],
@@ -43,7 +45,7 @@ const factTags = {
       surrey: ['ice cream SURREY', 'milk SURREY'],
     },
     drunkFood: ['TST* EL JEFE', 'ALEPPO PALACE', 'DOG HOUSE BOSTON'],
-    snacks: ['snack SURREY ST', 'Mercier: Chocolate bar', 'CVS/PHARMACY #00240', 'PARIS BAGUETTE E15', 'TATTE BAKERY'],
+    snacks: ['snacks PLAISTOW RTE', 'snack SURREY ST', 'Mercier: Chocolate bar', 'CVS/PHARMACY #00240', 'PARIS BAGUETTE E15', 'TATTE BAKERY'],
   },
   drinks: {
     coffee: ['me STARBUCKS STORE', 'ATOMIC BEAN CA Cambridge', 'Coofie', 'DUNKIN', 'PAVEMENT COFFE', 'DARWIN S LTD'],
@@ -53,10 +55,11 @@ const factTags = {
       liquorStore: ['rson: 🍷', 'Schoppe: Snurfs', 'DANA HILL LIQUORS', 'Sweet treat', 'A few cooking wines and a trip to the doctor', 'Skinner: Treehouse', 'TOTAL WINE AND MORE', 'Maple syrup and mimosas', 'LIQUOR STORE', 'BEER & WINE', 'SUPREME LIQUORS CAMBRIDGE', 'Boat brews and ice', 'Liquor haul'],
       store: {
         surrey: ['beer SURREY', 'Keith stone and juicy boys', ],
-        theCity: ['THE CITY TOBACCO & BEV', ],
+        theCity: ['THE CITY TBCO - PLAIST', 'THE CITY TOBACCO & BEV', ],
         unknownConvenienceStore: ['WALGREENS #10378 EAST HAMPSTEA', 'beer PLAISTOW RTE 125'],
         groceryStore: ['Merlot', 'HANNAFORD #8190 HAMPSTEAD NH', 'Skinner: Smutty', 'yea: 🍷 & 🥖', 'Truly shipment', 'Lanctot: Truly', 'The goodies', ],
       },
+      event: ['JULIAN LENZI HOSPI Lowell MA'],
       bars: ['LOLITA COCINA', 'WHISKEY STEAKHOUSE', 'Margaritas ay caramba', 'Alden and Harlow', 'RUSSELL HOUSE TAVERN', 'JAMISONS HAMPSTEAD', 'GREEN STREET CAMBRIDGE', 'PASTA LOFT E HAMPSTEAD', 'Hennessy\'s Boston', 'TST* GOURMET INDIA', 'BROADSIDE BOSTON', 'Skinner: Greeny', 'SQ *SQ *SOWA BOSTO', 'MIDDLE EAST RESTAURANT', 'The Harp Boston', 'SQU*SQ *THE PEOPLE', 'Dranks', 'SCHOLAR', 'BELL IN HAND TAVERN', 'DAEDALUS', 'TAVERN IN THE SQUARE', 'Night cap', 'FOUNDRY ON ELM', 'ARAMARK FENWAY'],
     },
   },
@@ -72,7 +75,7 @@ const factTags = {
   living: {
     wifi: ['wifi'],
     cellphone: ['cell'],
-    utilities: ['Utilitays', 'Rigs and the oven', 'eversource', 'utils', 'Import Java.util.*'],
+    utilities: ['Putnam rig fuel', 'Utilitays', 'Rigs and the oven', 'eversource', 'utils', 'Import Java.util.*'],
     houseHold: ['TARGET', 'BED BATH & BEYOND', 'me MAGPIE'],
     airFilter: ['air filters AMZN', 'GI8IM8UE3'],
     cleaningSupplies: ['mouth guard cleaner', 'Drain juice'],
@@ -81,7 +84,17 @@ const factTags = {
     gas: ['EXXONMOBIL', 'CUMBERLAND FARMS'],
     laundry: ['Qworters', 'Quarters', 'Kwarters'],
     rent: ['nner: Ivy Realty', 'Schoppe: Beans', 'Skinner: Blowjob', 'Roont', 'ACH Withdrawal BOSTON LUXURY'],
-    healthCare: ['MJ58B6ZO0 sunscreen', 'jojoba oil AMZN', 'shaver AMAZON', 'patchouli AMZN', 'WN0GX5B13', 'L66H83GF3', '5Q96J9DR3', 'OT1LO79C3', 'ARMOR GUARD LLC 8884755215', 'JULIAN LENZI HOSPI', 'TUFTS MC PO BOSTON'],
+    healthCare: {
+      products: {
+        hair: ['WN0GX5B13', 'OT1LO79C3', 'shaver AMAZON', 'jojoba oil AMZN', 'shampoo Amazon'],
+        skin: ['band aids Amazon', 'L66H83GF3', 'MJ58B6ZO0 sunscreen', 'patchouli AMZN'],
+        teeth: ['ARMOR GUARD LLC 8884755215', '5Q96J9DR3']
+      },
+      doctors: {
+        optometrist: ['CENTRAL SQUARE EYE CAR'],
+        dermatologist: ['TUFTS MC PO BOSTON'],
+      }
+    },
     hairCut: ['SUPERCUTS 2 PLAISTOW'],
     kitchenWare: {
       drinking: ['scotch glasses me', 'CD85Q4WS3'],
@@ -98,8 +111,12 @@ const factTags = {
       amazon: ['6R4C17P03', 'clothes AMZN'],
       randomStore: ['GEMPLER'],
       zappos: ['ZAPPOS.COM'],
+      muji: ['MUJI U.S.A. LIMITED'],
     },
     inStore: ['RENYS WELLS -9464', 'MUJI NEWBURY 617502117', 'T J MAXX', 'GARMENT DISTRICT', 'ISLANDERS OUTF', 'FORSAKE BOSTON MA'],
+  },
+  glasses: {
+    zenni: ['ZENNI OPTICAL'],
   },
   income: {
     savingsInterest: ['Dividend Deposit'],
@@ -149,12 +166,13 @@ const factTags = {
       musicGear: ['SWEETWATER SOUND', 'GL3OF9403', 'M16E76XP3', 'guitar pics', '1M37C19F3', 'GUITAR CENTER'],
       videoGames: ['STEAMGAMES.COM', 'blizzard', 'Microsoft', 'MOJANG STOCKHOLM SWE'],
       records: ['RECORDS'],
-      computerParts: ['DRI*LOGITECH ORDERFIND', 'MO5DK4S00', '295AB3OQ3', 'N62Z52OA3', 'WWW.RAZER.COM SAN FRANCISCO', 'MICRO CENTER', 'nner: Windforce', 'Skinner: Oops this too prob'],
+      computerParts: ['batteries and charger Amazon', 'DRI*LOGITECH ORDERFIND', 'MO5DK4S00', '295AB3OQ3', 'N62Z52OA3', 'WWW.RAZER.COM SAN FRANCISCO', 'MICRO CENTER', 'nner: Windforce', 'Skinner: Oops this too prob'],
       art: ['FISK GALLERY', 'GOODWILL CAMBRIDGE 506'],
       housePlants: ['plant supplies AMZN', 'Zz top', 'PILL HARDWARE CAMBRIDGE', 'DICKSON BROS TRUE VALU CAMBRIDGE MA', 'me SQ *SQ *THE HAPPY CACT'],
       movies: ['VIMEO.COM 646-470-8422', 'pink floyd dvd'],
       surfing: ['SURFARI MANCHESTER'],
       candles: ['drip candles'],
+      books: ['BARNES&NOBLE'],
     },
   },
   karma: {
@@ -167,7 +185,7 @@ const factTags = {
       madre: ['MAHONEYS GARDEN CENTER', 'SQUARE *SQ *ABODE'],
       annie: ['annie DAIRY QUEEN #42327', 'annie STARBUCKS STORE', 'TRILLIUM annie BREWING', 'SQU*SQ *CURIO SPICE', 'TREEHOUSEBREW.COM 4139491891', 'SP * LAMPLIGHTER BREWI 2076503325'],
       rosalie: ['rosalie DAIRY QUEEN #42327', 'rosalie STARBUCKS STORE', 'DK7PS4A73', 'For Rosalie 🌹', 'STAPLES 00109074 PLAISTOW', 'STATELINE PET SUPPLY PLAISTOW', 'NINTENDO *AMERICAUS', 'rosalie SQ *SQ *THE HAPPY CACT', 'rosalie MAGPIE'],
-      daddy: ['daddy DAIRY QUEEN #42327', '7532M4NX3', 'CL73N0133'],
+      daddy: ['MV4NU1I12', 'daddy DAIRY QUEEN #42327', '7532M4NX3', 'CL73N0133'],
     },
     extendedFamily: {
       cousins: ['PAPAGINOS'],
