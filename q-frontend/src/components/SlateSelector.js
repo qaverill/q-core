@@ -13,12 +13,12 @@ const ArraySelectorContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-padding: ${GAP_SIZE}px 0px;
+  padding: ${GAP_SIZE}px 0px;
 `;
 // ----------------------------------
 // COMPONENTS
 // ----------------------------------
-const SlateSelector = ({ idx, pages, onChange }) => {
+const SlateSelector = ({ idx, pages, onChange = () => {} }) => {
   const { url } = useRouteMatch();
   const leftIdx = idx + 1 > pages.length - 1 ? 0 : idx + 1;
   const rightIdx = idx - 1 < 0 ? pages.length - 1 : idx - 1;

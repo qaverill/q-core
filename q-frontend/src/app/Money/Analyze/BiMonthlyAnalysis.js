@@ -11,16 +11,13 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  Legend,
-  Line,
 } from 'recharts';
-import { Slate } from '../../packages/core';
-import { moneyTheme, green, red, yellow, random } from '../../packages/colors';
-import { times } from '../../packages/utils';
-import { useStore } from '../../store';
-import WaitSpinner from '../../components/WaitSpinner';
-import { selectMoneyStore } from '../../store/selectors';
-import { getBiMonthlyAnalysis } from '../../api/money';
+import { yellow, random } from '../../../packages/colors';
+import { times } from '../../../packages/utils';
+import { useStore } from '../../../store';
+import WaitSpinner from '../../../components/WaitSpinner';
+import { selectMoneyStore } from '../../../store/selectors';
+import { getBiMonthlyAnalysis } from '../../../api/money';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -45,14 +42,16 @@ const roundDomainMax = dataMax => Math.ceil(dataMax / 100) * 100;
 // ----------------------------------
 // STYLES
 // ----------------------------------
-const TopChartsSlate = styled(Slate)`
+const TopChartsDiv = styled.div`
+width: 100%;
+height: 100%;
   display: flex;
   flex-direction: column;
 `;
 // ----------------------------------
 // COMPONENTS
 // ----------------------------------
-const Analyze = () => {
+const BiMonthlyAnalysis = () => {
   const { state } = useStore();
   const { start, end, filter } = selectMoneyStore(state);
   const [analyses, setAnalyses] = React.useState([]);
@@ -67,8 +66,9 @@ const Analyze = () => {
   }, [start, end, filter]);
   const graphData = formatGraphData(analyses);
   const tagsInGraph = R.uniq(R.flatten(R.map(getKeyTags, analyses)));
+  console.log('here')
   return (
-    <TopChartsSlate rimColor={moneyTheme.secondary}>
+    <TopChartsDiv>
       {R.isEmpty(analyses) && <WaitSpinner message="Loading Money..." />}
       {!R.isEmpty(analyses) && (
         <ResponsiveContainer>
@@ -89,8 +89,8 @@ const Analyze = () => {
           </ComposedChart>
         </ResponsiveContainer>
       )}
-    </TopChartsSlate>
+    </TopChartsDiv>
   );
 };
 
-export default Analyze;
+export default BiMonthlyAnalysis;
