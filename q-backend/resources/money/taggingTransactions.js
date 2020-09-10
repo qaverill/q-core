@@ -9,18 +9,19 @@ const factTags = {
     dinner: {
       sushi: ['SUSHI', 'THELONIOUS MONKFI', 'SAKANA', 'TAKEMURA RESTAURANT'],
       ramen: ['GRUBHUBHOKKAIDORAMENS'],
-      indian: ['Indian from like two', 'Schoppe: Desi', 'Mouse food',],
-      thai: ['TST* CHICK CHICK BOOM!', 'Spicies', 'Thai 🍲', 'THELONIOUS MONKFI CAMBRIDGE', '9 TASTES CAMBRIDGE', 'THAI CUSINE', 'THAI CUISINE'],
+      indian: ['GRABULL INC', 'Indian from like two', 'Schoppe: Desi', 'Mouse food',],
+      thai: ['Skinner: Thai', 'TST* CHICK CHICK BOOM!', 'Spicies', 'Thai 🍲', 'THELONIOUS MONKFI CAMBRIDGE', '9 TASTES CAMBRIDGE', 'THAI CUSINE', 'THAI CUISINE'],
       foodies: ['Orfanos', 'U pays at du pays'],
       chinese: ['DUMPLING HOUSE',],
-      italian: ['ovan: Sub', 'ALFREDOS I* ALFREDOS', 'Spoodles', 'BASTA PASTA'],
+      italian: ['Skinner: Basta', 'Shorr: Pasta Pasta', 'ovan: Sub', 'ALFREDOS I* ALFREDOS', 'Spoodles', 'BASTA PASTA'],
       subs: ['CAMBRIDGE DELI & GRILL CAMBRIDGE'],
       pizza: ['Romanoff: ZA', 'Bizza', 'Binocchios bizza', 'Pizza', '🍕', 'Lanctot: Za'],
       miscDinner: ['Green dragon', 'POSTMATES', 'VEGGIE GRILL HAR OLO', 'Curry fries'],
       burgers: ['F26674 WINDHAM', 'BBC CAMBRIDGE CAMBRIDGE', 'TASTY BURGER', 'Burger co', 'borgar', 'MOATMOUNTAINSMOKEHOUSE'],
-      mexican: ['CHIPOTLE ONLINE', 'FELIPES TAQUERIA CAMBRIDGE', 'BORDER CAFE CAMBRIDGE', 'Las Olas', 'MI TIERRA RESTAURANT'],
+      mexican: ['CHIPOTLE 1892', 'CHIPOTLE ONLINE', 'FELIPES TAQUERIA CAMBRIDGE', 'BORDER CAFE CAMBRIDGE', 'Las Olas', 'MI TIERRA RESTAURANT'],
       fancyDinner: ['Sams bornt day', 'The day of my birth'],
       healthy: ['SWEETGREEN'],
+      bbq: ['Skinner: Coast', 'COAST CAFE CAMBRIDGE'],
       fastFood: ['MCDONALD'],
     },
     lunch: {
@@ -31,7 +32,10 @@ const factTags = {
       lunchOut: ['Time Out Market', 'ye moodle narket', 'DUCK FAT'],
     },
     brunch: ['Brunch'],
-    dessert: ['me DAIRY QUEEN #42327', 'ZINNEKENS CAMBRIDGE', 'JP LICKS', 'INSOMNIA COOKIES'],
+    dessert: {
+      iceCream: ['Skinner: Insomnia', 'me DAIRY QUEEN #42327', 'JP LICKS', 'INSOMNIA COOKIES'],
+      waffles: ['ZINNEKENS CAMBRIDGE'],
+    },
     groceries: {
       wholeFoods: ['Wf 3-', 'Pork shoulder for carnitas', 'Ho foods', 'WHOLEFDS RVR'],
       traderJoes: ['Trader Howies', 'TRADER JOE', 'tj', 'Apples from god'],
@@ -73,7 +77,7 @@ const factTags = {
     },
   },
   living: {
-    wifi: ['wifi'],
+    wifi: ['wifi', 'COMCAST BOSTON'],
     cellphone: ['cell'],
     utilities: ['Putnam rig fuel', 'Utilitays', 'Rigs and the oven', 'eversource', 'utils', 'Import Java.util.*'],
     houseHold: ['TARGET', 'BED BATH & BEYOND', 'me MAGPIE'],
@@ -84,6 +88,9 @@ const factTags = {
     gas: ['EXXONMOBIL', 'CUMBERLAND FARMS'],
     laundry: ['Qworters', 'Quarters', 'Kwarters'],
     rent: ['nner: Ivy Realty', 'Schoppe: Beans', 'Skinner: Blowjob', 'Roont', 'ACH Withdrawal BOSTON LUXURY'],
+    insurance: {
+      renters: ['LEMONADE I* LEMONADE'],
+    },
     healthCare: {
       products: {
         hair: ['WN0GX5B13', 'OT1LO79C3', 'shaver AMAZON', 'jojoba oil AMZN', 'shampoo Amazon'],
@@ -147,7 +154,7 @@ const factTags = {
     },
   },
   vices: {
-    weed: ['And for driving all the way out', 'Flanagan: Thanks'],
+    weed: ['And for driving all the way out', 'Kyle Flanagan'],
     paraphernalia: ['NU7HD7BX3', 'pax part', 'pipe AMZN'],
     condoms: ['condoms'],
     nicotine: ['nicotine PLAISTOW RTE 125', 'nicotine SURREY'],
@@ -178,14 +185,14 @@ const factTags = {
   karma: {
     friends: {
       sam: ['scotch glasses sam', 'HOMEBREW EMPORIUM CAMBRIDGE', '6F5F15NJ3'],
-      tyler: ['scotch glasses tyler', 'SUR LA TABLE #123', 'Skinner: fork'],
+      tyler: ['tyler SURREY', 'scotch glasses tyler', 'SUR LA TABLE #123', 'Skinner: fork'],
       multipleFriends: ['Lord Hobo Cambridge MA karma', 'karma CAPO'],
     },
     immediateFamily: {
       madre: ['MAHONEYS GARDEN CENTER', 'SQUARE *SQ *ABODE'],
       annie: ['annie DAIRY QUEEN #42327', 'annie STARBUCKS STORE', 'TRILLIUM annie BREWING', 'SQU*SQ *CURIO SPICE', 'TREEHOUSEBREW.COM 4139491891', 'SP * LAMPLIGHTER BREWI 2076503325'],
       rosalie: ['rosalie DAIRY QUEEN #42327', 'rosalie STARBUCKS STORE', 'DK7PS4A73', 'For Rosalie 🌹', 'STAPLES 00109074 PLAISTOW', 'STATELINE PET SUPPLY PLAISTOW', 'NINTENDO *AMERICAUS', 'rosalie SQ *SQ *THE HAPPY CACT', 'rosalie MAGPIE'],
-      daddy: ['MV4NU1I12', 'daddy DAIRY QUEEN #42327', '7532M4NX3', 'CL73N0133'],
+      daddy: ['Annie Averill: Ear buds', 'MV4NU1I12', 'daddy DAIRY QUEEN #42327', '7532M4NX3', 'CL73N0133'],
     },
     extendedFamily: {
       cousins: ['PAPAGINOS'],

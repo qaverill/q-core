@@ -1,14 +1,19 @@
 import axios from 'axios';
-
+// ----------------------------------
+// HELPERS
+// ----------------------------------
+const ME = 'Q';
+// ----------------------------------
+// REQUESTS
+// ----------------------------------
 export const getLights = async () => {
   const url = 'https://api.lifx.com/v1/lights/all';
-  return (await axios.get('/lifx', { params: { url } })).data;
+  return (await axios.get('/lifx', { params: { url } })).data
+    .filter(light => light.group.name === ME);
 };
-
 export const toggleLightPower = (label) => {
   axios.post('/lifx', { url: `https://api.lifx.com/v1/lights/label:${label}/toggle` });
 };
-
 export const setLightsCycle = ({ colors, lights }) => {
   lights.forEach(({ label }, i) => {
     axios.post('/lifx', {
@@ -26,7 +31,6 @@ export const setLightsCycle = ({ colors, lights }) => {
     });
   });
 };
-
 export const setLightsDefault = () => {
   // TODO: set all lights to that warm default color that I like
   axios.put('/lifx', {

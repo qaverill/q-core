@@ -7,9 +7,9 @@ import stringSimilarity from 'string-similarity';
 let tokenSource;
 const TYPES = ['track', 'artist', 'album'];
 // ----------------------------------
-// API CALLS
+// REQUESTS
 // ----------------------------------
-export const getCPT = () => new Promise((resolve, reject) => {
+export const getCurrentlyPlayingTrack = () => new Promise((resolve, reject) => {
   axios.get('/spotify', { params: { url: 'https://api.spotify.com/v1/me/player/currently-playing' } })
     .then(response => resolve(Object.keys(response.data).includes('item') ? response.data : null))
     .catch(error => {

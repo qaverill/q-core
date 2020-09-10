@@ -1,16 +1,16 @@
 /* eslint-disable no-undef */
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
-
 import { dashboardTheme } from '../../../packages/colors';
 import { Slate } from '../../../packages/core';
-
 import LightSwitch from './LightSwitch';
 import SpotifyCycle from './SpotifyCycle';
 import WaitSpinner from '../../../components/WaitSpinner';
 import { getLights } from '../../../api/lifx';
-import { getCPT } from '../../../api/spotify';
-
+import { getCurrentlyPlayingTrack } from '../../../api/spotify';
+// ----------------------------------
+// STYLES
+// ----------------------------------
 const LightsStyled = styled(Slate)`
   height: 50%;
   width: 50%;
@@ -25,23 +25,29 @@ const LightsStyled = styled(Slate)`
     outline: 9999px solid rgba(0,0,0,0.65);
   }
 `;
-
 const LightSwitches = styled.div`
   display: flex;
 `;
-
+// ----------------------------------
+// COMPONENTS
+// ----------------------------------
 const LightHub = () => {
-  const [lights, setLights] = useState(null);
-  const [cpt, setCPT] = useState(null);
+  const [lights, setLights] = React.useState(null);
+  const [currentlyPlayingTrack, setCurrentlyPlayingTrack] = React.useState(null);
+  const albumCover = currentlyPlayingTrack && currentlyPlayingTrack.item.album.images[0].url;
 
-  useEffect(() => {
-    const processLights = async () => setLights(await getLights());
+  React.useEffect(() => {
+    async function processLights() {
+      setLights(await getLights());
+    }
     processLights();
   }, []);
 
-  useEffect(() => {
-    const processCPT = async () => setCPT(await getCPT());
-    processCPT();
+  React.useEffect(() => {
+    async function processCurrentlyPlayingTrack() {
+      setCurrentlyPlayingTrack(await getCurrentlyPlayingTrack());
+    }
+    processCurrentlyPlayingTrack();
   }, []);
 
   return (
@@ -51,8 +57,8 @@ const LightHub = () => {
           ? lights.map(light => <LightSwitch light={light} key={light.label} />)
           : <WaitSpinner color={dashboardTheme.tertiary} />}
       </LightSwitches>
-      {cpt
-        ? <SpotifyCycle lights={lights} albumCover={cpt.item.album.images[0].url} />
+      {currentlyPlayingTrack
+        ? <SpotifyCycle lights={lights} albumCover={albumCover} />
         : <WaitSpinner color={dashboardTheme.tertiary} />}
     </LightsStyled>
   );

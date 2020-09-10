@@ -24,7 +24,7 @@ const writeDocument = ({ collection, _id, document }) => new Promise((resolve, r
     });
 });
 // ----------------------------------
-// API CALLS
+// REQUESTS
 // ----------------------------------
 const collection = 'metadata';
 const _id = 'settings';

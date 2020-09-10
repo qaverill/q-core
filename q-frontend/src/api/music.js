@@ -2,6 +2,9 @@ import axios from 'axios';
 import { stringify } from 'query-string';
 import { NotificationManager } from 'react-notifications';
 
+// ----------------------------------
+// REQUESTS
+// ----------------------------------
 export const getTopPlays = (query) => new Promise((resolve, reject) => {
   axios.get(`/music/topPlays?${stringify(query)}`)
     .then(results => resolve(results.data))
@@ -11,7 +14,6 @@ export const getTopPlays = (query) => new Promise((resolve, reject) => {
       reject(error);
     });
 });
-
 export const getDailyPlayTime = (query) => new Promise((resolve, reject) => {
   axios.get(`/music/dailyPlayTime?${stringify(query)}`)
     .then(results => resolve(results.data))

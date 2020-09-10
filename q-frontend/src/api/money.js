@@ -6,7 +6,7 @@ import { NotificationManager } from 'react-notifications';
 // CONSTANTS
 // ----------------------------------
 // ----------------------------------
-// API CALLS
+// REQUESTS
 // ----------------------------------
 export const getTransactions = query => new Promise((resolve, reject) => {
   // query = { start, end, filter }
