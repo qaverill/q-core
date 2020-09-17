@@ -44,46 +44,46 @@ const isFactNeeded = ({ timestamp, amount, description }) => (
 );
 const parseRow = (line, file) => {
   const row = cleanCSVRow(line).split(',');
-  let fact;
-  switch (file) {
-    case 'mvcu.csv':
+  let fact = null;
+  if (file === 'mvcu_old.csv') {
+    fact = {
+      account: row[0].indexOf('S0020') > -1 ? 'mvcu-checkings' : 'mvcu-savings',
+      timestamp: dateStringToTimestamp(row[1]),
+      amount: roundNumber2Decimals(row[2].indexOf('(') > -1 ? parseFloat(row[2].replace(/[)$(]/g, '')) * -1 : parseFloat(row[2].replace('$', ''))),
+      description: row[5],
+    };
+  } else if (file === 'citi.csv') {
+    fact = {
+      account: 'citi-credit',
+      timestamp: dateStringToTimestamp(row[1]),
+      amount: roundNumber2Decimals(row[3] !== '' ? parseFloat(row[3]) * -1 : parseFloat(row[4]) * -1),
+      description: row[2].replace(/"/g, ''),
+    };
+  } else if (file === 'venmo.csv') {
+    if (typeof parseInt(row[1], 10) === 'number' && row[3] !== 'Standard Transfer' && row[8] != null) {
+      const type = row[8].indexOf('+') > -1 ? 'from' : 'to';
+      const description = `Venmo ${type} ${row[6] === 'Quinn Averill' ? row[7] : row[6]}: ${row[5]}`;
       fact = {
-        account: row[0].indexOf('S0020') > -1 ? 'mvcu-checkings' : 'mvcu-savings',
-        timestamp: dateStringToTimestamp(row[1]),
-        amount: roundNumber2Decimals(row[2].indexOf('(') > -1 ? parseFloat(row[2].replace(/[)$(]/g, '')) * -1 : parseFloat(row[2].replace('$', ''))),
-        description: row[5],
+        account: 'venmo',
+        timestamp: dateStringToTimestamp(row[2]),
+        amount: roundNumber2Decimals(parseFloat(row[8].replace(/[ $+]/g, ''))),
+        description,
       };
-      fact.tags = tagTransaction(fact);
-      fact._id = generateFactId(fact);
-      return fact;
-    case 'citi.csv':
-      fact = {
-        account: 'citi-credit',
-        timestamp: dateStringToTimestamp(row[1]),
-        amount: roundNumber2Decimals(row[3] !== '' ? parseFloat(row[3]) * -1 : parseFloat(row[4]) * -1),
-        description: row[2].replace(/"/g, ''),
-      };
-      fact.tags = tagTransaction(fact);
-      fact._id = generateFactId(fact);
-      return fact;
-    case 'venmo.csv':
-      if (typeof parseInt(row[1], 10) === 'number' && row[3] !== 'Standard Transfer' && row[8] != null) {
-        const type = row[8].indexOf('+') > -1 ? 'from' : 'to';
-        const description = `Venmo ${type} ${row[6] === 'Quinn Averill' ? row[7] : row[6]}: ${row[5]}`;
-        fact = {
-          account: 'venmo',
-          timestamp: dateStringToTimestamp(row[2]),
-          amount: roundNumber2Decimals(parseFloat(row[8].replace(/[ $+]/g, ''))),
-          description,
-        };
-        fact.tags = tagTransaction(fact);
-        fact._id = generateFactId(fact);
-        return fact;
-      }
-      return null;
-    default:
-      return null;
+    }
+  } else if (file === 'mvcu.csv') {
+    fact = {
+      account: 'mvcu',
+      timestamp: dateStringToTimestamp(row[3]),
+      amount: roundNumber2Decimals(parseFloat(row[6].replace(/"/g, '').slice(0, -3))),
+      description: row[9],
+    };
   }
+
+  if (fact) {
+    fact.tags = tagTransaction(fact);
+    fact._id = generateFactId(fact);
+  }
+  return fact;
 };
 const parseTransactionsFacts = (data, file) => (
   data.split('\n')
@@ -108,6 +108,7 @@ module.exports = {
     return [
       ...await importFile('citi.csv'),
       ...await importFile('mvcu.csv'),
+      ...await importFile('mvcu_old.csv'),
       ...await importFile('venmo.csv'),
     ];
   },

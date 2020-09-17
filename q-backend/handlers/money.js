@@ -63,7 +63,7 @@ module.exports = {
             );
           })
           .catch((e) => {
-            console.log(e);
+            console.error(e);
             response.status(400).send(e)
           });
       })

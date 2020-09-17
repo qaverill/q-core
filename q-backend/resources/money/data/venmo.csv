@@ -1,5 +1,4 @@
 Username,ID,Datetime,Type,Status,Note,From,To,Amount (total),Amount (fee),Funding Source,Destination,Beginning Balance,Ending Balance,Statement Period Venmo Fees,Year to Date Venmo Fees,Disclaimer
-likeTheMightyQuinn,,,,,,,,,,,,$100.78,,,,
 ,2821531217092935705,2019-08-29T23:18:51,Charge,Complete,Router,Sam Skinner,Quinn Averill,- $16.67,,Merrimack Valley Fcu Personal Checking *3515,,,,,,
 ,2821531249431019682,2019-08-29T23:18:55,Charge,Complete,Treehouse,Tyler Schoppe,Quinn Averill,- $16.70,,Merrimack Valley Fcu Personal Checking *3515,,,,,,
 ,2822995016899625579,2019-08-31T23:47:10,Payment,Complete,CRUSHHHHHHHGG,Quinn Averill,Nick Rose,- $8.00,,Merrimack Valley Fcu Personal Checking *3515,,,,,,
@@ -296,33 +295,8 @@ likeTheMightyQuinn,,,,,,,,,,,,$100.78,,,,
 ,3093791262625497766,2020-09-08T14:50:58,Charge,Complete,Coast,Sam Skinner,Quinn Averill,- $20.00,,Venmo balance,,,,,Venmo,,
 ,3094018194269012879,2020-09-08T22:21:50,Charge,Complete,Costco (tomatoes & dishwasher detergent),Adriana Kammerer,Quinn Averill,- $6.49,,Venmo balance,,,,,Venmo,,
 ,3094695142678856044,2020-09-09T20:46:49,Payment,Complete,Thanka,Quinn Averill,Kyle Flanagan,- $100.00,,Merrimack Valley Fcu Personal Checking *3515,,,,,Venmo,,
-,,,,,,,,,,,,,$2.92,,,
-,,,,,,,,,,,,,,$0.00,,
-,,,,,,,,,,,,,,,$0.00,
-,,,,,,,,,,,,,,,,"In case of errors or questions about your 
-        electronic transfers:
-        - Telephone us at 855-812-4430
-        - Write the Venmo Error Resolution Department at 
-          222  W. Merchandise Plaza, Suite 800, Chicago, IL 60654; or
-        - Write to us through the Contact Us page 
-          (https://help.venmo.com/hc/en-us/requests/new)
-        Contact us as soon as you can if you think your statement or 
-        receipt is wrong or if you need more information about 
-        a transfer on the statement or receipt. We must hear from 
-        you no later than 60 days after we sent you the FIRST 
-        statement on which the error or problem appeared.
-        1. Tell us your name and username or phone number.
-        2. Describe the error or the transfer you are unsure about, 
-           and explain as clearly as you can why you believe it is 
-           an error or why you need more information.
-        3. Tell us the dollar amount of the suspected error.
-        We will investigate your complaint and will correct any 
-        error promptly. If we take more than 10 business days to do 
-        this, we will credit your account for the amount you think 
-        is in error, so that you will have the use of the money 
-        during the time it takes us to complete our investigation.
-        In case of errors or questions about your transactions made 
-        with your Venmo Mastercard, please consult your 
-        Cardholder Agreement 
-        (https://venmo.com/legal/bancorp-cardholder-agreement).
-        "
+,3094946408801763349,2020-09-10T05:06:02,Charge,Complete,Wifi,Quinn Averill,Sam Skinner,+ $13.33,,,Venmo balance,,,,Venmo,,
+,3094946450895798864,2020-09-10T05:06:07,Charge,Complete,Darwins,Quinn Averill,Sam Skinner,+ $12.00,,,Venmo balance,,,,Venmo,,
+,3095200481861960203,2020-09-10T13:30:50,Charge,Complete,Wifi,Quinn Averill,Tyler Schoppe,+ $13.33,,,Venmo balance,,,,Venmo,,
+,3095283531287363673,2020-09-10T16:15:50,Payment,Complete,Hatching me a speed egg,Quinn Averill,Timothy Stump,- $405.00,,Merrimack Valley Fcu Personal Checking *3515,,,,,Venmo,,
+,3096975309501628938,2020-09-13T00:17:06,Payment,Complete,You ten sills,Quinn Averill,Molly Mercier,- $8.00,,Venmo balance,,,,,Venmo,,
