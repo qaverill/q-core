@@ -1,7 +1,7 @@
 const R = require('ramda');
 const { createQuery } = require('./internal');
 const { getDocs, postDocs, putDoc } = require('../resources/methods/internal');
-const { ingestTransactions, getBiMonthlyAnalysis, tagTransaction } = require('../resources/money');
+const { compileTransactions, getBiMonthlyAnalysis, tagTransaction } = require('../resources/money');
 const { q_logger } = require('../q-lib/q-logger');
 // ----------------------------------
 // HELPERS
@@ -19,13 +19,14 @@ module.exports = {
         getDocs({ collection: paybackCollection })
           .then(data => {
             const paybacks = Array.isArray(data) ? data : [data];
-            response.status(200).json(ingestTransactions(transactions, paybacks));
+            response.status(200).json(compileTransactions(transactions, paybacks));
           })
           .catch(() => response.status(400).send());
       })
       .catch(() => response.status(400).send());
   },
-  handleTagAllTransactionsRequest: async ({ response }) => {
+  handleReingestRequest: async ({ response }) => {
+    // TODO: this func doesn't do what it needs to do, WIP
     getDocs({ collection: transactionCollection })
       .then(transactions => {
         const updatedTransactions = [];
@@ -59,7 +60,7 @@ module.exports = {
           .then(data => {
             const paybacks = Array.isArray(data) ? data : [data];
             response.status(200).json(
-              getBiMonthlyAnalysis(ingestTransactions(transactions, paybacks))
+              getBiMonthlyAnalysis(compileTransactions(transactions, paybacks))
             );
           })
           .catch((e) => {

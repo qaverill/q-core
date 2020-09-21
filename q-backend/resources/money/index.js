@@ -1,13 +1,11 @@
-const { importTransactionData } = require('./importingTransactions');
-const { tagTransaction } = require('./taggingTransactions');
-const { ingestTransactions } = require('./ingestingTransactions');
+const { tagTransaction } = require('../../ingesting/money/tagging');
+const { compileTransactions } = require('./compilingTransactions');
 const { getBiMonthlyAnalysis } = require('./analyzingTransactions');
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  importTransactionData,
   tagTransaction,
-  ingestTransactions,
+  compileTransactions,
   getBiMonthlyAnalysis,
 };

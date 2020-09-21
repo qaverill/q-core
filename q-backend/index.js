@@ -8,7 +8,7 @@ const { q_logger } = require('./q-lib/q-logger');
 const { validateConfig, port } = require('./config');
 const { logIncomingRequest } = require('./gates');
 const { autoRefreshTokens } = require('./jobs/tokenRefresh');
-const { autoMineData } = require('./jobs/dataMine');
+const { ingest } = require('./jobs/ingesting');
 const {
   makeGetEndpoint,
   makePostEndpoint,
@@ -25,7 +25,7 @@ const {
 } = require('./handlers/internal');
 const {
   handleGetTransactionsRequest,
-  handleTagAllTransactionsRequest,
+  handleReingestRequest,
   handlePaybackTransactionRequest,
   handleGetBiMonthlyAnalysisRequest
 } = require('./handlers/money');
@@ -33,6 +33,7 @@ const {
   handleMusicTopPlaysRequest,
   handleDailyPlayTimeRequest
 } = require('./handlers/music');
+const { algorithm } = require('./tests/taggingTransactions_test');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -72,8 +73,8 @@ makePutEndpoint({ routes, path }, handleInternalPutRequest);
 path = '/money/transactions';
 makeGetEndpoint({ routes, path }, handleGetTransactionsRequest);
 
-path = '/money/tagAllTransactions';
-makeGetEndpoint({ routes, path }, handleTagAllTransactionsRequest);
+path = '/money/reingest';
+makeGetEndpoint({ routes, path }, handleReingestRequest);
 
 path = '/money/paybackTransaction';
 makePostEndpoint({ routes, path }, handlePaybackTransactionRequest);
@@ -94,9 +95,9 @@ server.listen(port, () => {
   q_logger.info(`Started Q on port ${port}`);
   autoRefreshTokens()
     .then(() => {
-      autoMineData({ collection: 'listens', interval: 1800000 });
-      autoMineData({ collection: 'saves', interval: 2600000 });
-      autoMineData({ collection: 'transactions' });
+      ingest({ collection: 'listens', interval: 1800000 });
+      ingest({ collection: 'saves', interval: 2600000 });
+      ingest({ collection: 'transactions' });
     })
     .catch(() => {
       q_logger.error('Cannot start refresh tokens job, killing server...');

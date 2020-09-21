@@ -1,4 +1,4 @@
-const { testTagTransaction } = require('../resources/money/taggingTransactions');
+const { testTagTransaction } = require('../ingesting/money/tagging');
 // ----------------------------------
 // MOCK DATA
 // ----------------------------------
@@ -41,7 +41,7 @@ const tests = [
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  path: './resources/banks/autoTagDoc',
+  path: '/resources/money/taggingTransactions',
   algorithm: (i) => testTagTransaction(tests[i], tags, null),
   tests,
 };

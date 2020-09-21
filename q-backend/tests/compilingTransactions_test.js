@@ -1,4 +1,4 @@
-const { ingestTransactions } = require('../resources/money');
+const { compileTransactions } = require('../resources/money');
 // ----------------------------------
 // MOCKERS
 // ----------------------------------
@@ -51,7 +51,7 @@ const tests = [
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  path: './resources/banks/autoTagDoc',
-  algorithm: () => ingestTransactions(transactions, paybacks),
+  path: '/resources/money::compileTransactions',
+  algorithm: () => compileTransactions(transactions, paybacks),
   tests,
 };

@@ -7,7 +7,7 @@ const { roundNumber2Decimals } = require('../../utils');
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  ingestTransactions: (transactions, paybacks) => {
+  compileTransactions: (transactions, paybacks) => {
     const froms = R.map(R.prop('from'), paybacks);
     const tos = R.map(R.prop('to'), paybacks);
     function ingestedTransaction(transaction) {

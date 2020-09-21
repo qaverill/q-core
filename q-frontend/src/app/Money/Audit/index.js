@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { NotificationManager } from 'react-notifications';
-import { getTransactions, runTransactionTagger } from '../../../api/money';
+import { getTransactions, reingestTransactions } from '../../../api/money';
 import { useStore } from '../../../store';
 import { selectMoneyStore } from '../../../store/selectors';
 import { moneyTheme } from '../../../packages/colors';
@@ -32,7 +32,6 @@ const Audit = () => {
   const { state } = useStore();
   const { start, end, filter } = selectMoneyStore(state);
   const [transactions, setTransactions] = React.useState(null);
-  const [isTaggingTransactions, setIsTaggingTransactions] = React.useState(false);
   const [paybackTransaction, setPaybackTransaction] = React.useState(null);
   async function fetchTransactions() {
     setTransactions(await getTransactions({ start, end, filter }));
@@ -44,25 +43,22 @@ const Audit = () => {
     }
     callFetchTransactions();
   }, [start, end, filter]);
-  async function tagTransactions() {
-    setIsTaggingTransactions(true);
-    const updatedTransactions = await runTransactionTagger(transactions);
+  async function reingest() {
+    setTransactions(null);
+    const updatedTransactions = await reingestTransactions(transactions);
     if (updatedTransactions.length > 0) {
-      setTransactions(null);
-      fetchTransactions();
+      setTransactions(updatedTransactions);
       NotificationManager.success(`Updated the tags of ${updatedTransactions.length} transactions`, '👍');
     } else {
-      NotificationManager.info('No transactions were updated');
+      NotificationManager.info('No transactions were updated', 'RESTART SERVER');
     }
-    setIsTaggingTransactions(false);
   }
   return (
     <AuditSlate rimColor={moneyTheme.secondary}>
       <AuditHeader>
-        {transactions && !isTaggingTransactions && <Button onClick={tagTransactions}>|</Button>}
-        {transactions && isTaggingTransactions && <WaitSpinner color={moneyTheme.tertiary} />}
+        {transactions && <Button onClick={reingest}>Reingest</Button>}
       </AuditHeader>
-      {!transactions && <WaitSpinner />}
+      {!transactions && <WaitSpinner color={moneyTheme.tertiary} />}
       {transactions && transactions.map(transaction => (
         <Transaction
           key={transaction._id}

@@ -1,9 +1,9 @@
 const crypto = require('crypto');
 const R = require('ramda');
-const { readContentsOfFile } = require('../methods/external');
+const { readContentsOfFile } = require('../../resources/methods/external');
 const { dateStringToTimestamp } = require('../../utils/time');
 const { roundNumber2Decimals } = require('../../utils');
-const { tagTransaction } = require('./taggingTransactions');
+const { tagTransaction } = require('./tagging');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -17,6 +17,7 @@ const unneededFactDescriptions = [
   'PAYMENT THANK YOU',
   'Withdrawal CITI CARD ONLINE',
   'Transfer Deposit From Share',
+  'VENMO TYPE: PAYMENT ID:',
 ];
 const cleanCSVRow = row => {
   let editableRow = row;
@@ -95,7 +96,7 @@ const parseTransactionsFacts = (data, file) => (
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  importTransactionData: async () => {
+  getTransactionData: async () => {
     async function importFile(file) {
       const rawFacts = await readContentsOfFile(file);
       return (

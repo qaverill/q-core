@@ -45,7 +45,7 @@ module.exports = {
     });
   }),
   readContentsOfFile: file => new Promise((resolve, reject) => {
-    fs.readFile(path.join(__dirname, `../money/data/${file}`), 'UTF-8', (error, data) => {
+    fs.readFile(path.join(__dirname, `../../ingesting/money/data/${file}`), 'UTF-8', (error, data) => {
       if (!error) {
         resolve(data);
       } else {

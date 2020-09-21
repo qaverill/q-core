@@ -1,4 +1,4 @@
-const { hitGetEndpoint, hitPostEndpoint } = require('./methods/external');
+const { hitGetEndpoint, hitPostEndpoint } = require('../resources/methods/external');
 const { dateStringToTimestamp } = require('../utils/time');
 const { q_logger } = require('../q-lib/q-logger');
 

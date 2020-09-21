@@ -18,11 +18,11 @@ export const getTransactions = query => new Promise((resolve, reject) => {
       reject(error);
     });
 });
-export const runTransactionTagger = () => new Promise((resolve, reject) => {
-  axios.get('/money/tagAllTransactions')
+export const reingestTransactions = () => new Promise((resolve, reject) => {
+  axios.get('/money/reingest')
     .then(R.pipe(R.prop('data'), resolve))
     .catch(error => {
-      NotificationManager.error('Failed to run auto tag on all transactions');
+      NotificationManager.error('Failed to reingest transactions');
       console.error(error);
       reject(error);
     });

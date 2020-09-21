@@ -1,10 +1,10 @@
 const { q_logger } = require('../q-lib/q-logger');
 const tagTransaction = require('./taggingTransactions_test');
-const ingestTransaction = require('./ingestingTransactions_test');
+const compileTransaction = require('./compilingTransactions_test');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const runTestsFor = ({ tests, algorithm, path }) => {
+const runTests = ({ tests, algorithm, path }) => {
   const failedTests = tests
     .map((test, idx) => ({ ...test, actual: algorithm(idx) }))
     .filter(({ actual, expected }) => JSON.stringify(actual) !== JSON.stringify(expected));
@@ -20,6 +20,6 @@ const runTestsFor = ({ tests, algorithm, path }) => {
 // EXPORTS
 // ----------------------------------
 module.exports = [
-  () => runTestsFor(tagTransaction),
-  () => runTestsFor(ingestTransaction),
+  () => runTests(tagTransaction),
+  () => runTests(compileTransaction),
 ];

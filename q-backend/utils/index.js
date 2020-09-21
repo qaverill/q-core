@@ -43,4 +43,5 @@ module.exports = {
     return requestOptions;
   },
   roundNumber2Decimals: num => +((num).toFixed(2)),
+  getMinTimestamp: objectsWithTimestampProp => Math.min(...objectsWithTimestampProp.map(item => item.timestamp)), // ramda me
 };
