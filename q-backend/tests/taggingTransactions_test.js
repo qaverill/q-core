@@ -41,7 +41,7 @@ const tests = [
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  path: '/resources/money/taggingTransactions',
+  path: '/resources/money::taggingTransactions',
   algorithm: (i) => testTagTransaction(tests[i], tags, null),
   tests,
 };

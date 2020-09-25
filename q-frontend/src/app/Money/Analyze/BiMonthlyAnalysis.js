@@ -43,8 +43,8 @@ const roundDomainMax = dataMax => Math.ceil(dataMax / 100) * 100;
 // STYLES
 // ----------------------------------
 const TopChartsDiv = styled.div`
-width: 100%;
-height: 100%;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
 `;
@@ -60,13 +60,13 @@ const BiMonthlyAnalysis = () => {
       setAnalyses([]);
       const query = { start, end, filter };
       const data = await getBiMonthlyAnalysis(query);
+      console.log(data);
       setAnalyses(data);
     }
     fetchGraphData();
   }, [start, end, filter]);
   const graphData = formatGraphData(analyses);
   const tagsInGraph = R.uniq(R.flatten(R.map(getKeyTags, analyses)));
-  console.log('here')
   return (
     <TopChartsDiv>
       {R.isEmpty(analyses) && <WaitSpinner message="Loading Money..." />}

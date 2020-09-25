@@ -6,7 +6,7 @@ import { ONE_EPOCH_DAY, times } from '../packages/utils';
 // ----------------------------------
 const startOfDay = new Date();
 startOfDay.setHours(0, 0, 0, 0);
-const MUSIC_START = Math.round(startOfDay.getTime() / 1000) - 3 * ONE_EPOCH_DAY;
+const MUSIC_START = Math.round(startOfDay.getTime() / 1000) - 2 * ONE_EPOCH_DAY;
 const MUSIC_END = Math.round(new Date().getTime() / 1000);
 const MONEY_START = times.firstOfCurrentMonth();
 const MONEY_END = times.now();

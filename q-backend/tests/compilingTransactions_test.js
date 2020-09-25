@@ -1,48 +1,18 @@
 const { compileTransactions } = require('../resources/money');
-// ----------------------------------
-// MOCKERS
-// ----------------------------------
-function mockTransaction(_id, amount) {
-  return ({ _id, amount, timestamp: 1596167370 - _id });
-}
-function mockPayback(from, to, amount) {
-  return ({ from, to, amount });
-}
-// ----------------------------------
-// DATA
-// ----------------------------------
-const transactions = [
-  mockTransaction(1, 100),
-  mockTransaction(2, -30),
-  mockTransaction(3, -20),
-  mockTransaction(4, 200),
-  mockTransaction(5, 50),
-  mockTransaction(6, -5),
-  mockTransaction(7, -2),
-  mockTransaction(8, -500),
-  mockTransaction(9, -300),
-  mockTransaction(10, 20),
-  mockTransaction(11, -20),
-  mockTransaction(12, -40),
-];
-const paybacks = [
-  mockPayback(1, 8, 100),
-  mockPayback(4, 8, 200),
-  mockPayback(10, 2, 20),
-];
+const { transactions, paybacks, mockTransaction } = require('./mocks');
 // ----------------------------------
 // TESTS
 // ----------------------------------
 const expected = [
-  mockTransaction(12, -40),
-  mockTransaction(11, -20),
-  mockTransaction(9, -300),
-  mockTransaction(8, -200),
-  mockTransaction(7, -2),
-  mockTransaction(6, -5),
-  mockTransaction(5, 50),
-  mockTransaction(3, -20),
-  mockTransaction(2, -10),
+  mockTransaction(2, -10, 2, ['c']),
+  transactions[2],
+  transactions[4],
+  transactions[5],
+  transactions[6],
+  mockTransaction(8, -200, 8, ['a']),
+  transactions[8],
+  transactions[10],
+  transactions[11],
 ];
 const tests = [
   { transactions, paybacks, expected },

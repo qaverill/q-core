@@ -1,6 +1,7 @@
 const { q_logger } = require('../q-lib/q-logger');
 const tagTransaction = require('./taggingTransactions_test');
 const compileTransaction = require('./compilingTransactions_test');
+const analyzeTransaction = require('./analyzingTransactions_test');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -22,4 +23,5 @@ const runTests = ({ tests, algorithm, path }) => {
 module.exports = [
   () => runTests(tagTransaction),
   () => runTests(compileTransaction),
+  () => runTests(analyzeTransaction),
 ];
