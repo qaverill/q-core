@@ -47,3 +47,15 @@ export const setLightsDefault = () => {
     },
   });
 };
+export const setAllLightsToColor = color => {
+  // TODO: set all lights to that warm default color that I like
+  axios.put('/lifx', {
+    url: 'https://api.lifx.com/v1/lights/all/state?group=Q',
+    body: {
+      power: 'on',
+      brightness: 1,
+      color,
+      fast: true,
+    },
+  });
+};

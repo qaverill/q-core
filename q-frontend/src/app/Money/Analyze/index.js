@@ -5,7 +5,7 @@ import BiMonthlyAnalysis from './BiMonthlyAnalysis';
 import Overview from './Overview';
 import { Slate, SlateContent } from '../../../packages/core';
 import { moneyTheme } from '../../../packages/colors';
-import SlateSelector from '../../../components/SlateSelector';
+import { SlateSelector } from '../../../components/Selectors';
 // ----------------------------------
 // HELPERS
 // ----------------------------------

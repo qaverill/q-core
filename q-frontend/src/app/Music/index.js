@@ -8,7 +8,7 @@ import { actions, useStore } from '../../store';
 import { selectMusicStore, selectSettings } from '../../store/selectors';
 import { musicTheme } from '../../packages/colors';
 import { Slate, SlateContent } from '../../packages/core';
-import SlateSelector from '../../components/SlateSelector';
+import { SlateSelector } from '../../components/Selectors';
 import { searchSpotify } from '../../api/spotify';
 // ----------------------------------
 // HELPERS

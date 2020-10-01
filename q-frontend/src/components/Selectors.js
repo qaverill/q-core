@@ -5,6 +5,8 @@ import { LeftArrow, RightArrow, H2, GAP_SIZE } from '../packages/core';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
+const getLeftIdx = (idx, array) => (idx + 1 > array.length - 1 ? 0 : idx + 1);
+const getRightIdx = (idx, array) => (idx - 1 < 0 ? array.length - 1 : idx - 1);
 // ----------------------------------
 // STYLES
 // ----------------------------------
@@ -15,13 +17,18 @@ const ArraySelectorContainer = styled.div`
   align-items: center;
   padding: ${GAP_SIZE}px 0px;
 `;
+const Image = styled.img`
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+`;
 // ----------------------------------
 // COMPONENTS
 // ----------------------------------
-const SlateSelector = ({ idx, pages, onChange = () => {} }) => {
+export const SlateSelector = ({ idx, pages, onChange = () => {} }) => {
   const { url } = useRouteMatch();
-  const leftIdx = idx + 1 > pages.length - 1 ? 0 : idx + 1;
-  const rightIdx = idx - 1 < 0 ? pages.length - 1 : idx - 1;
+  const leftIdx = getLeftIdx(idx, pages);
+  const rightIdx = getRightIdx(idx, pages);
   const existingUrl = url[url.length - 1] === '/' ? `${url}` : `${url}/`;
   const leftSlateLink = `${existingUrl}${pages[leftIdx]}`;
   const rightSlateLink = `${existingUrl}${pages[rightIdx]}`;
@@ -38,4 +45,14 @@ const SlateSelector = ({ idx, pages, onChange = () => {} }) => {
   );
 };
 
-export default SlateSelector;
+export const ImageSelector = ({ idx, images, onChange = () => {} }) => {
+  const leftIdx = getLeftIdx(idx, images);
+  const rightIdx = getRightIdx(idx, images);
+  return (
+    <ArraySelectorContainer key={images[idx]}>
+      <LeftArrow onClick={() => onChange(leftIdx)} />
+      <Image src={images[idx]} alt={images[idx]} />
+      <RightArrow onClick={() => onChange(rightIdx)} />
+    </ArraySelectorContainer>
+  );
+};

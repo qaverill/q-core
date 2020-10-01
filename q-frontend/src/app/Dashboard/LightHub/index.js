@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 import * as React from 'react';
+import * as R from 'ramda';
 import styled from 'styled-components';
 import { dashboardTheme } from '../../../packages/colors';
 import { Slate } from '../../../packages/core';
@@ -8,12 +9,11 @@ import SpotifyCycle from './SpotifyCycle';
 import WaitSpinner from '../../../components/WaitSpinner';
 import { getLights } from '../../../api/lifx';
 import { getCurrentlyPlayingTrack } from '../../../api/spotify';
+import ModeSelector from './ModeSelector';
 // ----------------------------------
 // STYLES
 // ----------------------------------
 const LightsStyled = styled(Slate)`
-  height: 50%;
-  width: 50%;
   margin: 10px;
   border: 5px solid ${dashboardTheme.secondary};
   display: flex;
@@ -50,16 +50,16 @@ const LightHub = () => {
     processCurrentlyPlayingTrack();
   }, []);
 
+  if (R.isNil(lights)) return null;
   return (
     <LightsStyled>
       <LightSwitches>
-        {lights
-          ? lights.map(light => <LightSwitch light={light} key={light.label} />)
-          : <WaitSpinner color={dashboardTheme.tertiary} />}
+        {lights.map(light => <LightSwitch light={light} key={light.label} />)}
       </LightSwitches>
       {currentlyPlayingTrack
         ? <SpotifyCycle lights={lights} albumCover={albumCover} />
         : <WaitSpinner color={dashboardTheme.tertiary} />}
+      {lights && <ModeSelector lights={lights} />}
     </LightsStyled>
   );
 };

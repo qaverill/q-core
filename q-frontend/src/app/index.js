@@ -6,7 +6,7 @@ import { SlateContent } from '../packages/core';
 import Music from './Music';
 import Money from './Money';
 import Dashboard from './Dashboard';
-import SlateSelector from '../components/SlateSelector';
+import { SlateSelector } from '../components/Selectors';
 // ----------------------------------
 // HELPERS
 // ----------------------------------

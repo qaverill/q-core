@@ -5,7 +5,7 @@ import Analyze from './Analyze';
 import Audit from './Audit';
 import ChronologicalSearchBar from '../../components/ChronologicalSearchBar';
 import { Slate, SlateContent } from '../../packages/core';
-import SlateSelector from '../../components/SlateSelector';
+import { SlateSelector } from '../../components/Selectors';
 import { moneyTheme } from '../../packages/colors';
 import { actions, useStore } from '../../store';
 import { selectSettings, selectMoneyStore } from '../../store/selectors';
