@@ -5,7 +5,7 @@
       "sushi": ["SUSHI", "THELONIOUS MONKFI", "SAKANA", "TAKEMURA RESTAURANT"],
       "ramen": ["GRUBHUBHOKKAIDORAMENS"],
       "indian": ["GRABULL INC", "Indian from like two", "Schoppe: Desi", "Mouse food"],
-      "thai": ["Skinner: Thai", "TST* CHICK CHICK BOOM!", "Spicies", "Thai 🍲", "THELONIOUS MONKFI CAMBRIDGE", "9 TASTES CAMBRIDGE", "THAI CUSINE", "THAI CUISINE"],
+      "thai": ["THAI FOOD", "Skinner: Thai", "TST* CHICK CHICK BOOM!", "Spicies", "Thai 🍲", "THELONIOUS MONKFI CAMBRIDGE", "9 TASTES CAMBRIDGE", "THAI CUSINE", "THAI CUISINE"],
       "foodies": ["Orfanos", "U pays at du pays"],
       "chinese": ["DUMPLING HOUSE"],
       "italian": ["Skinner: Basta", "Shorr: Pasta Pasta", "ovan: Sub", "ALFREDOS I* ALFREDOS", "Spoodles", "BASTA PASTA"],
@@ -41,13 +41,14 @@
       "costco": ["Costco", "👏🏻 sponges 👏🏻 and 👏🏻 stock 👏🏻"],
       "convenienceSores": ["UNIVERSITY MARKET CAMBRIDGE"],
       "shaws": ["STAR MARKET", "SHAWS"],
-      "surrey": ["ice cream SURREY", "milk SURREY"]
+      "surrey": ["ice cream SURREY", "milk SURREY"],
+      "target": ["groceries TARrGET"]
     },
     "drunkFood": ["TST* EL JEFE", "ALEPPO PALACE", "DOG HOUSE BOSTON"],
     "snacks": ["snacks PLAISTOW RTE", "snack SURREY ST", "Mercier: Chocolate bar", "CVS/PHARMACY #00240", "PARIS BAGUETTE E15", "TATTE BAKERY"]
   },
   "drinks": {
-    "coffee": ["me STARBUCKS STORE", "ATOMIC BEAN CA Cambridge", "Coofie", "DUNKIN", "PAVEMENT COFFE", "DARWIN S LTD"],
+    "coffee": ["coffee PACIFIC STREET", "me STARBUCKS STORE", "ATOMIC BEAN CA Cambridge", "Coofie", "DUNKIN", "PAVEMENT COFFE", "DARWIN S LTD"],
     "tea": ["STASH TEA"],
     "alcohol": {
       "brewery": ["Leap beer", "LAMPLIGHTER BREWIN", "AUSTIN STREET BREWERY", "DEFINITIVE BREWING", "ALLAGASH BREWING", "TRILLIUM BREWING"],
@@ -79,10 +80,10 @@
     "airFilter": ["air filters AMZN", "GI8IM8UE3"],
     "cleaningSupplies": ["mouth guard cleaner", "Drain juice"],
     "pharmacy": ["RITE AID STORE"],
-    "furniture": ["MO75G5MB0", "W78VQ4M33", "HE6EP2P83", "7V6RQ99T3", "WS8OK6P73", "Q85IO03M3", "X399867X3", "8Q9QG9SJ3", "Center Chanel Holder"],
-    "gas": ["EXXONMOBIL", "CUMBERLAND FARMS"],
+    "furniture": ["curtains AMZN", "curtain rod AMZN", "window blinds", "lumbar support AMZN", "MO75G5MB0", "W78VQ4M33", "HE6EP2P83", "7V6RQ99T3", "WS8OK6P73", "Q85IO03M3", "X399867X3", "8Q9QG9SJ3", "Center Chanel Holder"],
+    "gas": ["EXXONMOBIL", "CUMBERLAND FARMS", "SHELL OIL"],
     "laundry": ["Qworters", "Quarters", "Kwarters"],
-    "rent": ["nner: Ivy Realty", "Schoppe: Beans", "Skinner: Blowjob", "Roont", "ACH Withdrawal BOSTON LUXURY"],
+    "rent": ["Skinner: Rent october", "nner: Ivy Realty", "Schoppe: Beans", "Skinner: Blowjob", "Roont", "ACH Withdrawal BOSTON LUXURY"],
     "insurance": {
       "renters": ["LEMONADE I* LEMONADE"]
     },
@@ -90,7 +91,7 @@
       "products": {
         "hair": ["WN0GX5B13", "OT1LO79C3", "shaver AMAZON", "jojoba oil AMZN", "shampoo Amazon"],
         "skin": ["band aids Amazon", "L66H83GF3", "MJ58B6ZO0 sunscreen", "patchouli AMZN"],
-        "teeth": ["ARMOR GUARD LLC 8884755215", "5Q96J9DR3"]
+        "teeth": ["toothpaste", "ARMOR GUARD LLC 8884755215", "5Q96J9DR3"]
       },
       "doctors": {
         "optometrist": ["CENTRAL SQUARE EYE CAR"],
@@ -105,7 +106,7 @@
   },
   "clothing": {
     "online": {
-      "territoryAhead": ["TERRITORY AHEAD"],
+      "territoryAhead": ["GUIDEBOAT BLUE ASH", "TERRITORY AHEAD"],
       "vissla": ["VISSLA"],
       "poler": ["POLER STUFF"],
       "music": ["ters: SHIRTTTTT", "SANDBAG LTD/W.A.S.T.E READING", "SP * TOROYMOI"],
@@ -115,7 +116,7 @@
       "zappos": ["ZAPPOS.COM"],
       "muji": ["MUJI U.S.A. LIMITED"]
     },
-    "inStore": ["RENYS WELLS -9464", "MUJI NEWBURY 617502117", "T J MAXX", "GARMENT DISTRICT", "ISLANDERS OUTF", "FORSAKE BOSTON MA"]
+    "inStore": ["HILTONS TENTCITY", "RENYS WELLS -9464", "MUJI NEWBURY 617502117", "T J MAXX", "GARMENT DISTRICT", "ISLANDERS OUTF", "FORSAKE BOSTON MA"]
   },
   "glasses": {
     "zenni": ["ZENNI OPTICAL"]
@@ -132,7 +133,7 @@
     "bonus": ["TRINETX BONUS"]
   },
   "loans": {
-    "UAS": ["ACH Withdrawal UAS"],
+    "UAS": ["ACH Withdrawal UAS", "UAS TYPE"],
     "navient": ["NAVI ED"],
     "heartland": ["ACH Withdrawal EDUCATIONAL COMP"]
   },
@@ -151,7 +152,7 @@
   },
   "vices": {
     "weed": ["And for driving all the way out", "Kyle Flanagan"],
-    "paraphernalia": ["NU7HD7BX3", "pax part", "pipe AMZN"],
+    "paraphernalia": ["Skinner: Bicc", "NU7HD7BX3", "pax part", "pipe AMZN"],
     "condoms": ["condoms"],
     "nicotine": ["nicotine PLAISTOW RTE 125", "nicotine SURREY"]
   },
@@ -173,7 +174,7 @@
       "art": ["FISK GALLERY", "GOODWILL CAMBRIDGE 506"],
       "housePlants": ["plant supplies AMZN", "Zz top", "PILL HARDWARE CAMBRIDGE", "DICKSON BROS TRUE VALU CAMBRIDGE MA", "me SQ *SQ *THE HAPPY CACT"],
       "movies": ["VIMEO.COM 646-470-8422", "pink floyd dvd"],
-      "surfing": ["SURFARI MANCHESTER", "Hatching me a speed egg"],
+      "surfing": ["Stump: La fin", "SURFARI MANCHESTER", "Hatching me a speed egg"],
       "candles": ["drip candles"],
       "books": ["BARNES&NOBLE"],
       "outdoorGear": ["REI.COM"]
@@ -194,6 +195,9 @@
     "extendedFamily": {
       "cousins": ["PAPAGINOS"],
       "luke": ["MJ1XT0191"]
+    },
+    "donations": {
+      "wikipedia": ["DONATION TO THE WIKIME"]
     }
   },
   "unknown": ["DAVIS SQUARE"]

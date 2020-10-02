@@ -31,10 +31,7 @@ export const times = {
     const month = date.toLocaleString('default', { month: 'long' });
     return month;
   },
-  getMonthAndYear: timestamp => {
-    const date = timestampToDate(timestamp);
-    return `${getMonth(date)}/${date.getFullYear().toString().slice(2)}`;
-  },
+  getMonthAndYear: date => `${getMonth(date)}/${date.getFullYear().toString().slice(2)}`,
 };
 
 export const getSettings = () => {

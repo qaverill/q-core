@@ -22,14 +22,25 @@ import { getBiMonthlyAnalysis } from '../../../api/money';
 // HELPERS
 // ----------------------------------
 const getKeyTags = ({ incomes, expenses }) => [...R.keys(incomes), ...R.keys(expenses)];
-const formatGraphData = (analyses) => (
-  analyses.map(({ timestamp, delta, incomes, expenses }, idx) => ({
-    name: `${times.getMonthAndYear(timestamp)} ${idx % 2 === 0 ? 'A' : 'B'}`,
-    delta,
-    ...incomes,
-    ...expenses,
-  }))
-);
+const getAnalysisName = (initAnalysisDate, idx) => {
+  let date = initAnalysisDate;
+  if (idx % 2 === 0) {
+    date = new Date(initAnalysisDate.setMonth(initAnalysisDate.getMonth() + 1));
+  }
+  return `${times.getMonthAndYear(date)} ${idx % 2 === 0 ? 'A' : 'B'}`;
+};
+const formatGraphData = (analyses) => {
+  const initAnalysisDate = !R.isEmpty(analyses) ? times.timestampToDate(analyses[0].timestamp) : null;
+  return (
+    analyses.map(({ delta, incomes, expenses }, idx) => ({
+      name: getAnalysisName(initAnalysisDate, idx),
+      delta,
+      ...incomes,
+      ...expenses,
+    }))
+  );
+};
+
 const gradientOffset = (graphData) => {
   const dataMax = Math.max(...graphData.map(i => i.delta));
   const dataMin = Math.min(...graphData.map(i => i.delta));
