@@ -7,43 +7,49 @@ const { ONE_DAY } = require('../utils/time');
 const TRACK_TYPE = 'tracks';
 const ARTIST_TYPE = 'artists';
 const ALBUM_TYPE = 'albums';
-const spotifyDataEndpoint = (type, items) => `https://api.spotify.com/v1/${type}?ids=${Object.keys(items).join()}`;
-const spliceTopN = counts => {
+const spotifyDataEndpoint = (type, listings) => `https://api.spotify.com/v1/${type}?ids=${Object.keys(listings).join()}`;
+const gatherData = async (type, listings) => {
+  const data = await hitGetEndpoint(spotifyDataEndpoint(type, listings));
+  return R.prop(type, data).map(o => ({ ...o, ...R.prop(o.id, listings), type }))
+}
+const spliceTopNAndGatherData = async (listings, type) => {
   const N = 5;
-  const topN = {};
-  Object.keys(counts)
-    .sort((a, b) => counts[b] - counts[a])
-    .splice(0, N)
-    .forEach(key => { topN[key] = counts[key]; });
-  return topN;
+  function cutTopN(listings, field) {
+    const topN = {};
+    Object.keys(listings)
+      .sort((a, b) => R.prop(field, listings[b]) - R.prop(field, listings[a]))
+      .splice(0, N)
+      .forEach(key => { topN[key] = listings[key]; });
+    return topN;
+  }
+  return {
+    byCount: await gatherData(type, cutTopN(listings, 'count')),
+    byTime: await gatherData(type, cutTopN(listings, 'time')),
+  };
 };
+const tallyChart = (listing, duration) => ({
+  count: R.isNil(listing) ? 1 : listing.count + 1,
+  time: R.isNil(listing) ? duration : listing.time + duration,
+});
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
 module.exports = {
   makeTopPlaysData: async data => {
-    let tracks = {};
-    let artists = {};
-    let albums = {};
-    function countListen({ track, artists: as, album }) {
-      const currentAmount = amount => (amount == null ? 0 : amount);
-      tracks[track] = 1 + currentAmount(tracks[track]);
-      as.forEach(artist => { artists[artist] = 1 + currentAmount(artists[artist]); });
-      albums[album] = 1 + currentAmount(albums[album]);
+    let topTracks = {};
+    let topArtists = {};
+    let topAlbums = {};
+    function countListen({ track, artists, album, duration }) {
+      topTracks[track] = tallyChart(topTracks[track], duration);
+      artists.forEach(artist => { topArtists[artist] = tallyChart(topArtists[artist], duration); });
+      topAlbums[album] = tallyChart(topAlbums[album], duration);
     }
     R.forEach(countListen, data);
 
-    tracks = spliceTopN(tracks);
-    artists = spliceTopN(artists);
-    albums = spliceTopN(albums);
-    const trackData = await hitGetEndpoint(spotifyDataEndpoint(TRACK_TYPE, tracks));
-    const artistData = await hitGetEndpoint(spotifyDataEndpoint(ARTIST_TYPE, artists));
-    const albumData = await hitGetEndpoint(spotifyDataEndpoint(ALBUM_TYPE, albums));
-
-    tracks = trackData.tracks.map(t => ({ ...t, count: tracks[t.id], type: TRACK_TYPE }));
-    artists = artistData.artists.map(a => ({ ...a, count: artists[a.id], type: ARTIST_TYPE }));
-    albums = albumData.albums.map(a => ({ ...a, count: albums[a.id], type: ALBUM_TYPE }));
-    return { tracks, artists, albums };
+    topTracks = await spliceTopNAndGatherData(topTracks, TRACK_TYPE);
+    topArtists = await spliceTopNAndGatherData(topArtists, ARTIST_TYPE);
+    topAlbums = await spliceTopNAndGatherData(topAlbums, ALBUM_TYPE);
+    return { topTracks, topArtists, topAlbums };
   },
   makeDailyPlayTimeData: async (start, listens) => {
     const dailyPlayTime = [];

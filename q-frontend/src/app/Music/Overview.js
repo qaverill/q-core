@@ -67,10 +67,10 @@ const ToolTip = styled.div`
 // ----------------------------------
 // COMPONENTS
 // ----------------------------------
-const TopN = ({ id, name, album, images, count, type }) => (
+const TopN = ({ id, name, album, images, count, time, type }) => (
   <Item
     key={id}
-    data-tip={[name, count]}
+    data-tip={[name, time, count]}
     image={type === 'tracks' ? album.images[0] : images[0]}
   />
 );
@@ -81,12 +81,12 @@ const Overview = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   React.useEffect(() => {
     async function fetchTopPlays() {
-      const { tracks, artists, albums } = await getTopPlays({ start, end, filter });
+      const { topTracks, topArtists, topAlbums } = await getTopPlays({ start, end, filter });
       setIsLoading(true);
       setTopPlays({
-        tracks: tracks.map(track => TopN(track)),
-        artists: artists.map(artist => TopN(artist)),
-        albums: albums.map(album => TopN(album)),
+        tracks: topTracks.byTime.map(track => TopN(track)),
+        artists: topArtists.byTime.map(artist => TopN(artist)),
+        albums: topAlbums.byTime.map(album => TopN(album)),
       });
       setIsLoading(false);
     }
