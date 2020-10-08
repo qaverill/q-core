@@ -45,14 +45,16 @@ export const SlateSelector = ({ idx, pages, onChange = () => {} }) => {
   );
 };
 
-export const ImageSelector = ({ idx, images, onChange = () => {} }) => {
+export const ImageSelector = ({ idx, images, onChange = () => {}, skips, onImageClick }) => {
   const leftIdx = getLeftIdx(idx, images);
+  const trueLeftIdx = skips.includes(leftIdx) ? getLeftIdx(leftIdx, images) : leftIdx;
   const rightIdx = getRightIdx(idx, images);
+  const trueRightIdx = skips.includes(rightIdx) ? getRightIdx(rightIdx, images) : rightIdx;
   return (
     <ArraySelectorContainer key={images[idx]}>
-      <LeftArrow onClick={() => onChange(leftIdx)} />
-      <Image src={images[idx]} alt={images[idx]} />
-      <RightArrow onClick={() => onChange(rightIdx)} />
+      <LeftArrow onClick={() => onChange(trueLeftIdx)} />
+      <Image src={images[idx]} alt={images[idx]} onClick={onImageClick} />
+      <RightArrow onClick={() => onChange(trueRightIdx)} />
     </ArraySelectorContainer>
   );
 };

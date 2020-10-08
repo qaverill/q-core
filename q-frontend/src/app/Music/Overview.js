@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as R from 'ramda';
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
 import { Slate, SlateContent, Title, H2, H3, DROP_SIZE, GAP_SIZE } from '../../packages/core';
@@ -7,9 +8,16 @@ import WaitSpinner from '../../components/WaitSpinner';
 import { selectMusicStore } from '../../store/selectors';
 import { musicTheme } from '../../packages/colors';
 import { getTopPlays } from '../../api/music';
+import { msToString } from '../../packages/utils';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
+const BY_COUNT = 'byCount';
+const initKeysForRanks = {
+  tracksKey: BY_COUNT,
+  artistsKey: BY_COUNT,
+  albumsKey: BY_COUNT,
+};
 // ----------------------------------
 // STYLES
 // ----------------------------------
@@ -70,28 +78,38 @@ const ToolTip = styled.div`
 const TopN = ({ id, name, album, images, count, time, type }) => (
   <Item
     key={id}
-    data-tip={[name, time, count]}
+    data-tip={[name, `${count}plays - ${msToString(time)}`]}
     image={type === 'tracks' ? album.images[0] : images[0]}
   />
 );
 const Overview = () => {
   const { state } = useStore();
   const { start, end, filter } = selectMusicStore(state);
+  const [data, setData] = React.useState();
   const [topPlays, setTopPlays] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [keyForRanks, setKeyForRanks] = React.useState(initKeysForRanks);
+  function processData(freshData) {
+    const dataToProcess = freshData || data;
+    if (dataToProcess) {
+      const { topTracks, topArtists, topAlbums } = dataToProcess;
+      const { tracksKey, artistsKey, albumsKey } = keyForRanks;
+      setTopPlays({
+        tracks: R.prop(tracksKey, topTracks).map(TopN),
+        artists: R.prop(artistsKey, topArtists).map(TopN),
+        albums: R.prop(albumsKey, topAlbums).map(TopN),
+      });
+    }
+  }
   React.useEffect(() => {
     async function fetchTopPlays() {
-      const { topTracks, topArtists, topAlbums } = await getTopPlays({ start, end, filter });
-      setIsLoading(true);
-      setTopPlays({
-        tracks: topTracks.byTime.map(track => TopN(track)),
-        artists: topArtists.byTime.map(artist => TopN(artist)),
-        albums: topAlbums.byTime.map(album => TopN(album)),
-      });
-      setIsLoading(false);
+      setData(null);
+      const freshData = await getTopPlays({ start, end, filter });
+      setData(freshData);
+      processData(freshData);
     }
     fetchTopPlays();
   }, [start, end, filter]);
+  React.useEffect(processData, [keyForRanks]);
   React.useEffect(() => ReactTooltip.rebuild());
 
   function getToolTipContent(dataTip) {
@@ -113,8 +131,8 @@ const Overview = () => {
   return (
     <TopPlaysSlate rimColor={musicTheme.tertiary}>
       <ReactTooltip getContent={getToolTipContent} />
-      {isLoading && <WaitSpinner message="Loading Music..." />}
-      {!isLoading && (
+      {!data && <WaitSpinner message="Loading Music..." />}
+      {data && (
         <TopPlaysContent drops={0}>
           <TopPlays>
             <ListTitle>TRACKS</ListTitle>

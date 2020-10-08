@@ -4,7 +4,6 @@ import * as R from 'ramda';
 import styled from 'styled-components';
 import { dashboardTheme } from '../../../packages/colors';
 import { Slate } from '../../../packages/core';
-import LightSwitch from './LightSwitch';
 import SpotifyCycle from './SpotifyCycle';
 import WaitSpinner from '../../../components/WaitSpinner';
 import { getLights } from '../../../api/lifx';
@@ -24,9 +23,6 @@ const LightsStyled = styled(Slate)`
     z-index: 10;
     outline: 9999px solid rgba(0,0,0,0.65);
   }
-`;
-const LightSwitches = styled.div`
-  display: flex;
 `;
 // ----------------------------------
 // COMPONENTS
@@ -49,13 +45,9 @@ const LightHub = () => {
     }
     processCurrentlyPlayingTrack();
   }, []);
-
   if (R.isNil(lights)) return null;
   return (
     <LightsStyled>
-      <LightSwitches>
-        {lights.map(light => <LightSwitch light={light} key={light.label} />)}
-      </LightSwitches>
       {currentlyPlayingTrack
         ? <SpotifyCycle lights={lights} albumCover={albumCover} />
         : <WaitSpinner color={dashboardTheme.tertiary} />}
