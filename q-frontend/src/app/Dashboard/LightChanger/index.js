@@ -1,13 +1,13 @@
 import * as React from 'react';
 import * as R from 'ramda';
 import styled from 'styled-components';
-import { ImageSelector } from '../../../../components/Selectors';
+import { ImageSelector } from '../../../components/Selectors';
 import off from './images/off.jpg';
 import unknown from './images/unknown.png';
 import purplegreen from './images/purplegreen.jpg';
 import white from './images/white.jpg';
 import Modes from './modes.json';
-import { setAllLightsToColor, turnAllLightsOff } from '../../../../api/lifx';
+import { setAllLightsToColor, turnAllLightsOff } from '../../../api/lifx';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -31,21 +31,19 @@ const determineCurrentModeIdx = lights => {
     .filter(i => i != null)[0];
   return currentModeIdx || UNKNOWN_IDX;
 };
-
 // ----------------------------------
 // COMPONENTS
 // ----------------------------------
-const ModeSelector = ({ lights }) => {
+const LightChanger = ({ lights }) => {
   const [modeIdx, setModeIdx] = React.useState(determineCurrentModeIdx(lights));
-  const changeMode = (idx) => {
+  function changeMode(idx) {
     setModeIdx(idx);
     setAllLightsToColor(Modes[MODE_NAMES[idx]]);
-  };
-  const turnAllLightsOffAndChangeIdx = () => {
+  }
+  function turnAllLightsOffAndChangeIdx() {
     turnAllLightsOff();
     setModeIdx(OFF_IDX);
-  };
-  console.log(lights)
+  }
   return (
     <div>
       <ImageSelector
@@ -58,4 +56,4 @@ const ModeSelector = ({ lights }) => {
     </div>
   );
 };
-export default ModeSelector;
+export default LightChanger;
