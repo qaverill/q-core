@@ -18,6 +18,7 @@ const unneededFactDescriptions = [
   'Withdrawal CITI CARD ONLINE',
   'Transfer Deposit From Share',
   'VENMO TYPE',
+  'CITI CARD ONLINE TYPE: PAYMENT',
 ];
 const cleanCSVRow = row => {
   let editableRow = row;

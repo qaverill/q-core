@@ -129,4 +129,24 @@ module.exports = {
       }
     });
   }),
+  dropCollection: collection => new Promise((resolve, reject) => {
+    MongoClient.connect(mongo_uri, MongoClient.connectionParams, (connectError, db) => {
+      if (connectError) {
+        q_logger.error('Failed to connect to mongo in dropCollection', connectError);
+        reject(connectError);
+      } else {
+        db.db(database)
+          .collection(collection)
+          .deleteMany({}, (dropError, result) => {
+            db.close();
+            if (dropError) {
+              q_logger.error(`Failed to delete ${collection} in mongo`, dropError);
+              reject(dropError);
+            } else {
+              resolve(result.deletedCount);
+            }
+          });
+      }
+    });
+  }),
 };

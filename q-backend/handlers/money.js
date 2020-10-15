@@ -1,7 +1,8 @@
 const R = require('ramda');
 const { createQuery } = require('./internal');
-const { getDocs, postDocs, putDoc } = require('../resources/methods/internal');
+const { getDocs, postDocs, putDoc, dropCollection } = require('../resources/methods/internal');
 const { compileTransactions, getBiMonthlyAnalysis, tagTransaction } = require('../resources/money');
+const { ingestData } = require('../ingesting/');
 const { q_logger } = require('../q-lib/q-logger');
 // ----------------------------------
 // HELPERS
@@ -25,24 +26,12 @@ module.exports = {
       })
       .catch(() => response.status(400).send());
   },
-  handleReingestRequest: async ({ response }) => {
-    // TODO: this func doesn't do what it needs to do, WIP
-    getDocs({ collection: transactionCollection })
-      .then(transactions => {
-        const updatedTransactions = [];
-        transactions.forEach(async transaction => {
-          const taggedTransaction = { ...transaction, tags: tagTransaction(transaction) };
-          if (!R.equals(taggedTransaction.tags, transaction.tags)) {
-            updatedTransactions.push(taggedTransaction);
-            await putDoc({
-              collection: transactionCollection,
-              query: { _id: transaction._id },
-              doc: taggedTransaction,
-            });
-          }
-        });
-        if (updatedTransactions.length > 0) q_logger.info(`Tagged ${updatedTransactions.length} transactions`);
-        response.status(200).json(updatedTransactions);
+  handleReingestRequest: async ({ request, response }) => {
+    const collection = transactionCollection;
+    dropCollection(transactionCollection)
+      .then(async _ => {
+        await ingestData({ collection });
+        module.exports.handleGetTransactionsRequest({ request, response })
       })
       .catch((e) => response.status(400).send(e));
   },

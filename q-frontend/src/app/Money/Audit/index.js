@@ -45,10 +45,11 @@ const Audit = () => {
   }, [start, end, filter]);
   async function reingest() {
     setTransactions(null);
-    const updatedTransactions = await reingestTransactions(transactions);
+    const updatedTransactions = await reingestTransactions({ start, end, filter });
+    const numNewTransactions = updatedTransactions.length - transactions.length;
     if (updatedTransactions.length > 0) {
       setTransactions(updatedTransactions);
-      NotificationManager.success(`Updated the tags of ${updatedTransactions.length} transactions`, '👍');
+      NotificationManager.success(`Ingestion found ${numNewTransactions} new transactions`, '👍');
     } else {
       NotificationManager.info('No transactions were updated', 'RESTART SERVER');
     }

@@ -11,15 +11,16 @@ import { NotificationManager } from 'react-notifications';
 export const getTransactions = query => new Promise((resolve, reject) => {
   // query = { start, end, filter }
   axios.get(`/money/transactions?${stringify(query)}`)
-    .then(({ data }) => resolve(R.reverse(data)))
+    .then(({ data }) => resolve(data))
     .catch(error => {
       NotificationManager.error('Failed to get transactions');
       console.error(error);
       reject(error);
     });
 });
-export const reingestTransactions = () => new Promise((resolve, reject) => {
-  axios.get('/money/reingest')
+export const reingestTransactions = query => new Promise((resolve, reject) => {
+  // query = { start, end, filter }
+  axios.get(`/money/reingest?${stringify(query)}`)
     .then(R.pipe(R.prop('data'), resolve))
     .catch(error => {
       NotificationManager.error('Failed to reingest transactions');

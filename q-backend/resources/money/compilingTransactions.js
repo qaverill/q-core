@@ -20,13 +20,15 @@ module.exports = {
       return transaction;
     }
 
-    return R.sortBy(
-      R.prop('timestamp'),
-      R.reject(
-        R.isNil,
-        R.map(
-          ingestedTransaction,
-          transactions,
+    return R.reverse(
+      R.sortBy(
+        R.prop('timestamp'),
+        R.reject(
+          R.isNil,
+          R.map(
+            ingestedTransaction,
+            transactions,
+          ),
         ),
       ),
     );
