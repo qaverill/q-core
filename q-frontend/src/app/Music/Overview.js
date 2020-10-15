@@ -13,11 +13,13 @@ import { msToString } from '../../packages/utils';
 // HELPERS
 // ----------------------------------
 const BY_COUNT = 'byCount';
+const BY_TIME = 'byTime';
 const initKeysForRanks = {
   tracksKey: BY_COUNT,
   artistsKey: BY_COUNT,
   albumsKey: BY_COUNT,
 };
+const flipKey = key => (key === BY_COUNT ? BY_TIME : BY_COUNT);
 // ----------------------------------
 // STYLES
 // ----------------------------------
@@ -25,26 +27,37 @@ const TopPlaysSlate = styled(Slate)`
   display: flex;
   flex-direction: column;
 `;
+const TopPlaysContent = styled(SlateContent)`
+  display: flex;
+  flex-direction: column;
+`;
+const Headers = styled.div`
+  background-color: ${musicTheme.tertiary};
+  width: 100%;
+  display: flex;
+`;
+const ListTitle = styled(Title)`
+  height: ${DROP_SIZE - GAP_SIZE}px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
+const Body = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+`;
 const TopPlays = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   flex-grow: 1;
-  transition: all 300ms ease-in;
+  transition: all 250ms ease-in;
   :hover {
-    flex-grow: 3;
+    flex-grow: 5;
   }
-`;
-const ListTitle = styled(Title)`
-  height: ${DROP_SIZE - GAP_SIZE}px;
-  width: 100%;
-  background-color: ${musicTheme.tertiary};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-const TopPlaysContent = styled(SlateContent)`
-  display: flex;
 `;
 const Item = styled.div`
   display: flex;
@@ -87,12 +100,13 @@ const Overview = () => {
   const { start, end, filter } = selectMusicStore(state);
   const [data, setData] = React.useState();
   const [topPlays, setTopPlays] = React.useState([]);
-  const [keyForRanks, setKeyForRanks] = React.useState(initKeysForRanks);
+  const [keysForRanks, setkeysForRanks] = React.useState(initKeysForRanks);
+  console.log(keysForRanks)
+  const { tracksKey, artistsKey, albumsKey } = keysForRanks;
   function processData(freshData) {
     const dataToProcess = freshData || data;
     if (dataToProcess) {
       const { topTracks, topArtists, topAlbums } = dataToProcess;
-      const { tracksKey, artistsKey, albumsKey } = keyForRanks;
       setTopPlays({
         tracks: R.prop(tracksKey, topTracks).map(TopN),
         artists: R.prop(artistsKey, topArtists).map(TopN),
@@ -109,7 +123,7 @@ const Overview = () => {
     }
     fetchTopPlays();
   }, [start, end, filter]);
-  React.useEffect(processData, [keyForRanks]);
+  React.useEffect(processData, [keysForRanks]);
   React.useEffect(() => ReactTooltip.rebuild());
 
   function getToolTipContent(dataTip) {
@@ -127,6 +141,16 @@ const Overview = () => {
     return <Title>No results, check the filter</Title>;
   }
 
+  const ListHeader = ({ keyForRank, title }) => (
+    <ListTitle
+      key={keyForRank}
+      data-tip={keyForRank}
+      onClick={() => setkeysForRanks({ ...keysForRanks, [`${title}Key`]: flipKey(keyForRank) })}
+    >
+      {title.toUpperCase()}
+    </ListTitle>
+  );
+
   const { tracks, artists, albums } = topPlays;
   return (
     <TopPlaysSlate rimColor={musicTheme.tertiary}>
@@ -134,18 +158,16 @@ const Overview = () => {
       {!data && <WaitSpinner message="Loading Music..." />}
       {data && (
         <TopPlaysContent drops={0}>
-          <TopPlays>
-            <ListTitle>TRACKS</ListTitle>
-            {tracks}
-          </TopPlays>
-          <TopPlays>
-            <ListTitle>ARTISTS</ListTitle>
-            {artists}
-          </TopPlays>
-          <TopPlays>
-            <ListTitle>ALBUMS</ListTitle>
-            {albums}
-          </TopPlays>
+          <Headers>
+            <ListHeader keyForRank={tracksKey} title="tracks" />
+            <ListHeader keyForRank={artistsKey} title="artists" />
+            <ListHeader keyForRank={albumsKey} title="albums" />
+          </Headers>
+          <Body>
+            <TopPlays>{tracks}</TopPlays>
+            <TopPlays>{artists}</TopPlays>
+            <TopPlays>{albums}</TopPlays>
+          </Body>
         </TopPlaysContent>
       )}
     </TopPlaysSlate>
