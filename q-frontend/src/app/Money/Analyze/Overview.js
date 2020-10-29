@@ -12,8 +12,8 @@ import {
   YAxis,
   Tooltip,
 } from 'recharts';
-import { yellow, random } from '../../../packages/colors';
-import { times } from '../../../packages/utils';
+import { yellow, random } from '../../../common/colors';
+import { times } from '../../../common/time';
 import { useStore } from '../../../store';
 import WaitSpinner from '../../../components/WaitSpinner';
 import { selectMoneyStore } from '../../../store/selectors';

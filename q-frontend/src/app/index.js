@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { useStore, actions } from '../store';
 import { selectSettings } from '../store/selectors';
-import { SlateContent } from '../packages/core';
+import { SlateContent } from '../common/elements';
 import Music from './Music';
 import Money from './Money';
 import Dashboard from './Dashboard';

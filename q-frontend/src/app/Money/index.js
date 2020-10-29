@@ -4,9 +4,9 @@ import { Switch, Redirect, Route } from 'react-router-dom';
 import Analyze from './Analyze';
 import Audit from './Audit';
 import ChronologicalSearchBar from '../../components/ChronologicalSearchBar';
-import { Slate, SlateContent } from '../../packages/core';
+import { Slate, SlateContent } from '../../common/elements';
 import { SlateSelector } from '../../components/Selectors';
-import { moneyTheme } from '../../packages/colors';
+import { moneyTheme } from '../../common/colors';
 import { actions, useStore } from '../../store';
 import { selectSettings, selectMoneyStore } from '../../store/selectors';
 // ----------------------------------

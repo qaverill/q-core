@@ -5,8 +5,8 @@ import { NotificationManager } from 'react-notifications';
 
 import DateAdjuster from './DateAdjuster';
 import SearchBar from './SearchBar';
-import { BoldText, TextInput, DROP_SIZE, GAP_SIZE } from '../../packages/core';
-import { epochToString, epochToDate, stringToEpoch } from '../../packages/utils';
+import { BoldText, TextInput, DROP_SIZE, GAP_SIZE } from '../../common/elements';
+import { epochToString, epochToDate, stringToEpoch } from '../../common/time';
 // ----------------------------------
 // HELPERS
 // ----------------------------------

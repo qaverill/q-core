@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { Switch, Redirect, Route } from 'react-router-dom';
 import BiMonthlyAnalysis from './BiMonthlyAnalysis';
 import Overview from './Overview';
-import { Slate, SlateContent } from '../../../packages/core';
-import { moneyTheme } from '../../../packages/colors';
+import { Slate, SlateContent } from '../../../common/elements';
+import { moneyTheme } from '../../../common/colors';
 import { SlateSelector } from '../../../components/Selectors';
 // ----------------------------------
 // HELPERS

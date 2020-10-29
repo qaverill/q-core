@@ -6,8 +6,8 @@ import Overview from './Overview';
 import ChronologicalSearchBar from '../../components/ChronologicalSearchBar';
 import { actions, useStore } from '../../store';
 import { selectMusicStore, selectSettings } from '../../store/selectors';
-import { musicTheme } from '../../packages/colors';
-import { Slate, SlateContent } from '../../packages/core';
+import { musicTheme } from '../../common/colors';
+import { Slate, SlateContent } from '../../common/elements';
 import { SlateSelector } from '../../components/Selectors';
 import { searchSpotify } from '../../api/spotify';
 // ----------------------------------

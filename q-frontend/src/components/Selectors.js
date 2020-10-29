@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
-import { LeftArrow, RightArrow, H2, GAP_SIZE } from '../packages/core';
+import { LeftArrow, RightArrow, H2, GAP_SIZE } from '../common/elements';
 // ----------------------------------
 // HELPERS
 // ----------------------------------

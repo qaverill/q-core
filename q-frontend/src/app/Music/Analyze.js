@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from 'recharts';
-import { Slate } from '../../packages/core';
-import { musicTheme } from '../../packages/colors';
+import { Slate } from '../../common/elements';
+import { musicTheme } from '../../common/colors';
 import { useStore } from '../../store';
 import WaitSpinner from '../../components/WaitSpinner';
 import { selectMusicStore } from '../../store/selectors';

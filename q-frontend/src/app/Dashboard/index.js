@@ -2,8 +2,8 @@
 import * as React from 'react';
 import * as R from 'ramda';
 import styled from 'styled-components';
-import { dashboardTheme } from '../../packages/colors';
-import { Slate } from '../../packages/core';
+import { dashboardTheme } from '../../common/colors';
+import { Slate } from '../../common/elements';
 import CurrentlyPlayingTrack from './CurrentlyPlayingTrack';
 import LightChanger from './LightChanger';
 import WaitSpinner from '../../components/WaitSpinner';

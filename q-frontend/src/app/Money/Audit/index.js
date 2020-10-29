@@ -4,8 +4,8 @@ import { NotificationManager } from 'react-notifications';
 import { getTransactions, reingestTransactions } from '../../../api/money';
 import { useStore } from '../../../store';
 import { selectMoneyStore } from '../../../store/selectors';
-import { moneyTheme } from '../../../packages/colors';
-import { Button, Slate, DROP_SIZE, GAP_SIZE } from '../../../packages/core';
+import { moneyTheme } from '../../../common/colors';
+import { Button, Slate, DROP_SIZE, GAP_SIZE } from '../../../common/elements';
 import WaitSpinner from '../../../components/WaitSpinner';
 import Transaction from './Transaction';
 // ----------------------------------

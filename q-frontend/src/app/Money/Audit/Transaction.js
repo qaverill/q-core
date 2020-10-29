@@ -2,9 +2,10 @@ import * as React from 'react';
 import * as R from 'ramda';
 import styled from 'styled-components';
 import { NotificationManager } from 'react-notifications';
-import { red, green, yellow, moneyTheme } from '../../../packages/colors';
-import { epochToString, numberToPrice } from '../../../packages/utils';
-import { Button, H2 } from '../../../packages/core';
+import { red, green, yellow, moneyTheme } from '../../../common/colors';
+import { epochToString } from '../../../common/time';
+import { numberToPrice } from '../../../common/utils';
+import { Button, H2 } from '../../../common/elements';
 import { markPaybackTransaction } from '../../../api/money';
 // ----------------------------------
 // HELPERS

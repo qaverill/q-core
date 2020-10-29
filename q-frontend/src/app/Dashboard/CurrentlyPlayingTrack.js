@@ -3,12 +3,9 @@ import * as React from 'react';
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
 import * as Vibrant from 'node-vibrant';
-import * as R from 'ramda';
-import { eventListenerHook } from '../../helpers';
+import { eventListenerHook } from '../../common/helpers';
 
 import { setLightsCycle, setLightsDefault } from '../../api/lifx';
-import { HorizontalDiv } from '../../elements';
-import WaitSpinner from '../../components/WaitSpinner';
 import { getCurrentlyPlayingTrack } from '../../api/spotify';
 // ----------------------------------
 // HELPERS
@@ -24,6 +21,9 @@ const ColorSwatch = styled.div`
   width: 15px;
   margin: 5px;
   background-color: ${props => props.color};
+`;
+const HorizontalDiv = styled.div`
+  display: flex;
 `;
 // ----------------------------------
 // COMPONENTS

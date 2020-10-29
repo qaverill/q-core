@@ -12,8 +12,8 @@ import {
   YAxis,
   Tooltip,
 } from 'recharts';
-import { yellow, random } from '../../../packages/colors';
-import { times } from '../../../packages/utils';
+import { yellow, random } from '../../../common/colors';
+import { epochToDate, times } from '../../../common/time';
 import { useStore } from '../../../store';
 import WaitSpinner from '../../../components/WaitSpinner';
 import { selectMoneyStore } from '../../../store/selectors';
@@ -30,7 +30,7 @@ const getAnalysisName = (initAnalysisDate, idx) => {
   return `${times.getMonthAndYear(date)} ${idx % 2 === 0 ? 'A' : 'B'}`;
 };
 const formatGraphData = (analyses) => {
-  const initAnalysisDate = !R.isEmpty(analyses) ? times.timestampToDate(analyses[0].timestamp) : null;
+  const initAnalysisDate = !R.isEmpty(analyses) ? epochToDate(analyses[0].timestamp) : null;
   return (
     analyses.map(({ delta, incomes, expenses }, idx) => ({
       name: getAnalysisName(initAnalysisDate, idx),

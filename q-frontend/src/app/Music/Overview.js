@@ -2,13 +2,13 @@ import * as React from 'react';
 import * as R from 'ramda';
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
-import { Slate, SlateContent, Title, H2, H3, DROP_SIZE, GAP_SIZE } from '../../packages/core';
+import { Slate, SlateContent, Title, H2, H3, DROP_SIZE, GAP_SIZE } from '../../common/elements';
 import { useStore } from '../../store';
 import WaitSpinner from '../../components/WaitSpinner';
 import { selectMusicStore } from '../../store/selectors';
-import { musicTheme } from '../../packages/colors';
+import { musicTheme } from '../../common/colors';
 import { getTopPlays } from '../../api/music';
-import { msToString } from '../../packages/utils';
+import { msToString } from '../../common/time';
 // ----------------------------------
 // HELPERS
 // ----------------------------------

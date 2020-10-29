@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React from 'react';
-import { Button, Text, H2 } from '../../packages/core';
+import { Button, Text, H2 } from '../../common/elements';
 
 const SmallButton = styled(Button)`
   height: 20px;
