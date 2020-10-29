@@ -34,15 +34,6 @@ const CurrentlyPlayingTrack = ({ lights }) => {
   const [currentlyPlayingTrack, setCurrentlyPlayingTrack] = React.useState(null);
   const albumCover = currentlyPlayingTrack && currentlyPlayingTrack.item.album.images[0].url;
   // ----------------------------------
-  // DATA FETCHERS
-  // ----------------------------------
-  async function checkForNewAlbumArt() {
-    const newCurrentlyPlayingTrack = await getCurrentlyPlayingTrack();
-    if (newCurrentlyPlayingTrack.item.album.id !== currentlyPlayingTrack.item.album.id) {
-      setCurrentlyPlayingTrack(newCurrentlyPlayingTrack);
-    }
-  }
-  // ----------------------------------
   // HOOKS
   // ----------------------------------
   React.useEffect(() => {
@@ -53,14 +44,22 @@ const CurrentlyPlayingTrack = ({ lights }) => {
       }
     }
     calculateColors();
-  }, [currentlyPlayingTrack]);
+  }, [currentlyPlayingTrack, albumCover]);
   React.useEffect(() => {
     async function fetchData() {
       setCurrentlyPlayingTrack(await getCurrentlyPlayingTrack());
     }
     fetchData();
   }, []);
-  React.useEffect(() => eventListenerHook(checkForNewAlbumArt), [currentlyPlayingTrack]);
+  React.useEffect(() => {
+    async function checkForNewAlbumArt() {
+      const newCurrentlyPlayingTrack = await getCurrentlyPlayingTrack();
+      if (newCurrentlyPlayingTrack.item.album.id !== currentlyPlayingTrack.item.album.id) {
+        setCurrentlyPlayingTrack(newCurrentlyPlayingTrack);
+      }
+    }
+    return eventListenerHook(checkForNewAlbumArt);
+  }, [currentlyPlayingTrack]);
   // ----------------------------------
   // HANDLERS
   // ----------------------------------

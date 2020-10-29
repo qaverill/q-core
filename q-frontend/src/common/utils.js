@@ -22,7 +22,7 @@ export const setSettings = (key, value) => {
       .then(() => {
         sessionStorage.setItem('settings', JSON.stringify(updatedSettings));
       }).catch((e) => {
-        console.log('Error settting settings...', e);
+        console.error('Error settting settings...', e);
       });
   }
 };

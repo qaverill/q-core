@@ -71,7 +71,6 @@ const BiMonthlyAnalysis = () => {
       setAnalyses([]);
       const query = { start, end, filter };
       const data = await getBiMonthlyAnalysis(query);
-      console.log(data);
       setAnalyses(data);
     }
     fetchGraphData();

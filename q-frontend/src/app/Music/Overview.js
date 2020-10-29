@@ -99,33 +99,22 @@ const Overview = () => {
   const { state } = useStore();
   const { start, end, filter } = selectMusicStore(state);
   const [data, setData] = React.useState();
-  const [topPlays, setTopPlays] = React.useState([]);
   const [keysForRanks, setkeysForRanks] = React.useState(initKeysForRanks);
-  console.log(keysForRanks)
-  const { tracksKey, artistsKey, albumsKey } = keysForRanks;
-  function processData(freshData) {
-    const dataToProcess = freshData || data;
-    if (dataToProcess) {
-      const { topTracks, topArtists, topAlbums } = dataToProcess;
-      setTopPlays({
-        tracks: R.prop(tracksKey, topTracks).map(TopN),
-        artists: R.prop(artistsKey, topArtists).map(TopN),
-        albums: R.prop(albumsKey, topAlbums).map(TopN),
-      });
-    }
-  }
+  // ----------------------------------
+  // HOOKS
+  // ----------------------------------
   React.useEffect(() => {
     async function fetchTopPlays() {
       setData(null);
       const freshData = await getTopPlays({ start, end, filter });
       setData(freshData);
-      processData(freshData);
     }
     fetchTopPlays();
   }, [start, end, filter]);
-  React.useEffect(processData, [keysForRanks]);
   React.useEffect(() => ReactTooltip.rebuild());
-
+  // ----------------------------------
+  // HANDLERS
+  // ----------------------------------
   function getToolTipContent(dataTip) {
     if (dataTip) {
       return (
@@ -136,11 +125,9 @@ const Overview = () => {
       );
     }
   }
-
-  if (topPlays == null) {
-    return <Title>No results, check the filter</Title>;
-  }
-
+  // ----------------------------------
+  // COMPONENTS
+  // ----------------------------------
   const ListHeader = ({ keyForRank, title }) => (
     <ListTitle
       key={keyForRank}
@@ -150,8 +137,10 @@ const Overview = () => {
       {title.toUpperCase()}
     </ListTitle>
   );
-
-  const { tracks, artists, albums } = topPlays;
+  // ----------------------------------
+  // RENDER
+  // ----------------------------------
+  const { tracksKey, artistsKey, albumsKey } = keysForRanks;
   return (
     <TopPlaysSlate rimColor={musicTheme.tertiary}>
       <ReactTooltip getContent={getToolTipContent} />
@@ -164,9 +153,9 @@ const Overview = () => {
             <ListHeader keyForRank={albumsKey} title="albums" />
           </Headers>
           <Body>
-            <TopPlays>{tracks}</TopPlays>
-            <TopPlays>{artists}</TopPlays>
-            <TopPlays>{albums}</TopPlays>
+            <TopPlays>{R.prop(tracksKey, data.topTracks).map(TopN)}</TopPlays>
+            <TopPlays>{R.prop(artistsKey, data.topArtists).map(TopN)}</TopPlays>
+            <TopPlays>{R.prop(albumsKey, data.topAlbums).map(TopN)}</TopPlays>
           </Body>
         </TopPlaysContent>
       )}

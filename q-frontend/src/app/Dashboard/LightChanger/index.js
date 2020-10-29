@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as R from 'ramda';
-import styled from 'styled-components';
 import { ImageSelector } from '../../../components/Selectors';
 import off from './images/off.jpg';
 import unknown from './images/unknown.png';

@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 import * as React from 'react';
-import * as R from 'ramda';
 import styled from 'styled-components';
 import { dashboardTheme } from '../../common/colors';
 import { Slate } from '../../common/elements';
