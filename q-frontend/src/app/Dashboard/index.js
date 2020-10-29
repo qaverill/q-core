@@ -8,7 +8,6 @@ import CurrentlyPlayingTrack from './CurrentlyPlayingTrack';
 import LightChanger from './LightChanger';
 import WaitSpinner from '../../components/WaitSpinner';
 import { getLights } from '../../api/lifx';
-import { getCurrentlyPlayingTrack } from '../../api/spotify';
 // ----------------------------------
 // STYLES
 // ----------------------------------
@@ -33,28 +32,21 @@ const Widget = styled.div`
 // ----------------------------------
 const Dashboard = () => {
   const [lights, setLights] = React.useState(null);
-  const [currentlyPlayingTrack, setCurrentlyPlayingTrack] = React.useState(null);
-  const isPlaying = currentlyPlayingTrack && R.prop('is_playing', currentlyPlayingTrack);
+
   React.useEffect(() => {
     async function fetchData() {
       setLights(await getLights());
-      setCurrentlyPlayingTrack(await getCurrentlyPlayingTrack());
     }
     fetchData();
   }, []);
+
   return (
     <DashboardPage rimColor={dashboardTheme.primary}>
       <Widget>
         {lights ? <LightChanger lights={lights} /> : <WaitSpinner />}
       </Widget>
       <Widget>
-        {!lights && !currentlyPlayingTrack && <WaitSpinner />}
-        {lights && isPlaying && (
-          <CurrentlyPlayingTrack
-            lights={lights}
-            currentlyPlayingTrack={currentlyPlayingTrack}
-          />
-        )}
+        {lights ? <CurrentlyPlayingTrack lights={lights} /> : <WaitSpinner /> }
       </Widget>
     </DashboardPage>
   );

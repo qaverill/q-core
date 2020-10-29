@@ -1,10 +1,15 @@
+/* eslint-disable no-undef */
 import * as React from 'react';
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
 import * as Vibrant from 'node-vibrant';
+import * as R from 'ramda';
+import { eventListenerHook } from '../../helpers';
 
 import { setLightsCycle, setLightsDefault } from '../../api/lifx';
 import { HorizontalDiv } from '../../elements';
+import WaitSpinner from '../../components/WaitSpinner';
+import { getCurrentlyPlayingTrack } from '../../api/spotify';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -12,7 +17,7 @@ import { HorizontalDiv } from '../../elements';
 // STYLES
 // ----------------------------------
 const AlbumCover = styled.div`
-  /* filter: grayscale(${props => (props.isActive ? '0%' : '100%')}); */
+  filter: grayscale(${props => (props.isActive ? '0%' : '100%')});
 `;
 const ColorSwatch = styled.div`
   height: 15px;
@@ -23,33 +28,62 @@ const ColorSwatch = styled.div`
 // ----------------------------------
 // COMPONENTS
 // ----------------------------------
-const CurrentlyPlayingTrack = ({ lights, currentlyPlayingTrack }) => {
-  const [colors, setColors] = React.useState([]);
+const CurrentlyPlayingTrack = ({ lights }) => {
+  const [colors, setColors] = React.useState(null);
   const [isActive, setIsActive] = React.useState(false);
+  const [currentlyPlayingTrack, setCurrentlyPlayingTrack] = React.useState(null);
   const albumCover = currentlyPlayingTrack && currentlyPlayingTrack.item.album.images[0].url;
-
+  // ----------------------------------
+  // DATA FETCHERS
+  // ----------------------------------
+  async function checkForNewAlbumArt() {
+    const newCurrentlyPlayingTrack = await getCurrentlyPlayingTrack();
+    if (newCurrentlyPlayingTrack.item.album.id !== currentlyPlayingTrack.item.album.id) {
+      setCurrentlyPlayingTrack(newCurrentlyPlayingTrack);
+    }
+  }
+  // ----------------------------------
+  // HOOKS
+  // ----------------------------------
   React.useEffect(() => {
     async function calculateColors() {
-      const palette = await Vibrant.from(albumCover).getPalette();
-      setColors(Object.keys(palette).map(key => palette[key].hex));
+      if (currentlyPlayingTrack) {
+        const palette = await Vibrant.from(albumCover).getPalette();
+        setColors(Object.keys(palette).map(key => palette[key].hex));
+      }
     }
     calculateColors();
   }, [currentlyPlayingTrack]);
-
+  React.useEffect(() => {
+    async function fetchData() {
+      setCurrentlyPlayingTrack(await getCurrentlyPlayingTrack());
+    }
+    fetchData();
+  }, []);
+  React.useEffect(() => eventListenerHook(checkForNewAlbumArt), [currentlyPlayingTrack]);
+  // ----------------------------------
+  // HANDLERS
+  // ----------------------------------
   function onClick() {
     if (isActive) setLightsDefault();
     else setLightsCycle({ colors, lights });
     setIsActive(!isActive);
   }
-
-  return [
-    <AlbumCover onClick={onClick} isActive={isActive} key="item">
-      <img src={albumCover} alt={albumCover} data-tip data-for="albumColors" height="100%" width="100%" />
-    </AlbumCover>,
-    <ReactTooltip id="albumColors" key="tool-tip">
-      <HorizontalDiv>{colors.map(color => <ColorSwatch color={color} key={color} />)}</HorizontalDiv>
-    </ReactTooltip>,
-  ];
+  // ----------------------------------
+  // RETURN
+  // ----------------------------------
+  return (
+    (currentlyPlayingTrack && colors && (
+      <>
+        <AlbumCover onClick={onClick} isActive={isActive} key="item">
+          <img src={albumCover} alt={albumCover} data-tip data-for="albumColors" height="100%" width="100%" />
+        </AlbumCover>
+        <ReactTooltip id="albumColors" key="tool-tip">
+          <HorizontalDiv>{colors.map(c => <ColorSwatch color={c} key={c} />)}</HorizontalDiv>
+        </ReactTooltip>
+      </>
+    ))
+  );
 };
 
 export default CurrentlyPlayingTrack;
