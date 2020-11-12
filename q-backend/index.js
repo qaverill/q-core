@@ -33,7 +33,10 @@ const {
   handleMusicTopPlaysRequest,
   handleDailyPlayTimeRequest
 } = require('./handlers/music');
-const { algorithm } = require('./tests/taggingTransactions_test');
+const {
+  handleKasaInfo,
+  handleKasaPowerToggle
+} = require('./handlers/kasa');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -87,6 +90,10 @@ makeGetEndpoint({ routes, path }, handleMusicTopPlaysRequest);
 
 path = '/music/dailyPlayTime';
 makeGetEndpoint({ routes, path }, handleDailyPlayTimeRequest);
+
+path = '/kasa';
+makeGetEndpoint({ routes, path}, handleKasaInfo);
+makePutEndpoint({ routes, path}, handleKasaPowerToggle);
 // ----------------------------------
 // START
 // ----------------------------------
