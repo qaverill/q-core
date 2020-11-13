@@ -18,14 +18,15 @@
       "healthy": ["SWEETGREEN"],
       "bbq": ["Skinner: Coast", "COAST CAFE CAMBRIDGE", "Skinner: Bbq"],
       "fastFood": ["MCDONALD"],
-      "cambridgePizzeria": ["SLICE*CAMBRIDGEPIZZERI"]
+      "cambridgePizzeria": ["SLICE*CAMBRIDGEPIZZERI"],
+      "korean": ["Koreana"]
     },
     "lunch": {
       "cpd200": ["SQ *200 CAMBRIDGE PARK"],
       "foodTrucks": ["MOYZILLA", "SA PA Boston", "SATE GRILL Cambridge", "GOGI ON THE BL", "CHEF LOUIE Cambridge", "zaaki", "AUGUSTA SUBS"],
       "revival": ["REVIVAL CAFE"],
       "miscLunch": ["Boat foods", "Lunch"],
-      "lunchOut": ["Time Out Market", "ye moodle narket", "DUCK FAT"],
+      "lunchOut": ["WORKS 44450240931 DURHAM NH", "PACIFIC STREET CAFE", "Time Out Market", "ye moodle narket", "DUCK FAT"],
       "hMartBakery": ["TST* PARIS BAGUETTE"]
     },
     "brunch": ["Brunch"],
@@ -34,17 +35,18 @@
       "waffles": ["ZINNEKENS CAMBRIDGE"]
     },
     "groceries": {
-      "wholeFoods": ["Wf 3-", "Pork shoulder for carnitas", "Ho foods", "WHOLEFDS RVR"],
+      "wholeFoods": ["Skinner: Grilling at 6 mandalorian at 7", "Wf 3-", "Pork shoulder for carnitas", "Ho foods", "WHOLEFDS RVR"],
       "traderJoes": ["Trader Howies", "TRADER JOE", "tj", "Apples from god"],
-      "marketBasket": ["Double bucket", "Insta never again", "Market bucket 🍖 run", "supplies from the bucket", "Insta🅱️art", "MARKET BASKET"],
+      "marketBasket": ["Schoppe: Olive oil", "Tyler Schoppe: And parm", "Double bucket", "Insta never again", "Market bucket 🍖 run", "supplies from the bucket", "Insta🅱️art", "MARKET BASKET"],
       "hMart": ["BibimBAP", "Hmart", "H MART"],
       "unknownGroceryStore": ["Grocery", "Fujdddddddd", "Once a fan always a fan", "Food stuff", "Skinner: Groceries"],
       "stopAndShop": ["Stop and shop"],
-      "costco": ["Costco", "👏🏻 sponges 👏🏻 and 👏🏻 stock 👏🏻"],
+      "costco": ["Zouppa", "Costco", "👏🏻 sponges 👏🏻 and 👏🏻 stock 👏🏻"],
       "convenienceSores": ["UNIVERSITY MARKET CAMBRIDGE"],
       "shaws": ["STAR MARKET", "SHAWS"],
       "surrey": ["ice cream SURREY", "milk SURREY"],
-      "target": ["groceries TARrGET"]
+      "target": ["groceries TARrGET"],
+      "pearlStreet": ["milk PEARL STREET MARKET"]
     },
     "drunkFood": ["TST* EL JEFE", "ALEPPO PALACE", "DOG HOUSE BOSTON"],
     "snacks": ["snacks PLAISTOW RTE", "snack SURREY ST", "Mercier: Chocolate bar", "CVS/PHARMACY #00240", "PARIS BAGUETTE E15", "TATTE BAKERY"]
@@ -59,8 +61,8 @@
         "surrey": ["beer SURREY", "Keith stone and juicy boys" ],
         "theCity": ["THE CITY TBCO - PLAIST", "THE CITY TOBACCO & BEV" ],
         "unknownConvenienceStore": ["WALGREENS #10378 EAST HAMPSTEA", "beer PLAISTOW RTE 125"],
-        "groceryStore": ["Merlot", "HANNAFORD #8190 HAMPSTEAD NH", "Skinner: Smutty", "yea: 🍷 & 🥖", "Truly shipment", "Lanctot: Truly", "The goodies"],
-        "massAveWine": ["MASS AVE WINE INC"]
+        "groceryStore": ["RED STRIPE™", "Merlot", "HANNAFORD #8190 HAMPSTEAD NH", "Skinner: Smutty", "yea: 🍷 & 🥖", "Truly shipment", "Lanctot: Truly", "The goodies"],
+        "massAveWine": ["Skinner: Pumpkins and sangria", "MASS AVE WINE INC"]
       },
       "event": ["JULIAN LENZI HOSPI Lowell MA"],
       "bars": ["LOLITA COCINA", "WHISKEY STEAKHOUSE", "Margaritas ay caramba", "Alden and Harlow", "RUSSELL HOUSE TAVERN", "JAMISONS HAMPSTEAD", "GREEN STREET CAMBRIDGE", "PASTA LOFT E HAMPSTEAD", "Hennessys Boston", "TST* GOURMET INDIA", "BROADSIDE BOSTON", "Skinner: Greeny", "SQ *SQ *SOWA BOSTO", "MIDDLE EAST RESTAURANT", "The Harp Boston", "SQU*SQ *THE PEOPLE", "Dranks", "SCHOLAR", "BELL IN HAND TAVERN", "DAEDALUS", "TAVERN IN THE SQUARE", "Night cap", "FOUNDRY ON ELM", "ARAMARK FENWAY"]
@@ -77,28 +79,28 @@
   },
   "living": {
     "wifi": ["wifi", "COMCAST BOSTON", "COMCAST CABLE COMM"],
-    "cellphone": ["cell"],
+    "cellphone": ["iphone mini", "cell"],
     "utilities": ["Putnam rig fuel", "Utilitays", "Rigs and the oven", "eversource", "utils", "Import Java.util.*"],
-    "houseHold": ["TARGET", "BED BATH & BEYOND", "me MAGPIE"],
+    "houseHold": ["household TARGET", "Paper towel and TP for da house", "BED BATH & BEYOND", "me MAGPIE"],
     "airFilter": ["air filters AMZN", "GI8IM8UE3"],
     "cleaningSupplies": ["isopropyl PEARL", "mouth guard cleaner", "Drain juice"],
     "pharmacy": ["RITE AID STORE", "cleaning CVS/PHARMACY"],
     "furniture": ["IKEA.COM 366246346", "curtains AMZN", "curtain rod AMZN", "window blinds", "lumbar support AMZN", "MO75G5MB0", "W78VQ4M33", "HE6EP2P83", "7V6RQ99T3", "WS8OK6P73", "Q85IO03M3", "X399867X3", "8Q9QG9SJ3", "Center Chanel Holder"],
     "gas": ["EXXONMOBIL", "CUMBERLAND FARMS", "SHELL OIL"],
     "laundry": ["Qworters", "Quarters", "Kwarters"],
-    "rent": ["Skinner: Rent october", "nner: Ivy Realty", "Schoppe: Beans", "Skinner: Blowjob", "Roont", "ACH Withdrawal BOSTON LUXURY"],
+    "rent": ["Rent november", "Skinner: Rent october", "nner: Ivy Realty", "Schoppe: Beans", "Skinner: Blowjob", "Roont", "ACH Withdrawal BOSTON LUXURY"],
     "insurance": {
       "renters": ["LEMONADE I* LEMONADE"]
     },
     "healthCare": {
       "products": {
-        "hair": ["WN0GX5B13", "OT1LO79C3", "shaver AMAZON", "jojoba oil AMZN", "shampoo Amazon"],
+        "hair": ["hair BLICK ART ", "WN0GX5B13", "OT1LO79C3", "shaver AMAZON", "jojoba oil AMZN", "shampoo Amazon"],
         "skin": ["band aids Amazon", "L66H83GF3", "MJ58B6ZO0 sunscreen", "patchouli AMZN"],
         "teeth": ["toothpaste", "ARMOR GUARD LLC 8884755215", "5Q96J9DR3"]
       },
       "doctors": {
         "optometrist": ["CENTRAL SQUARE EYE CAR"],
-        "dermatologist": ["TUFTS MC PO BOSTON"]
+        "dermatologist": ["BOSTON MEDICAL CENT", "TUFTS MC PO BOSTON"]
       }
     },
     "hairCut": ["SUPERCUTS 2 PLAISTOW"],
@@ -136,7 +138,8 @@
     "accident": ["this must have been an accident"],
     "taxReturn": ["ACH Deposit COMM. OF MASS.", "ACH Deposit IRS TREAS 310 taxes"],
     "stimulusCheck": ["ACH Deposit IRS TREAS 310 stimulus"],
-    "bonus": ["TRINETX BONUS"]
+    "bonus": ["TRINETX BONUS"],
+    "stockOptions": ["Carlyle payout"]
   },
   "loans": {
     "UAS": ["ACH Withdrawal UAS", "UAS TYPE"],
@@ -169,7 +172,8 @@
       "movies": ["APPLE CINEMAS FRESH", "ARCLIGHT CINEMAS BOSTO", "ROYAL 2 CAMBRIDGE", "SOMERVILLE THEATRE", "REGAL CINEMAS"],
       "shows": ["INNER WAVE DIVINO", "SOFAR SOUNDS", "TM *THUNDERCAT", "ORPHEUM THEATER BOSTON"],
       "blackMountain": ["F shack", "Db supplies and breakfast"],
-      "escapeRooms": ["BODA BORG"]
+      "escapeRooms": ["BODA BORG"],
+      "virtualShows": ["MIXCLOUD LONDON"]
     },
     "hobbies": {
       "pictures": ["kodak", "CVS/PHARMACY #08319"],
@@ -180,10 +184,11 @@
       "art": ["FISK GALLERY", "GOODWILL CAMBRIDGE 506"],
       "housePlants": ["plant supplies AMZN", "Zz top", "PILL HARDWARE CAMBRIDGE", "DICKSON BROS TRUE VALU CAMBRIDGE MA", "me SQ *SQ *THE HAPPY CACT"],
       "movies": ["VIMEO.COM 646-470-8422", "pink floyd dvd"],
-      "surfing": ["Stump: La fin", "SURFARI MANCHESTER", "Hatching me a speed egg"],
+      "surfing": ["WETSUIT WEARHOUSE 8669067848", "Stump: La fin", "SURFARI MANCHESTER", "Hatching me a speed egg"],
       "candles": ["drip candles"],
       "books": ["BARNES&NOBLE"],
-      "outdoorGear": ["REI.COM"]
+      "outdoorGear": ["REI.COM"],
+      "mycology": ["Sonoran Spores"]
     }
   },
   "karma": {
@@ -195,7 +200,7 @@
     "immediateFamily": {
       "mama": ["MAHONEYS GARDEN CENTER", "SQUARE *SQ *ABODE"],
       "annie": ["annie DAIRY QUEEN #42327", "annie STARBUCKS STORE", "TRILLIUM annie BREWING", "SQU*SQ *CURIO SPICE", "TREEHOUSEBREW.COM 4139491891", "SP * LAMPLIGHTER BREWI 2076503325"],
-      "rosalie": ["rosalie SP * DARN TOUGH", "rosalie DAIRY QUEEN #42327", "rosalie STARBUCKS STORE", "DK7PS4A73", "For Rosalie 🌹", "STAPLES 00109074 PLAISTOW", "STATELINE PET SUPPLY PLAISTOW", "NINTENDO *AMERICAUS", "rosalie SQ *SQ *THE HAPPY CACT", "rosalie MAGPIE"],
+      "rosalie": ["incense PEARL STREET MARKET", "rosalie SP * DARN TOUGH", "rosalie DAIRY QUEEN #42327", "rosalie STARBUCKS STORE", "DK7PS4A73", "For Rosalie 🌹", "STAPLES 00109074 PLAISTOW", "STATELINE PET SUPPLY PLAISTOW", "NINTENDO *AMERICAUS", "rosalie SQ *SQ *THE HAPPY CACT", "rosalie MAGPIE"],
       "daddy": ["Annie Averill: Ear buds", "MV4NU1I12", "daddy DAIRY QUEEN #42327", "7532M4NX3", "CL73N0133"]
     },
     "extendedFamily": {

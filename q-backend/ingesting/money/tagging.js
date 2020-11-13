@@ -1,6 +1,5 @@
 const fs = require('fs')
 const path = require('path')
-const tags = JSON.parse(fs.readFileSync(path.join(__dirname, './tags.json'), 'utf-8'))
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -44,6 +43,7 @@ module.exports = {
     if (description.includes('Check Withdrawal') && amount === RENT_AMOUNT) {
       return ['living', 'rent'];
     }
+    const tags = JSON.parse(fs.readFileSync(path.join(__dirname, './tags.json'), 'utf-8'))
     return generateTags(fact, tags, null);
   },
   testTagTransaction: (fact, tags, label) => generateTags(fact, tags, label),

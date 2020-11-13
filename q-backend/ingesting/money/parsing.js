@@ -1,9 +1,11 @@
 const crypto = require('crypto');
+const parse = require('csv-parse/lib/sync')
 const R = require('ramda');
 const { readContentsOfFile } = require('../../resources/methods/external');
 const { dateStringToTimestamp } = require('../../utils/time');
 const { roundNumber2Decimals } = require('../../utils');
 const { tagTransaction } = require('./tagging');
+const { raw } = require('body-parser');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -13,23 +15,13 @@ const unneededFactDescriptions = [
   'Online Transfer',
   'Transfer Withdrawal',
   'ACH Deposit VENMO',
-  'ONLINE PAYMENT THANK YOU',
+  'ONLINE PAYMENT, THANK YOU',
   'PAYMENT THANK YOU',
   'Withdrawal CITI CARD ONLINE',
   'Transfer Deposit From Share',
   'VENMO TYPE',
   'CITI CARD ONLINE TYPE: PAYMENT',
 ];
-const cleanCSVRow = row => {
-  let editableRow = row;
-  if (row.indexOf('"') > 0) {
-    const firstHalf = row.slice(0, row.indexOf('"'));
-    const secondHalf = row.slice(row.lastIndexOf('"') + 1, row.length);
-    const cleanedMiddle = row.slice(row.indexOf('"') + 1, row.lastIndexOf('"')).replace(/,/g, '');
-    editableRow = firstHalf + cleanedMiddle + secondHalf;
-  }
-  return editableRow;
-};
 const generateFactId = ({ account, timestamp, amount, description }) => (
   crypto.createHash('md5')
     .update(account + timestamp + amount + description)
@@ -44,8 +36,7 @@ const isFactNeeded = ({ timestamp, amount, description }) => (
   && !new RegExp(R.join('|', R.map(R.toLower, unneededFactDescriptions)))
     .test(R.toLower(description))
 );
-const parseRow = (line, file) => {
-  const row = cleanCSVRow(line).split(',');
+const parseRow = (row, file) => {
   let fact = null;
   if (file === 'mvcu_old.csv') {
     fact = {
@@ -68,19 +59,18 @@ const parseRow = (line, file) => {
       fact = {
         account: 'venmo',
         timestamp: dateStringToTimestamp(row[2]),
-        amount: roundNumber2Decimals(parseFloat(row[8].replace(/[ $+]/g, ''))),
+        amount: roundNumber2Decimals(parseFloat(row[8].replace(/[ $+,]/g, ''))),
         description,
       };
     }
   } else if (file === 'mvcu.csv') {
     fact = {
       account: 'mvcu',
-      timestamp: dateStringToTimestamp(row[3]),
-      amount: roundNumber2Decimals(parseFloat(row[6].replace(/"/g, '').slice(0, -3))),
-      description: row[9],
+      timestamp: dateStringToTimestamp(row[1]),
+      amount: roundNumber2Decimals(parseFloat(row[4].replace(/"/g, '').slice(0, -3))),
+      description: row[7],
     };
   }
-
   if (fact) {
     fact.tags = tagTransaction(fact);
     fact._id = generateFactId(fact);
@@ -88,8 +78,7 @@ const parseRow = (line, file) => {
   return fact;
 };
 const parseTransactionsFacts = (data, file) => (
-  data.split('\n')
-    .slice(1, -1)
+  parse(data, { relax_column_count: true })
     .map(line => parseRow(line, file))
     .filter(d => d != null)
 );

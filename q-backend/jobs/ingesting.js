@@ -13,12 +13,12 @@ module.exports = {
         })
         .catch((e) => {
           q_logger.error(e);
-          q_logger.warn(`Failed to mine ${collection}... trying again in 3 seconds`);
+          q_logger.warn(`Failed to mine ${collection}... trying again in 1 hour`);
           setTimeout(() => module.exports.ingest({
             collection,
             interval,
             attempts: !attempts ? 1 : attempts + 1,
-          }), 3000);
+          }), 3.6e6);
         });
     } else {
       throw new Error(`Failed to mine ${collection} 3 times in a row... ABORT`);
