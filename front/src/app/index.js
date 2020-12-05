@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { useStore, actions } from '../store';
-import { selectSettings } from '../store/selectors';
 import { SlateContent } from '../common/elements';
 import Music from './Music';
 import Money from './Money';
@@ -18,13 +16,6 @@ const SLATES = ['music', 'dashboard', 'money'];
 // COMPONENTS
 // ----------------------------------
 const App = () => {
-  const { state, dispatch } = useStore();
-  const { settings } = state;
-  const { appIdx } = selectSettings(state);
-  function setSubSlate(slateIdx) {
-    dispatch(actions.setSettings({ ...settings, appIdx: slateIdx }));
-  }
-
   return (
     <SlateContent drops={0}>
       <SlateSelector pages={SLATES} idx={appIdx} onChange={setSubSlate} />

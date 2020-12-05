@@ -1,11 +1,9 @@
-import React, { useEffect, useReducer } from 'react';
+import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import { NotificationContainer } from 'react-notifications';
 import { StoreContext, reducer, initialState, actions } from './store';
-import { selectSettings } from './store/selectors';
-import WaitSpinner from './components/WaitSpinner';
-import { readSettings } from './api/mongodb';
+import { SlateContent } from './common/elements';
 import App from './app';
 import 'react-notifications/lib/notifications.css';
 // ----------------------------------
@@ -19,20 +17,13 @@ import 'react-notifications/lib/notifications.css';
 // ----------------------------------
 const Root = () => {
   const [state, dispatch] = useReducer(reducer, { ...initialState });
-  const settings = selectSettings(state);
-  useEffect(() => {
-    async function fetchSettings() {
-      dispatch(actions.storeSettings(await readSettings()));
-    }
-    fetchSettings();
-  }, []);
-
   return (
     <Router>
       <NotificationContainer />
       <StoreContext.Provider value={{ state, dispatch }}>
-        {!settings && <WaitSpinner />}
-        {settings && <App />}
+        <SlateContent drops={0}>
+          
+        </SlateContent>
       </StoreContext.Provider>
     </Router>
   );

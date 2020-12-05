@@ -34,7 +34,7 @@ const Money = () => {
       <ChronologicalSearchBar
         start={start}
         end={end}
-        setFilters={filters => dispatch(actions.setMusicFilters(filters))}
+        setFilters={filters => dispatch(actions.setMoneyFilters(filters))}
         dateControls={DATE_CONTROLS}
         colorTheme={moneyTheme}
       />
