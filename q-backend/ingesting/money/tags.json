@@ -35,7 +35,7 @@
       "waffles": ["ZINNEKENS CAMBRIDGE"]
     },
     "groceries": {
-      "wholeFoods": ["Skinner: Grilling at 6 mandalorian at 7", "Wf 3-", "Pork shoulder for carnitas", "Ho foods", "WHOLEFDS RVR"],
+      "wholeFoods": ["groceries WHOLEFDS", "Skinner: Grilling at 6 mandalorian at 7", "Wf 3-", "Pork shoulder for carnitas", "Ho foods"],
       "traderJoes": ["Trader Howies", "TRADER JOE", "tj", "Apples from god"],
       "marketBasket": ["Schoppe: Olive oil", "Tyler Schoppe: And parm", "Double bucket", "Insta never again", "Market bucket 🍖 run", "supplies from the bucket", "Insta🅱️art", "MARKET BASKET"],
       "hMart": ["BibimBAP", "Hmart", "H MART"],
@@ -45,11 +45,11 @@
       "convenienceSores": ["UNIVERSITY MARKET CAMBRIDGE"],
       "shaws": ["STAR MARKET", "SHAWS"],
       "surrey": ["ice cream SURREY", "milk SURREY"],
-      "target": ["groceries TARrGET"],
+      "target": ["groceries TARGET", "groceries TARrGET"],
       "pearlStreet": ["milk PEARL STREET MARKET"]
     },
     "drunkFood": ["TST* EL JEFE", "ALEPPO PALACE", "DOG HOUSE BOSTON"],
-    "snacks": ["snacks PLAISTOW RTE", "snack SURREY ST", "Mercier: Chocolate bar", "CVS/PHARMACY #00240", "PARIS BAGUETTE E15", "TATTE BAKERY"]
+    "snacks": ["CVS/PHARMACY #01002", "snacks PLAISTOW RTE", "snack SURREY ST", "Mercier: Chocolate bar", "CVS/PHARMACY #00240", "PARIS BAGUETTE E15", "TATTE BAKERY"]
   },
   "drinks": {
     "coffee": ["coffee PACIFIC STREET", "me STARBUCKS STORE", "ATOMIC BEAN CA Cambridge", "Coofie", "DUNKIN", "PAVEMENT COFFE", "DARWIN S LTD"],
@@ -62,7 +62,8 @@
         "theCity": ["THE CITY TBCO - PLAIST", "THE CITY TOBACCO & BEV" ],
         "unknownConvenienceStore": ["WALGREENS #10378 EAST HAMPSTEA", "beer PLAISTOW RTE 125"],
         "groceryStore": ["RED STRIPE™", "Merlot", "HANNAFORD #8190 HAMPSTEAD NH", "Skinner: Smutty", "yea: 🍷 & 🥖", "Truly shipment", "Lanctot: Truly", "The goodies"],
-        "massAveWine": ["Skinner: Pumpkins and sangria", "MASS AVE WINE INC"]
+        "massAveWine": ["Skinner: Pumpkins and sangria", "MASS AVE WINE INC"],
+        "wholeFoods": ["alcohol WHOLEFDS"]
       },
       "event": ["JULIAN LENZI HOSPI Lowell MA"],
       "bars": ["LOLITA COCINA", "WHISKEY STEAKHOUSE", "Margaritas ay caramba", "Alden and Harlow", "RUSSELL HOUSE TAVERN", "JAMISONS HAMPSTEAD", "GREEN STREET CAMBRIDGE", "PASTA LOFT E HAMPSTEAD", "Hennessys Boston", "TST* GOURMET INDIA", "BROADSIDE BOSTON", "Skinner: Greeny", "SQ *SQ *SOWA BOSTO", "MIDDLE EAST RESTAURANT", "The Harp Boston", "SQU*SQ *THE PEOPLE", "Dranks", "SCHOLAR", "BELL IN HAND TAVERN", "DAEDALUS", "TAVERN IN THE SQUARE", "Night cap", "FOUNDRY ON ELM", "ARAMARK FENWAY"]
@@ -81,7 +82,7 @@
     "wifi": ["wifi", "COMCAST BOSTON", "COMCAST CABLE COMM"],
     "cellphone": ["iphone mini", "cell"],
     "utilities": ["Putnam rig fuel", "Utilitays", "Rigs and the oven", "eversource", "utils", "Import Java.util.*"],
-    "houseHold": ["household TARGET", "Paper towel and TP for da house", "BED BATH & BEYOND", "me MAGPIE"],
+    "houseHold": ["household PILL", "household TARGET", "Paper towel and TP for da house", "BED BATH & BEYOND", "me MAGPIE"],
     "airFilter": ["air filters AMZN", "GI8IM8UE3"],
     "cleaningSupplies": ["isopropyl PEARL", "mouth guard cleaner", "Drain juice"],
     "pharmacy": ["RITE AID STORE", "cleaning CVS/PHARMACY"],
@@ -182,20 +183,21 @@
       "records": ["RECORDS"],
       "computerParts": ["LENOVO UNITED STATES", "batteries and charger Amazon", "DRI*LOGITECH ORDERFIND", "MO5DK4S00", "295AB3OQ3", "N62Z52OA3", "WWW.RAZER.COM SAN FRANCISCO", "MICRO CENTER", "nner: Windforce", "Skinner: Oops this too prob"],
       "art": ["FISK GALLERY", "GOODWILL CAMBRIDGE 506"],
-      "housePlants": ["plant supplies AMZN", "Zz top", "PILL HARDWARE CAMBRIDGE", "DICKSON BROS TRUE VALU CAMBRIDGE MA", "me SQ *SQ *THE HAPPY CACT"],
+      "housePlants": ["plant supplies AMZN", "Zz top", "DICKSON BROS TRUE VALU CAMBRIDGE MA", "me SQ *SQ *THE HAPPY CACT"],
       "movies": ["VIMEO.COM 646-470-8422", "pink floyd dvd"],
       "surfing": ["WETSUIT WEARHOUSE 8669067848", "Stump: La fin", "SURFARI MANCHESTER", "Hatching me a speed egg"],
       "candles": ["drip candles"],
       "books": ["BARNES&NOBLE"],
       "outdoorGear": ["REI.COM"],
-      "mycology": ["Sonoran Spores"]
+      "mycology": ["mycology", "Sonoran Spores"]
     }
   },
   "karma": {
     "friends": {
       "sam": ["scotch glasses sam", "HOMEBREW EMPORIUM CAMBRIDGE", "6F5F15NJ3"],
       "tyler": ["tyler SURREY", "scotch glasses tyler", "SUR LA TABLE #123", "Skinner: fork"],
-      "multipleFriends": ["Lord Hobo Cambridge MA karma", "karma CAPO"]
+      "multipleFriends": ["Lord Hobo Cambridge MA karma", "karma CAPO"],
+      "molly": ["CVS/PHARMACY MOLLY"]
     },
     "immediateFamily": {
       "mama": ["MAHONEYS GARDEN CENTER", "SQUARE *SQ *ABODE"],

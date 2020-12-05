@@ -51,7 +51,7 @@ const Dashboard = () => {
     setDeskPower(!deskIsOn);
     setDeskIsOn(!deskIsOn);
     if (!deskIsOn) {
-      setTimeout(async () => { setLights(await getLights()); }, 2000);
+      setTimeout(async () => { setLights(await getLights()) }, 2000);
     } else {
       setLights(null);
     }
