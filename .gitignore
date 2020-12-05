@@ -3,8 +3,8 @@
 **/.DS_Store
 **/._.DS_Store
 
-q-backend/config/config.json
-q-backend/config/tokens.json
+back/config/config.json
+back/config/tokens.json
 
 node_modules/
 
