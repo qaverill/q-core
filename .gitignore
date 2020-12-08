@@ -3,8 +3,8 @@
 **/.DS_Store
 **/._.DS_Store
 
-back/config/config.json
-back/config/tokens.json
+**/config.json
+**/tokens.json
 
 node_modules/
 
