@@ -1,8 +1,9 @@
 const express = require('express');
 const routes = require('express').Router();
 const cookieParser = require('cookie-parser');
-const { q_logger } = require('./q-logger');
+const q_logger = require('q-logger');
 const { validateConfig, port } = require('./config');
+const lifx = require('./endpoints/lifx');
 
 const server = require('./services/express-server');
 // ----------------------------------
@@ -11,6 +12,11 @@ const server = require('./services/express-server');
 q_logger.info('Starting server...');
 routes.use(express.static(`${__dirname}/public`)).use(cookieParser());
 validateConfig();
+
+// ----------------------------------
+// ENDPOINTS
+// ----------------------------------
+lifx.createEndpoints(routes);
 
 // ----------------------------------
 // START

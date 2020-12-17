@@ -1,4 +1,4 @@
-const { q_logger } = require('./q-logger');
+const q_logger = require('q-logger');
 
 module.exports = {
   makeGetEndpoint: ({ routes, path }, action) => {

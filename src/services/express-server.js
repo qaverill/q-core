@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { json, urlencoded } = require('body-parser');
-const { q_logger } = require('../q-logger');
+const q_logger = require('q-logger');
 // ----------------------------------
 // HELPERS
 // ----------------------------------

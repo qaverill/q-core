@@ -92,8 +92,8 @@ path = '/music/dailyPlayTime';
 makeGetEndpoint({ routes, path }, handleDailyPlayTimeRequest);
 
 path = '/kasa';
-makeGetEndpoint({ routes, path}, handleKasaInfo);
-makePutEndpoint({ routes, path}, handleKasaPowerToggle);
+makeGetEndpoint({ routes, path }, handleKasaInfo);
+makePutEndpoint({ routes, path }, handleKasaPowerToggle);
 // ----------------------------------
 // START
 // ----------------------------------
