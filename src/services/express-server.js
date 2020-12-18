@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const { json, urlencoded } = require('body-parser');
 const q_logger = require('q-logger');
 // ----------------------------------
@@ -28,4 +29,10 @@ server.use(json());
 server.use(urlencoded({ extended: true }));
 server.use(logIncomingRequest);
 
-module.exports = server;
+const routes = express.Router();
+routes.use(express.static(`${__dirname}/public`)).use(cookieParser());
+
+module.exports = {
+  server,
+  routes,
+};

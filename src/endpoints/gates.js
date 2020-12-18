@@ -1,40 +1,48 @@
+/* eslint-disable no-console */
 const q_logger = require('q-logger');
-
+// ----------------------------------
+// HELPERS
+// ----------------------------------
+const GET = 'GET';
+const PUT = 'PUT';
+const POST = 'POST';
+const DELETE = 'DELETE';
+const printEndpoint = (method, path) => console.log(`  ${method}   ${path}`);
+const handle = (method, request, response, action) => {
+  const { originalUrl } = request;
+  const { statusCode } = response;
+  const start = new Date().getTime();
+  action({ request, response }).then(() => {
+    const totalTime = new Date().getTime() - start;
+    q_logger.apiOut(`${method} ${originalUrl} returned in ${totalTime}ms ... ${statusCode}`);
+  });
+};
+// ----------------------------------
+// EXPORTS
+// ----------------------------------
 module.exports = {
   makeGetEndpoint: ({ routes, path }, action) => {
-    console.log(`  GET    ${path}`);
+    printEndpoint(GET, path);
     routes.get(path, (request, response) => {
-      const start = new Date().getTime();
-      action({ request, response, path }).then(() => {
-        q_logger.apiOut(`GET ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
-      });
+      handle(GET, request, response, action);
     });
   },
   makePutEndpoint: ({ routes, path }, action) => {
-    console.log(`  PUT    ${path}`);
+    printEndpoint(PUT, path);
     routes.put(path, (request, response) => {
-      const start = new Date().getTime();
-      action({ request, response, path }).then(() => {
-        q_logger.apiOut(`PUT ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
-      });
+      handle(PUT, request, response, action);
     });
   },
   makePostEndpoint: ({ routes, path }, action) => {
-    console.log(`  POST   ${path}`);
+    printEndpoint(POST, path);
     routes.post(path, (request, response) => {
-      const start = new Date().getTime();
-      action({ request, response, path }).then(() => {
-        q_logger.apiOut(`POST ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
-      });
+      handle(POST, request, response, action);
     });
   },
   makeDeleteEndpoint: ({ routes, path }, action) => {
-    console.log(`  DELETE ${path}`);
+    printEndpoint(DELETE, path);
     routes.delete(path, (request, response) => {
-      const start = new Date().getTime();
-      action({ request, response, path }).then(() => {
-        q_logger.apiOut(`DELETE ${request.originalUrl} returned in ${new Date().getTime() - start}ms ... ${response.statusCode}`);
-      });
+      handle(DELETE, request, response, action);
     });
   },
 };
