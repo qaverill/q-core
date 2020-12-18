@@ -16,6 +16,7 @@ validateConfig();
 // ----------------------------------
 // ENDPOINTS
 // ----------------------------------
+q_logger.info('Available endpoints:');
 lifx.createEndpoints(routes);
 
 // ----------------------------------

@@ -7,8 +7,12 @@ const MAGENTA = '\x1b[35m';
 const GREEN = '\x1b[32m';
 const YELLOW = '\x1b[33m';
 const RED = '\x1b[31m';
+const TAB = '\x1b[0m';
 const log = (status, message, payload) => {
-  console.log(`${status} \x1b[0m [${new Date().toISOString()}]  ${message}`, payload);
+  const timestamp = new Date().toISOString();
+  const possibleColon = payload ? ':' : '';
+  console.log(`${status} ${TAB} [${timestamp}]  ${message}${possibleColon}`);
+  if (payload) console.log(payload);
 };
 // ----------------------------------
 // LOGGERS
