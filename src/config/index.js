@@ -1,4 +1,4 @@
-const q_logger = require('q-logger');
+const logger = require('@q/logger');
 const config = require('./config.json');
 const tokens = require('./tokens.json');
 
@@ -30,7 +30,7 @@ module.exports = {
         ? module.exports[splitItem[0]][splitItem[1]]
         : module.exports[item];
       if (itemToValidate == null) {
-        q_logger.error('Missing config parameter: ', item);
+        logger.error('Missing config parameter: ', item);
         process.exit();
       }
     });

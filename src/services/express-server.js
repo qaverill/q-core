@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const { json, urlencoded } = require('body-parser');
-const q_logger = require('q-logger');
+const logger = require('@q/logger');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -16,10 +16,9 @@ const logIncomingRequest = (request, response, next) => {
       payload.body = request.body;
     }
   }
-  q_logger.apiIn(`${request.method} ${request.originalUrl}`, payload);
+  logger.apiIn(`${request.method} ${request.originalUrl}`, payload);
   next();
 };
-
 // ----------------------------------
 // INIT
 // ----------------------------------

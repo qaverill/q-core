@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const q_logger = require('q-logger');
+const logger = require('@q/logger');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -14,7 +14,7 @@ const handle = (method, request, response, action) => {
   const start = new Date().getTime();
   action({ request, response }).then(() => {
     const totalTime = new Date().getTime() - start;
-    q_logger.apiOut(`${method} ${originalUrl} returned in ${totalTime}ms ... ${statusCode}`);
+    logger.apiOut(`${method} ${originalUrl} returned in ${totalTime}ms ... ${statusCode}`);
   });
 };
 // ----------------------------------
