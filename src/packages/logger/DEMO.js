@@ -1,5 +1,7 @@
 const logger = require('./index');
-
+// ----------------------------------
+// DEMOS
+// ----------------------------------
 logger.apiIn('Q-LOGGER IN!!!');
 logger.apiOut('Q-LOGGER OUT!!!');
 logger.error('Q-LOGGER ERROR!!!');

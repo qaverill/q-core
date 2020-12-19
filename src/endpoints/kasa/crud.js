@@ -1,5 +1,7 @@
 const R = require('ramda');
-
+// ----------------------------------
+// EXPORTS
+// ----------------------------------
 module.exports = {
   readOutlet: async (kasaClient, host) => R.prop(
     '_sysInfo',

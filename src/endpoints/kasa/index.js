@@ -1,14 +1,12 @@
 const { Client } = require('tplink-smarthome-api');
 const { makeGetEndpoint, makePutEndpoint } = require('../gates');
 const { readOutlet, updateOutlet } = require('./crud');
-
-const kasaClient = new Client();
-
-const myOutletMacAddress = 'B0:95:75:44:A5:D5';
 // ----------------------------------
 // HELPERS
 // ----------------------------------
 const path = '/kasa';
+const myOutletMacAddress = 'B0:95:75:44:A5:D5';
+const kasaClient = new Client();
 // ----------------------------------
 // EXPORTS
 // ----------------------------------

@@ -1,12 +1,11 @@
 const R = require('ramda');
 const { makeGetEndpoint, makePutEndpoint } = require('../gates');
 const { readLights, updateLights } = require('./crud');
-const states = require('./states');
+const { buildStates, possibleStates } = require('./lightStates');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
 const path = '/lifx';
-const possibleStates = R.keys(states).join(', ');
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
@@ -18,12 +17,12 @@ module.exports = {
     });
     // PUT /lifx
     makePutEndpoint({ routes, path }, async ({ request, response }) => {
-      const body = states[request.body.state];
-      if (R.isNil(body)) {
-        response.status(400).send(`Invalid state. Possible states: ${possibleStates}`);
-        return;
+      const states = buildStates(request.body.preset);
+      if (R.isNil(states)) {
+        response.send(`Invalid state, possibleStates: ${possibleStates.join(', ')}`);
+      } else {
+        response.send(await updateLights(states));
       }
-      response.send(await updateLights(body));
     });
   },
 };

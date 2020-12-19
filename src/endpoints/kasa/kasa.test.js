@@ -13,8 +13,7 @@ test(`GET ${PATH}`, async () => {
   expect(mac).toEqual('B0:95:75:44:A5:D5');
   expect(results).toHaveProperty('on_time');
 });
-
 test(`PUT ${PATH}`, async () => {
-   const results = await apiPut(PATH, { state: 'on' });
-   expect(results).toEqual(true);
+  const results = await apiPut(PATH, { state: 'on' });
+  expect(results).toEqual(true);
 });
