@@ -3,7 +3,7 @@ const R = require('ramda');
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  readOutlet: async (kasaClient, host) => R.prop(
+  readOutlet: async (kasaClient, hosts) => R.prop(
     '_sysInfo',
     await kasaClient.getDevice({ host }),
   ),

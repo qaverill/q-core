@@ -30,7 +30,7 @@ const assertResults = (results, preset) => {
 describe(`GET ${PATH}`, () => {
   test('returns all the correct values and no more', async () => {
     const results = await apiGet(PATH);
-    expect(results).toHaveLength(2);
+    expect(results).toHaveLength(4);
     results.forEach((result) => {
       expect(result).toHaveProperty('id');
       expect(result).toHaveProperty('uuid');
