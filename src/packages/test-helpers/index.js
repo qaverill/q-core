@@ -8,6 +8,6 @@ const makeFullPath = (path) => `http://localhost:4040${path}`;
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  apiGet: async (path) => R.prop('data', await axios.get(makeFullPath(path))),
+  apiGet: async (path, body) => R.prop('data', await axios.get(makeFullPath(path), { params: { ...body } })),
   apiPut: async (path, body) => R.prop('data', await axios.put(makeFullPath(path), body)),
 };

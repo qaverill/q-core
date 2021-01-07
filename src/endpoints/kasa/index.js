@@ -1,38 +1,39 @@
 const { Client } = require('tplink-smarthome-api');
-const { makeGetEndpoint, makePutEndpoint } = require('../gates');
-const { readOutlet, updateOutlet } = require('./crud');
 const R = require('ramda');
-
+const { makeGetEndpoint, makePutEndpoint } = require('../gates');
+const { readOutlets, updateOutlets } = require('./crud');
+const { setOutletHost } = require('./redis');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
 const path = '/kasa';
 const myMacAddresses = {
-  'B0:95:75:44:94:A8': 'lavaLamp',
+  'B0:95:75:44:94:A8': 'lavalamp',
   'B0:95:75:44:A5:D5': 'desk',
 };
+// ----------------------------------
+// KASA
+// ----------------------------------
 const kasaClient = new Client();
+kasaClient.startDiscovery().on('plug-new', ({ _sysInfo, host }) => {
+  const outlet = R.prop(_sysInfo.mac, myMacAddresses);
+  if (outlet) setOutletHost(outlet, host);
+});
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
 module.exports = {
   createEndpoints: (routes) => {
-    const hosts = {};
-    kasaClient.startDiscovery().on('plug-new', (plug) => {
-      const { _sysInfo, host } = plug;
-      if (myMacAddresses[_sysInfo.mac]) {
-        hosts[myMacAddresses[_sysInfo.mac]] = host;
-      }
-      if (R.keys(hosts).length === R.keys(myMacAddresses).length) {
-        // GET /kasa
-        makeGetEndpoint({ routes, path }, async ({ response }) => {
-          response.send(await readOutlet(kasaClient, hosts));
-        });
-        // PUT /kasa
-        makePutEndpoint(({ routes, path }), async ({ request, response }) => {
-          response.send(await updateOutlet(kasaClient, hosts, request.body.state));
-        });
-      }
+    // GET /kasa?outlet={lavalamp, desk}
+    makeGetEndpoint({ routes, path }, async ({ request, response }) => {
+      const { outlet } = request.query;
+      response.send(await readOutlets(outlet));
+    });
+    // PUT /kasa
+    makePutEndpoint(({ routes, path }), async ({ request, response }) => {
+      const { outlet } = request.query;
+      const { state } = request.body;
+      response.send(await updateOutlets(outlet, state));
     });
   },
 };
