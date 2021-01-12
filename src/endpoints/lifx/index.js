@@ -19,7 +19,7 @@ module.exports = {
     makePutEndpoint({ routes, path }, async ({ request, response }) => {
       const states = buildStates(request.body.preset);
       if (R.isNil(states)) {
-        response.send(`Invalid state, possibleStates: ${possibleStates.join(', ')}`);
+        response.send('Invalid state, see lightStates.js::buildStates() for possible states');
       } else {
         response.send(await updateLights(states));
       }

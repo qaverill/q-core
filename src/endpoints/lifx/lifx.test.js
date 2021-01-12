@@ -12,17 +12,13 @@ const setLights = async (preset) => {
   await new Promise(r => setTimeout(r, 1000));
   return await apiGet(PATH);
 };
-const assertResults = (results, preset) => {
-  const power = preset === OFF ? OFF : ON;
-  expect(results[0]).toHaveProperty('power', power);
-  expect(results[1]).toHaveProperty('power', power);
-  if (preset === PURPLEGREEN) {
-    expect(results[0].preset).toMatch(/purple|green/);
-    expect(results[1].preset).toMatch(/purple|green/);
-  } else {
-    expect(results[0].preset).toEqual(preset);
-    expect(results[1].preset).toEqual(preset);
-  }
+const assertResults = (results, expected) => {
+  results.forEach((light) => {
+    expect(light.power).toEqual(expected === OFF ? OFF : ON);
+    if (expected !== OFF) {
+      expect(light.preset).toEqual(expected[light.label])
+    }
+  });
 }
 // ----------------------------------
 // TESTS
@@ -50,20 +46,55 @@ describe(`GET ${PATH}`, () => {
   })
 });
 describe(`PUT ${PATH}`, () => {
+  test('each light set to random', async () => {
+    const results = await setLights('random');
+    const expectedColors = {
+      'Tree Left': 'unknown',
+      'Tree Right': 'unknown',
+      'Flower Lamp': 'unknown',
+      'Lamp': 'unknown'
+    };
+    assertResults(results, expectedColors);
+  });
+  test('each light set to the same', async () => {
+    const results = await setLights('default');
+    const expectedColors = {
+      'Tree Left': 'default',
+      'Tree Right': 'default',
+      'Flower Lamp': 'default',
+      'Lamp': 'default'
+    };
+    assertResults(results, expectedColors);
+  });
   test('each light set to its own', async () => {
-    assertResults(await setLights(PURPLEGREEN), PURPLEGREEN);
+    const results = await setLights('technicolor');
+    const expectedColors = {
+      'Tree Left': 'green',
+      'Tree Right': 'purple',
+      'Flower Lamp': 'blue',
+      'Lamp': 'yellow'
+    };
+    assertResults(results, expectedColors);
   });
   test('"off" turns them off', async () => {
-    assertResults(await setLights(OFF), OFF);
+    const results = await setLights('off');
+    assertResults(results, OFF);
   });
   test('"on" turns them on but does not change color', async () => {
-    assertResults(await setLights(ON), PURPLEGREEN);
-  });
-  test('both lights set to the same', async () => {
-    assertResults(await setLights(DEFAULT), DEFAULT);
+    const results = await setLights('on');
+    const expectedColors = {
+      'Tree Left': 'green',
+      'Tree Right': 'purple',
+      'Flower Lamp': 'blue',
+      'Lamp': 'yellow'
+    };
+    assertResults(results, expectedColors);
   });
   test('invalid preset returns error', async () => {
     const result = await apiPut(PATH, { preset: 'invalid' });
-    expect(result).toEqual('Invalid state, possibleStates: on, off, default, purpleGreen');
+    expect(result).toEqual('Invalid state, see lightStates.js::buildStates() for possible states');
+  });
+  test.skip('can change the brightness of them all', async () => {
+    // TODO: add ability to change brightness of all light at once
   });
 });

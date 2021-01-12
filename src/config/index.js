@@ -24,7 +24,7 @@ module.exports = {
       'spotify.refresh_token',
       'spotify.valid_until',
     ];
-    itemsToValidate.forEach(item => {
+    itemsToValidate.forEach((item) => {
       const splitItem = item.split('.');
       const itemToValidate = splitItem.length === 2
         ? module.exports[splitItem[0]][splitItem[1]]

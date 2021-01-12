@@ -1,57 +1,58 @@
 const R = require('ramda');
+const { ids, colors } = require('./lights.json');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const SELECT_LEFT = 'id:d073d53ce830';
-const SELECT_RIGHT = 'id:d073d53cf1d9';
-const ON = 'on'
+const ON = 'on';
 const OFF = 'off';
-const UNKNOWN = 'unknown';
-const DEFAULT = 'default';
-const GREEN = 'green';
-const PURPLE = 'purple';
-const colors = {
-  default: 'saturation:0 kelvin:3000',
-  green: 'hue:98.82 saturation:1',
-  purple: 'hue:269.23 saturation:1',
-}
-// ----------------------------------
-// BUILDERS
-// ----------------------------------
+const randomColor = () => `hue:${Math.floor((Math.random() * 360) + 0)} saturation:1`;
 const craftPayload = (state) => {
   const payload = { duration: 0, power: OFF };
   if (state === OFF) return payload;
   payload.power = ON;
   if (state === ON) return payload;
-  payload.color = colors[state];
+  payload.color = state;
   return payload;
 };
-const buildState = (leftColor, rightColor = leftColor) => [
-  { selector: SELECT_LEFT, ...craftPayload(leftColor) },
-  { selector: SELECT_RIGHT, ...craftPayload(rightColor) },
+const buildState = (I, II = I, III = I, IV = I) => [
+  { selector: ids.TREE_LEFT, ...craftPayload(I) },
+  { selector: ids.TREE_RIGHT, ...craftPayload(II) },
+  { selector: ids.FLOWER_LAMP, ...craftPayload(III) },
+  { selector: ids.LAMP, ...craftPayload(IV) },
 ];
-const states = {
-  on: buildState(ON),
-  off: buildState(OFF),
-  default: buildState(DEFAULT),
-  purpleGreen: buildState(GREEN, PURPLE),
-};
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  buildStates: (state) => R.prop(state, states),
-  possibleStates: R.keys(states),
+  buildStates: (state) => {
+    switch (state) {
+      case 'on':
+        return buildState(ON);
+      case 'off':
+        return buildState(OFF);
+      case 'default': // TODO: make this adjust with the time of day!
+        return buildState(colors.default);
+      case 'technicolor':
+        return buildState(colors.green, colors.purple, colors.blue, colors.yellow);
+      case 'random':
+        return buildState(randomColor(), randomColor(), randomColor(), randomColor());
+      default:
+        return null;
+    }
+  },
   determinePreset: (light) => {
     const { power, color } = light;
     if (power === OFF) return OFF;
     const { hue, saturation, kelvin } = color;
-    if (saturation === 0) return DEFAULT;
+    const knownColors = R.reduce((acc, key) => {
+      acc[colors[key]] = key;
+      return acc;
+    }, {}, R.keys(colors));
+    const tempString = `saturation:${saturation} kelvin:${kelvin}`;
+    if (knownColors[tempString]) return knownColors[tempString];
     const colorString = `hue:${hue} saturation:${saturation}`;
-    const matchedColor = R.find(
-      (key) => R.equals(colorString, colors[key]),
-      R.keys(colors),
-    )
-    return matchedColor || UNKNOWN;
+    if (knownColors[colorString]) return knownColors[colorString];
+    return 'unknown';
   },
 };
+// ***THIS IS ALL TESTED IN crud.test.js

@@ -37,7 +37,6 @@ describe(`GET ${PATH}`, () => {
     expect(outlets[1]).toHaveProperty('mac');
     expect(outlets[1]).toHaveProperty('alias');
     expect(outlets[1]).toHaveProperty('on_time');
-
   });
 });
 describe(`PUT ${PATH}`, () => {
