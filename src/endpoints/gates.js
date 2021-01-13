@@ -23,25 +23,25 @@ const handle = (method, request, response, action) => {
 module.exports = {
   makeGetEndpoint: ({ routes, path }, action) => {
     printEndpoint(GET, path);
-    routes.get(path, (request, response) => {
+    routes.get(`/api${path}`, (request, response) => {
       handle(GET, request, response, action);
     });
   },
   makePutEndpoint: ({ routes, path }, action) => {
     printEndpoint(PUT, path);
-    routes.put(path, (request, response) => {
+    routes.put(`/api${path}`, (request, response) => {
       handle(PUT, request, response, action);
     });
   },
   makePostEndpoint: ({ routes, path }, action) => {
     printEndpoint(POST, path);
-    routes.post(path, (request, response) => {
+    routes.post(`/api${path}`, (request, response) => {
       handle(POST, request, response, action);
     });
   },
   makeDeleteEndpoint: ({ routes, path }, action) => {
     printEndpoint(DELETE, path);
-    routes.delete(path, (request, response) => {
+    routes.delete(`/api${path}`, (request, response) => {
       handle(DELETE, request, response, action);
     });
   },

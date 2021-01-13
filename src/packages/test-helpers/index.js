@@ -3,7 +3,7 @@ const R = require('ramda');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const makeFullPath = (path) => `http://localhost:4040${path}`;
+const makeFullPath = (path) => `http://localhost:4040/api${path}`;
 // ----------------------------------
 // EXPORTS
 // ----------------------------------

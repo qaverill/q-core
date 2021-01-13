@@ -1,7 +1,7 @@
 const R = require('ramda');
 const { makeGetEndpoint, makePutEndpoint } = require('../gates');
 const { readLights, updateLights } = require('./crud');
-const { buildStates, possibleStates } = require('./lightStates');
+const { buildStates } = require('./lightStates');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
