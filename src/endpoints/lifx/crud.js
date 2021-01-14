@@ -2,10 +2,10 @@ const axios = require('axios');
 const R = require('ramda');
 const config = require('../../config');
 const { determinePreset } = require('./lightStates');
-const { group } = require('./lights.json');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
+const group = 'Q';
 const headers = {
   Authorization: `Bearer ${config.lifx.access_token}`,
 };

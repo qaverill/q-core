@@ -1,45 +1,51 @@
 const R = require('ramda');
-const { ids, colors } = require('./lights.json');
 // ----------------------------------
-// HELPERS
+// LIGHT INFO
 // ----------------------------------
 const ON = 'on';
 const OFF = 'off';
 const randomColor = () => `hue:${Math.floor((Math.random() * 360) + 0)} saturation:1`;
-const craftPayload = (state) => {
-  const payload = { duration: 0, power: OFF };
-  if (state === OFF) return payload;
-  payload.power = ON;
-  if (state === ON) return payload;
-  payload.color = state;
-  return payload;
+const ids = {
+  TREE_LEFT: 'id:d073d53ce830',
+  TREE_RIGHT: 'id:d073d53cf1d9',
+  FLOWER_LAMP: 'id:d073d562d356',
+  LAMP: 'id:d073d563aba5',
 };
-const buildState = (I, II = I, III = I, IV = I) => [
-  { selector: ids.TREE_LEFT, ...craftPayload(I) },
-  { selector: ids.TREE_RIGHT, ...craftPayload(II) },
-  { selector: ids.FLOWER_LAMP, ...craftPayload(III) },
-  { selector: ids.LAMP, ...craftPayload(IV) },
-];
+const colors = {
+  default: 'saturation:0 kelvin:3000',
+  green: 'hue:98.82 saturation:1',
+  purple: 'hue:269.23 saturation:1',
+  blue: 'hue:219 saturation:1',
+  yellow: 'hue:50.6 saturation:1',
+};
+const presets = {
+  on: ON,
+  off: OFF,
+  default: colors.default,
+  technicolor: [colors.green, colors.purple, colors.blue, colors.yellow],
+};
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  buildStates: (state) => {
-    switch (state) {
-      case 'on':
-        return buildState(ON);
-      case 'off':
-        return buildState(OFF);
-      case 'default': // TODO: make this adjust with the time of day!
-        return buildState(colors.default);
-      case 'technicolor':
-        return buildState(colors.green, colors.purple, colors.blue, colors.yellow);
-      case 'random':
-        return buildState(randomColor(), randomColor(), randomColor(), randomColor());
-      default:
-        return null;
+  buildPayload: ({ preset, brightness }) => R.keys(ids).map((selector, idx) => {
+    const state = {
+      selector: ids[selector],
+      duration: 0,
+      power: preset === OFF ? OFF : ON,
+    };
+    if (preset !== ON && preset !== OFF) {
+      if (brightness) state.brightness = brightness;
+      if (preset === 'random') {
+        state.color = randomColor();
+      } else if (preset) {
+        const colorStates = presets[preset];
+        if (colorStates == null) return null;
+        state.color = Array.isArray(colorStates) ? colorStates[idx] : colorStates;
+      }
     }
-  },
+    return state;
+  }),
   determinePreset: (light) => {
     const { power, color } = light;
     if (power === OFF) return OFF;
