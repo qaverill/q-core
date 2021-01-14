@@ -13,35 +13,39 @@ const setLights = async ({ preset, brightness }) => {
   await new Promise(r => setTimeout(r, 1000));
   return await apiGet(PATH);
 };
-const assertResults = (results, expected) => {
+const assertResults = (results, preset) => {
+  const expected = expectedResults[preset];
   results.forEach((light) => {
-    expect(light.power).toEqual(expected === OFF ? OFF : ON);
-    if (expected !== OFF) {
-      expect(light.preset).toEqual(expected[light.label])
+    expect(light.power).toEqual(expected ? ON : OFF);
+    if (preset) {
+      expect(light.preset).toEqual(preset);
+      expect(light.colorString).toEqual(expected[light.label]);
     }
   });
 }
 // ----------------------------------
 // EXPECTED RESULTS
 // ----------------------------------
-const expectedRandom = {
-  'Tree Left': 'unknown',
-  'Tree Right': 'unknown',
-  'Flower Lamp': 'unknown',
-  'Lamp': 'unknown'
-};
-const expectedTechnicolor = {
-  'Tree Left': 'green',
-  'Tree Right': 'purple',
-  'Flower Lamp': 'blue',
-  'Lamp': 'yellow'
-};
-const expectedDefault = {
-  'Tree Left': 'default',
-  'Tree Right': 'default',
-  'Flower Lamp': 'default',
-  'Lamp': 'default'
-};
+const expectedResults = {
+  random: {
+    'Tree Left': 'unknown',
+    'Tree Right': 'unknown',
+    'Flower Lamp': 'unknown',
+    'Lamp': 'unknown'
+  },
+  technicolor: {
+    'Tree Left': 'green',
+    'Tree Right': 'purple',
+    'Flower Lamp': 'blue',
+    'Lamp': 'yellow'
+  },
+  default: {
+    'Tree Left': 'default',
+    'Tree Right': 'default',
+    'Flower Lamp': 'default',
+    'Lamp': 'default'
+  }
+}
 // ----------------------------------
 // TESTS
 // ----------------------------------
@@ -62,31 +66,32 @@ describe(`GET ${PATH}`, () => {
       expect(result).toHaveProperty('product');
       expect(result).toHaveProperty('last_seen');
       expect(result).toHaveProperty('seconds_since_seen');
+      expect(result).toHaveProperty('colorString');
       expect(result).toHaveProperty('preset');
-      expect(Object.keys(result)).toHaveLength(13);
+      expect(Object.keys(result)).toHaveLength(14);
     })
   })
 });
 describe(`PUT ${PATH}`, () => {
   test('each light set to random', async () => {
-    const results = await setLights({ preset: 'random' });
-    assertResults(results, expectedRandom);
+    const preset = 'random';
+    assertResults(await setLights({ preset }), preset);
   });
   test('each light set to its own', async () => {
-    const results = await setLights({ preset: 'technicolor' });
-    assertResults(results, expectedTechnicolor);
+    const preset = 'technicolor';
+    assertResults(await setLights({ preset }), preset);
   });
   test('each light set to the same', async () => {
-    const results = await setLights({ preset: 'default' });
-    assertResults(results, expectedDefault);
+    const preset = 'default';
+    assertResults(await setLights({ preset }), preset);
   });
   test('"off" turns them off', async () => {
     const results = await setLights({ preset: 'off' });
-    assertResults(results, OFF);
+    assertResults(results);
   });
   test('"on" turns them on but does not change color', async () => {
     const results = await setLights({ preset: 'on' });
-    assertResults(results, expectedDefault);
+    assertResults(results, 'default');
   });
   test('invalid preset returns error', async () => {
     const result = await apiPut(PATH, { preset: 'invalid' });
@@ -95,13 +100,14 @@ describe(`PUT ${PATH}`, () => {
   test('can change only the brightness of them all', async () => {
     const brightness = 0.5
     const results = await setLights({ brightness });
-    assertResults(results, expectedDefault);
+    assertResults(results, 'default');
     results.forEach((light) => expect(light.brightness).toEqual(brightness));
   });
   test('can change the brightness and color of them all', async () => {
     const brightness = 1
-    const results = await setLights({ brightness, preset: 'technicolor' });
-    assertResults(results, expectedTechnicolor);
+    const preset = 'technicolor';
+    const results = await setLights({ brightness, preset });
+    assertResults(results, preset);
     results.forEach((light) => expect(light.brightness).toEqual(brightness));
   });
 });

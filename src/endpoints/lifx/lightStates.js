@@ -46,7 +46,7 @@ module.exports = {
     }
     return state;
   }),
-  determinePreset: (light) => {
+  determineColorString: (light) => {
     const { power, color } = light;
     if (power === OFF) return OFF;
     const { hue, saturation, kelvin } = color;
@@ -54,10 +54,10 @@ module.exports = {
       acc[colors[key]] = key;
       return acc;
     }, {}, R.keys(colors));
-    const tempString = `saturation:${saturation} kelvin:${kelvin}`;
-    if (knownColors[tempString]) return knownColors[tempString];
-    const colorString = `hue:${hue} saturation:${saturation}`;
-    if (knownColors[colorString]) return knownColors[colorString];
+    const tempDefinition = `saturation:${saturation} kelvin:${kelvin}`;
+    if (knownColors[tempDefinition]) return knownColors[tempDefinition];
+    const colorDefinition = `hue:${hue} saturation:${saturation}`;
+    if (knownColors[colorDefinition]) return knownColors[colorDefinition];
     return 'unknown';
   },
 };

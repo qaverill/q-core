@@ -21,7 +21,7 @@ module.exports = {
       if (R.any(R.isNil, states)) {
         response.send('Invalid state, see lightStates.js::buildPayload() for possible states');
       } else {
-        response.send(await updateLights(states));
+        response.send(await updateLights(states, request.body.preset));
       }
     });
   },
