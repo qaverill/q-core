@@ -19,7 +19,6 @@ const colors = {
   yellow: 'hue:50.6 saturation:1',
 };
 const presets = {
-  on: ON,
   off: OFF,
   default: colors.default,
   technicolor: [colors.green, colors.purple, colors.blue, colors.yellow],
@@ -34,7 +33,7 @@ module.exports = {
       duration: 0,
       power: preset === OFF ? OFF : ON,
     };
-    if (preset !== ON && preset !== OFF) {
+    if (preset !== OFF) {
       if (brightness) state.brightness = brightness;
       if (preset === 'random') {
         state.color = randomColor();

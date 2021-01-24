@@ -13,7 +13,7 @@ describe(`GET ${PATH}`, () => {
     const outlets = await apiGet(PATH_DESK);
     expect(outlets).toHaveLength(1);
     const { alias, mac } = outlets[0];
-    expect(alias).toEqual('Desk');
+    expect(alias).toEqual('desk');
     expect(mac).toEqual('B0:95:75:44:A5:D5');
     expect(outlets[0]).toHaveProperty('on_time');
   });
@@ -21,7 +21,7 @@ describe(`GET ${PATH}`, () => {
     const outlets = await apiGet(PATH_LAVALAMP);
     expect(outlets).toHaveLength(1);
     const { alias, mac } = outlets[0];
-    expect(alias).toEqual('Lava lamp');
+    expect(alias).toEqual('lavalamp');
     expect(mac).toEqual('B0:95:75:44:94:A8');
     expect(outlets[0]).toHaveProperty('on_time');
   });
@@ -29,7 +29,7 @@ describe(`GET ${PATH}`, () => {
     const outlets = await apiGet(PATH);
     expect(outlets).toHaveLength(2);
     const { alias, mac } = outlets[0];
-    expect(alias).toEqual('Lava lamp');
+    expect(alias).toEqual('lavalamp');
     expect(mac).toEqual('B0:95:75:44:94:A8');
     expect(outlets[0]).toHaveProperty('mac');
     expect(outlets[0]).toHaveProperty('alias');

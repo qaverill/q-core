@@ -28,7 +28,7 @@ module.exports = {
   updateLights: async (states, preset) => {
     const url = 'https://api.lifx.com/v1/lights/states';
     const { data } = await axios.put(url, { states }, { headers });
-    if (preset && preset !== 'on' && preset !== 'off') setCurrentPreset(preset);
+    setCurrentPreset(preset);
     return data;
   },
 };

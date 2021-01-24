@@ -1,7 +1,8 @@
 const logger = require('@q/logger');
 const { validateConfig, port } = require('./config');
 const SetupAllEndpoints = require('./endpoints');
-const { server, routes } = require('./express-server');
+const { app, routes, httpServer } = require('./express-server');
+const { setupSockets } = require('./sockets');
 // ----------------------------------
 // ROOT
 // ----------------------------------
@@ -9,7 +10,8 @@ logger.info('Starting server...');
 validateConfig();
 
 logger.info('Available endpoints:');
-SetupAllEndpoints(routes);
+const socket = setupSockets(httpServer);
+SetupAllEndpoints(socket, routes);
+app.use('/', routes);
 
-server.use('/', routes);
-server.listen(port);
+httpServer.listen(port);

@@ -23,7 +23,7 @@ kasaClient.startDiscovery().on('plug-new', ({ _sysInfo, host }) => {
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  createEndpoints: (routes) => {
+  createEndpoints: (socket, routes) => {
     // GET /kasa?outlet={lavalamp, desk}
     makeGetEndpoint({ routes, path }, async ({ request, response }) => {
       const { outlet } = request.query;
@@ -34,6 +34,8 @@ module.exports = {
       const { outlet } = request.query;
       const { state } = request.body;
       response.send(await updateOutlets(outlet, state));
+      await new Promise((r) => setTimeout(r, 1000));
+      socket.emit(path, await readOutlets());
     });
   },
 };

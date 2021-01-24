@@ -14,13 +14,12 @@ const setLights = async ({ preset, brightness }) => {
   return await apiGet(PATH);
 };
 const assertResults = (results, preset) => {
-  const expected = expectedResults[preset];
   results.forEach((light) => {
-    expect(light.power).toEqual(expected ? ON : OFF);
-    if (preset) {
-      expect(light.preset).toEqual(preset);
-      expect(light.colorString).toEqual(expected[light.label]);
-    }
+    expect(light.power).toEqual(preset === OFF ? OFF : ON);
+    expect(light.preset).toEqual(preset);
+    if (preset !== OFF) {
+      expect(light.colorString).toEqual(expectedResults[preset][light.label])
+    };
   });
 }
 // ----------------------------------
@@ -81,17 +80,13 @@ describe(`PUT ${PATH}`, () => {
     const preset = 'technicolor';
     assertResults(await setLights({ preset }), preset);
   });
+  test('"off" turns them off', async () => {
+    const preset = 'off';
+    assertResults(await setLights({ preset }), preset);
+  });
   test('each light set to the same', async () => {
     const preset = 'default';
     assertResults(await setLights({ preset }), preset);
-  });
-  test('"off" turns them off', async () => {
-    const results = await setLights({ preset: 'off' });
-    assertResults(results);
-  });
-  test('"on" turns them on but does not change color', async () => {
-    const results = await setLights({ preset: 'on' });
-    assertResults(results, 'default');
   });
   test('invalid preset returns error', async () => {
     const result = await apiPut(PATH, { preset: 'invalid' });
