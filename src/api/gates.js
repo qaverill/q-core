@@ -17,6 +17,14 @@ const handle = (method, request, response, action) => {
     logger.apiOut(`${method} ${originalUrl} returned in ${totalTime}ms ... ${statusCode}`);
   });
 };
+const handleResponse = (method, request, response) => {
+  const start = new Date().getTime();
+  return (result) => {
+    response.send.bind(response)(result);
+    const totalTime = new Date().getTime() - start;
+    logger.apiOut(`${method} ${request.originalUrl} returned in ${totalTime}ms ... ${response.statusCode}`);
+  };
+};
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
@@ -43,6 +51,20 @@ module.exports = {
     printEndpoint(DELETE, path);
     routes.delete(`/api${path}`, (request, response) => {
       handle(DELETE, request, response, action);
+    });
+  },
+  makeGetEndpointAsync: ({ routes, path }, action) => {
+    printEndpoint(GET, path);
+    routes.get(`/api${path}`, (request, response) => {
+      const respond = handleResponse(GET, request, response);
+      action({ request, respond });
+    });
+  },
+  makePutEndpointAsync: ({ routes, path }, action) => {
+    printEndpoint(PUT, path);
+    routes.put(`/api${path}`, (request, response) => {
+      const respond = handleResponse(PUT, request, response);
+      action({ request, respond });
     });
   },
 };

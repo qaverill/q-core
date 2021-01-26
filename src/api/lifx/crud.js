@@ -14,21 +14,24 @@ const headers = {
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  readLights: async () => {
+  readLights: () => new Promise((resolve) => {
     const url = `https://api.lifx.com/v1/lights/group:${group}`;
-    const { data } = await axios.get(url, { headers });
-    const preset = await getCurrentPreset();
-    const results = R.map((light) => ({
-      ...light,
-      preset,
-      colorString: determineColorString(light),
-    }), data);
-    return results;
-  },
-  updateLights: async (states, preset) => {
+    axios.get(url, { headers }).then(({ data }) => {
+      getCurrentPreset().then((preset) => {
+        const results = R.map((light) => ({
+          ...light,
+          preset,
+          colorString: determineColorString(light),
+        }), data);
+        resolve(results);
+      });
+    });
+  }),
+  updateLights: (states, preset) => new Promise((resolve) => {
     const url = 'https://api.lifx.com/v1/lights/states';
-    const { data } = await axios.put(url, { states }, { headers });
-    setCurrentPreset(preset);
-    return data;
-  },
+    axios.put(url, { states }, { headers }).then(({ data }) => {
+      setCurrentPreset(preset);
+      resolve(data);
+    });
+  }),
 };

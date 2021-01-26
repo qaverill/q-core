@@ -1,6 +1,6 @@
 const logger = require('@q/logger');
 const { validateConfig, port } = require('./config');
-const SetupAllEndpoints = require('./endpoints');
+const SetupAllEndpoints = require('./api');
 const { app, routes, httpServer } = require('./express-server');
 const { setupSockets } = require('./sockets');
 // ----------------------------------

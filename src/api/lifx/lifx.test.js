@@ -2,7 +2,7 @@ const { apiGet, apiPut } = require('@q/test-helpers');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const PATH = '/lifx';
+const PATH = '/control/lifx';
 const ON = 'on';
 const OFF = 'off';
 const setLights = async ({ preset, brightness }) => {

@@ -2,9 +2,9 @@ const { apiGet, apiPut } = require('@q/test-helpers');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const PATH = '/kasa';
-const PATH_DESK = '/kasa?outlet=desk';
-const PATH_LAVALAMP = '/kasa?outlet=lavalamp'
+const PATH = '/control/kasa';
+const PATH_DESK = '/control/kasa?outlet=desk';
+const PATH_LAVALAMP = '/control/kasa?outlet=lavalamp'
 // ----------------------------------
 // TESTS
 // ----------------------------------

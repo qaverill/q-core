@@ -1,12 +1,12 @@
 const { Client } = require('tplink-smarthome-api');
 const R = require('ramda');
-const { makeGetEndpoint, makePutEndpoint } = require('../gates');
+const { makeGetEndpointAsync, makePutEndpointAsync } = require('../gates');
 const { readOutlets, updateOutlets } = require('./crud');
 const { setOutletHost } = require('./redis');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const path = '/kasa';
+const path = '/control/kasa';
 const myMacAddresses = {
   'B0:95:75:44:94:A8': 'lavalamp',
   'B0:95:75:44:A5:D5': 'desk',
@@ -24,18 +24,20 @@ kasaClient.startDiscovery().on('plug-new', ({ _sysInfo, host }) => {
 // ----------------------------------
 module.exports = {
   createEndpoints: (socket, routes) => {
-    // GET /kasa?outlet={lavalamp, desk}
-    makeGetEndpoint({ routes, path }, async ({ request, response }) => {
+    // GET /control/kasa?outlet={lavalamp, desk}
+    makeGetEndpointAsync({ routes, path }, ({ request, respond }) => {
       const { outlet } = request.query;
-      response.send(await readOutlets(outlet));
+      readOutlets(outlet).then(respond);
     });
-    // PUT /kasa
-    makePutEndpoint(({ routes, path }), async ({ request, response }) => {
+    // PUT /control/kasa
+    makePutEndpointAsync(({ routes, path }), ({ request, respond }) => {
       const { outlet } = request.query;
       const { state } = request.body;
-      response.send(await updateOutlets(outlet, state));
-      await new Promise((r) => setTimeout(r, 1000));
-      socket.emit(path, await readOutlets());
+      updateOutlets(outlet, state).then(async (result) => {
+        respond(result);
+        await new Promise((r) => setTimeout(r, 1000)); // TODO: remove this
+        readOutlets().then((outlets) => socket.emit('/kasa', outlets));
+      });
     });
   },
 };
