@@ -22,7 +22,7 @@ module.exports = {
         respond('Invalid state, see lightStates.js::buildPayload() for possible states');
       } else {
         updateLights(states, request.body.preset).then(respond);
-        readLights().then((lights) => socket.emit('/kasa', lights));
+        readLights().then((lights) => socket.emit('/lifx', lights));
       }
     });
   },

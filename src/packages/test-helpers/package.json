@@ -3,8 +3,5 @@
   "version": "1.0.0",
   "description": "helpers for jest tests",
   "main": "index.js",
-  "scripts": {
-    "test": "jest"
-  },
   "author": "Q"
 }

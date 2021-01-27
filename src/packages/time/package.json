@@ -1,5 +1,5 @@
 {
-  "name": "@q/logger",
+  "name": "@q/time",
   "version": "1.0.0",
   "description": "logger for q",
   "main": "index.js",

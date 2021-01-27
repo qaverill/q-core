@@ -1,6 +1,6 @@
 const R = require('ramda');
 const { makeGetEndpointAsync } = require('../gates');
-const { analyzeMusicTemporal, analyzeMusicCurrent } = require('./analyze');
+const { analyzeMusic } = require('./analyze');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -20,8 +20,10 @@ module.exports = {
     makeGetEndpointAsync({ routes, path }, ({ request, respond }) => {
       const { start, end } = request.query;
       if (end && R.isNil(start)) respond('Cannot provide end but no start!');
-      else if (start) analyzeMusicTemporal({ start, end }).then(respond);
-      else analyzeMusicCurrent().then(respond);
+      else {
+        const timeframe = (start == null && end == null) ? null : { start, end };
+        analyzeMusic(timeframe).then(respond);
+      }
     });
   },
 };

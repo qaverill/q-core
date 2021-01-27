@@ -1,4 +1,5 @@
 const { apiGet } = require('@q/test-helpers');
+const { getNDaysAgoTimestamp } = require('@q/time');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -15,15 +16,19 @@ describe(`GET ${PATH}`, () => {
     expect(results).toEqual('Cannot provide end but no start!');
   });
   test('start but no end results in temporal analysis leading up to today', async () => {
-    const results = await apiGet(`${PATH}?start=start`);
-    expect(results).toEqual('temporal analysis...');
+    const { start, end } = await apiGet(`${PATH}?start=start`);
+    expect(start).toEqual('start');
+    expect(end).toBeUndefined();
   });
   test('start and end results in temporal analysis with correct timeframe', async () => {
-    const results = await apiGet(`${PATH}?start=start&end=end`);
-    expect(results).toEqual('temporal analysis...');
+    const { start, end } = await apiGet(`${PATH}?start=start&end=end`);
+    expect(start).toEqual('start');
+    expect(end).toEqual('end');
   });
   test('no start or end results in current analysis (of past 3 days)', async () => {
-    const results = await apiGet(PATH);
-    expect(results).toEqual('current analysis...');
+    const threeDaysAgo = getNDaysAgoTimestamp(3); // 5 for buffer
+    const { start, end } = await apiGet(PATH);
+    expect(start).toBeGreaterThanOrEqual(threeDaysAgo);
+    expect(end).toBeNull();
   });
 });
