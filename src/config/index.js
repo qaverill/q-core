@@ -15,7 +15,9 @@ module.exports = {
   validateConfig: () => {
     const itemsToValidate = [
       'port',
-      'mongo_uri',
+      'MONGO_URI',
+      'MONGO_DB',
+      'MONGO_PARAMS',
       'spotify.client_id',
       'spotify.client_secret',
       'spotify.redirect_uri',

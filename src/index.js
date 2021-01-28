@@ -7,6 +7,7 @@ const { setupSockets } = require('./sockets');
 // ROOT
 // ----------------------------------
 logger.info('Starting server...');
+console.log(`  PORT: ${port}`);
 validateConfig();
 
 logger.info('Available endpoints:');
