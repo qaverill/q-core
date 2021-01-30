@@ -21,8 +21,10 @@ module.exports = {
       if (R.any(R.isNil, states)) {
         respond('Invalid state, see lightStates.js::buildPayload() for possible states');
       } else {
-        updateLights(states, request.body.preset).then(respond);
-        readLights().then((lights) => socket.emit('/lifx', lights));
+        updateLights(states, request.body.preset).then((result) => {
+          respond(result);
+          readLights().then((lights) => socket.emit('/lifx', lights));
+        });
       }
     });
   },
