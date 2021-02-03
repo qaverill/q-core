@@ -1,11 +1,12 @@
-const { response } = require('express');
-const R = require('ramda');
 const { makeGetEndpointAsync } = require('../gates');
 const { analyzeMusic } = require('./analyze');
+const { currentTimeframe } = require('@q/time');
+
 // ----------------------------------
 // HELPERS
 // ----------------------------------
 const path = '/analyze/music';
+const parseInput = (number) => parseInt(number, 10) || null;
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
@@ -20,14 +21,11 @@ module.exports = {
      */
     makeGetEndpointAsync({ routes, path }, ({ request, respond }) => {
       const { start, end } = request.query;
-      if (end && R.isNil(start)) respond('Cannot provide end but no start!');
-      else if (start > end) respond('Start cannot be greater than end!');
-      else {
-        const timeframe = (start == null && end == null)
-          ? null
-          : { start: parseInt(start, 10), end: parseInt(end, 10) };
-        analyzeMusic(timeframe).then(respond);
-      }
+      const timeframe = (start == null && end == null)
+        ? currentTimeframe()
+        : { start: parseInput(start), end: parseInput(end) };
+      analyzeMusic(timeframe)
+        .then(respond)
     });
   },
 };
