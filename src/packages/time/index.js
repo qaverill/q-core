@@ -8,6 +8,7 @@ const getNDaysAgoTimestamp = (N) => {
   date.setDate(date.getDate() - N);
   return dateToTimestamp(date);
 };
+const parseInput = (number) => parseInt(number, 10) || null;
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
@@ -19,4 +20,8 @@ module.exports = {
     start: getNDaysAgoTimestamp(3),
     end: null,
   }),
+  requestToTimeframe: (request) => {
+    const { start, end } = request.query;
+    return { start: parseInput(start), end: parseInput(end) };
+  },
 };

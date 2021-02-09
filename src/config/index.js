@@ -18,6 +18,7 @@ module.exports = {
       'MONGO_URI',
       'MONGO_DB',
       'MONGO_PARAMS',
+      'SQL_CONFIG',
       'spotify.client_id',
       'spotify.client_secret',
       'spotify.redirect_uri',

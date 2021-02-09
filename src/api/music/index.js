@@ -1,12 +1,12 @@
+const { currentTimeframe, requestToTimeframe } = require('@q/time');
 const { makeGetEndpointAsync } = require('../gates');
 const { analyzeMusic } = require('./analyze');
-const { currentTimeframe } = require('@q/time');
+const { readListens } = require('./crud');
 
 // ----------------------------------
 // HELPERS
 // ----------------------------------
 const path = '/analyze/music';
-const parseInput = (number) => parseInt(number, 10) || null;
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
@@ -23,9 +23,10 @@ module.exports = {
       const { start, end } = request.query;
       const timeframe = (start == null && end == null)
         ? currentTimeframe()
-        : { start: parseInput(start), end: parseInput(end) };
-      analyzeMusic(timeframe)
-        .then(respond)
+        : requestToTimeframe(request);
+      readListens(timeframe).then((listens) => {
+        analyzeMusic(listens).then(respond);
+      });
     });
   },
 };
