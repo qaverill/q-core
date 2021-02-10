@@ -1,27 +1,5 @@
+/* eslint-disable jest/expect-expect */
 const { apiGet, apiPut } = require('@q/test-helpers');
-// ----------------------------------
-// HELPERS
-// ----------------------------------
-const PATH = '/control/lifx';
-const ON = 'on';
-const OFF = 'off';
-const setLights = async ({ preset, brightness }) => {
-  const body = {};
-  if (preset) body.preset = preset;
-  if (brightness) body.brightness = brightness;
-  await apiPut(PATH, body);
-  await new Promise(r => setTimeout(r, 1000));
-  return await apiGet(PATH);
-};
-const assertResults = (results, preset) => {
-  results.forEach((light) => {
-    expect(light.power).toEqual(preset === OFF ? OFF : ON);
-    expect(light.preset).toEqual(preset);
-    if (preset !== OFF) {
-      expect(light.colorString).toEqual(expectedResults[preset][light.label])
-    };
-  });
-}
 // ----------------------------------
 // EXPECTED RESULTS
 // ----------------------------------
@@ -30,21 +8,45 @@ const expectedResults = {
     'Tree Left': 'unknown',
     'Tree Right': 'unknown',
     'Flower Lamp': 'unknown',
-    'Lamp': 'unknown'
+    Lamp: 'unknown',
   },
   technicolor: {
     'Tree Left': 'green',
     'Tree Right': 'purple',
     'Flower Lamp': 'blue',
-    'Lamp': 'yellow'
+    Lamp: 'yellow',
   },
   default: {
     'Tree Left': 'default',
     'Tree Right': 'default',
     'Flower Lamp': 'default',
-    'Lamp': 'default'
-  }
-}
+    Lamp: 'default',
+  },
+};
+// ----------------------------------
+// HELPERS
+// ----------------------------------
+const PATH = '/control/lights';
+const ON = 'on';
+const OFF = 'off';
+const setLights = async ({ preset, brightness }) => {
+  const body = {};
+  if (preset) body.preset = preset;
+  if (brightness) body.brightness = brightness;
+  await apiPut(PATH, body);
+  await new Promise((r) => setTimeout(r, 1000));
+  const results = await apiGet(PATH);
+  return results;
+};
+const assertResults = (results, preset) => {
+  results.forEach((light) => {
+    expect(light.power).toEqual(preset === OFF ? OFF : ON);
+    expect(light.preset).toEqual(preset);
+    if (preset !== OFF) {
+      expect(light.colorString).toEqual(expectedResults[preset][light.label]);
+    }
+  });
+};
 // ----------------------------------
 // TESTS
 // ----------------------------------
@@ -68,8 +70,8 @@ describe(`GET ${PATH}`, () => {
       expect(result).toHaveProperty('colorString');
       expect(result).toHaveProperty('preset');
       expect(Object.keys(result)).toHaveLength(14);
-    })
-  })
+    });
+  });
 });
 describe(`PUT ${PATH}`, () => {
   test('each light set to random', async () => {
@@ -93,13 +95,13 @@ describe(`PUT ${PATH}`, () => {
     expect(result).toEqual('Invalid state, see lightStates.js::buildPayload() for possible states');
   });
   test('can change only the brightness of them all', async () => {
-    const brightness = 0.5
+    const brightness = 0.5;
     const results = await setLights({ brightness });
     assertResults(results, 'default');
     results.forEach((light) => expect(light.brightness).toEqual(brightness));
   });
   test('can change the brightness and color of them all', async () => {
-    const brightness = 1
+    const brightness = 1;
     const preset = 'technicolor';
     const results = await setLights({ brightness, preset });
     assertResults(results, preset);

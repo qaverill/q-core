@@ -1,7 +1,7 @@
 const { currentTimeframe, requestToTimeframe } = require('@q/time');
 const { makeGetEndpointAsync } = require('../gates');
 const { analyzeMusic } = require('./analyze');
-const { readListens } = require('./crud');
+const { readListens } = require('../../crud/music');
 
 // ----------------------------------
 // HELPERS

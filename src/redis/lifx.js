@@ -3,7 +3,7 @@ const logger = require('@q/logger');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const hostKey = (outlet) => `kasa:${outlet}:host`;
+const currentPresetKey = 'lights:currentPreset';
 // ----------------------------------
 // REDIS
 // ----------------------------------
@@ -13,11 +13,11 @@ redisClient.on('error', logger.error);
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  setOutletHost: (outlet, host) => new Promise((resolve) => {
-    redisClient.set(hostKey(outlet), host, resolve);
+  setCurrentPreset: (preset) => new Promise((resolve) => {
+    redisClient.set(currentPresetKey, preset, resolve);
   }),
-  getOutletHost: (outlet) => new Promise((resolve) => {
-    redisClient.get(hostKey(outlet), (_, result) => {
+  getCurrentPreset: () => new Promise((resolve) => {
+    redisClient.get(currentPresetKey, (_, result) => {
       resolve(result);
     });
   }),

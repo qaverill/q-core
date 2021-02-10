@@ -3,6 +3,7 @@ const { validateConfig, port } = require('./config');
 const SetupAllEndpoints = require('./api');
 const { app, routes, httpServer } = require('./express-server');
 const { setupSockets } = require('./sockets');
+const KickoffIngestions = require('./ingesting');
 // ----------------------------------
 // ROOT
 // ----------------------------------
@@ -16,3 +17,5 @@ SetupAllEndpoints(socket, routes);
 app.use('/', routes);
 
 httpServer.listen(port);
+
+KickoffIngestions();

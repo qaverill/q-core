@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb');
 const logger = require('@q/logger');
 const R = require('ramda');
-const { MONGO_URI, MONGO_DB, MONGO_PARAMS } = require('./config');
+const { MONGO_URI, MONGO_DB, MONGO_PARAMS } = require('../config');
 // ----------------------------------
 // HELPERS
 // ----------------------------------

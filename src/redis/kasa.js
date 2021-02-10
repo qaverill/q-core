@@ -3,7 +3,7 @@ const logger = require('@q/logger');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const hostKey = (outlet) => `kasa:${outlet}:host`;
+const hostKey = (outlet) => `outlets:${outlet}:host`;
 // ----------------------------------
 // REDIS
 // ----------------------------------

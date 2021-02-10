@@ -1,5 +1,5 @@
 const { makeGetEndpointAsync } = require('../gates');
-const { readTransactions } = require('./crud');
+const { readTransactions } = require('../../crud/transactions');
 // ----------------------------------
 // ENDPOINTS
 // ----------------------------------

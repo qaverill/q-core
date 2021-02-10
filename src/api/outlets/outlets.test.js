@@ -2,9 +2,9 @@ const { apiGet, apiPut } = require('@q/test-helpers');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const PATH = '/control/kasa';
-const PATH_DESK = '/control/kasa?outlet=desk';
-const PATH_LAVALAMP = '/control/kasa?outlet=lavalamp'
+const PATH = '/control/outlets';
+const PATH_DESK = '/control/outlets?outlet=desk';
+const PATH_LAVALAMP = '/control/outlets?outlet=lavalamp';
 // ----------------------------------
 // TESTS
 // ----------------------------------
@@ -43,41 +43,41 @@ describe(`PUT ${PATH}`, () => {
   test('setting desk outlet state', async () => {
     const offResults = await apiPut(PATH_DESK, { state: 'off' });
     expect(offResults[0]).toEqual(true);
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 1000));
     const offOutlets = await apiGet(PATH_DESK);
-    expect(offOutlets[0]['on_time']).toEqual(0);
+    expect(offOutlets[0].on_time).toEqual(0);
     const onResults = await apiPut(PATH_DESK, { state: 'on' });
     expect(onResults[0]).toEqual(true);
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 1000));
     const onOutlets = await apiGet(PATH_DESK);
-    expect(onOutlets[0]['on_time']).toBeGreaterThan(0);
+    expect(onOutlets[0].on_time).toBeGreaterThan(0);
   });
   test('setting lavalamp outlet state', async () => {
     const offResults = await apiPut(PATH_LAVALAMP, { state: 'off' });
     expect(offResults[0]).toEqual(true);
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 1000));
     const offOutlets = await apiGet(PATH_LAVALAMP);
-    expect(offOutlets[0]['on_time']).toEqual(0);
+    expect(offOutlets[0].on_time).toEqual(0);
     const onResults = await apiPut(PATH_LAVALAMP, { state: 'on' });
     expect(onResults[0]).toEqual(true);
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 1000));
     const onOutlets = await apiGet(PATH_LAVALAMP);
-    expect(onOutlets[0]['on_time']).toBeGreaterThan(0);
+    expect(onOutlets[0].on_time).toBeGreaterThan(0);
   });
   test('setting all outlets state', async () => {
     const offResults = await apiPut(PATH, { state: 'off' });
     expect(offResults[0]).toEqual(true);
     expect(offResults[1]).toEqual(true);
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 1000));
     const offOutlets = await apiGet(PATH);
-    expect(offOutlets[0]['on_time']).toEqual(0);
-    expect(offOutlets[1]['on_time']).toEqual(0);
+    expect(offOutlets[0].on_time).toEqual(0);
+    expect(offOutlets[1].on_time).toEqual(0);
     const onResults = await apiPut(PATH, { state: 'on' });
     expect(onResults[0]).toEqual(true);
     expect(onResults[1]).toEqual(true);
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 1000));
     const onOutlets = await apiGet(PATH);
-    expect(onOutlets[0]['on_time']).toBeGreaterThan(0);
-    expect(onOutlets[1]['on_time']).toBeGreaterThan(0);
+    expect(onOutlets[0].on_time).toBeGreaterThan(0);
+    expect(onOutlets[1].on_time).toBeGreaterThan(0);
   });
 });

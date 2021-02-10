@@ -1,4 +1,4 @@
-const { timeframeRead } = require('../../mongo');
+const { timeframeRead } = require('../mongo');
 // ----------------------------------
 // HELPERS
 // ----------------------------------

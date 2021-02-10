@@ -1,6 +1,6 @@
 const R = require('ramda');
 const { Client } = require('tplink-smarthome-api');
-const { getOutletHost } = require('./redis');
+const { getOutletHost } = require('../../redis/kasa');
 // ----------------------------------
 // HELPERS
 // ----------------------------------

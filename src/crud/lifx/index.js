@@ -2,7 +2,7 @@ const axios = require('axios');
 const R = require('ramda');
 const config = require('../../config');
 const { determineColorString } = require('./lightStates');
-const { getCurrentPreset, setCurrentPreset } = require('./redis');
+const { getCurrentPreset, setCurrentPreset } = require('../../redis/lifx');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
