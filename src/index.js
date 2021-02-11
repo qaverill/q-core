@@ -1,8 +1,8 @@
 const logger = require('@q/logger');
 const { validateConfig, port } = require('./config');
 const SetupAllEndpoints = require('./api');
-const { app, routes, httpServer } = require('./express-server');
-const { setupSockets } = require('./sockets');
+const { app, routes, httpServer } = require('./modules/express-server');
+const { setupSockets } = require('./modules/sockets');
 const KickoffIngestions = require('./ingesting');
 // ----------------------------------
 // ROOT
@@ -18,4 +18,4 @@ app.use('/', routes);
 
 httpServer.listen(port);
 
-KickoffIngestions();
+// KickoffIngestions();

@@ -12,6 +12,7 @@ module.exports = {
     ecmaVersion: 12,
   },
   rules: {
+    'no-underscore-dangle': 0,
   },
   plugins: ['jest'],
 };
