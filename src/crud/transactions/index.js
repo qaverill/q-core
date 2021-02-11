@@ -1,9 +1,6 @@
 const R = require('ramda');
 const { executeSQL, timeframeToQuery } = require('../mssql');
 // ----------------------------------
-// HELPERS
-// ----------------------------------
-// ----------------------------------
 // CRUD
 // ----------------------------------
 module.exports = {

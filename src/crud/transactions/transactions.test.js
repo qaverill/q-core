@@ -21,7 +21,7 @@ const data = [
 // TESTS
 // ----------------------------------
 describe('CREATE', () => {
-  test('successfully creates all transactions in input', async () => {
+  test('successfully creates all transactions', async () => {
     await deleteTransactions();
     const results = await createTransactions(data);
     expect(results).toEqual([data.length]);
