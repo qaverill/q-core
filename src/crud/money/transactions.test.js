@@ -4,7 +4,7 @@ const {
   readTransactions,
   updateTransactions,
   deleteTransactions,
-} = require('.');
+} = require('./transactions');
 // ----------------------------------
 // DATA
 // ----------------------------------

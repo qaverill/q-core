@@ -1,7 +1,7 @@
 const { Client } = require('tplink-smarthome-api');
 const R = require('ramda');
 const { makeGetEndpointAsync, makePutEndpointAsync } = require('../gates');
-const { readOutlets, updateOutlets } = require('../../crud/kasa');
+const { readOutlets, updateOutlets } = require('../../crud/control/outlets');
 const { setOutletHost } = require('../../redis/kasa');
 // ----------------------------------
 // HELPERS

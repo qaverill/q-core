@@ -39,9 +39,10 @@ module.exports = {
     MongoClient.connect(MONGO_URI, MONGO_PARAMS, (connectError, db) => {
       if (connectError) logger.error(`Failed to connect to mongo when inserting to ${collection}`, connectError);
       else {
+        const payload = Array.isArray(documents) ? documents : [documents];
         db.db(MONGO_DB)
           .collection(collection)
-          .insertMany(documents, { ordered: false }, (insertError, result) => {
+          .insertMany(payload, { ordered: false }, (insertError, result) => {
             db.close();
             if (insertError) logger.error(`Failed to insert ${collection} into mongo`, insertError);
             else resolve(result);

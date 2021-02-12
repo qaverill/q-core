@@ -1,7 +1,7 @@
 const R = require('ramda');
 const { makeGetEndpointAsync, makePutEndpointAsync } = require('../gates');
-const { readLights, updateLights } = require('../../crud/lifx');
-const { buildPayload } = require('../../crud/lifx/lightStates');
+const { readLights, updateLights } = require('../../crud/control/lights');
+const { buildPayload } = require('../../algorithms/lights');
 // ----------------------------------
 // HELPERS
 // ----------------------------------

@@ -3,7 +3,7 @@ const {
   readPaybacks,
   updatePaybacks,
   deletePaybacks,
-} = require('.');
+} = require('./paybacks');
 const { mongoDelete } = require('../mongo');
 // ----------------------------------
 // HELPERS
