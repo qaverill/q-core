@@ -11,7 +11,7 @@ const headers = {
   Authorization: `Bearer ${config.lifx.access_token}`,
 };
 // ----------------------------------
-// EXPORTS
+// CRUD external api
 // ----------------------------------
 module.exports = {
   readLights: () => new Promise((resolve) => {

@@ -4,7 +4,7 @@ const { mongoFind, timeframeToQuery } = require('../mongo');
 // ----------------------------------
 const collection = 'listens';
 // ----------------------------------
-// EXPORTS
+// CRUD mssql TOBE
 // ----------------------------------
 module.exports = {
   readListens: (timeframe = {}) => mongoFind(timeframeToQuery(timeframe), collection),

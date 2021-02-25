@@ -10,7 +10,7 @@ const myOutlets = ['lavalamp', 'desk'];
 // ----------------------------------
 const kasaClient = new Client();
 // ----------------------------------
-// EXPORTS
+// CRUD external api
 // ----------------------------------
 module.exports = {
   readOutlets: (outlet) => new Promise((resolve) => {

@@ -1,7 +1,6 @@
 const { makePostEndpoint } = require('../gates');
-const { createPaybacks, readPaybacks } = require('../../crud/money/paybacks');
-const { exportPaybacks } = require('../../data/paybacks');
-const { ingestMoney } = require('../../ingesting/money');
+const { exportPaybacks, importPaybacks } = require('../../data/paybacks');
+const { processPayback } = require('../../algorithms/money');
 // ----------------------------------
 // ENDPOINTS
 // ----------------------------------
@@ -16,11 +15,12 @@ module.exports = {
      */
     makePostEndpoint({ routes, path: '/money/paybacks' }, ({ request, respond }) => {
       const { to, from, amount } = request.query;
-      createPaybacks({ to, from, amount })
-        .then(readPaybacks)
-        .then(exportPaybacks)
-        .then(ingestMoney)
+      processPayback({ to, from, amount })
         .then(respond);
+      importPaybacks((paybacks) => {
+        paybacks.push({ to, from, amount });
+        exportPaybacks(paybacks);
+      });
     });
   },
 };
