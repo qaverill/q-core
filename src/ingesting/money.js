@@ -1,4 +1,3 @@
-const R = require('ramda');
 const { deleteTransactions, createTransactions } = require('../crud/money/transactions');
 const { tagTransactions, processPaybacks } = require('../algorithms/money');
 const { importBankFacts } = require('../data/bankFacts');

@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon src/index.js",
-    "test": "jest"
+    "test": "jest --runInBand"
   },
   "dependencies": {
     "@q/logger": "link:src/packages/logger",
