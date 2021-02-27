@@ -1,45 +1,60 @@
-const logger = require('@q/logger');
+const R = require('ramda');
 const { deleteTransaction, updateTransaction, readTransaction } = require('../crud/money/transactions');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const validateFrom = ({ from, fromTransaction }) => {
-
-}
+const gatherTransactions = R.compose(
+  R.reduce((p, fn) => p.then(fn), Promise.resolve([])),
+  R.map(({ from, to }) => (acc) => new Promise((resolve) => {
+    readTransaction(from).then((fromTransaction) => {
+      readTransaction(to).then((toTransaction) => {
+        resolve([...acc, {
+          from, fromTransaction, to, toTransaction,
+        }]);
+      });
+    });
+  })),
+);
+const validatePaybackTransactions = (paybackTransactions) => {
+  paybackTransactions.forEach(({
+    from, fromTransaction, to, toTransaction,
+  }) => {
+    if (fromTransaction == null) throw new Error(`From transaction ${from} does not exist!`);
+    if (fromTransaction.amount < 0) throw new Error(`From transaction ${from} must have a positive amount`);
+    if (toTransaction == null) throw new Error(`To transaction ${to} does not exist!`);
+    if (toTransaction.amount > 0) throw new Error(`toAmount must be less than 0 ---- toAmount: ${toTransaction.amount}`);
+    const newAmount = toTransaction.amount + fromTransaction.amount;
+    if (newAmount > 0) throw new Error(`newAmount must be less than 0 ---- newAmount: ${newAmount}`);
+  });
+  return paybackTransactions;
+};
+const processPaybackTransactions = R.compose(
+  R.reduce((p, fn) => p.then(fn), Promise.resolve()),
+  R.map(({ fromTransaction, toTransaction }) => () => new Promise((resolve) => {
+    deleteTransaction(fromTransaction.id).then(() => {
+      const newAmount = toTransaction.amount + fromTransaction.amount;
+      updateTransaction({ id: toTransaction.id, amount: newAmount })
+        .then(resolve);
+    });
+  })),
+);
 // ----------------------------------
 // LOGIC
 // ----------------------------------
 const tagTransaction = (fact, tags) => {
   // TODO: tag fact and return it
 };
-// TODO: test me!
-const processPayback = ({ from, to }) => new Promise((resolve, reject) => {
-  readTransaction(from).then((fromTransaction) => {
-    if (fromTransaction == null) throw new Error(`From transaction ${from} does not exist!`);
-    const { amount: fromAmount } = fromTransaction;
-    if (fromAmount < 0) throw new Error(`From transaction ${from} must have a positive amount`);
-    readTransaction(to).then((toTransaction) => {
-      if (toTransaction == null) throw new Error(`To transaction ${to} does not exist!`);
-      const { amount: toAmount } = toTransaction;
-      if (toAmount > 0) throw new Error(`toAmount must be less than 0 ---- toAmount: ${toAmount}`);
-      const newAmount = toAmount + fromAmount;
-      if (newAmount > 0) throw new Error(`newAmount must be less than 0 ---- newAmount: ${newAmount}`);
-      deleteTransaction(from).then(() => {
-        updateTransaction({ id: to, amount: toAmount + fromAmount }).then(resolve);
-      });
-    }).catch(reject);
-  }).catch(reject);
-});
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  processPayback,
-  processPaybacks: async (paybacks) => {
-    paybacks.forEach(async (payback) => {
-      await processPayback(payback);
-    });
-    logger.info(`Successfully processed ${paybacks.length} paybacks!`);
-  },
-  tagTransactions: ({ bankFacts, tags }) => bankFacts.map((fact) => tagTransaction(fact, tags)),
+  gatherTransactions,
+  processPaybacks: (paybacks) => (
+    gatherTransactions(Array.isArray(paybacks) ? paybacks : [paybacks])
+      .then(validatePaybackTransactions)
+      .then(processPaybackTransactions)
+  ),
+  tagTransactions: ({ bankFacts, tags }) => bankFacts.map(
+    (bankFact) => tagTransaction(bankFact, tags),
+  ),
 };

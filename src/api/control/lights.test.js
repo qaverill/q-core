@@ -50,61 +50,63 @@ const assertResults = (results, preset) => {
 // ----------------------------------
 // TESTS
 // ----------------------------------
-describe(`GET ${PATH}`, () => {
-  test('returns all the correct values and no more', async () => {
-    const results = await apiGet(PATH);
-    expect(results).toHaveLength(4);
-    results.forEach((result) => {
-      expect(result).toHaveProperty('id');
-      expect(result).toHaveProperty('uuid');
-      expect(result).toHaveProperty('label');
-      expect(result).toHaveProperty('connected');
-      expect(result).toHaveProperty('power');
-      expect(result).toHaveProperty('color');
-      expect(result).toHaveProperty('brightness');
-      expect(result).toHaveProperty('group.name', 'Q');
-      expect(result).toHaveProperty('location.name', 'Q Palace');
-      expect(result).toHaveProperty('product');
-      expect(result).toHaveProperty('last_seen');
-      expect(result).toHaveProperty('seconds_since_seen');
-      expect(result).toHaveProperty('colorString');
-      expect(result).toHaveProperty('preset');
-      expect(Object.keys(result)).toHaveLength(14);
+describe.skip('lights', () => {
+  describe(`GET ${PATH}`, () => {
+    test('returns all the correct values and no more', async () => {
+      const results = await apiGet(PATH);
+      expect(results).toHaveLength(4);
+      results.forEach((result) => {
+        expect(result).toHaveProperty('id');
+        expect(result).toHaveProperty('uuid');
+        expect(result).toHaveProperty('label');
+        expect(result).toHaveProperty('connected');
+        expect(result).toHaveProperty('power');
+        expect(result).toHaveProperty('color');
+        expect(result).toHaveProperty('brightness');
+        expect(result).toHaveProperty('group.name', 'Q');
+        expect(result).toHaveProperty('location.name', 'Q Palace');
+        expect(result).toHaveProperty('product');
+        expect(result).toHaveProperty('last_seen');
+        expect(result).toHaveProperty('seconds_since_seen');
+        expect(result).toHaveProperty('colorString');
+        expect(result).toHaveProperty('preset');
+        expect(Object.keys(result)).toHaveLength(14);
+      });
     });
   });
-});
-describe(`PUT ${PATH}`, () => {
-  test('each light set to random', async () => {
-    const preset = 'random';
-    assertResults(await setLights({ preset }), preset);
-  });
-  test('each light set to its own', async () => {
-    const preset = 'technicolor';
-    assertResults(await setLights({ preset }), preset);
-  });
-  test('"off" turns them off', async () => {
-    const preset = 'off';
-    assertResults(await setLights({ preset }), preset);
-  });
-  test('each light set to the same', async () => {
-    const preset = 'default';
-    assertResults(await setLights({ preset }), preset);
-  });
-  test('invalid preset returns error', async () => {
-    const result = await apiPut(PATH, { preset: 'invalid' });
-    expect(result).toEqual('Invalid state, see lightStates.js::buildPayload() for possible states');
-  });
-  test('can change only the brightness of them all', async () => {
-    const brightness = 0.5;
-    const results = await setLights({ brightness });
-    assertResults(results, 'default');
-    results.forEach((light) => expect(light.brightness).toEqual(brightness));
-  });
-  test('can change the brightness and color of them all', async () => {
-    const brightness = 1;
-    const preset = 'technicolor';
-    const results = await setLights({ brightness, preset });
-    assertResults(results, preset);
-    results.forEach((light) => expect(light.brightness).toEqual(brightness));
+  describe(`PUT ${PATH}`, () => {
+    test('each light set to random', async () => {
+      const preset = 'random';
+      assertResults(await setLights({ preset }), preset);
+    });
+    test('each light set to its own', async () => {
+      const preset = 'technicolor';
+      assertResults(await setLights({ preset }), preset);
+    });
+    test('"off" turns them off', async () => {
+      const preset = 'off';
+      assertResults(await setLights({ preset }), preset);
+    });
+    test('each light set to the same', async () => {
+      const preset = 'default';
+      assertResults(await setLights({ preset }), preset);
+    });
+    test('invalid preset returns error', async () => {
+      const result = await apiPut(PATH, { preset: 'invalid' });
+      expect(result).toEqual('Invalid state, see lightStates.js::buildPayload() for possible states');
+    });
+    test('can change only the brightness of them all', async () => {
+      const brightness = 0.5;
+      const results = await setLights({ brightness });
+      assertResults(results, 'default');
+      results.forEach((light) => expect(light.brightness).toEqual(brightness));
+    });
+    test('can change the brightness and color of them all', async () => {
+      const brightness = 1;
+      const preset = 'technicolor';
+      const results = await setLights({ brightness, preset });
+      assertResults(results, preset);
+      results.forEach((light) => expect(light.brightness).toEqual(brightness));
+    });
   });
 });

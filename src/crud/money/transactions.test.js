@@ -48,11 +48,11 @@ describe('Transactions CRUD', () => {
       });
       test('start and end return correct transactions', async () => {
         const results = await readTransactions({ start: 3, end: 4 });
-        expect(results).toEqual([transactions[2], transactions[3]]);
+        expect(results).toEqual([transactions[3], transactions[4]]);
       });
       test('start but no end return correct transactions', async () => {
         const results = await readTransactions({ start: 5 });
-        expect(results).toEqual([transactions[4], transactions[5], transactions[6]]);
+        expect(results).toEqual([transactions[5], transactions[6], transactions[7]]);
       });
       test('no start but end return all transactions', async () => {
         const results = await readTransactions({ end: 5 });
