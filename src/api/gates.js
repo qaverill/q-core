@@ -67,4 +67,11 @@ module.exports = {
       action({ request, respond });
     });
   },
+  makePostEndpointAsync: ({ routes, path }, action) => {
+    printEndpoint(POST, path);
+    routes.post(`/api${path}`, (request, response) => {
+      const respond = handleResponse(POST, request, response);
+      action({ request, respond });
+    });
+  },
 };

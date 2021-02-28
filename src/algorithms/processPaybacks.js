@@ -6,6 +6,7 @@ const { deleteTransaction, updateTransaction, readTransaction } = require('../cr
 const gatherTransactions = R.compose(
   R.reduce((p, fn) => p.then(fn), Promise.resolve([])),
   R.map(({ from, to }) => (acc) => new Promise((resolve) => {
+    if (R.isNil(from) || R.isNil(to)) throw new Error(`Must provide a ${R.isNil(from) ? 'from' : 'to'} field!`);
     readTransaction(from).then((fromTransaction) => {
       readTransaction(to).then((toTransaction) => {
         resolve([...acc, {
@@ -41,20 +42,10 @@ const processPaybackTransactions = R.compose(
 // ----------------------------------
 // LOGIC
 // ----------------------------------
-const tagTransaction = (fact, tags) => {
-  // TODO: tag fact and return it
-};
-// ----------------------------------
-// EXPORTS
-// ----------------------------------
 module.exports = {
-  gatherTransactions,
   processPaybacks: (paybacks) => (
     gatherTransactions(Array.isArray(paybacks) ? paybacks : [paybacks])
       .then(validatePaybackTransactions)
       .then(processPaybackTransactions)
-  ),
-  tagTransactions: ({ bankFacts, tags }) => bankFacts.map(
-    (bankFact) => tagTransaction(bankFact, tags),
   ),
 };

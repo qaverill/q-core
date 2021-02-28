@@ -1,22 +1,33 @@
 const { transactions } = require('@q/test-helpers');
-const { createTransactions, deleteTransactions, readTransactions, readTransaction } = require('../crud/money/transactions');
-const { processPaybacks, gatherTransactions } = require('./money');
-// ----------------------------------
-// HELPERS
-// ----------------------------------
-
+const { processPaybacks } = require('./processPaybacks');
+const {
+  createTransactions,
+  deleteTransactions,
+  readTransactions,
+  readTransaction,
+} = require('../crud/money/transactions');
 // ----------------------------------
 // TESTS
 // ----------------------------------
 describe('Money algorithms', () => {
-  beforeEach(async () => {
-    await createTransactions(transactions);
-  });
-  afterEach(async () => {
-    await deleteTransactions();
-  });
   describe('processPaybacks', () => {
+    beforeEach(async () => {
+      await createTransactions(transactions);
+    });
+    afterEach(async () => {
+      await deleteTransactions();
+    });
     describe('invalid input', () => {
+      it('throws error when from or to is null', async () => {
+        await expect(processPaybacks({ from: null, to: '3' }))
+          .rejects
+          .toThrow(new Error('Must provide a from field!'));
+        expect(await readTransactions()).toEqual(transactions);
+        await expect(processPaybacks({ from: '69', to: null }))
+          .rejects
+          .toThrow(new Error('Must provide a to field!'));
+        expect(await readTransactions()).toEqual(transactions);
+      });
       it('throws error when from does not exist', async () => {
         await expect(processPaybacks({ from: '69', to: '3' }))
           .rejects

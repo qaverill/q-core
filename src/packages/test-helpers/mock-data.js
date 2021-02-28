@@ -10,4 +10,14 @@ module.exports = {
     { id: '6', account: 'f', timestamp: 6, amount: 6, description: '6', tags: ['1', '2', '3'] },
     { id: '7', account: 'g', timestamp: 7, amount: -7, description: '7', tags: ['1', '2', '3'] },
   ],
+  tags: {
+    a: {
+      b: {
+        c: {
+          d: ['d'],
+          e: ['e'],
+        }
+      }
+    }
+  }
 };

@@ -12,4 +12,5 @@ module.exports = {
   ...mocks,
   apiGet: async (path, body) => R.prop('data', await axios.get(makeFullPath(path), { params: { ...body } })),
   apiPut: async (path, body) => R.prop('data', await axios.put(makeFullPath(path), body)),
+  apiPost: async (path, body) => R.prop('data', await axios.post(makeFullPath(path), body)),
 };

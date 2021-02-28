@@ -1,6 +1,7 @@
-const { makePostEndpoint } = require('../gates');
+const R = require('ramda');
+const { makePostEndpointAsync } = require('../gates');
 const { exportPaybacks, importPaybacks } = require('../../data/paybacks');
-const { processPayback } = require('../../algorithms/money');
+const { processPaybacks } = require('../../algorithms/processPaybacks');
 // ----------------------------------
 // ENDPOINTS
 // ----------------------------------
@@ -10,17 +11,17 @@ module.exports = {
      * POST /money/paybacks
      * @param to transactionId NONNULL
      * @param from transactionId NONNULL
-     * @param amount float NONNULL
      * @returns boolean
      */
-    makePostEndpoint({ routes, path: '/money/paybacks' }, ({ request, respond }) => {
-      const { to, from, amount } = request.query;
-      processPayback({ to, from, amount })
-        .then(respond);
-      importPaybacks((paybacks) => {
-        paybacks.push({ to, from, amount });
-        exportPaybacks(paybacks);
-      });
+    makePostEndpointAsync({ routes, path: '/money/paybacks' }, ({ request, respond }) => {
+      processPaybacks(request.body)
+        .then(respond)
+        .catch(R.compose(respond, R.prop('message')));
+      // processPaybacks({ to, from }).then(() => {
+      //   importPaybacks().then((paybacks) => {
+      //     exportPaybacks([...paybacks, { from, to }]).then(respond);
+      //   });
+      // });
     });
   },
 };
