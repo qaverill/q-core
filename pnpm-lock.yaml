@@ -1,12 +1,12 @@
 dependencies:
-  '@q/logger': 'link:src/packages/logger'
-  '@q/test-helpers': 'link:src/packages/test-helpers'
-  '@q/time': 'link:src/packages/time'
+  '@q/logger': link:src/packages/logger
+  '@q/test-helpers': link:src/packages/test-helpers
+  '@q/time': link:src/packages/time
   axios: 0.21.1
   body-parser: 1.19.0
   cookie-parser: 1.4.5
   cors: 2.8.5
-  csv-parse: 4.15.1
+  csv-parse: 4.15.3
   eslint-plugin-jest: 24.1.3_eslint@7.19.0
   express: 4.17.1
   jest: 26.6.3
@@ -1605,10 +1605,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-AZL67abkUzIuvcHqk7c09cezpGNcxUxU4Ioi/05xHk4DQeTkWmGYftIE6ctU6AEt+Gn4n1lDStOtj7FKycP71A==
-  /csv-parse/4.15.1:
+  /csv-parse/4.15.3:
     dev: false
     resolution:
-      integrity: sha512-TXIvRtNp0fqMJbk3yPR35bQIDzMH4khDwduElzE7Fl1wgnl25mnWYLSLqd/wS5GsDoX1rWtysivEYMNsz5jKwQ==
+      integrity: sha512-jlTqDvLdHnYMSr08ynNfk4IAUSJgJjTKy2U5CQBSu4cN9vQOJonLVZP4Qo4gKKrIgIQ5dr07UwOJdi+lRqT12w==
   /dashdash/1.14.1:
     dependencies:
       assert-plus: 1.0.0
@@ -4924,7 +4924,7 @@ packages:
       request-promise-core: 1.1.4_request@2.88.2
       stealthy-require: 1.1.1
       tough-cookie: 2.5.0
-    deprecated: 'request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142'
+    deprecated: request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142
     dev: false
     engines:
       node: '>=0.12.0'
@@ -4954,7 +4954,7 @@ packages:
       tough-cookie: 2.5.0
       tunnel-agent: 0.6.0
       uuid: 3.4.0
-    deprecated: 'request has been deprecated, see https://github.com/request/request/issues/3142'
+    deprecated: request has been deprecated, see https://github.com/request/request/issues/3142
     dev: false
     engines:
       node: '>= 6'
@@ -5010,7 +5010,7 @@ packages:
     resolution:
       integrity: sha512-qYg9KP24dD5qka9J47d0aVky0N+b4fTU89LN9iDnjB5waksiC49rvMB0PrUJQGoTmH50XPiqOvAjDfaijGxYZw==
   /resolve-url/0.2.1:
-    deprecated: 'https://github.com/lydell/resolve-url#deprecated'
+    deprecated: https://github.com/lydell/resolve-url#deprecated
     dev: false
     resolution:
       integrity: sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
@@ -5920,7 +5920,7 @@ packages:
     resolution:
       integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   /urix/0.1.0:
-    deprecated: 'Please see https://github.com/lydell/urix#deprecated'
+    deprecated: Please see https://github.com/lydell/urix#deprecated
     dev: false
     resolution:
       integrity: sha1-2pN/emLiH+wf0Y1Js1wpNQZ6bHI=
@@ -6203,14 +6203,14 @@ packages:
     resolution:
       integrity: sha512-aePbxDmcYW++PaqBsJ+HYUFwCdv4LVvdnhBy78E57PIor8/OVvhMrADFFEDh8DHDFRv/O9i3lPhsENjO7QX0+A==
 specifiers:
-  '@q/logger': 'link:src/packages/logger'
-  '@q/test-helpers': 'link:src/packages/test-helpers'
-  '@q/time': 'link:src/packages/time'
+  '@q/logger': link:src/packages/logger
+  '@q/test-helpers': link:src/packages/test-helpers
+  '@q/time': link:src/packages/time
   axios: ^0.21.1
   body-parser: ^1.19.0
   cookie-parser: ^1.4.5
   cors: ^2.8.5
-  csv-parse: ^4.15.1
+  csv-parse: ^4.15.3
   eslint: ^7.19.0
   eslint-config-airbnb-base: ^14.2.1
   eslint-plugin-import: ^2.22.1

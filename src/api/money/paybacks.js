@@ -14,14 +14,12 @@ module.exports = {
      * @returns boolean
      */
     makePostEndpointAsync({ routes, path: '/money/paybacks' }, ({ request, respond }) => {
-      processPaybacks(request.body)
+      const { from, to, mock } = request.body;
+      processPaybacks({ from, to })
+        .then(() => importPaybacks(mock))
+        .then((paybacks) => exportPaybacks([...paybacks, request.body], mock))
         .then(respond)
         .catch(R.compose(respond, R.prop('message')));
-      // processPaybacks({ to, from }).then(() => {
-      //   importPaybacks().then((paybacks) => {
-      //     exportPaybacks([...paybacks, { from, to }]).then(respond);
-      //   });
-      // });
     });
   },
 };

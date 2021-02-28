@@ -9,43 +9,63 @@ const gatherTransactions = R.compose(
     if (R.isNil(from) || R.isNil(to)) throw new Error(`Must provide a ${R.isNil(from) ? 'from' : 'to'} field!`);
     readTransaction(from).then((fromTransaction) => {
       readTransaction(to).then((toTransaction) => {
-        resolve([...acc, {
-          from, fromTransaction, to, toTransaction,
-        }]);
+        resolve([...acc, { from, fromTransaction, to, toTransaction }]);
       });
-    });
-  })),
-);
-const validatePaybackTransactions = (paybackTransactions) => {
-  paybackTransactions.forEach(({
-    from, fromTransaction, to, toTransaction,
-  }) => {
-    if (fromTransaction == null) throw new Error(`From transaction ${from} does not exist!`);
-    if (fromTransaction.amount < 0) throw new Error(`From transaction ${from} must have a positive amount`);
-    if (toTransaction == null) throw new Error(`To transaction ${to} does not exist!`);
-    if (toTransaction.amount > 0) throw new Error(`toAmount must be less than 0 ---- toAmount: ${toTransaction.amount}`);
-    const newAmount = toTransaction.amount + fromTransaction.amount;
-    if (newAmount > 0) throw new Error(`newAmount must be less than 0 ---- newAmount: ${newAmount}`);
-  });
-  return paybackTransactions;
-};
-const processPaybackTransactions = R.compose(
-  R.reduce((p, fn) => p.then(fn), Promise.resolve()),
-  R.map(({ fromTransaction, toTransaction }) => () => new Promise((resolve) => {
-    deleteTransaction(fromTransaction.id).then(() => {
-      const newAmount = toTransaction.amount + fromTransaction.amount;
-      updateTransaction({ id: toTransaction.id, amount: newAmount })
-        .then(resolve);
     });
   })),
 );
 // ----------------------------------
 // LOGIC
 // ----------------------------------
+const fullyValidatePaybacks = (paybacks) => new Promise((resolve, reject) => {
+  const existingFroms = [];
+  try {
+    paybacks.forEach(({ from }) => {
+      if (existingFroms.includes(from)) throw new Error(`From ${from} already exists, they cannot be used twice!`);
+      existingFroms.push(from);
+    });
+    gatherTransactions(paybacks)
+      .then((paybackTransactions) => {
+        const transactions = {};
+        paybackTransactions.forEach(({ from, fromTransaction, to, toTransaction }) => {
+          if (fromTransaction == null) throw new Error(`From transaction ${from} does not exist!`);
+          if (toTransaction == null) throw new Error(`To transaction ${to} does not exist!`);
+          transactions[fromTransaction.id] = fromTransaction;
+          transactions[toTransaction.id] = toTransaction;
+        });
+        paybacks.forEach(({ from, to }) => {
+          if (transactions[from].amount < 0) throw new Error(`From transaction ${from} must have a positive amount`);
+          if (transactions[to].amount > 0) throw new Error(`toAmount must be less than 0 ---- toAmount: ${transactions[to].amount}`);
+          transactions[to].amount += transactions[from].amount;
+          if (transactions[to].amount >= 0) throw new Error(`newAmount must be less than 0 ---- newAmount: ${transactions[to].amount}`);
+        });
+        resolve(paybacks);
+      })
+      .catch(reject);
+  } catch (e) {
+    reject(e);
+  }
+});
+const processPaybackTransactions = R.compose(
+  R.reduce((p, fn) => p.then(fn), Promise.resolve()),
+  R.map(({ from, to }) => () => new Promise((resolve) => {
+    readTransaction(from).then((fromTransaction) => {
+      readTransaction(to).then((toTransaction) => {
+        deleteTransaction(fromTransaction.id).then(() => {
+          const newAmount = toTransaction.amount + fromTransaction.amount;
+          updateTransaction({ id: toTransaction.id, amount: newAmount })
+            .then(resolve);
+        });
+      });
+    });
+  })),
+);
+// ----------------------------------
+// EXPORTS
+// ----------------------------------
 module.exports = {
   processPaybacks: (paybacks) => (
-    gatherTransactions(Array.isArray(paybacks) ? paybacks : [paybacks])
-      .then(validatePaybackTransactions)
+    fullyValidatePaybacks(Array.isArray(paybacks) ? paybacks : [paybacks])
       .then(processPaybackTransactions)
   ),
 };
