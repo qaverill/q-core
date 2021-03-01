@@ -50,7 +50,7 @@ const assertResults = (results, preset) => {
 // ----------------------------------
 // TESTS
 // ----------------------------------
-describe.skip('lights', () => {
+describe('lights', () => {
   describe(`GET ${PATH}`, () => {
     test('returns all the correct values and no more', async () => {
       const results = await apiGet(PATH);
@@ -93,7 +93,7 @@ describe.skip('lights', () => {
     });
     test('invalid preset returns error', async () => {
       const result = await apiPut(PATH, { preset: 'invalid' });
-      expect(result).toEqual('Invalid state, see lightStates.js::buildPayload() for possible states');
+      expect(result).toEqual('Invalid state, see lightStates.js::buildPayloads() for possible states');
     });
     test('can change only the brightness of them all', async () => {
       const brightness = 0.5;

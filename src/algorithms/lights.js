@@ -11,48 +11,54 @@ const ids = {
   FLOWER_LAMP: 'id:d073d562d356',
   LAMP: 'id:d073d563aba5',
 };
-const colors = {
+const lifxColors = {
   default: 'saturation:0 kelvin:3000',
   green: 'hue:98.82 saturation:1',
   purple: 'hue:269.23 saturation:1',
   blue: 'hue:219 saturation:1',
   yellow: 'hue:50.6 saturation:1',
+  candle: 'saturation:0 kelvin:1500',
 };
 const presets = {
-  off: OFF,
-  default: colors.default,
-  technicolor: [colors.green, colors.purple, colors.blue, colors.yellow],
+  off: { },
+  default: { colors: lifxColors.default, brightness: 1 },
+  technicolor: {
+    colors: [lifxColors.green, lifxColors.purple, lifxColors.blue, lifxColors.yellow],
+    brightness: 1,
+  },
+  candle: {
+    colors: lifxColors.candle,
+    brightness: 0.2,
+  },
 };
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  buildPayload: ({ preset, brightness }) => R.keys(ids).map((selector, idx) => {
+  buildPayloads: ({ preset, brightness }) => R.keys(ids).map((selector, idx) => {
     const state = {
       selector: ids[selector],
       duration: 0,
       power: preset === OFF ? OFF : ON,
     };
-    if (preset !== OFF) {
-      if (brightness) state.brightness = brightness;
-      if (preset === 'random') {
-        state.color = randomColor();
-      } else if (preset) {
-        const colorStates = presets[preset];
-        if (colorStates == null) return null;
-        state.color = Array.isArray(colorStates) ? colorStates[idx] : colorStates;
-      }
-    }
-    return state;
+    if (brightness) return { ...state, brightness };
+    if (preset === 'random') return { ...state, color: randomColor(), brightness: 1 };
+    if (R.isNil(preset) || R.isNil(presets[preset])) return null;
+    const { colors, brightness: presetBrightness } = presets[preset];
+    return {
+      ...state,
+      color: Array.isArray(colors) ? colors[idx] : colors,
+      brightness: presetBrightness,
+    };
   }),
   determineColorString: (light) => {
     const { power, color } = light;
     if (power === OFF) return OFF;
     const { hue, saturation, kelvin } = color;
     const knownColors = R.reduce((acc, key) => {
-      acc[colors[key]] = key;
+      acc[lifxColors[key]] = key;
       return acc;
-    }, {}, R.keys(colors));
+    }, {}, R.keys(lifxColors));
     const tempDefinition = `saturation:${saturation} kelvin:${kelvin}`;
     if (knownColors[tempDefinition]) return knownColors[tempDefinition];
     const colorDefinition = `hue:${hue} saturation:${saturation}`;

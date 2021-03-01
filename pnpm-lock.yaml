@@ -2,6 +2,7 @@ dependencies:
   '@q/logger': link:src/packages/logger
   '@q/test-helpers': link:src/packages/test-helpers
   '@q/time': link:src/packages/time
+  '@q/utils': link:src/packages/utils
   axios: 0.21.1
   body-parser: 1.19.0
   cookie-parser: 1.4.5
@@ -6206,6 +6207,7 @@ specifiers:
   '@q/logger': link:src/packages/logger
   '@q/test-helpers': link:src/packages/test-helpers
   '@q/time': link:src/packages/time
+  '@q/utils': link:src/packages/utils
   axios: ^0.21.1
   body-parser: ^1.19.0
   cookie-parser: ^1.4.5
