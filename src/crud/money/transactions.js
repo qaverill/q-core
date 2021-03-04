@@ -19,9 +19,9 @@ const rowsAffected = (resolve) => R.compose(
 module.exports = {
   createTransactions: (transactions) => new Promise((resolve) => {
     const values = transactions.map(
-      (t) => `('${t.id}','${t.account}',${t.timestamp},${t.amount},'${t.description}','${t.tags.join(',')}')`,
+      (t) => `('${t.id}',${t.timestamp},${t.amount},'${t.description}','${t.account}','${t.tags.join(',')}')`,
     ).join(',');
-    executeSQL(`INSERT INTO dbo.transactions (id, account, timestamp, amount, description, tags) VALUES ${values}`)
+    executeSQL(`INSERT INTO dbo.transactions (id, timestamp, amount, description, account, tags) VALUES ${values}`)
       .then(rowsAffected(resolve));
   }),
   readTransaction: (id) => new Promise((resolve) => {

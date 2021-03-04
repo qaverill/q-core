@@ -16,4 +16,9 @@ module.exports = {
     { from: '4', to: '5' },
     { from: '6', to: '7' },
   ],
+  mockBankFacts: [
+    { id: '1', timestamp: 1, amount: 1, description: '1', account: 'a' },
+    { id: '2', timestamp: 2, amount: 2, description: '2', account: 'b' },
+    { id: '3', timestamp: 3, amount: 3, description: '3', account: 'c' },
+  ],
 };

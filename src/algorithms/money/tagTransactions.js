@@ -1,4 +1,4 @@
-const { importTags } = require('../data/tags');
+const { importTags } = require('../../data/money/tags');
 // ----------------------------------
 // HELPERS
 // ----------------------------------

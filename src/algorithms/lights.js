@@ -41,6 +41,7 @@ module.exports = {
       duration: 0,
       power: preset === OFF ? OFF : ON,
     };
+    if (R.isNil(preset) && R.isNil(brightness)) return state;
     if (brightness) return { ...state, brightness };
     if (preset === 'random') return { ...state, color: randomColor(), brightness: 1 };
     if (R.isNil(preset) || R.isNil(presets[preset])) return null;

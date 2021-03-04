@@ -5,7 +5,7 @@ const {
   deleteTransactions,
   readTransactions,
   readTransaction,
-} = require('../crud/money/transactions');
+} = require('../../crud/money/transactions');
 // ----------------------------------
 // TESTS
 // ----------------------------------

@@ -50,7 +50,7 @@ const assertResults = (results, preset) => {
 // ----------------------------------
 // TESTS
 // ----------------------------------
-describe('lights', () => {
+describe.skip('lights', () => {
   describe(`GET ${PATH}`, () => {
     test('returns all the correct values and no more', async () => {
       const results = await apiGet(PATH);

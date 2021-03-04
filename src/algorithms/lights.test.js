@@ -14,11 +14,6 @@ describe('light algorithms', () => {
         buildPayloads({ brightness: 0.2 }).every(({ power, color, brightness }) => power === 'on' && color == null && brightness === 0.2),
       ).toEqual(true);
     });
-    it('when given preset sets only preset, payload contains only color', () => {
-      expect(
-        buildPayloads({ preset: 'default' }).every(({ power, color, brightness }) => power === 'on' && color === 'saturation:0 kelvin:3000' && brightness == null),
-      ).toEqual(true);
-    });
     it('when given preset sets preset and brightness, payload contains color and brightness changes', () => {
       expect(
         buildPayloads({ preset: 'candle' }).every(({ power, color, brightness }) => power === 'on' && color === 'saturation:0 kelvin:1500' && brightness === 0.2),

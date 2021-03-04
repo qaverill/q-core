@@ -1,7 +1,7 @@
 const R = require('ramda');
 const { makePostEndpointAsync } = require('../gates');
-const { exportPaybacks, importPaybacks } = require('../../data/paybacks');
-const { processPaybacks } = require('../../algorithms/processPaybacks');
+const { exportPaybacks, importPaybacks } = require('../../data/money/paybacks');
+const { processPaybacks } = require('../../algorithms/money/processPaybacks');
 // ----------------------------------
 // ENDPOINTS
 // ----------------------------------

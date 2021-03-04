@@ -1,5 +1,5 @@
 const R = require('ramda');
-const { deleteTransaction, updateTransaction, readTransaction } = require('../crud/money/transactions');
+const { deleteTransaction, updateTransaction, readTransaction } = require('../../crud/money/transactions');
 // ----------------------------------
 // HELPERS
 // ----------------------------------

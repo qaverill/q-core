@@ -1,7 +1,12 @@
 const { transactions, mockPaybacks } = require('@q/test-helpers');
 const { apiPost } = require('@q/test-helpers');
-const { createTransactions, readTransaction, readTransactions, deleteTransactions } = require('../../crud/money/transactions');
-const { mockImportPaybacks, mockExportPaybacks } = require('../../data/paybacks');
+const {
+  createTransactions,
+  readTransaction,
+  readTransactions,
+  deleteTransactions,
+} = require('../../crud/money/transactions');
+const { mockImportPaybacks, mockExportPaybacks } = require('../../data/money/paybacks');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
