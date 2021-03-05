@@ -1,0 +1,9 @@
+{
+  "tags": "/Users/q/GitHub/q-data/money/tags.json",
+  "paybacks": "/Users/q/GitHub/q-data/money/paybacks.csv",
+  "mockPaybacks": "/Users/q/GitHub/q-data/mock/mockPaybacks.csv",
+  "bankFacts": "/Users/q/GitHub/q-data/money/bankFacts.csv",
+  "mockBankFacts": "/Users/q/GitHub/q-data/mock/mockBankFacts.csv",
+  "bankFactInputs": "/Users/q/GitHub/q-data/input",
+  "mockBankFactInputs": "/Users/q/GitHub/q-data/mock/input"
+}
