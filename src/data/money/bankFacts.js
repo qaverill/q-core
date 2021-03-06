@@ -86,6 +86,9 @@ const exportBankFacts = (bankFacts, mock) => new Promise((resolve) => {
 // EXPORTS
 // ----------------------------------
 module.exports = {
+  mockImportExistingBankFacts: () => importExistingBankFacts(true),
+  mockImportNewBankFacts: () => importNewBankFacts(true),
+  mockExportBankFacts: (mockBankFacts) => exportBankFacts(mockBankFacts, true),
   importBankFacts: (mock) => new Promise((resolve) => {
     importExistingBankFacts(mock).then((existingTransactions) => {
       importNewBankFacts(mock).then((newTransactions) => {
@@ -99,5 +102,4 @@ module.exports = {
     });
   }),
   mockImportBankFacts: () => module.exports.importBankFacts(true),
-  mockExportBankFacts: (mockBankFacts) => exportBankFacts(mockBankFacts, true),
 };

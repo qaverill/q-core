@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 const R = require('ramda');
 const { mockBankFacts } = require('@q/test-helpers');
-const { mockImportBankFacts, mockExportBankFacts } = require('./bankFacts');
+const { mockImportBankFacts, mockExportBankFacts, mockImportExistingBankFacts } = require('./bankFacts');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -15,32 +15,73 @@ const expectedCombinedPaybacks = [
 // ----------------------------------
 // TESTS
 // ----------------------------------
-describe('Mocked payback import/exports', () => {
-  beforeEach(async () => {
-    await mockExportBankFacts(mockBankFacts);
-  });
-  describe('importBankFacts (mocked)', () => {
-    it('returns the correct information', async () => {
-      const bankFacts = await mockImportBankFacts();
-      expect(bankFacts.length).toEqual(4);
-      expect(bankFacts.every(({
-        id,
-        timestamp,
-        amount,
-        description,
-        account,
-      }) => !R.isNil(id) && !R.isNil(timestamp) && !R.isNil(amount) && !R.isNil(description) && !R.isNil(account))).toEqual(true);
-      expect(bankFacts.every((payback) => R.keys(payback).length === 5)).toEqual(true);
+describe('helpers', () => {
+  describe('importExistingBankFacts()', () => {
+    it('existing bank fact without id is given one', async () => {
+
     });
-    it('correctly combines existing and new raw bankFacts', async () => {
-      const bankFacts = await mockImportBankFacts();
-      expect(bankFacts).toEqual(expectedCombinedPaybacks);
+    it('existing bank fact with a duplicated id is not returned', async () => {
+
+    });
+    it('returns expected data', async () => {
+
     });
   });
-  it('exportBankFacts (mocked)', async () => {
+  describe('importNewBankFacts()', () => {
+    it('does not contain facts that are not needed', async () => {
+
+    });
+    it('gives all new transactions an id', async () => {
+
+    });
+    it('has no facts with duplicate ids', async () => {
+
+    });
+    it('returns expected data', async () => {
+
+    });
+  });
+  test('exportBankFacts()', async () => {
     const bankFacts = [expectedCombinedPaybacks[3], ...mockBankFacts];
     await mockExportBankFacts(bankFacts);
     const newBankFacts = await mockImportBankFacts();
     expect(newBankFacts).toEqual(expectedCombinedPaybacks);
+  });
+});
+describe('importBankFacts()', () => {
+  beforeEach(async () => {
+    await mockExportBankFacts(mockBankFacts);
+  });
+  it('returns the correct information', async () => {
+    const bankFacts = await mockImportBankFacts();
+    expect(bankFacts.length).toEqual(4);
+    expect(bankFacts.every(({
+      id,
+      timestamp,
+      amount,
+      description,
+      account,
+    }) => (
+      !R.isNil(id) && !R.isNil(timestamp) && !R.isNil(amount) && !R.isNil(description) && !R.isNil(account)
+      && typeof id === 'string' && typeof timestamp === 'number' && typeof amount === 'number' && typeof description === 'string' && typeof account === 'string'
+    ))).toEqual(true);
+    expect(bankFacts.every((payback) => R.keys(payback).length === 5)).toEqual(true);
+  });
+  it('is sorted newest -> oldest', async () => {
+    const bankFacts = await mockImportBankFacts();
+    let lastTimestamp = 0;
+    bankFacts.forEach(({ timestamp }) => {
+      expect(timestamp).toBeGreaterThan(lastTimestamp);
+      lastTimestamp = timestamp;
+    });
+  });
+  it('does not include new transactions that existed already', async () => {
+    const bankFacts = await mockImportBankFacts();
+    expect(bankFacts).toEqual(expectedCombinedPaybacks);
+  });
+  it('exports the newly combined transactions', async () => {
+    await mockImportBankFacts();
+    const afterImport = await mockImportExistingBankFacts();
+    expect(expectedCombinedPaybacks).toEqual(afterImport);
   });
 });
