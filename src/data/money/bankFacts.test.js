@@ -15,21 +15,27 @@ const expectedCombinedPaybacks = [
 // ----------------------------------
 // TESTS
 // ----------------------------------
-describe('helpers', () => {
+describe.only('helpers', () => {
   describe('importExistingBankFacts()', () => {
     it('existing bank fact without id is given one', async () => {
-
+      await mockExportBankFacts([...mockBankFacts, { timestamp: 99, amount: 99, description: 'missing id', account: 'a' }]);
+      const results = await mockImportExistingBankFacts();
+      expect(results.find(({ description }) => description === 'missing id').id).toEqual('a77832c93b41d31cb156997272688ccf');
     });
     it('existing bank fact with a duplicated id is not returned', async () => {
-
+      await mockExportBankFacts([...mockBankFacts, { id: '3', timestamp: 3, amount: 3, description: '3', account: 'c' }]);
+      const results = await mockImportExistingBankFacts();
+      expect(results.filter(({ id }) => id === '3').length).toEqual(1);
     });
     it('returns expected data', async () => {
-
+      await mockExportBankFacts(mockBankFacts);
+      const results = await mockImportExistingBankFacts();
+      expect(results).toEqual(mockBankFacts);
     });
   });
   describe('importNewBankFacts()', () => {
     it('does not contain facts that are not needed', async () => {
-
+      
     });
     it('gives all new transactions an id', async () => {
 

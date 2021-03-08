@@ -17,8 +17,8 @@ const importExistingBankFacts = (mock) => new Promise((resolve, reject) => {
   const path = mock ? paths.mockBankFacts : paths.bankFacts;
   readCsvFile(path).then((bankFacts) => {
     const existingIds = [];
-    resolve(R.pipe(
-      bankFacts,
+    resolve(R.compose(
+      R.reject(R.isNil),
       R.map((fact) => {
         const parsedFact = {
           ...fact,
@@ -27,14 +27,13 @@ const importExistingBankFacts = (mock) => new Promise((resolve, reject) => {
         };
         const id = parsedFact.id || computeFactId(parsedFact);
         if (existingIds.includes(id)) {
-          logger.error(`Duplicate ids in bankFacts: ${id}`);
+          logger.error(`Duplicate id in bankFacts: ${id}`);
           return null;
         }
         existingIds.push(id);
         return { ...parsedFact, id };
       }),
-      R.reject(R.isNil),
-    ));
+    )(bankFacts));
   }).catch(reject);
 });
 const importNewBankFacts = (mock) => new Promise((resolve, reject) => {
@@ -45,9 +44,8 @@ const importNewBankFacts = (mock) => new Promise((resolve, reject) => {
         readCsvFile(`${path}/venmo.csv`).then(parseVenmo).then((venmoFacts) => {
           const bankFacts = [...citiFacts, ...mvcuFacts, ...mvcuOldFacts, ...venmoFacts];
           const existingIds = [];
-          resolve(R.pipe(
-            bankFacts,
-            R.filter(factIsNeeded),
+          resolve(R.compose(
+            R.reject(R.isNil),
             R.map((fact) => {
               const id = computeFactId(fact);
               if (existingIds.includes(id)) {
@@ -57,8 +55,8 @@ const importNewBankFacts = (mock) => new Promise((resolve, reject) => {
               existingIds.push(id);
               return { ...fact, id };
             }),
-            R.reject(R.isNil),
-          ));
+            R.filter(factIsNeeded),
+          )(bankFacts));
         }).catch(reject);
       });
     });
@@ -76,7 +74,7 @@ const exportBankFacts = (bankFacts, mock) => new Promise((resolve) => {
         amount,
         description,
         account,
-      }) => `${id},${timestamp},${amount},${description},${account}`,
+      }) => `${id || ''},${timestamp},${amount},${description},${account}`,
       R.sortBy(R.prop('timestamp'), bankFacts),
     ),
   );

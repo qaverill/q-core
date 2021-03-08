@@ -12,4 +12,5 @@ module.exports = {
     if (number < 0 || number > 100) return null;
     return number / 100;
   },
+  roundNumber2Decimals: (num) => +((num).toFixed(2)),
 };

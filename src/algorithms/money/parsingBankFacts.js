@@ -1,5 +1,7 @@
 const crypto = require('crypto');
 const R = require('ramda');
+const { dateStringToTimestamp } = require('@q/time');
+const { roundNumber2Decimals } = require('@q/utils');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
@@ -19,82 +21,41 @@ const unneededFactDescriptions = [
 // ----------------------------------
 // LOGIC
 // ----------------------------------
-// const parseRow = (row, file) => {
-//   let fact = null;
-//   if (file === 'mvcu_old.csv') {
-//     fact = {
-//       account: row[0].indexOf('S0020') > -1 ? 'mvcu-checkings' : 'mvcu-savings',
-//       timestamp: dateStringToTimestamp(row[1]),
-//       amount: roundNumber2Decimals(row[2].indexOf('(') > -1 ? parseFloat(row[2].replace(/[)$(]/g, '')) * -1 : parseFloat(row[2].replace('$', ''))),
-//       description: row[5],
-//     };
-//   } else if (file === 'citi.csv') {
-//     fact = {
-//       account: 'citi-credit',
-//       timestamp: dateStringToTimestamp(row[1]),
-//       amount: roundNumber2Decimals(row[3] !== '' ? parseFloat(row[3]) * -1 : parseFloat(row[4]) * -1),
-//       description: row[2].replace(/"/g, ''),
-//     };
-//   } else if (file === 'venmo.csv') {
-//     if (typeof parseInt(row[1], 10) === 'number' && row[3] !== 'Standard Transfer' && row[8] != null) {
-//       const type = row[8].indexOf('+') > -1 ? 'from' : 'to';
-//       const description = `Venmo ${type} ${row[6] === 'Quinn Averill' ? row[7] : row[6]}: ${row[5]}`;
-//       fact = {
-//         account: 'venmo',
-//         timestamp: dateStringToTimestamp(row[2]),
-//         amount: roundNumber2Decimals(parseFloat(row[8].replace(/[ $+,]/g, ''))),
-//         description,
-//       };
-//     }
-//   } else if (file === 'mvcu.csv') {
-//     fact = {
-//       account: 'mvcu',
-//       timestamp: dateStringToTimestamp(row[1]),
-//       amount: roundNumber2Decimals(parseFloat(row[4].replace(/"/g, '').slice(0, -3))),
-//       description: row[7],
-//     };
-//   }
-//   if (fact) {
-//     fact.tags = tagTransaction(fact);
-//     fact._id = generateFactId(fact);
-//   }
-//   return fact;
-// };
-// ----------------------------------
-// EXPORTS
-// ----------------------------------
-// module.exports = {
-//   getTransactionData: async () => {
-//     async function importFile(file) {
-//       const rawFacts = await readContentsOfFile(file);
-//       return (
-//         R.filter(
-//           isFactNeeded,
-//           parseTransactionsFacts(rawFacts, file),
-//         )
-//       );
-//     }
-//     return [
-//       ...await importFile('citi.csv'),
-//       ...await importFile('mvcu.csv'),
-//       ...await importFile('mvcu_old.csv'),
-//       ...await importFile('venmo.csv'),
-//     ];
-//   },
-// };
 module.exports = {
-  parseCiti: () => Promise.resolve([
-
-  ]),
-  parseMvcu: () => Promise.resolve([
-
-  ]),
-  parseMvcuOld: () => Promise.resolve([
-
-  ]),
-  parseVenmo: () => Promise.resolve([
-
-  ]),
+  parseCiti: R.map(({ Date, Debit, Credit, Description }) => ({
+    account: 'citi-credit',
+    timestamp: dateStringToTimestamp(Date),
+    amount: roundNumber2Decimals(Debit !== '' ? parseFloat(Debit) * -1 : parseFloat(Credit) * -1),
+    description: Description.replace(/"/g, ''),
+  })),
+  parseMvcu: R.map((row) => ({
+    account: 'mvcu',
+    timestamp: dateStringToTimestamp(row['Posting Date']),
+    amount: roundNumber2Decimals(parseFloat(row.Amount.replace(/"/g, '').slice(0, -3))),
+    description: row.Description,
+  })),
+  parseMvcuOld: R.map(({ account, date, amount, description }) => ({
+    account: account.indexOf('S0020') > -1 ? 'mvcu-checkings' : 'mvcu-savings',
+    timestamp: dateStringToTimestamp(date),
+    amount: roundNumber2Decimals(amount.indexOf('(') > -1 ? parseFloat(amount.replace(/[)$(]/g, '')) * -1 : parseFloat(amount.replace('$', ''))),
+    description,
+  })),
+  parseVenmo: R.compose(
+    R.reject(R.isNil),
+    R.map((row) => {
+      if (typeof parseInt(row.ID, 10) === 'number' && row.Type !== 'Standard Transfer' && row['Amount (total)'] != null) {
+        const type = row['Amount (total)'].indexOf('+') > -1 ? 'from' : 'to';
+        const description = `Venmo ${type} ${row.From === 'Quinn Averill' ? row.To : row.From}: ${row.Note}`;
+        return ({
+          account: 'venmo',
+          timestamp: dateStringToTimestamp(row.Datetime),
+          amount: roundNumber2Decimals(parseFloat(row['Amount (total)'].replace(/[ $+,]/g, ''))),
+          description,
+        });
+      }
+      return null;
+    }),
+  ),
   computeFactId: ({ account, timestamp, amount, description }) => (
     crypto.createHash('md5')
       .update(account + timestamp + amount + description)

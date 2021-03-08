@@ -15,6 +15,7 @@ const parseInput = (number) => parseInt(number, 10) || null;
 module.exports = {
   timestampToDate,
   dateToTimestamp,
+  dateStringToTimestamp: (date) => parseInt(new Date(date).getTime() / 1000, 10),
   getNDaysAgoTimestamp,
   currentTimeframe: () => ({
     start: getNDaysAgoTimestamp(3),
