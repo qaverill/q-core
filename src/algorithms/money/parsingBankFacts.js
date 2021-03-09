@@ -1,47 +1,59 @@
 const crypto = require('crypto');
 const R = require('ramda');
 const { dateStringToTimestamp } = require('@q/time');
-const { roundNumber2Decimals } = require('@q/utils');
+const { round2Decimals } = require('@q/utils');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
 const START_OF_SEPTEMBER_19 = 1567310400;
-const unneededFactDescriptions = [
-  'Withdrawal VENMO',
-  'Online Transfer',
-  'Transfer Withdrawal',
-  'ACH Deposit VENMO',
-  'ONLINE PAYMENT, THANK YOU',
-  'PAYMENT THANK YOU',
-  'Withdrawal CITI CARD ONLINE',
-  'Transfer Deposit From Share',
-  'VENMO TYPE',
-  'CITI CARD ONLINE TYPE: PAYMENT',
-];
+const stringDoesNotContainSubstrings = (string, substrings) => (
+  !new RegExp(R.join('|', R.map(R.toLower, substrings))).test(R.toLower(string))
+);
+const citiIgnoredSubstrings = ['ONLINE PAYMENT, THANK YOU'];
+const mvcuIgnoredSubstrings = ['VENMO TYPE', 'CITI CARD ONLINE TYPE: PAYMENT'];
+const mvcuOldIgnoredSubstrings = ['Withdrawal VENMO', 'Online Transfer', 'Transfer Withdrawal', 'ACH Deposit VENMO', 'Withdrawal CITI CARD ONLINE', 'Transfer Deposit From Share'];
 // ----------------------------------
 // LOGIC
 // ----------------------------------
 module.exports = {
-  parseCiti: R.map(({ Date, Debit, Credit, Description }) => ({
-    account: 'citi-credit',
-    timestamp: dateStringToTimestamp(Date),
-    amount: roundNumber2Decimals(Debit !== '' ? parseFloat(Debit) * -1 : parseFloat(Credit) * -1),
-    description: Description.replace(/"/g, ''),
-  })),
-  parseMvcu: R.map((row) => ({
-    account: 'mvcu',
-    timestamp: dateStringToTimestamp(row['Posting Date']),
-    amount: roundNumber2Decimals(parseFloat(row.Amount.replace(/"/g, '').slice(0, -3))),
-    description: row.Description,
-  })),
-  parseMvcuOld: R.map(({ account, date, amount, description }) => ({
-    account: account.indexOf('S0020') > -1 ? 'mvcu-checkings' : 'mvcu-savings',
-    timestamp: dateStringToTimestamp(date),
-    amount: roundNumber2Decimals(amount.indexOf('(') > -1 ? parseFloat(amount.replace(/[)$(]/g, '')) * -1 : parseFloat(amount.replace('$', ''))),
-    description,
-  })),
-  parseVenmo: R.compose(
-    R.reject(R.isNil),
+  parseCiti: R.pipe(
+    R.filter(({ Description }) => (
+      stringDoesNotContainSubstrings(Description, citiIgnoredSubstrings)
+    )),
+    R.map(({
+      Date, Debit, Credit, Description,
+    }) => ({
+      account: 'citi-credit',
+      timestamp: dateStringToTimestamp(Date),
+      amount: round2Decimals(Debit != null ? parseFloat(Debit) * -1 : parseFloat(Credit) * -1),
+      description: Description.replace(/"/g, ''),
+    })),
+  ),
+  parseMvcu: R.pipe(
+    R.filter(({ Description }) => (
+      stringDoesNotContainSubstrings(Description, mvcuIgnoredSubstrings)
+    )),
+    R.map((row) => ({
+      account: 'mvcu',
+      timestamp: dateStringToTimestamp(row['Posting Date']),
+      amount: round2Decimals(parseFloat(row.Amount.replace(/"/g, '').slice(0, -3))),
+      description: row.Description,
+    })),
+  ),
+  parseMvcuOld: R.pipe(
+    R.filter(({ description }) => (
+      stringDoesNotContainSubstrings(description, mvcuOldIgnoredSubstrings)
+    )),
+    R.map(({
+      account, date, amount, description,
+    }) => ({
+      account: account.indexOf('S0020') > -1 ? 'mvcu-checkings' : 'mvcu-savings',
+      timestamp: dateStringToTimestamp(date),
+      amount: round2Decimals(amount.indexOf('(') > -1 ? parseFloat(amount.replace(/[)$(]/g, '')) * -1 : parseFloat(amount.replace('$', ''))),
+      description,
+    })),
+  ),
+  parseVenmo: R.pipe(
     R.map((row) => {
       if (typeof parseInt(row.ID, 10) === 'number' && row.Type !== 'Standard Transfer' && row['Amount (total)'] != null) {
         const type = row['Amount (total)'].indexOf('+') > -1 ? 'from' : 'to';
@@ -49,22 +61,20 @@ module.exports = {
         return ({
           account: 'venmo',
           timestamp: dateStringToTimestamp(row.Datetime),
-          amount: roundNumber2Decimals(parseFloat(row['Amount (total)'].replace(/[ $+,]/g, ''))),
+          amount: round2Decimals(parseFloat(row['Amount (total)'].replace(/[ $+,]/g, ''))),
           description,
         });
       }
       return null;
     }),
+    R.reject(R.isNil),
   ),
-  computeFactId: ({ account, timestamp, amount, description }) => (
+  computeFactId: ({
+    account, timestamp, amount, description,
+  }) => (
     crypto.createHash('md5')
       .update(account + timestamp + amount + description)
       .digest('hex')
   ),
-  factIsNeeded: ({ timestamp, amount, description }) => (
-    timestamp >= START_OF_SEPTEMBER_19
-      && amount !== 0
-      && !new RegExp(R.join('|', R.map(R.toLower, unneededFactDescriptions)))
-        .test(R.toLower(description))
-  ),
+  factIsNeeded: ({ timestamp, amount }) => timestamp >= START_OF_SEPTEMBER_19 && amount !== 0,
 };

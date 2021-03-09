@@ -17,8 +17,9 @@ module.exports = {
     { from: '6', to: '7' },
   ],
   mockBankFacts: [
-    { id: '1', timestamp: 1, amount: 1, description: '1', account: 'a' },
-    { id: '2', timestamp: 2, amount: 2, description: '2', account: 'b' },
+    { id: '241c85ab49f466bea84226ef9059dbaa', timestamp: 1598846400, amount: 1.77, description: 'this description should be it', account: 'mvcu-savings' },
     { id: '3', timestamp: 3, amount: 3, description: '3', account: 'c' },
+    { id: '2', timestamp: 2, amount: 2, description: '2', account: 'b' },
+    { id: '1', timestamp: 1, amount: 1, description: '1', account: 'a' },
   ],
 };

@@ -23,22 +23,20 @@ describe('Parsers', () => {
       expect(parseCiti([
         { ...unneededCitiFields, Date: '03/01/2021', Description: 'mock citi payment', Debit: '25.00' },
       ])).toEqual([
-        { timestamp: 1614574800, amount: 25.00, description: 'mock citi payment', account: 'citi-credit' },
+        { timestamp: 1614574800, amount: -25.00, description: 'mock citi payment', account: 'citi-credit' },
       ]);
     });
     it('parses returns correctly', async () => {
       expect(parseCiti([
-        { ...unneededCitiFields, Date: '10/19/2020', Description: 'GUIDEBOAT/TERRITORY AH 855-8720868 OH', Credit: '-49.50' },
+        { ...unneededCitiFields, Date: '10/19/2020', Description: 'mock citi income', Credit: '-49.50' },
       ])).toEqual([
-        { timestamp: 1603080000, amount: -49.50, description: 'GUIDEBOAT/TERRITORY AH 855-8720868 OH', account: 'citi-credit' },
+        { timestamp: 1603080000, amount: 49.50, description: 'mock citi income', account: 'citi-credit' },
       ]);
     });
     it('ignores credit card bill payments', () => {
       expect(parseCiti([
         { ...unneededCitiFields, Date: '11/02/2020', Description: 'ONLINE PAYMENT, THANK YOU', Credit: '-1848.87' },
-      ])).toEqual([
-        { timestamp: 1604293200, amount: -1848.87, description: 'ONLINE PAYMENT, THANK YOU', account: 'citi-credit' },
-      ]);
+      ])).toEqual([]);
     });
   });
   describe('parseMvcu()', () => {
@@ -55,6 +53,12 @@ describe('Parsers', () => {
       ])).toEqual([
         { timestamp: 1613019600, amount: 2225.54, description: 'mvcu income', account: 'mvcu' },
       ]);
+    });
+    it('ignores ignored facts', () => {
+      expect(parseMvcu([
+        { ...unneededMvcuFields, 'Posting Date': '2/11/2021', Amount: '2225.54000', Description: 'VENMO TYPE: PAYMENT  ID: 3264681992  CO: VENMO' },
+        { ...unneededMvcuFields, 'Posting Date': '2/11/2021', Amount: '2225.54000', Description: 'CITI CARD ONLINE TYPE: PAYMENT  ID: CITICTP CO: CITI CARD ONLINE' },
+      ])).toEqual([]);
     });
   });
   describe('parseMvcuOld()', () => {
@@ -78,6 +82,16 @@ describe('Parsers', () => {
       ])).toEqual([
         { timestamp: 1598846400, amount: 1.77, description: 'mvcu_old income', account: 'mvcu-checkings' },
       ]);
+    });
+    it('ignores unneeded transactions', () => {
+      expect(parseMvcuOld([
+        { ...unneededMvcuOldFields, date: '8/31/2020', amount: '$1.77', description: 'ACH Withdrawal VENMO' },
+        { ...unneededMvcuOldFields, date: '8/31/2020', amount: '$1.77', description: 'Online Transfer' },
+        { ...unneededMvcuOldFields, date: '8/31/2020', amount: '$1.77', description: 'Online Transfer Withdrawal' },
+        { ...unneededMvcuOldFields, date: '8/31/2020', amount: '$1.77', description: 'ACH Deposit VENMO' },
+        { ...unneededMvcuOldFields, date: '8/31/2020', amount: '$1.77', description: 'Withdrawal CITI CARD ONLINE' },
+        { ...unneededMvcuOldFields, date: '8/31/2020', amount: '$1.77', description: 'Transfer Deposit From Share' },
+      ])).toEqual([]);
     });
   });
   describe('parseVenmo()', () => {
@@ -134,11 +148,5 @@ describe('factIsNeeded()', () => {
     expect(factIsNeeded({ timestamp: 1567310401, amount: -1, description: 'good' })).toEqual(true);
     expect(factIsNeeded({ timestamp: 1567310401, amount: 0 })).toEqual(false);
     expect(factIsNeeded({ timestamp: 1567310401, amount: 1, description: 'good' })).toEqual(true);
-  });
-  it('fails for transactions with unneeded description', () => {
-    expect(factIsNeeded({ timestamp: 1567310401, amount: 1, description: 'ACH Deposit VENMO' })).toEqual(false);
-    expect(factIsNeeded({ timestamp: 1567310401, amount: 1, description: 'ach Deposit venmo' })).toEqual(false);
-    expect(factIsNeeded({ timestamp: 1567310401, amount: 1, description: 'ach deposit venmo' })).toEqual(false);
-    expect(factIsNeeded({ timestamp: 1567310401, amount: 1, description: 'ach dep||osit venmo' })).toEqual(true);
   });
 });

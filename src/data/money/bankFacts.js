@@ -45,6 +45,8 @@ const importNewBankFacts = (mock) => new Promise((resolve, reject) => {
           const bankFacts = [...citiFacts, ...mvcuFacts, ...mvcuOldFacts, ...venmoFacts];
           const existingIds = [];
           resolve(R.compose(
+            R.reverse,
+            R.sortBy(R.prop('timestamp')),
             R.reject(R.isNil),
             R.map((fact) => {
               const id = computeFactId(fact);
@@ -75,7 +77,7 @@ const exportBankFacts = (bankFacts, mock) => new Promise((resolve) => {
         description,
         account,
       }) => `${id || ''},${timestamp},${amount},${description},${account}`,
-      R.sortBy(R.prop('timestamp'), bankFacts),
+      R.sortBy(R.prop('timestamp'), bankFacts).reverse(),
     ),
   );
   writeCsvFile({ path, payload: `${header}\n${data}` }).then(resolve);
@@ -90,10 +92,10 @@ module.exports = {
   importBankFacts: (mock) => new Promise((resolve) => {
     importExistingBankFacts(mock).then((existingTransactions) => {
       importNewBankFacts(mock).then((newTransactions) => {
-        const allFacts = R.sortBy(
+        const allFacts = R.reverse(R.sortBy(
           R.prop('timestamp'),
-          R.unionWith(R.eqBy(R.prop('id')), newTransactions, existingTransactions),
-        );
+          R.unionWith(R.eqBy(R.prop('id')), existingTransactions, newTransactions),
+        ));
         exportBankFacts(allFacts, mock);
         resolve(allFacts);
       });
