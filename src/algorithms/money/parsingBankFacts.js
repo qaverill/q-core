@@ -17,9 +17,9 @@ const mvcuOldIgnoredSubstrings = ['Withdrawal VENMO', 'Online Transfer', 'Transf
 // ----------------------------------
 module.exports = {
   parseCiti: R.pipe(
-    R.filter(({ Description, Debit }) => (
+    R.filter(({ Description, Debit, Credit }) => (
       stringDoesNotContainSubstrings(Description, citiIgnoredSubstrings)
-      && (Debit > 0 || Debit < 0)
+      && (Debit > 0 || Debit < 0 || Credit > 0 || Credit < 0)
     )),
     R.map(({
       Date, Debit, Credit, Description,
