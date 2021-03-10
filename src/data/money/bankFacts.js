@@ -16,24 +16,28 @@ const {
 const importExistingBankFacts = (mock) => new Promise((resolve, reject) => {
   const path = mock ? paths.mockBankFacts : paths.bankFacts;
   readCsvFile(path).then((bankFacts) => {
-    const existingIds = [];
-    resolve(R.compose(
-      R.reject(R.isNil),
-      R.map((fact) => {
-        const parsedFact = {
-          ...fact,
-          amount: parseFloat(fact.amount),
-          timestamp: parseInt(fact.timestamp, 10),
-        };
-        const id = parsedFact.id || computeFactId(parsedFact);
-        if (existingIds.includes(id)) {
-          logger.error(`Duplicate id in bankFacts: ${id}`);
-          return null;
-        }
-        existingIds.push(id);
-        return { ...parsedFact, id };
-      }),
-    )(bankFacts));
+    if (bankFacts === []) {
+      resolve([]);
+    } else {
+      const existingIds = [];
+      resolve(R.compose(
+        R.reject(R.isNil),
+        R.map((fact) => {
+          const parsedFact = {
+            ...fact,
+            amount: parseFloat(fact.amount),
+            timestamp: parseInt(fact.timestamp, 10),
+          };
+          const id = parsedFact.id || computeFactId(parsedFact);
+          if (existingIds.includes(id)) {
+            logger.error(`Duplicate id in bankFacts: ${id}`);
+            return null;
+          }
+          existingIds.push(id);
+          return { ...parsedFact, id };
+        }),
+      )(bankFacts));
+    }
   }).catch(reject);
 });
 const importNewBankFacts = (mock) => new Promise((resolve, reject) => {
@@ -76,7 +80,7 @@ const exportBankFacts = (bankFacts, mock) => new Promise((resolve) => {
         amount,
         description,
         account,
-      }) => `${id || ''},${timestamp},${amount},${description},${account}`,
+      }) => `${id || ''},${timestamp},${amount},"${description}",${account}`,
       R.sortBy(R.prop('timestamp'), bankFacts).reverse(),
     ),
   );

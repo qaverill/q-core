@@ -32,12 +32,18 @@ describe('helpers', () => {
     it('existing bank fact with a duplicated id is not returned', async () => {
       await mockExportBankFacts([...mockBankFacts, { id: '3', timestamp: 3, amount: 3, description: '3', account: 'c' }]);
       const results = await mockImportExistingBankFacts();
+      console.log("Don't worry, that error is good 👍");
       expect(results.filter(({ id }) => id === '3').length).toEqual(1);
     });
     it('returns expected data', async () => {
       await mockExportBankFacts(mockBankFacts);
       const results = await mockImportExistingBankFacts();
       expect(results).toEqual(mockBankFacts);
+    });
+    it('returns [] when there are no exisisting bank facts', async () => {
+      await mockExportBankFacts([]);
+      const results = await mockImportExistingBankFacts();
+      expect(results).toEqual([]);
     });
   });
   describe('importNewBankFacts()', () => {
@@ -71,6 +77,9 @@ describe('helpers', () => {
 });
 describe('importBankFacts()', () => {
   beforeEach(async () => {
+    await mockExportBankFacts(mockBankFacts);
+  });
+  afterEach(async () => {
     await mockExportBankFacts(mockBankFacts);
   });
   it('returns the correct information', async () => {

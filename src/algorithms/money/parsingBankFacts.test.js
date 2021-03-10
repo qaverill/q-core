@@ -26,7 +26,7 @@ describe('Parsers', () => {
         { timestamp: 1614574800, amount: -25.00, description: 'mock citi payment', account: 'citi-credit' },
       ]);
     });
-    it('parses returns correctly', async () => {
+    it('parses refunds correctly', async () => {
       expect(parseCiti([
         { ...unneededCitiFields, Date: '10/19/2020', Description: 'mock citi income', Credit: '-49.50' },
       ])).toEqual([

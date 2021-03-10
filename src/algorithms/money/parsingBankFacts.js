@@ -17,15 +17,16 @@ const mvcuOldIgnoredSubstrings = ['Withdrawal VENMO', 'Online Transfer', 'Transf
 // ----------------------------------
 module.exports = {
   parseCiti: R.pipe(
-    R.filter(({ Description }) => (
+    R.filter(({ Description, Debit }) => (
       stringDoesNotContainSubstrings(Description, citiIgnoredSubstrings)
+      && (Debit > 0 || Debit < 0)
     )),
     R.map(({
       Date, Debit, Credit, Description,
     }) => ({
       account: 'citi-credit',
       timestamp: dateStringToTimestamp(Date),
-      amount: round2Decimals(Debit != null ? parseFloat(Debit) * -1 : parseFloat(Credit) * -1),
+      amount: round2Decimals(parseFloat(Debit) * -1 || parseFloat(Credit) * -1),
       description: Description.replace(/"/g, ''),
     })),
   ),

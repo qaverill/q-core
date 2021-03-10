@@ -18,4 +18,4 @@ app.use('/', routes);
 
 httpServer.listen(port);
 
-// KickoffIngestions();
+KickoffIngestions();

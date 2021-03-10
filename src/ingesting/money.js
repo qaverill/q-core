@@ -9,10 +9,10 @@ const { importPaybacks } = require('../data/money/paybacks');
 module.exports = {
   ingestMoney: () => {
     deleteTransactions()
-      .then(importBankFacts)
-      .then(tagTransactions)
-      .then(createTransactions)
-      .then(importPaybacks)
-      .then(processPaybacks);
+      .then(() => importBankFacts())
+      // .then(tagTransactions)
+      // .then(createTransactions)
+      // .then(importPaybacks)
+      // .then(processPaybacks);
   },
 };
