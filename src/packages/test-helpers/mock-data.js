@@ -1,7 +1,7 @@
 /* eslint-disable object-curly-newline */
 module.exports = {
   transactions: [
-    { id: '0', account: '0', timestamp: 0, amount: 0, description: '0', tags: ['0'] },
+    { id: '0', account: '0', timestamp: 0, amount: 0, description: "0's", tags: ['0'] },
     { id: '1', account: 'a', timestamp: 1, amount: -1, description: '1', tags: ['1', '2', '3'] },
     { id: '2', account: 'b', timestamp: 2, amount: 2, description: '2', tags: ['1', '2', '3'] },
     { id: '3', account: 'c', timestamp: 3, amount: -3, description: '3', tags: ['1', '2', '3'] },

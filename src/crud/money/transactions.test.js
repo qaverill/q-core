@@ -29,6 +29,15 @@ describe('Transactions CRUD', () => {
       const afterRead = await readTransactions();
       expect(afterRead).toEqual(transactions);
     });
+    it('excapes single quotes correclty', async () => {
+      await deleteTransactions();
+      await createTransactions(transactions);
+      const results = await readTransactions();
+      expect(results.find(({ id }) => id === '0').description).toEqual("0's");
+    });
+    it('chunks when > 1000 transactions', async () => {
+      expect(1).toEqual(2);
+    });
   });
   describe('READ', () => {
     describe('readTransaction', () => {
