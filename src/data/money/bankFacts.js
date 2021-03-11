@@ -81,7 +81,7 @@ const exportBankFacts = (bankFacts, mock) => new Promise((resolve) => {
         description,
         account,
       }) => `${id || ''},${timestamp},${amount},"${description}",${account}`,
-      R.sortBy(R.prop('timestamp'), bankFacts).reverse(),
+      R.sortBy(({ timestamp, amount }) => `${timestamp}${amount}`, bankFacts).reverse(),
     ),
   );
   writeCsvFile({ path, payload: `${header}\n${data}` }).then(resolve);

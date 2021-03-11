@@ -15,7 +15,7 @@ const expectedNewBankFacts = [
   { account: 'venmo', timestamp: 1612920426, amount: -33, description: 'Venmo to Annie Averill: venmo payment 2', id: 'a675cb1abfc8715f02495e19f13bd3ca' },
   { account: 'venmo', timestamp: 1612398528, amount: 33, description: 'Venmo from David Averill: venmo income 1', id: 'd502b2089625c61f876265aaa32ab6a0' },
   { account: 'venmo', timestamp: 1612398527, amount: -33, description: 'Venmo to David Averill: venmo payment 1', id: '423a48a4e18557ba633913477bfe1eb8' },
-  { account: 'citi-credit', timestamp: 1603080000, amount: NaN, description: 'mock citi income', id: '848b0f9fe0fe8ba9acf87422182fb3f2' },
+  { account: 'citi-credit', timestamp: 1603080000, amount: 49.5, description: 'mock citi income', id: 'ff85427b0dbfd8e1aeb0f3fd905d4ee8' },
   { account: 'mvcu-savings', timestamp: 1599019200, amount: -115, description: 'mvcu_old payment', id: 'fffa684e67ded60e8f8e49a8c255673f' },
   { account: 'mvcu-savings', timestamp: 1598846400, amount: 1.77, description: 'mvcu_old income', id: '241c85ab49f466bea84226ef9059dbaa' },
 ];
@@ -112,6 +112,6 @@ describe('importBankFacts()', () => {
   it('exports the newly combined transactions', async () => {
     await mockImportBankFacts();
     const afterImport = await mockImportExistingBankFacts();
-    expect(afterImport).toEqual([...expectedNewBankFacts.slice(0, expectedNewBankFacts.length - 1), ...mockBankFacts]);
+    expect(afterImport).toEqual([...mockBankFacts.slice(0, mockBankFacts.length - 1), ...expectedNewBankFacts.slice(0, expectedNewBankFacts.length - 1), mockBankFacts[3]]);
   });
 });
