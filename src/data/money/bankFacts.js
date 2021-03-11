@@ -59,7 +59,7 @@ const importNewBankFacts = (mock) => new Promise((resolve, reject) => {
                 return null;
               }
               existingIds.push(id);
-              return { ...fact, id };
+              return { ...fact, id, description: fact.description.slice(0, 100) };
             }),
             R.filter(factIsNeeded),
           )(bankFacts));

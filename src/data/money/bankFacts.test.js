@@ -10,7 +10,7 @@ const START_OF_SEPTEMBER_19 = 1567310400;
 const expectedNewBankFacts = [
   { account: 'mvcu', timestamp: 1614747600, amount: -1225.7, description: 'mvcu payment', id: '18d485ed12cae3ebccb09eca95097857' },
   { account: 'citi-credit', timestamp: 1614574800, amount: -25, description: 'mock citi payment', id: 'c8f5d25988fc56dbc54371c831b310b8' },
-  { account: 'mvcu', timestamp: 1613019600, amount: 2225.54, description: 'mvcu income', id: '5b155def4b98275deaf67aefad482029' },
+  { account: 'mvcu', timestamp: 1613019600, amount: 2225.54, description: 'mvcu income with long ass descriptionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnalksdhfalksdfhalksdjfhalksdfasdh', id: '3dd0a8e52266162ec4bb81913e008c8b' },
   { account: 'venmo', timestamp: 1612920427, amount: 33, description: 'Venmo from Annie Averill: venmo income 2', id: '4400abb483c221ebf65901069277bbd6' },
   { account: 'venmo', timestamp: 1612920426, amount: -33, description: 'Venmo to Annie Averill: venmo payment 2', id: 'a675cb1abfc8715f02495e19f13bd3ca' },
   { account: 'venmo', timestamp: 1612398528, amount: 33, description: 'Venmo from David Averill: venmo income 1', id: 'd502b2089625c61f876265aaa32ab6a0' },
@@ -67,6 +67,10 @@ describe('helpers', () => {
     it('returns expected data', async () => {
       const newBankFacts = await mockImportNewBankFacts();
       expect(newBankFacts).toEqual(expectedNewBankFacts);
+    });
+    it('truncates large descriptions AFTER assigning id', async () => {
+      const newBankFacts = await mockImportNewBankFacts();
+      expect(newBankFacts.find(({ id }) => id === '3dd0a8e52266162ec4bb81913e008c8b').description.length).toEqual(100);
     });
   });
   test('exportBankFacts()', async () => {
