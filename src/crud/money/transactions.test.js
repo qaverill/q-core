@@ -1,5 +1,7 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable object-curly-newline */
 const { transactions } = require('@q/test-helpers');
+const R = require('ramda');
 const {
   createTransactions,
   readTransaction,
@@ -11,6 +13,7 @@ const {
 // ----------------------------------
 // DATA
 // ----------------------------------
+const sortedTransactions = R.sortBy(R.prop('timestamp'), transactions);
 // ----------------------------------
 // TESTS
 // ----------------------------------
@@ -25,9 +28,9 @@ describe('Transactions CRUD', () => {
     test('successfully creates all transactions', async () => {
       await deleteTransactions();
       const results = await createTransactions(transactions);
-      expect(results).toEqual([transactions.length]);
+      expect(results).toEqual(transactions.length);
       const afterRead = await readTransactions();
-      expect(afterRead).toEqual(transactions);
+      expect(afterRead).toEqual(sortedTransactions);
     });
     it('excapes single quotes correclty', async () => {
       await deleteTransactions();
@@ -36,7 +39,16 @@ describe('Transactions CRUD', () => {
       expect(results.find(({ id }) => id === '0').description).toEqual("0's");
     });
     it('chunks when > 1000 transactions', async () => {
-      expect(1).toEqual(2);
+      await deleteTransactions();
+      const numTransactions = 1420;
+      const manyTransactions = [];
+      for (let i = 0; i < numTransactions; i++) {
+        manyTransactions.push({ id: `${i}`, account: '0', timestamp: 0 + i, amount: 0 + i, description: `${i}`, tags: ['0', `${i}`] });
+      }
+      const createResults = await createTransactions(manyTransactions);
+      expect(createResults).toEqual(numTransactions);
+      const results = await readTransactions();
+      expect(results).toEqual(manyTransactions);
     });
   });
   describe('READ', () => {
@@ -53,19 +65,19 @@ describe('Transactions CRUD', () => {
     describe('readTransactions', () => {
       test('no timeframe returns all transactions', async () => {
         const results = await readTransactions();
-        expect(results).toEqual(transactions);
+        expect(results).toEqual(sortedTransactions);
       });
       test('start and end return correct transactions', async () => {
         const results = await readTransactions({ start: 3, end: 4 });
-        expect(results).toEqual([transactions[3], transactions[4]]);
+        expect(results).toEqual([transactions[4], transactions[5]]);
       });
       test('start but no end return correct transactions', async () => {
         const results = await readTransactions({ start: 5 });
-        expect(results).toEqual([transactions[5], transactions[6], transactions[7]]);
+        expect(results).toEqual([transactions[6], transactions[7], transactions[8]]);
       });
       test('no start but end return all transactions', async () => {
         const results = await readTransactions({ end: 5 });
-        expect(results).toEqual(transactions);
+        expect(results).toEqual(R.sortBy(R.prop('timestamp'), transactions));
       });
     });
   });

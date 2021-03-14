@@ -1,11 +1,12 @@
 const R = require('ramda');
-const { executeSQL, timeframeToQuery } = require('../mssql');
+const { executeSQL, executeInsertSQL, timeframeToQuery } = require('../mssql');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
 const parseTransactions = (resolve, justOne) => R.compose(
   resolve,
   (x) => (justOne ? x[0] : x),
+  R.sortBy(R.prop('timestamp')),
   R.map(R.evolve({ tags: R.split(',') })),
   R.prop('recordset'),
 );
@@ -20,9 +21,9 @@ module.exports = {
   createTransactions: (transactions) => new Promise((resolve) => {
     const values = transactions.map(
       (t) => `('${t.id}',${t.timestamp},${t.amount},'${t.description.replace(/'/g, "''")}','${t.account}','${t.tags.join(',')}')`,
-    ).join(',');
-    executeSQL(`INSERT INTO dbo.transactions (id, timestamp, amount, description, account, tags) VALUES ${values}`)
-      .then(rowsAffected(resolve));
+    );
+    executeInsertSQL('INSERT INTO dbo.transactions (id, timestamp, amount, description, account, tags) VALUES', values)
+      .then(resolve);
   }),
   readTransaction: (id) => new Promise((resolve) => {
     executeSQL(`SELECT * FROM dbo.transactions WHERE id='${id}'`)
