@@ -3,16 +3,29 @@ const { tagTransactions } = require('../algorithms/money/tagTransactions');
 const { processPaybacks } = require('../algorithms/money/processPaybacks');
 const { importBankFacts } = require('../data/money/bankFacts');
 const { importPaybacks } = require('../data/money/paybacks');
+const logger = require('@q/logger');
 // ----------------------------------
 // PROCEDURE
 // ----------------------------------
 module.exports = {
   ingestMoney: () => {
+    const start = new Date().getTime();
+    logger.info('Starting money ingestion...');
     deleteTransactions()
       .then(() => importBankFacts())
-      // .then(tagTransactions)
-      // .then(createTransactions)
-      // .then(importPaybacks)
-      // .then(processPaybacks);
+      .then((bankFacts) => {
+        logger.info(`Imported ${bankFacts.length} bankFacts`);
+        return tagTransactions(bankFacts);
+      })
+      .then(createTransactions)
+      .then(() => importPaybacks())
+      .then((paybacks) => {
+        logger.info(`Imported ${paybacks.length} paybacks`);
+        return processPaybacks(paybacks);
+      })
+      .then(() => {
+        const totalTime = new Date().getTime() - start;
+        logger.info(`Successfully ingested money! ...${totalTime}ms`);
+      });
   },
 };
