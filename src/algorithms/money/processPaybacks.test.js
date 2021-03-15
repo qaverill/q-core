@@ -12,6 +12,7 @@ const {
 describe('Money algorithms', () => {
   describe('processPaybacks', () => {
     beforeEach(async () => {
+      await deleteTransactions();
       await createTransactions(transactions);
     });
     afterEach(async () => {

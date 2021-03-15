@@ -20,6 +20,7 @@ const mock = true;
 // ----------------------------------
 describe('POST payback', () => {
   beforeEach(async () => {
+    await deleteTransactions();
     await createTransactions(transactions);
     await mockExportPaybacks(mockPaybacks);
   });
