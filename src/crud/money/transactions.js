@@ -6,6 +6,7 @@ const { executeSQL, executeInsertSQL, timeframeToQuery } = require('../mssql');
 const parseTransactions = (resolve, justOne) => R.compose(
   resolve,
   (x) => (justOne ? x[0] : x),
+  R.reverse,
   R.sortBy(R.prop('timestamp')),
   R.map(R.evolve({ tags: R.split(',') })),
   R.prop('recordset'),
