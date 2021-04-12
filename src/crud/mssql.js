@@ -33,9 +33,12 @@ module.exports = {
     )(chunks);
   },
   timeframeToQuery: (timeframe = {}) => {
-    const { start, end } = timeframe;
-    if (start && end) return `WHERE timestamp >= ${start} AND timestamp <= ${end}`;
-    if (start && end == null) return `WHERE timestamp >= ${start}`;
-    return '';
+    const { start, end, filter } = timeframe;
+    if (!start && !end && !filter) return '';
+    const criteria = [];
+    if (start) criteria.push(`timestamp >= ${start}`);
+    if (end) criteria.push(`timestamp <= ${end}`);
+    if (filter) criteria.push(`tags LIKE '%${filter}%'`);
+    return `WHERE ${criteria.join(' AND ')}`;
   },
 };
