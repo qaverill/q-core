@@ -25,4 +25,11 @@ module.exports = {
     const { start, end } = request.query;
     return { start: parseInput(start), end: parseInput(end) };
   },
+  startOfMonth: (timestamp) => {
+    const date = timestampToDate(timestamp);
+    date.setUTCDate(1);
+    date.setUTCHours(0, 0, 0);
+    date.setMilliseconds(0);
+    return date.getTime() / 1000;
+  },
 };
