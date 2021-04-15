@@ -13,7 +13,7 @@ module.exports = {
      * @params filter (optional) STRING default: null
      * @returns list of transactions, post payback/tagging
      */
-    makeGetEndpointAsync({ routes, path: '/money/analysis' }, ({ request, respond }) => {
+    makeGetEndpointAsync({ routes, path: '/analyze/money' }, ({ request, respond }) => {
       const { start, end, filter } = request.query;
       readTransactions({ start, end, filter })
         .then((transactions) => {

@@ -1,13 +1,13 @@
 const lights = require('./control/lights');
 const outlets = require('./control/outlets');
-const music = require('./music');
 const paybacks = require('./money/paybacks');
 const transactions = require('./money/transactions');
-const moneyAnalysis = require('./money/analysis');
+const analyzeMoney = require('./analyze/money');
+const analyzeMusic = require('./analyze/music');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const endpoints = [lights, outlets, music, paybacks, transactions, moneyAnalysis];
+const endpoints = [lights, outlets, paybacks, transactions, analyzeMoney, analyzeMusic];
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
