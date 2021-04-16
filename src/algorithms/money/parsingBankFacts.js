@@ -10,8 +10,8 @@ const stringDoesNotContainSubstrings = (string, substrings) => (
   !new RegExp(R.join('|', R.map(R.toLower, substrings))).test(R.toLower(string))
 );
 const citiIgnoredSubstrings = ['ONLINE PAYMENT, THANK YOU'];
-const mvcuIgnoredSubstrings = ['VENMO TYPE', 'CITI CARD ONLINE TYPE: PAYMENT'];
-const mvcuOldIgnoredSubstrings = ['Withdrawal VENMO', 'Online Transfer', 'Transfer Withdrawal', 'ACH Deposit VENMO', 'Withdrawal CITI CARD ONLINE', 'Transfer Deposit From Share'];
+const mvcuIgnoredSubstrings = ['VENMO TYPE', 'CITI CARD ONLINE TYPE: PAYMENT', 'From Share', 'To Share'];
+const mvcuOldIgnoredSubstrings = ['Withdrawal VENMO', 'Online Transfer', 'Transfer Withdrawal', 'ACH Deposit VENMO', 'Withdrawal CITI CARD ONLINE', 'From Share', 'To Share'];
 // ----------------------------------
 // LOGIC
 // ----------------------------------

@@ -6,7 +6,9 @@ const parse = require('csv-parse');
 module.exports = {
   readCsvFile: (path) => new Promise((resolve) => {
     fs.readFile(path, (readError, fileData) => {
-      parse(fileData, { columns: true }, (parseError, rows) => {
+      if (readError) console.error(readError);
+      parse(fileData, { columns: true, relaxColumnCount: true }, (parseError, rows) => {
+        if (parseError) console.error(parseError);
         resolve(rows);
       });
     });
