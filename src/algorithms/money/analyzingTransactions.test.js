@@ -38,24 +38,28 @@ describe('analyzeTransactions()', () => {
       const analysis = analyzeTransactions(transactions);
       expect(analysis).toEqual({
         1612137600: {
-          byTag: {
+          tags: {
             income: 140.0,
             living: -60.50,
           },
           delta: 79.50,
+          incoming: 140.0,
+          outcoming: -60.50,
         },
         1614556800: {
-          byTag: {
+          tags: {
             fun: -420.0,
           },
           delta: -420.0,
+          outcoming: -420.0,
         },
         1617235200: {
-          byTag: {
+          tags: {
             living: -100.0,
             income: -50,
           },
           delta: -150.0,
+          outcoming: -150.0,
         },
       });
     });
@@ -63,24 +67,28 @@ describe('analyzeTransactions()', () => {
       const analysis = analyzeTransactions(filteredTransactions, 'target');
       expect(analysis).toEqual({
         1612137600: {
-          byTag: {
+          tags: {
             target: 110.0,
           },
           delta: 110.0,
+          incoming: 110.0,
         },
         1614556800: {
-          byTag: {
+          tags: {
             second: 90,
             next: 80,
             target: -40,
           },
           delta: 130.0,
+          incoming: 170.0,
+          outcoming: -40.0,
         },
         1617235200: {
-          byTag: {
+          tags: {
             post: 70,
           },
           delta: 70,
+          incoming: 70.0,
         },
       });
     });
@@ -88,16 +96,18 @@ describe('analyzeTransactions()', () => {
       const analysis = analyzeTransactions(singleTagFilteredTransactions, 'loans');
       expect(analysis).toEqual({
         1612137600: {
-          byTag: {
+          tags: {
             loans: 200.0,
           },
           delta: 200.0,
+          incoming: 200.0,
         },
         1614556800: {
-          byTag: {
+          tags: {
             loans: -300.0,
           },
           delta: -300.0,
+          outcoming: -300.0,
         },
       });
     });

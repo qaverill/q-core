@@ -9,13 +9,18 @@ const tagAfterFilter = (tags, filter) => {
   return indexOfFilter === tags.length - 1 ? tags[indexOfFilter] : tags[indexOfFilter + 1];
 };
 const analyzeTransaction = (amount, tag) => (analysis) => {
-  const currentTagSum = R.path(['byTag', tag], analysis) || 0;
+  const tagSumPath = ['tags', tag];
+  const polarity = amount > 0 ? 'incoming' : 'outcoming';
+  const currentTagSum = R.path(tagSumPath, analysis) || 0;
   const currentDelta = R.prop('delta', analysis) || 0;
+  const currentPolarityValue = R.prop(polarity, analysis) || 0;
   const newTagSum = round2Decimals(currentTagSum + amount);
   const newDelta = round2Decimals(currentDelta + amount);
+  const newPolarityValue = round2Decimals(currentPolarityValue + amount);
   return R.compose(
-    R.assocPath(['byTag', tag], newTagSum),
+    R.assocPath(tagSumPath, newTagSum),
     R.assoc('delta', newDelta),
+    R.assoc(polarity, newPolarityValue),
   )(analysis);
 };
 // ----------------------------------
