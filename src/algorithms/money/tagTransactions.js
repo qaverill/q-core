@@ -1,49 +1,63 @@
+const R = require('ramda');
+const { listWithoutDuplicates } = require('@q/utils');
 const { importTags } = require('../../data/money/tags');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const determineTags = (bankFact, tags, parentTag) => {
-  const { description } = bankFact;
-  const lowercaseDescription = description.toLowerCase();
-  if (Array.isArray(tags)) {
-    return [...new Set(
-      tags.map((keyWord) => (
-        lowercaseDescription.includes(keyWord.toLowerCase())
-          ? parentTag
-          : null
-      )).filter((tag) => tag != null),
-    )];
+// this must be in lower case
+const ignoredVenmoFroms = [
+  'customer data security breach',
+  'this must have been an accident',
+];
+const matchTagsWithDescription = (tagKeys, tag, description) => {
+  function seekMatchingTagKey(tagKey) {
+    const lowercaseDescription = description.toLowerCase();
+    return lowercaseDescription.includes(tagKey.toLowerCase())
+      ? tag
+      : null;
   }
-  return [...new Set(Object.keys(tags).flatMap((subTag) => {
-    const possibleTag = determineTags(bankFact, tags[subTag], subTag);
-    return possibleTag.length > 0 ? [parentTag, ...possibleTag] : null;
-  }).filter((tag) => tag != null))];
+  const tags = tagKeys.map(seekMatchingTagKey).filter((t) => t != null);
+  return listWithoutDuplicates(tags);
 };
-const checkForSpecialCases = ({ description, amount }) => {
-  const caseInsensitiveDescription = description.toLowerCase();
-  const excludeVenmoFrom = () => (![
-    'Customer Data Security Breach',
-    'this must have been an accident',
-  ].every((str) => !caseInsensitiveDescription.includes(str.toLowerCase())));
-  if (caseInsensitiveDescription.includes('venmo from') && !excludeVenmoFrom(description)) {
-    return ['payBack'];
+const determineTags = (bankFact, tagBranch, parentTag) => {
+  const { description } = bankFact;
+  const isTagLeaf = Array.isArray(tagBranch);
+  function seekTagsRecursively(subBranch) {
+    const possibleTag = determineTags(bankFact, tagBranch[subBranch], subBranch);
+    return possibleTag.length > 0 ? [parentTag, ...possibleTag] : null;
   }
-  if (caseInsensitiveDescription.includes('check withdrawal') && amount === -1150) {
-    return ['living', 'rent', 'butnam'];
+  // base case
+  if (isTagLeaf) {
+    return matchTagsWithDescription(tagBranch, parentTag, description);
   }
+  const tags = Object.keys(tagBranch)
+    .flatMap(seekTagsRecursively)
+    .filter((tag) => tag != null);
+  return listWithoutDuplicates(tags);
+};
+const checkForSpecialCases = (transaction) => {
+  const { description, amount, account } = transaction;
+  const normalizedDescription = description.toLowerCase();
+  const isVenmoFrom = normalizedDescription.includes('venmo from');
+  const isExcludedVenmoFrom = !ignoredVenmoFroms.every((s) => !normalizedDescription.includes(s));
+  const isVenmoPayback = isVenmoFrom && !isExcludedVenmoFrom;
+  const isCitiRefund = account === 'citi-credit' && amount > 0;
+  const isButnamRent = normalizedDescription.includes('check withdrawal') && amount === -1150;
+  if (isVenmoPayback || isCitiRefund) return ['payBack'];
+  if (isButnamRent) return ['living', 'rent', 'butnam'];
   return null;
 };
 // ----------------------------------
-// LOGIC
+// EXPORTS
 // ----------------------------------
 module.exports = {
   tagTransactions: (bankFacts) => {
-    const tags = importTags();
-    const isSingleTransaction = Array.isArray(bankFacts);
-    const result = (isSingleTransaction ? bankFacts : [bankFacts]).map((bankFact) => {
+    const tagRoots = importTags();
+    function bankFactToTaggedBankFact(bankFact) {
       const presetTags = checkForSpecialCases(bankFact);
-      return { ...bankFact, tags: presetTags || determineTags(bankFact, tags, null) };
-    });
-    return isSingleTransaction ? result : result[0];
+      const tags = presetTags || determineTags(bankFact, tagRoots, null);
+      return R.assoc('tags', tags, bankFact);
+    }
+    return R.map(bankFactToTaggedBankFact, bankFacts);
   },
 };

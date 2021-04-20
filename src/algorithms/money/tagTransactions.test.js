@@ -7,16 +7,16 @@ describe('tagTransactions', () => {
     it('tags a butnam rent check correctly', () => {
       const description = 'Check withdraWal';
       const amount = -1150;
-      expect(tagTransactions({ description, amount })).toEqual({ description, amount, tags: ['living', 'rent', 'butnam'] });
+      expect(tagTransactions([{ description, amount }])).toEqual([{ description, amount, tags: ['living', 'rent', 'butnam'] }]);
     });
     it('tags venmo froms as payBack', () => {
       const description = 'veNmo fRom venmo';
       const amount = 69;
-      expect(tagTransactions({ description, amount })).toEqual({ description, amount, tags: ['payBack'] });
+      expect(tagTransactions([{ description, amount }])).toEqual([{ description, amount, tags: ['payBack'] }]);
     });
     it('tags a venmo from on ignore list correctly', () => {
       const description = 'xxxxvenmo from Customer Data Security Breachblaah';
-      expect(tagTransactions({ description })).toEqual({ description, tags: ['income', 'random'] });
+      expect(tagTransactions([{ description }])).toEqual([{ description, tags: ['income', 'random'] }]);
     });
   });
   it('correctly tags multiple transactions at once', () => {
@@ -27,6 +27,6 @@ describe('tagTransactions', () => {
   });
   it('gives empty tags when no matches', () => {
     const description = '????';
-    expect(tagTransactions({ description })).toEqual({ description, tags: [] });
+    expect(tagTransactions([{ description }])).toEqual([{ description, tags: [] }]);
   });
 });

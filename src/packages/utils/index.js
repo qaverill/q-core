@@ -13,4 +13,5 @@ module.exports = {
     return number / 100;
   },
   round2Decimals: (num) => +((num).toFixed(2)),
+  listWithoutDuplicates: (list) => [...new Set(list)],
 };
