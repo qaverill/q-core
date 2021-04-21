@@ -9,18 +9,18 @@ const ignoredVenmoFroms = [
   'customer data security breach',
   'this must have been an accident',
 ];
-const matchTagsWithDescription = (tagKeys, tag, description) => {
+const seekTagsForFact = (tagKeys, tag, bankFact) => {
+  const { id, description } = bankFact;
   function seekMatchingTagKey(tagKey) {
+    const idMatch = id === tagKey;
     const lowercaseDescription = description.toLowerCase();
-    return lowercaseDescription.includes(tagKey.toLowerCase())
-      ? tag
-      : null;
+    const descriptionMatch = lowercaseDescription.includes(tagKey.toLowerCase());
+    return idMatch || descriptionMatch ? tag : null;
   }
   const tags = tagKeys.map(seekMatchingTagKey).filter((t) => t != null);
   return listWithoutDuplicates(tags);
 };
 const determineTags = (bankFact, tagBranch, parentTag) => {
-  const { description } = bankFact;
   const isTagLeaf = Array.isArray(tagBranch);
   function seekTagsRecursively(subBranch) {
     const possibleTag = determineTags(bankFact, tagBranch[subBranch], subBranch);
@@ -28,7 +28,7 @@ const determineTags = (bankFact, tagBranch, parentTag) => {
   }
   // base case
   if (isTagLeaf) {
-    return matchTagsWithDescription(tagBranch, parentTag, description);
+    return seekTagsForFact(tagBranch, parentTag, bankFact);
   }
   const tags = Object.keys(tagBranch)
     .flatMap(seekTagsRecursively)

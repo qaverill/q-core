@@ -29,4 +29,9 @@ describe('tagTransactions', () => {
     const description = '????';
     expect(tagTransactions([{ description }])).toEqual([{ description, tags: [] }]);
   });
+  it('tags by transaction id', () => {
+    const id = '5673cdb89b67c1f09bccb9dc52bc1bbc';
+    const description = 'xxtesT1';
+    expect(tagTransactions([{ id, description }])).toEqual([{ id, description, tags: ['living', 'airConditioner', 'fun', 'hobbies', 'computerParts'] }]);
+  });
 });
