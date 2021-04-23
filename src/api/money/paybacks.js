@@ -15,7 +15,7 @@ module.exports = {
      */
     makePostEndpointAsync({ routes, path: '/money/paybacks' }, ({ request, respond }) => {
       const { from, to, mock } = request.body;
-      processPaybacks({ from, to })
+      processPaybacks([{ from, to }])
         .then(() => importPaybacks(mock))
         .then((paybacks) => exportPaybacks([...paybacks, request.body], mock))
         .then(respond)

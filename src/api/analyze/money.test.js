@@ -8,7 +8,7 @@ const PATH = '/analyze/money';
 // ----------------------------------
 // TESTS
 // ----------------------------------
-describe(`GET ${PATH}`, () => {
+describe.skip(`GET ${PATH}`, () => {
   test('money analysis is correct with first year of data', async () => {
     const testStart = 1572566400;
     const testEnd = 1601510400;

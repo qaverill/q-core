@@ -13,6 +13,7 @@ const executeSQL = (query) => new Promise((resolve) => {
     request.query(query, (queryError, results) => {
       if (queryError) logger.error('Failed querying SQL', queryError);
       resolve(results);
+      // sql.close();
     });
   });
 });

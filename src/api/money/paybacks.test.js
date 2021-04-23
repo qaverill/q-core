@@ -38,11 +38,11 @@ describe('POST payback', () => {
     expect((await readTransaction('7')).amount).toEqual(-3);
   });
   it('payback is added to data file correctly, in correct order', async () => {
-    await apiPost(PATH, { from: '+1', to: '3', mock });
+    await apiPost(PATH, { from: '8', to: '3', mock });
     const data = await mockImportPaybacks();
     expect(data).toEqual([
       { from: '2', to: '3' },
-      { from: '+1', to: '3' },
+      { from: '8', to: '3' },
       { from: '4', to: '5' },
       { from: '6', to: '7' },
     ]);
