@@ -23,17 +23,34 @@ const analyzeTransaction = (amount, tag) => (analysis) => {
     R.assoc(polarity, newPolarityValue),
   )(analysis);
 };
+const addNeutralTags = (baseAnalysis, uniqueTags) => (
+  R.keys(baseAnalysis)
+    .reduce((fullAnalysis, timestamp) => {
+      const currentAnalysis = baseAnalysis[timestamp];
+      const updatedTags = uniqueTags.reduce((result, tag) => {
+        const tagValue = currentAnalysis.tags[tag] || 0;
+        return R.assoc(tag, tagValue, result);
+      }, {});
+      const updatedAnalysis = { ...currentAnalysis, tags: updatedTags };
+      return R.assoc(timestamp, updatedAnalysis, fullAnalysis);
+    }, {})
+);
 // ----------------------------------
 // LOGIC
 // ----------------------------------
 module.exports = {
-  analyzeTransactions: (transactions, filter = null) => (
-    transactions.reduce((analysis, transaction) => {
+  analyzeTransactions: (transactions, filter = null) => {
+    const allTags = [];
+    const baseAnalysis = transactions.reduce((analysis, transaction) => {
       const { timestamp, amount, tags } = transaction;
       const month = startOfMonth(timestamp);
       const tag = filter ? tagAfterFilter(tags, filter) : tags[0];
+      allTags.push(tag);
       const monthLens = R.lens(R.prop(month), R.assoc(month));
       return R.over(monthLens, analyzeTransaction(amount, tag), analysis);
-    }, {})
-  ),
+    }, {});
+    const uniqueTags = R.uniq(allTags).filter((tag) => tag != null);
+    const fullAnalysis = addNeutralTags(baseAnalysis, uniqueTags);
+    return fullAnalysis;
+  },
 };

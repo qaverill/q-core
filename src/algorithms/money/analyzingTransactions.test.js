@@ -39,6 +39,7 @@ describe('analyzeTransactions()', () => {
       expect(analysis).toEqual({
         1612137600: {
           tags: {
+            fun: 0,
             income: 140.0,
             living: -60.50,
           },
@@ -49,6 +50,8 @@ describe('analyzeTransactions()', () => {
         1614556800: {
           tags: {
             fun: -420.0,
+            income: 0,
+            living: 0,
           },
           delta: -420.0,
           outcoming: -420.0,
@@ -57,6 +60,7 @@ describe('analyzeTransactions()', () => {
           tags: {
             living: -100.0,
             income: -50,
+            fun: 0,
           },
           delta: -150.0,
           outcoming: -150.0,
@@ -69,6 +73,9 @@ describe('analyzeTransactions()', () => {
         1612137600: {
           tags: {
             target: 110.0,
+            second: 0,
+            next: 0,
+            post: 0,
           },
           delta: 110.0,
           incoming: 110.0,
@@ -78,6 +85,7 @@ describe('analyzeTransactions()', () => {
             second: 90,
             next: 80,
             target: -40,
+            post: 0,
           },
           delta: 130.0,
           incoming: 170.0,
@@ -86,6 +94,9 @@ describe('analyzeTransactions()', () => {
         1617235200: {
           tags: {
             post: 70,
+            target: 0,
+            second: 0,
+            next: 0,
           },
           delta: 70,
           incoming: 70.0,
