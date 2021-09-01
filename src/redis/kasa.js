@@ -3,7 +3,7 @@ const logger = require('@q/logger');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const hostKey = (outlet) => `outlets:${outlet}:host`;
+const craftOutletKey = (outlet) => `outlets:${outlet}:host`;
 // ----------------------------------
 // REDIS
 // ----------------------------------
@@ -14,10 +14,12 @@ redisClient.on('error', logger.error);
 // ----------------------------------
 module.exports = {
   setOutletHost: (outlet, host) => new Promise((resolve) => {
-    redisClient.set(hostKey(outlet), host, resolve);
+    const outletKey = craftOutletKey(outlet);
+    redisClient.set(outletKey, host, resolve);
   }),
   getOutletHost: (outlet) => new Promise((resolve) => {
-    redisClient.get(hostKey(outlet), (_, result) => {
+    const outletKey = craftOutletKey(outlet);
+    redisClient.get(outletKey, (_, result) => {
       resolve(result);
     });
   }),

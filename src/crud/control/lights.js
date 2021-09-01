@@ -6,7 +6,7 @@ const { getCurrentPreset, setCurrentPreset } = require('../../redis/lifx');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const group = 'Q';
+const location = 'Home';
 const headers = {
   Authorization: `Bearer ${config.lifx.access_token}`,
 };
@@ -15,7 +15,7 @@ const headers = {
 // ----------------------------------
 module.exports = {
   readLights: () => new Promise((resolve) => {
-    const url = `https://api.lifx.com/v1/lights/group:${group}`;
+    const url = `https://api.lifx.com/v1/lights/location:${location}`;
     axios.get(url, { headers }).then(({ data }) => {
       getCurrentPreset().then((preset) => {
         const results = R.map((light) => ({

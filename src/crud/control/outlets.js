@@ -4,7 +4,7 @@ const { getOutletHost } = require('../../redis/kasa');
 // ----------------------------------
 // HELPERS
 // ----------------------------------
-const myOutlets = ['lavalamp', 'desk'];
+const myOutlets = ['Stereowall', 'Lavalamp'];
 // ----------------------------------
 // KASA
 // ----------------------------------
@@ -25,7 +25,9 @@ module.exports = {
     resolve(Promise.all(R.map(async (o) => {
       const host = await getOutletHost(o);
       const device = await kasaClient.getDevice({ host });
-      return device.setPowerState(powerState === 'on');
+      const newPowerState = powerState === 'on';
+      device.setPowerState(newPowerState);
+      return newPowerState;
     }, outlets)));
   }),
 };

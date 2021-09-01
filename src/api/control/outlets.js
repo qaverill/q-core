@@ -1,5 +1,5 @@
 const { Client } = require('tplink-smarthome-api');
-const R = require('ramda');
+const logger = require('@q/logger');
 const { makeGetEndpointAsync, makePutEndpointAsync } = require('../gates');
 const { readOutlets, updateOutlets } = require('../../crud/control/outlets');
 const { setOutletHost } = require('../../redis/kasa');
@@ -7,16 +7,13 @@ const { setOutletHost } = require('../../redis/kasa');
 // HELPERS
 // ----------------------------------
 const path = '/control/outlets';
-const myMacAddresses = {
-  'B0:95:75:44:94:A8': 'lavalamp',
-  'B0:95:75:44:A5:D5': 'desk',
-};
 // ----------------------------------
 // KASA
 // ----------------------------------
 const kasaClient = new Client();
 kasaClient.startDiscovery().on('plug-new', ({ _sysInfo, host }) => {
-  const outlet = R.prop(_sysInfo.mac, myMacAddresses);
+  const outlet = _sysInfo.alias;
+  logger.info(`Found plug... ${outlet} on ${host}`);
   if (outlet) setOutletHost(outlet, host);
 });
 // ----------------------------------
@@ -24,7 +21,7 @@ kasaClient.startDiscovery().on('plug-new', ({ _sysInfo, host }) => {
 // ----------------------------------
 module.exports = {
   createEndpoints: (socket, routes) => {
-    // GET /control/outlets?outlet={lavalamp, desk}
+    // GET /control/outlets?outlet={Stereowall, Lavalamp}
     makeGetEndpointAsync({ routes, path }, ({ request, respond }) => {
       const { outlet } = request.query;
       readOutlets(outlet).then(respond);
@@ -35,7 +32,7 @@ module.exports = {
       const { state } = request.body;
       updateOutlets(outlet, state).then(async (result) => {
         respond(result);
-        await new Promise((r) => setTimeout(r, 1000)); // TODO: remove this
+        await new Promise((r) => setTimeout(r, 200));
         readOutlets().then((outlets) => socket.emit('/outlets', outlets));
       });
     });

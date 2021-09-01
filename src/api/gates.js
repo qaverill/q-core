@@ -7,7 +7,7 @@ const GET = 'GET';
 const PUT = 'PUT';
 const POST = 'POST';
 const DELETE = 'DELETE';
-const printEndpoint = (method, path) => console.log(`${method}   ${path}`);
+const printEndpoint = (method, path) => console.log(`       ${method}\t${path}`);
 const handle = (method, request, response, action) => {
   const { originalUrl } = request;
   const { statusCode } = response;
