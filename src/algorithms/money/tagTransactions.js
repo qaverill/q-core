@@ -35,6 +35,13 @@ const determineTags = (bankFact, tagBranch, parentTag) => {
     .filter((tag) => tag != null);
   return listWithoutDuplicates(tags);
 };
+const determineIfVenmoIncome = (description) => {
+  const isFromVinylWilliams = description.includes('Venmo from Lionel Williams');
+  const isSecurityDepositReturn = description.includes('from Evan Lanctot: Security deposit');
+  const isCatSitting = description.includes('Eitan Romanoff: Waffle');
+  const isLastMonthRentReturn = description.includes('Evan Lanctot: Rent for August');
+  return isFromVinylWilliams || isSecurityDepositReturn || isCatSitting || isLastMonthRentReturn;
+};
 const checkForSpecialCases = (transaction) => {
   const { description, amount, account } = transaction;
   const normalizedDescription = description.toLowerCase();
@@ -43,8 +50,8 @@ const checkForSpecialCases = (transaction) => {
   const isVenmoPayback = isVenmoFrom && !isExcludedVenmoFrom;
   const isCitiRefund = account === 'citi-credit' && amount > 0;
   const isButnamRent = normalizedDescription.includes('check withdrawal') && amount === -1150;
-  const isFromVinylWilliams = description.includes('Venmo from Lionel Williams');
-  if (isFromVinylWilliams) return null;
+  const isVenmoIncome = determineIfVenmoIncome(description);
+  if (isVenmoIncome) return null;
   if (isVenmoPayback || isCitiRefund) return ['payBack'];
   if (isButnamRent) return ['living', 'rent', 'butnam'];
   return null;
