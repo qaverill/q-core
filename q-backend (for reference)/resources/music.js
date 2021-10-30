@@ -1,5 +1,5 @@
 const R = require('ramda');
-const { hitGetEndpoint } = require('../resources/methods/external');
+const { hitGetEndpoint } = require('./methods/external');
 const { ONE_DAY } = require('../utils/time');
 // ----------------------------------
 // HELPERS

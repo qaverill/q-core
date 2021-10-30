@@ -49,11 +49,9 @@ const checkForSpecialCases = (transaction) => {
   const isExcludedVenmoFrom = !ignoredVenmoFroms.every((s) => !normalizedDescription.includes(s));
   const isVenmoPayback = isVenmoFrom && !isExcludedVenmoFrom;
   const isCitiRefund = account === 'citi-credit' && amount > 0;
-  const isButnamRent = normalizedDescription.includes('check withdrawal') && amount === -1150;
   const isVenmoIncome = determineIfVenmoIncome(description);
   if (isVenmoIncome) return null;
   if (isVenmoPayback || isCitiRefund) return ['payBack'];
-  if (isButnamRent) return ['living', 'rent', 'butnam'];
   return null;
 };
 // ----------------------------------

@@ -18,7 +18,7 @@ module.exports = {
       readTransactions({ start, end, filter })
         .then((transactions) => {
           // TODO: can this be written curry style?
-          const analysis = analyzeTransactions(transactions);
+          const analysis = analyzeTransactions(transactions, filter);
           respond(analysis);
         });
     });
