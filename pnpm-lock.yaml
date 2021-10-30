@@ -10,6 +10,7 @@ dependencies:
   csv-parse: 4.16.0
   eslint-plugin-jest: 24.4.0_eslint@7.32.0
   express: 4.17.1
+  fractional: 1.0.0
   jest: 26.6.3
   mongodb: 3.6.11
   mssql: 6.3.2
@@ -2597,6 +2598,10 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==
+  /fractional/1.0.0:
+    dev: false
+    resolution:
+      integrity: sha1-2rFnovn4BM+QOL3fR6qbp/IH6rw=
   /fragment-cache/0.2.1:
     dependencies:
       map-cache: 0.2.2
@@ -6347,6 +6352,7 @@ specifiers:
   eslint-plugin-import: ^2.24.2
   eslint-plugin-jest: ^24.4.0
   express: ^4.17.1
+  fractional: ^1.0.0
   jest: ^26.6.3
   mongodb: ^3.6.11
   mssql: ^6.3.2
