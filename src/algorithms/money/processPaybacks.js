@@ -20,11 +20,11 @@ const gatherTransactions = R.compose(
 // LOGIC
 // ----------------------------------
 const fullyValidatePaybacks = (paybacks) => new Promise((resolve, reject) => {
-  const existingFroms = [];
+  const existingFroms = {};
   try {
     paybacks.forEach(({ from }) => {
-      if (existingFroms.includes(from)) throw new Error(`From ${from} already exists, they cannot be used twice!`);
-      existingFroms.push(from);
+      if (existingFroms[from]) throw new Error(`From ${from} already exists, they cannot be used twice!`);
+      existingFroms[from] = true;
     });
     gatherTransactions(paybacks)
       .then((paybackTransactions) => {
@@ -64,12 +64,11 @@ const processPaybackTransactions = R.compose(
     });
   })),
 );
+function processPaybacks(paybacks) {
+  return fullyValidatePaybacks(paybacks)
+    .then(processPaybackTransactions);
+}
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
-module.exports = {
-  processPaybacks: (paybacks) => (
-    fullyValidatePaybacks(paybacks)
-      .then(processPaybackTransactions)
-  ),
-};
+module.exports = { processPaybacks };

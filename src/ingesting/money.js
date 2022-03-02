@@ -12,17 +12,11 @@ module.exports = {
     const start = new Date().getTime();
     logger.info('Starting money ingestion...');
     deleteTransactions()
-      .then(() => importBankFacts())
-      .then((bankFacts) => {
-        logger.info(`Imported ${bankFacts.length} bankFacts`);
-        return tagTransactions(bankFacts);
-      })
+      .then(importBankFacts)
+      .then(tagTransactions)
       .then(createTransactions)
-      .then(() => importPaybacks())
-      .then((paybacks) => {
-        logger.info(`Imported ${paybacks.length} paybacks`);
-        return processPaybacks(paybacks);
-      })
+      .then(importPaybacks)
+      .then(processPaybacks)
       .then(() => {
         const totalTime = new Date().getTime() - start;
         logger.info(`Successfully ingested money! ...${totalTime}ms`);

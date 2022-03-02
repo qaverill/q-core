@@ -1,5 +1,6 @@
 const R = require('ramda');
 const logger = require('@q/logger');
+const { isNotNull } = require('@q/utils');
 const { readCsvFile, writeCsvFile } = require('../csv');
 const paths = require('./paths.json');
 const {
@@ -11,34 +12,34 @@ const {
   factIsNeeded,
 } = require('../../algorithms/money/parsingBankFacts');
 // ----------------------------------
-// HELPERS
+// STATE
 // ----------------------------------
-const importExistingBankFacts = (mock) => new Promise((resolve, reject) => {
-  const path = mock ? paths.mockBankFacts : paths.bankFacts;
-  readCsvFile(path).then((bankFacts) => {
-    if (bankFacts === []) {
-      resolve([]);
-    } else {
-      const existingIds = [];
-      resolve(R.compose(
-        R.reject(R.isNil),
-        R.map((fact) => {
-          const parsedFact = {
-            ...fact,
-            amount: parseFloat(fact.amount),
-            timestamp: parseInt(fact.timestamp, 10),
-          };
-          const id = parsedFact.id || computeFactId(parsedFact);
-          if (existingIds.includes(id)) {
-            logger.error(`Duplicate id in bankFacts: ${id}`);
-            return null;
-          }
-          existingIds.push(id);
-          return { ...parsedFact, id };
-        }),
-      )(bankFacts));
+// ----------------------------------
+// LOGIC
+// ----------------------------------
+function parseBankFacts(bankFacts) {
+  const existingIds = {};
+  return bankFacts.map((bankFact) => {
+    const parsedFact = {
+      ...bankFact,
+      amount: parseFloat(bankFact.amount),
+      timestamp: parseInt(bankFact.timestamp, 10),
+    };
+    const id = parsedFact.id || computeFactId(parsedFact);
+    if (existingIds[id]) {
+      logger.error(`Duplicate id in bankFacts: ${id}`);
+      return null;
     }
-  }).catch(reject);
+    existingIds[id] = true;
+    return { ...parsedFact, id };
+  }).filter(isNotNull);
+}
+const importExistingBankFacts = (mock) => new Promise((resolve) => {
+  const path = mock ? paths.mockBankFacts : paths.bankFacts;
+  readCsvFile(path).then(R.compose(
+    resolve,
+    parseBankFacts,
+  ));
 });
 const importNewBankFacts = (mock) => new Promise((resolve, reject) => {
   const path = mock ? paths.mockBankFactInputs : paths.bankFactInputs;
@@ -47,18 +48,18 @@ const importNewBankFacts = (mock) => new Promise((resolve, reject) => {
       readCsvFile(`${path}/mvcu_old.csv`).then(parseMvcuOld).then((mvcuOldFacts) => {
         readCsvFile(`${path}/venmo.csv`).then(parseVenmo).then((venmoFacts) => {
           const bankFacts = [...citiFacts, ...mvcuFacts, ...mvcuOldFacts, ...venmoFacts];
-          const existingIds = [];
+          const existingIds = {};
           resolve(R.compose(
             R.reverse,
             R.sortBy(R.prop('timestamp')),
             R.reject(R.isNil),
             R.map((fact) => {
               const id = computeFactId(fact);
-              if (existingIds.includes(id)) {
+              if (existingIds[id]) {
                 logger.error(`Duplicate ${fact.account} ids in input: ${JSON.stringify(fact)}`);
                 return null;
               }
-              existingIds.push(id);
+              existingIds[id] = true;
               return { ...fact, id, description: fact.description.slice(0, 100) };
             }),
             R.filter(factIsNeeded),
@@ -68,8 +69,8 @@ const importNewBankFacts = (mock) => new Promise((resolve, reject) => {
     });
   });
 });
-const exportBankFacts = (bankFacts, mock) => new Promise((resolve) => {
-  const path = mock ? paths.mockBankFacts : paths.bankFacts;
+const exportBankFacts = (bankFacts) => new Promise((resolve) => {
+  const path = paths.bankFacts;
   const header = 'id,timestamp,amount,description,account';
   const data = R.join(
     '\n',
@@ -86,6 +87,21 @@ const exportBankFacts = (bankFacts, mock) => new Promise((resolve) => {
   );
   writeCsvFile({ path, payload: `${header}\n${data}` }).then(resolve);
 });
+function importBankFacts() {
+  return new Promise((resolve) => {
+    importExistingBankFacts().then((existingTransactions) => {
+      importNewBankFacts().then((newTransactions) => {
+        const allFacts = R.reverse(R.sortBy(
+          R.prop('timestamp'),
+          R.unionWith(R.eqBy(R.prop('id')), existingTransactions, newTransactions),
+        ));
+        exportBankFacts(allFacts);
+        logger.info(`Imported ${allFacts.length} bankFacts`);
+        resolve(allFacts);
+      });
+    });
+  });
+}
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
@@ -93,17 +109,6 @@ module.exports = {
   mockImportExistingBankFacts: () => importExistingBankFacts(true),
   mockImportNewBankFacts: () => importNewBankFacts(true),
   mockExportBankFacts: (mockBankFacts) => exportBankFacts(mockBankFacts, true),
-  importBankFacts: (mock) => new Promise((resolve) => {
-    importExistingBankFacts(mock).then((existingTransactions) => {
-      importNewBankFacts(mock).then((newTransactions) => {
-        const allFacts = R.reverse(R.sortBy(
-          R.prop('timestamp'),
-          R.unionWith(R.eqBy(R.prop('id')), existingTransactions, newTransactions),
-        ));
-        exportBankFacts(allFacts, mock);
-        resolve(allFacts);
-      });
-    });
-  }),
+  importBankFacts,
   mockImportBankFacts: () => module.exports.importBankFacts(true),
 };

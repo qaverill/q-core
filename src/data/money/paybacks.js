@@ -1,14 +1,24 @@
 const R = require('ramda');
+const logger = require('@q/logger');
 const { readCsvFile, writeCsvFile } = require('../csv');
 const paths = require('./paths.json');
+// ----------------------------------
+// LOGIC
+// ----------------------------------
+function importPaybacks() {
+  return new Promise((resolve) => {
+    const path = paths.paybacks;
+    readCsvFile(path).then((paybacks) => {
+      logger.info(`Imported ${paybacks.length} paybacks`);
+      resolve(paybacks);
+    });
+  });
+}
 // ----------------------------------
 // EXPORTS
 // ----------------------------------
 module.exports = {
-  importPaybacks: (mock) => new Promise((resolve) => {
-    const path = mock ? paths.mockPaybacks : paths.paybacks;
-    readCsvFile(path).then(resolve);
-  }),
+  importPaybacks,
   exportPaybacks: (paybacks, mock) => new Promise((resolve) => {
     const path = mock ? paths.mockPaybacks : paths.paybacks;
     const header = 'from,to';

@@ -4,8 +4,8 @@ const { Fraction } = require('fractional');
 // CONTROLS
 // ----------------------------------
 const art = {
-  width: 10 + (9 / 16),
-  height: 13 + (1 / 4),
+  width: 10,
+  height: 10,
 };
 const frame = {
   overlap: 1 / 8,

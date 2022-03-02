@@ -14,4 +14,5 @@ module.exports = {
   },
   round2Decimals: (num) => +((num).toFixed(2)),
   listWithoutDuplicates: (list) => [...new Set(list)],
+  isNotNull: (object) => object != null,
 };
